@@ -7,16 +7,13 @@
 auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
                  const double& delta,    const int& nphon, const int& ntempr,
                  const std::vector<double>& alpha, const std::vector<double>& beta,
-                 std::vector<double>& t1 ){
+                 std::vector<double>& t1, const int& itemp ){
  
+    std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+      std::vector<std::vector<double>> (beta.size(), 
+      std::vector<double> ( ntempr, 0.0 ) ) );
+
     std::vector<double> xa(alpha.size(),0.0);
-    std::vector<std::vector<std::vector<double>>> sym_sab( 2, 
-      std::vector<std::vector<double>> (3, std::vector<double> ( 4, 0.0 ) ) );
-    for ( auto entry : sym_sab ){ 
-        std::cout << entry.size() << std::endl;
-    }
-    std::cout << "  " << std::endl;
-    std::vector<double> sym_sabOld(alpha.size()*beta.size()*ntempr,0.0);
 
     double exp_lim = -250.0, tiny = 1e-30;
  
@@ -38,7 +35,7 @@ auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
         for( int b = 0; b < beta.size(); ++b ){
             double add = exx * interpolate( t1, delta, beta[b] * sc );
             if ( add < tiny ){ add = 0; }
-            sym_sabOld[c] = add;
+            sym_sab[a][b][itemp] = add;
             c += 1;
         }
     }
@@ -60,9 +57,9 @@ auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
             for( int b = 0; b < beta.size(); ++b ){
                 double add = exx * interpolate(tnow, delta, beta[b]*sc );
                 if ( add < tiny){ add = 0; }
-                sym_sabOld[c] += add;
-                if (sym_sabOld[c] != 0 and n == nphon-1 and 
-                    add > sym_sabOld[c]*.001 and b < maxt[a] ){
+                sym_sab[a][b][itemp] += add;
+                if (sym_sab[a][b][itemp] != 0 and n == nphon-1 and 
+                    add > sym_sab[a][b][itemp]*.001 and b < maxt[a] ){
                         maxt[a] = b;
                 }
                 c += 1;
@@ -72,17 +69,16 @@ auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
         for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
 
     } // for n in nphon (maxn in leapr.f90) 
-
-    return sym_sabOld; 
+    return sym_sab; 
 }
 
 
 
-std::vector<double> contin(const int& ntempr, const int& nphon, 
+auto contin(const int& ntempr, const int& nphon, 
         const std::vector<double>& alpha, const std::vector<double>& beta, 
         int lat, double delta, std::vector<double> phonon_dist, 
         const double& tbeta, const double& arat, const double& tev, 
-        const double& sc ){
+        const double& sc, const int& itemp ){
     
     // Start calculates the T1 term, described in Eq. 525
     // calling start will also change delta --> delta / tev
@@ -90,7 +86,7 @@ std::vector<double> contin(const int& ntempr, const int& nphon,
     // deltab
     double lambda_s = start( phonon_dist, delta, tev, tbeta );
     std::vector<double> t1 = std::move(phonon_dist);
-    return phonon_exp(lambda_s, sc, arat, delta, nphon, ntempr, alpha, beta, t1);
+    return phonon_exp(lambda_s, sc, arat, delta, nphon, ntempr, alpha, beta, t1, itemp );
 
 }
 
