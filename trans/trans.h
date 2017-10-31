@@ -19,7 +19,8 @@ void print( T a ){
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
             const int lat, const double& trans_weight, double delta, 
             const double& diffusion_const, const double& sc, const double& arat,
-            const double& tev, std::vector<double>& ssm ){
+            const double& tev, std::vector<std::vector<std::vector<double>>>& ssm,
+            const int& itemp ){
     double c0 = 0.4;    double c1 = 1.0;    double c2 = 1.42;
     double c3 = 0.2;    double c4 = 10.0;
 
@@ -50,7 +51,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
         if ( nsd > 1 ){
             for ( int i = 0; i < beta.size(); ++i ){
                 betan[i] = beta[i] * sc;
-                ap[i] = ssm[i];
+                ap[i] = ssm[a][i][itemp];
             }
             // loop over beta values
             for ( int ibeta = 0; ibeta < beta.size(); ++ibeta ){
@@ -58,11 +59,9 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
                 double be = betan[ibeta];
                 // prepare table of continuous ss on new interval
                 int nbt = nsd;
-                for ( int i = 0; i < 20; ++i ){ std::cout << ap[i] << std::endl; }
-                std::cout << "   " << std::endl;
+
                 sbfill( sb, nbt, delta, be, ap, betan, beta.size(), ibeta, ndmax );
-//                for ( int i = 0; i < 20; ++i ){ std::cout << ap[i] << std::endl; }
-//                std::cout << "    " << std::endl;
+
             }
         }
     }

@@ -64,13 +64,11 @@ int main(){
           // the temperature dependent parameters for this specifically 
 
         // Continuous part of the distribution
-        auto ssm = contin( ntempr, nphon, alpha, beta, lat, delta, rho, tbeta, arat, tev, sc ); 
-
-       // std::cout << "Hello, world" << std::endl;
+        auto ssm = contin( ntempr, nphon, alpha, beta, lat, delta, rho, tbeta, arat, tev, sc, itemp );
        
         // Translational part of distribution, if any
         trans( alpha, beta, lat, trans_weight, delta, diffusion_const, sc, arat, 
-               tev, ssm );
+               tev, ssm, itemp );
 
       }
       done = true;
