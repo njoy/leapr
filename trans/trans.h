@@ -3,24 +3,15 @@
 #include <vector>
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
+#include "trans_util/terps.h"
 
-void print( std::vector<double> a ){
-    for ( double entry : a ){
-        std::cout << entry << std::endl;
-    }
-    std::cout << " " << std::endl;
-}
-
-template <typename T>
-void print( T a ){
-    std::cout << a << std::endl;
-}
 
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
             const int lat, const double& trans_weight, double delta, 
             const double& diffusion_const, const double& sc, const double& arat,
             const double& tev, std::vector<std::vector<std::vector<double>>>& ssm,
-            const int& itemp ){
+            const int& itemp, const double& lambda_s, 
+            std::vector<std::vector<std::vector<double>>>& sym_sab ){
     double c0 = 0.4;    double c1 = 1.0;    double c2 = 1.42;
     double c3 = 0.2;    double c4 = 10.0;
 
@@ -55,11 +46,26 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
             }
             // loop over beta values
             for ( int ibeta = 0; ibeta < beta.size(); ++ibeta ){
-                int s = 0;
+                double s = 0;
                 double be = betan[ibeta];
                 // prepare table of continuous ss on new interval
                 int nbt = nsd;
+                ibeta += 1;
                 sbfill( sb, nbt, delta, be, ap, betan, beta.size(), ibeta, ndmax );
+                ibeta -= 1;
+                // convolve s-transport with s-continuous
+                for ( int i = 0; i < nbt; ++i ){
+                    double f = 2*(i%2)+2;
+                    if ( i == 0 or i == nbt - 1 ){ f = 1; }
+                    s = s + f*sd[i]*sb[nbt+i-1];
+                    s = s + f*sd[i]*sb[nbt-i+1]*exp(-i*delta);
+                }
+                s = s*delta/3;
+                if ( s < 1e-30 ){ s = 0; }
+                
+                double st = terps(sd,nbt,delta,be);
+                if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s )*st; }
+                sym_sab[a][ibeta][itemp] = s;
 
             }
         }

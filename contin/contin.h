@@ -4,15 +4,12 @@
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
 
-auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
+void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab, 
+                 const double& lambda_s, const double& sc, const double& arat,
                  const double& delta,    const int& nphon, const int& ntempr,
                  const std::vector<double>& alpha, const std::vector<double>& beta,
                  std::vector<double>& t1, const int& itemp ){
  
-    std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
-      std::vector<std::vector<double>> (beta.size(), 
-      std::vector<double> ( ntempr, 0.0 ) ) );
-
     std::vector<double> xa(alpha.size(),0.0);
 
     double exp_lim = -250.0, tiny = 1e-30;
@@ -69,12 +66,12 @@ auto phonon_exp( const double& lambda_s, const double& sc, const double& arat,
         for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
 
     } // for n in nphon (maxn in leapr.f90) 
-    return sym_sab; 
 }
 
 
 
-auto contin(const int& ntempr, const int& nphon, 
+auto contin(std::vector<std::vector<std::vector<double>>>& sym_sab, 
+        const int& ntempr, const int& nphon, 
         const std::vector<double>& alpha, const std::vector<double>& beta, 
         int lat, double delta, std::vector<double> phonon_dist, 
         const double& tbeta, const double& arat, const double& tev, 
@@ -84,9 +81,11 @@ auto contin(const int& ntempr, const int& nphon,
     // calling start will also change delta --> delta / tev
     // where tev is temperature in eV. leapr.f90 calls this 
     // deltab
+    
     double lambda_s = start( phonon_dist, delta, tev, tbeta );
     std::vector<double> t1 = std::move(phonon_dist);
-    return phonon_exp(lambda_s, sc, arat, delta, nphon, ntempr, alpha, beta, t1, itemp );
+    phonon_exp( sym_sab, lambda_s, sc, arat, delta, nphon, ntempr, alpha, beta, t1, itemp );
+    return lambda_s;
 
 }
 

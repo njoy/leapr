@@ -37,11 +37,14 @@ TEST_CASE( "contin" ){
                                   0.16, 0.32, 0.64, 1.28};
       std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
       std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
+      std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+        std::vector<std::vector<double>> ( beta.size(),
+        std::vector<double> ( ntempr, 0.0 ) ) );
       double delta = 0.1; double tbeta = 1.0;
       double arat  = 1.0; double tev = 0.01723477;
       double sc = 0.0253 / tev;
       THEN( "contin output matches expected value" ){
-        auto sym_scat_matrix = contin( ntempr, nphon, alpha, beta, lat, 
+        contin( sym_sab, ntempr, nphon, alpha, beta, lat, 
                                        delta,  rho,   tbeta, arat, tev, sc, itemp );
               std::vector<double> expected {6.474331963E-7, 7.658564709E-7, 
                 8.842797456E-7, 1.121126294E-6, 1.594819393E-6, 1.294036143E-6, 
@@ -54,7 +57,7 @@ TEST_CASE( "contin" ){
                 3.979478204E-5, 4.707463949E-5, 5.435449694E-5, 6.891421183E-5, 
                 9.803364162E-5, 7.638863877E-5, 9.036457859E-5, 1.043405184E-4, 
                 1.322923980E-4, 1.881961573E-4};
-              equal_vec_mega_vec( sym_scat_matrix, expected );
+              equal_vec_mega_vec( sym_sab, expected );
         } // THEN
        } // WHEN
     } // GIVEN
@@ -64,11 +67,14 @@ TEST_CASE( "contin" ){
         std::vector<double> alpha { 0.1, 0.2, 0.4, 0.8, 1.6 };
         std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
         std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
-        double delta = 0.04; double tbeta = 1.0;
+        std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+        std::vector<std::vector<double>> ( beta.size(),
+        std::vector<double> ( ntempr, 0.0 ) ) );
+       double delta = 0.04; double tbeta = 1.0;
         double arat  = 1.0; double tev = 0.01723477;
         double sc = 1.0;
         THEN( "contin output matches expected value" ){
-            auto sym_scat_matrix = contin( ntempr, nphon, alpha, beta, lat, 
+            contin( sym_sab, ntempr, nphon, alpha, beta, lat, 
                                            delta,  rho,   tbeta, arat, tev, sc, itemp );
             std::vector<double> expected {6.82096404E-5, 7.51470660E-5, 
               8.20844916E-5, 9.59593429E-5, 1.23709045E-4, 1.34940719E-4, 
@@ -77,7 +83,7 @@ TEST_CASE( "contin" ){
               4.78960557E-4, 5.05599918E-4, 5.57045626E-4, 6.08491333E-4, 
               7.11382748E-4, 9.17165579E-4, 9.26780041E-4, 1.02112863E-3, 
               1.11547723E-3, 1.30417442E-3, 1.68156881E-3};
-            equal_vec_mega_vec( sym_scat_matrix, expected );
+            equal_vec_mega_vec( sym_sab, expected );
         } // THEN
         } // WHEN
     } // GIVEN 
@@ -87,11 +93,14 @@ TEST_CASE( "contin" ){
         std::vector<double> alpha { 0.1, 0.2, 0.4, 0.8, 1.6 };
         std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
         std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
-        double delta = 4.; double tbeta = 2.0;
+        std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+        std::vector<std::vector<double>> ( beta.size(),
+        std::vector<double> ( ntempr, 0.0 ) ) );
+       double delta = 4.; double tbeta = 2.0;
         double arat  = 1.0; double tev = 0.01723477;
         double sc = 1.0;
         THEN( "contin output matches expected value" ){
-            auto sym_scat_matrix = contin( ntempr, nphon, alpha, beta, lat, 
+            contin( sym_sab, ntempr, nphon, alpha, beta, lat, 
                                            delta,  rho,   tbeta, arat, tev, sc, itemp );
             std::vector<double> expected {1.37883996E-10, 1.58477481E-10, 
               1.79070966E-10, 2.20257936E-10, 3.02631876E-10, 2.75707903E-10, 
@@ -100,7 +109,7 @@ TEST_CASE( "contin" ){
               1.20973637E-09, 1.10139053E-09, 1.26588730E-09, 1.43038407E-09, 
               1.75937760E-09, 2.41736468E-09, 2.19894405E-09, 2.52736456E-09, 
               2.85578506E-09, 3.51262608E-09, 4.82630810E-09};
-            equal_vec_mega_vec( sym_scat_matrix, expected );
+            equal_vec_mega_vec( sym_sab, expected );
         } // THEN
       } // WHEN
     } // GIVEN 

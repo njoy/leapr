@@ -33,7 +33,7 @@ int main(){
     std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
   // Card13
 //    double twt = 0.3, c = 0.1, tbeta = 2.0;
-    double trans_weight = 0.3, diffusion_const = 0.1, tbeta = 2.0;
+    double trans_weight = 0.03, diffusion_const = 1.0, tbeta = 2.0;
   // Card14
     int nd = 0;
   
@@ -44,7 +44,13 @@ int main(){
   int isecs = 0;
   double arat  = 1.0; // This is for scaling alpha and beta values later
   bool done = false;
-  
+
+  std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+      std::vector<std::vector<double>> (beta.size(), 
+      std::vector<double> ( ntempr, 0.0 ) ) );
+
+
+
   while ( not done ){
       if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
       if ( isecs >  0 ){ 
@@ -64,12 +70,14 @@ int main(){
           // the temperature dependent parameters for this specifically 
 
         // Continuous part of the distribution
-        auto ssm = contin( ntempr, nphon, alpha, beta, lat, delta, rho, tbeta, arat, tev, sc, itemp );
+        double lambda_s = contin( sym_sab, ntempr, nphon, alpha, beta, lat, delta, rho, tbeta, arat, tev, sc, itemp );
        
+        std::cout << sym_sab[2][2][0] << std::endl;
         // Translational part of distribution, if any
         trans( alpha, beta, lat, trans_weight, delta, diffusion_const, sc, arat, 
-               tev, ssm, itemp );
+               tev, sym_sab, itemp, lambda_s, sym_sab );
 
+        std::cout << sym_sab[2][2][0] << std::endl;
       }
       done = true;
   }
