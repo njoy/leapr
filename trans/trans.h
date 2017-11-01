@@ -59,7 +59,6 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
                 double be = betan[ibeta];
                 // prepare table of continuous ss on new interval
                 int nbt = nsd;
-
                 sbfill( sb, nbt, delta, be, ap, betan, beta.size(), ibeta, ndmax );
 
             }
