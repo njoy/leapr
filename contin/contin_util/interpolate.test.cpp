@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "../../catch.hpp"
 #include "interpolate.h"
 
 void equal( double a, double b ){

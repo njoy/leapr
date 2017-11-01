@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "../../../catch.hpp"
 #include "start_util.h"
 #include <vector>
 #include <cmath>
