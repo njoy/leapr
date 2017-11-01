@@ -46,6 +46,7 @@ def testing_func():
     dirs = get_all_dirs()
     tests = get_all_test_files()
     for test in tests:
+        print(" - ",test )
         if not run_test(test):
             print("Oh no! "+test+" failed :( ")
             return False
@@ -54,7 +55,6 @@ def testing_func():
         print('Checking',directory)
         testing_func()
         os.chdir("../")
-        break
     return True
 
 if testing_func():
