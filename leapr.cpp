@@ -75,7 +75,7 @@ int main(){
         std::cout << sym_sab[2][2][0] << std::endl;
         // Translational part of distribution, if any
         trans( alpha, beta, lat, trans_weight, delta, diffusion_const, sc, arat, 
-               tev, sym_sab, itemp, lambda_s, sym_sab );
+               tev, sym_sab, itemp, lambda_s );
 
         std::cout << sym_sab[2][2][0] << std::endl;
       }
