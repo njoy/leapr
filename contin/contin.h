@@ -44,7 +44,7 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
     for( int n = 1; n < nphon; ++n ){
         int c = 0;
         npn = t1.size() + npl - 1;
-        tnow = convol(t1, tlast, delta, npn, npl);
+        tnow = convol(t1, tlast, delta);
 
         for( int a = 0; a < alpha.size(); ++a ){
             xa[a] +=  log(lambda_s * alpha[a] * sc / ( arat * ( n + 1 ) ) );

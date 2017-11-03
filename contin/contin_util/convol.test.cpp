@@ -29,7 +29,7 @@ TEST_CASE( "convol" ){
                                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
                 double delta = 0.03;
 
-                std::vector<double> output = convol( t1, t2, delta, t2.size(), t1.size() );
+                std::vector<double> output = convol( t1, t2, delta );
                 std::vector<double> correct = {3.8459762, 2.6993367, 1.0195307, 0.53364442, 0.37281623, 0.38400000, 0.62399999, 1.0079999, 1.7999999, 2.1599999, 0.95999997854232788, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
                 equal_vec(output, correct);
            
@@ -40,7 +40,7 @@ TEST_CASE( "convol" ){
                                           0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
                                           0.0,  0.0,  0.0,  0.0,  0.0,  0.0};
                 double delta = 0.5;
-                std::vector<double> output = convol( t1, t2, delta, t2.size(), t1.size() );
+                std::vector<double> output = convol( t1, t2, delta );
                 std::vector<double> correct {1.1974704E-2, 1.3563056E-2, 1.3531928E-2, 1.3796487E-2, 1.3871143E-2, 1.7874999E-2, 2.6749999E-2, 3.1774999E-2, 3.0124998E-2, 2.5199998E-2, 1.1024999E-2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
                 equal_vec(output, correct);
             }

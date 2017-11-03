@@ -34,31 +34,38 @@ def get_all_test_files():
 def run_test(test):
     my_str = "g++ -std=c++14 " + test 
     os.system(my_str)
-    output = subprocess.check_output(["./a.out"])
-    if 'All tests passed' in output.decode('utf-8'):
-        return True
-    return False
+    try: 
+        output = subprocess.check_output(["./a.out"])
+        if 'All tests passed' in output.decode('utf-8'):
+            return True
+    except:
+        return False
     
     
 
 
-def testing_func():
+def testing_func(failed=[]):
     dirs = get_all_dirs()
     tests = get_all_test_files()
     for test in tests:
         print(" - ",test )
         if not run_test(test):
             print("Oh no! "+test+" failed :( ")
-            return False
+            failed.append(test)
     for directory in dirs:
         os.chdir("./"+directory)
         print('Checking',directory)
-        testing_func()
+        failed = testing_func(failed)
         os.chdir("../")
-    return True
+    return failed
 
-if testing_func():
-    print(":)")
+output = testing_func()
+if len(output) == 0:
+    print( "\n:)\n" )
+else:
+    print("\nThe following tests failed: ")
+    print(output)
+    print( ":(" )
 
 
 

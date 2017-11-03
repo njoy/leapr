@@ -1,21 +1,22 @@
+#include <vector>
 
-double interpolate( const std::vector<double>& y_vec, const double& delta, const double& x_desired ){
-    /* This function takes in some y vector (which corresponds to some evenly spaced
-     * x vector, with spacing delta). It find the linear approximation at some
-     * desired point, and returns that corresponding value.
-     */
-    int index_left = (x_desired / delta);   // This is the index just to the left
-                                            // of my desired x point
+double interpolate( const std::vector<double>& y_vec, 
+                    const double& delta, const double& x ){
+  /* This takes in some vector y (which has a corresponding evenly spaced
+  * x vector, with spacing delta). It finds and returns the linearly 
+  * interpolated value approximation at point x
+  */
 
-    // Check to make sure that the desired x point is within range
-    if ( index_left < (y_vec.size() - 1) ){
-        double x_left  = index_left * delta; // tabulated x values to the left and 
-        double x_right = x_left + delta;     // right of my desired point
+  int i = x / delta; // This is the index just to the left
+                     // of my desired x point
 
-        return y_vec[index_left] + ( x_desired - x_left )*( y_vec[index_left + 1] - y_vec[index_left] )/(delta);
-    }        
+  // Return 0.0 if out of range (above) 
+  if ( i >= y_vec.size() - 1 ){ return 0.0; }
 
-    return 0.0;
+  // Check to make sure that the desired x point is within range
+  double x_L = i * delta; // tabulated x values to the left and 
+
+  return y_vec[i] + ( x - x_L ) * ( y_vec[i+1] - y_vec[i] ) / delta;
 }
 
 
