@@ -70,7 +70,7 @@ int main(){
           // the temperature dependent parameters for this specifically 
 
         // Continuous part of the distribution
-        double lambda_s = contin( sym_sab, ntempr, nphon, alpha, beta, lat, delta, rho, tbeta, arat, tev, sc, itemp );
+        double lambda_s = contin( sym_sab, ntempr, nphon, alpha, beta, delta, rho, tbeta, arat, tev, sc, itemp );
        
         std::cout << sym_sab[2][2][0] << std::endl;
         // Translational part of distribution, if any
