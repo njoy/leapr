@@ -6,7 +6,6 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
    double be, std::vector<double>& s,std::vector<double>& betan,
    int nbeta, int nbe, int ndmax){
 
-   // nbeta += 1;
     double bmin=-be-(nbt-1)*delta;
     double bmax=-be+(nbt-1)*delta+delta/100;
     double shade = 1.00001e0;
@@ -22,11 +21,12 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
     while (bet < bmax){
         i=i+1;
         double b=abs(bet);
+
         // search for correct beta range
         int idone = 0;
         while (idone == 0){
             if ( b > betan[j] ){
-                if ( j == nbeta and b < shade * betan[j] ){
+                if ( j+1 == nbeta and b < shade * betan[j] ){
                     idone = 1;
                 }
                 else {
@@ -52,14 +52,11 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
                 }
             }
         }
-       //     std::cout << idone << "   " << i << "    " <<j << std::endl;
         if ( idone == 1 ){
-           // std::cout << s[j] << std::endl;
             if ( s[j] < 0 ){
                 st = slim;
             }
             else {
-           //     std::cout << s[j] <<std::endl;
                 st = log( s[j] );
             }
             if ( s[j-1] < 0 ){
@@ -69,12 +66,6 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
                 stm = log( s[j-1] );
             }
             sb[i] = st + (b-betan[j])*(stm-st)/(betan[j-1]-betan[j]);
-         //   std::cout << sb[i] << std::endl;
-         //   return 0;
-          //  std::cout << (stm) << std::endl; 
-          //  std::cout << sb[i] << std::endl; 
-          //  std::cout << "Done" << std::endl; 
-          //  return 0;
             if (bet > 0) sb[i] = sb[i] - bet;
             arg = sb[i];
             sb[i] = 0;
@@ -83,6 +74,7 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
         else {
             sb[i] = 0;
         }
+
         bet = bet + delta;
     }
     return 0;
