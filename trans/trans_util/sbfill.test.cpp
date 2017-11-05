@@ -13,7 +13,7 @@ void equal( double a, double b ){
 
 
 TEST_CASE( "sbfill" ){
-  GIVEN( "inputs" ){
+  GIVEN( "invalid inputs" ){
     int ndmax = 5100;
     std::vector<double> sb (ndmax,0.0); 
     std::vector<double> ap (ndmax,0.0); 
@@ -180,5 +180,38 @@ TEST_CASE( "sbfill" ){
       equal( sb[i], correct[j] );
       j += 1;
     }
+  } // GIVEN
+  GIVEN( "invalid inputs" ){
+    WHEN( "not even close to enough entries in sb, ap" ){
+      int ndmax = 100;
+      std::vector<double> sb (ndmax,0.0); 
+      std::vector<double> ap (ndmax,0.0); 
+      for ( int i = 0; i < ap.size(); ++i ){
+        ap[i] = (i+1)*0.0001;
+      }
+      std::vector<double> betan {0.15, 0.18, 0.22};
+      int nbt = 2545, nbeta = 3, ibeta = 0;
+      double delta = 1.791435E-3, be = 0.15;
+      THEN( "an exception is thrown" ){
+        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, nbeta, ibeta, 
+          ndmax ) );
+      } // THEN
+    } // WHEN
+
+    WHEN( "just barely not enough entries (1 too few)" ){
+      int ndmax = 5088;
+      std::vector<double> sb (ndmax,0.0); 
+      std::vector<double> ap (ndmax,0.0); 
+      for ( int i = 0; i < ap.size(); ++i ){
+        ap[i] = (i+1)*0.0001;
+      }
+      std::vector<double> betan {0.15, 0.18, 0.22};
+      int nbt = 2545, nbeta = 3, ibeta = 0;
+      double delta = 1.791435E-3, be = 0.15;
+      THEN( "an exception is thrown" ){
+        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, nbeta, ibeta, 
+          ndmax ) );
+      } // THEN
+    } // WHEN
   } // GIVEN
 } // TEST CASE
