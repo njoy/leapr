@@ -15,29 +15,22 @@ TEST_CASE( "terps" ){
         WHEN( "desired value is within range" ){
             THEN( "interpolated value returned" ){
                 std::vector<double> input { 1.5, 2.0, 4.0, 5.5, 7.5 };
-                int npt = 4;
-                double delta = 1.5, x_val = 2.5;
-                equal( terps( input, npt, delta, x_val ), 3.17480210 );
-                x_val = 1.5;
-                equal( terps( input, npt, delta, x_val ), 2.0 );
-                x_val = 0.5;
-                equal( terps( input, npt, delta, x_val ), 1.6509636 );
-                delta = 1.2;
-                equal( terps( input, npt, delta, x_val ), 1.6910212 );
-                delta = 0.2;
-                equal( terps( input, npt, delta, x_val ), 4.6904157 );
+                
+                //     terps( input, nps, delta, xval ) 
+                equal( terps( input, 4, 1.5, 2.5 ), 3.17480210 );
+                equal( terps( input, 4, 1.5, 1.5 ), 2.0 );
+                equal( terps( input, 4, 1.5, 0.5 ), 1.6509636 );
+                equal( terps( input, 4, 1.2, 0.5 ), 1.6910212 );
+                equal( terps( input, 4, 0.2, 0.5 ), 4.6904157 );
             } // THEN
         } // WHEN
         WHEN( "desired value is not within range" ){
             THEN( "value of zero is returned" ){
                 std::vector<double> input { 1.5, 2.0, 4.0, 5.5, 7.5 };
-                int npt = 4;
-                double delta = 0.2, x_val = 3.5;
-                equal( terps( input, npt, delta, x_val ), 0.0 );
-                delta = 3.5; x_val = 15.3;
-                equal( terps( input, npt, delta, x_val ), 0.0 );
-                delta = 0.5; x_val = -1.2;
-                equal( terps( input, npt, delta, x_val ), 0.0 );
+                //     terps( input, nps, delta, xval ) 
+                equal( terps( input, 4, 0.2, 3.5 ), 0.0 );
+                equal( terps( input, 4, 3.5, 15.3 ), 0.0 );
+                equal( terps( input, 4, 0.5, -1.2 ), 0.0 );
             } // THEN
         } // WHEN
     } // GIVEN
