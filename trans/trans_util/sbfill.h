@@ -96,52 +96,5 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
 
 
 
-/*
-    // search for correct beta range
-    int idone = 0;
-    done = false;
-    while (not done){
-      if ( b > betan[j] ){      // If desired value is somewhere to the right
-        if ( j + 1 == nbeta ){  // -- and I'm on second to last beta value
-          if ( b < shade * betan[j] ){ idone = 1; } // ---- and my desired
-                                                    //      value is basically
-                                                    //      at my current value
-
-          else { idone = 2; }  // --- My desired value is somewhere to the right
-                               // --- and I'm at second to last beta value
-                               // --- but this isn't what I was hoping for 
-          done = true;
-        }
-        else { j = j + 1; } // My desired value is somewhere to the right
-                            // and I still have more beta values to the right
-                            // that I can explore, I'll just increase my index
-      }
-      else {                // My desired is somewhere to the left
-        if ( b > betan[j-1] ){  // But my desired value is to the right of my
-          idone = 1;            // next left point, then I know my desired point
-          done = true;          // lies between j-1 and j
-        }
-        else {
-          if (j == 1){      // If I've hit the left side of my beta values,
-            idone = 1;      // but the point is somewhere to the left stil
-            done = true;    // then that must mean that it's on this current point
-          }
-          else {         // My desired point is somewhere to the left, and I
-            j = j - 1;   // still have room to explore
-          }
-        }
-      }
-    }
-
-*/
-
-
-
-
-
-
-
-
-
 
 

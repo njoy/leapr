@@ -3,7 +3,6 @@
 #include <cmath>
 
 auto bessel_K1_gen(double x ){
-  double v,u,bi1,bi3;
   double c0  = 0.125;
   double c1  = 0.442850424;
   double c2  = 0.584115288;
@@ -42,25 +41,36 @@ auto bessel_K1_gen(double x ){
   double c35 = 0.1468582957;
   double c36 = 0.4699927013;
   double c37 = 1.2533141373;
+  double v,u,bi1,bi3;
 
-  double besk1;
-  
+  std::vector<double> constVec; 
   if (x <= 1 ){
-    v=c0*x;
-    u=v*v;
-    bi1=(((((((((c1*u+c2)*u+c3)*u+c4)*u+c5)*u+c6)*u
-                     +c7)*u+c8)*u+c9)*u+c10)*v;
-    bi3=(((((((((c11*u+c12)*u+c13)*u+c14)*u+c15)*u
-                     +c16)*u+c17)*u+c18)*u+c19)*u+c20);
-    besk1=c21/x+ bi1*(log(c22*x)+c23)-v*bi3;
+    v = c0 * x;
+
+    bi1 = c1*v*v;
+    constVec = {c2,c3,c4,c5,c6,c7,c8,c9};
+    for ( auto& entry : constVec ){ bi1 = (bi1 + entry)*v*v; }
+    bi1 = ( bi1 + c10 ) * v;
+
+    bi3 = c11*v*v;
+    constVec = {c12,c13,c14,c15,c16,c17,c18,c19};
+    for ( auto& entry : constVec ){ bi3 = (bi3 + entry)*v*v; }
+    bi3 = bi3 + c20;
+    
+    return c21 / x + bi1 * ( log( c22 * x ) + c23 ) - v * bi3;
+
   }
   else {
-    u=c24/x;
-    bi3=((((((((((((-c25*u+c26)*u-c27)*u+c28)*u-c29)*u+c30)*u-c31)*u
-                          +c32)*u-c33)*u+c34)*u-c35)*u+c36)*u+c37);
-    besk1=sqrt(u)*bi3;
+    u = c24 / x;
+    bi3 = -c25*u;
+    int i = 1;
+    constVec = {c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36};
+    for (auto& entry : constVec ){
+      bi3 = ( bi3 + i*entry ) * u;
+      i = -i;
+    }
+    return sqrt( u ) * ( bi3 + c37 );
   }
-  return besk1;
 }
 
 
