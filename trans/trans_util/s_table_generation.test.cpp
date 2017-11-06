@@ -19,10 +19,10 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 TEST_CASE( "diffusion s-table generation" ){
   GIVEN( "trans. weight, alpha, diffusion const, delta and empty vectors" ){
     THEN( "the beta and translational scattering vectors are filled" ){
-      double c = 2.0, delta = 0.2, trans_weight = 1.5, alpha_sc = 0.1;
-      int ndmax = 100; double nsd = 0;
+      double c = 2.0, delta = 0.2, trans_weight = 1.5, alpha = 0.1;
+      int ndmax = 100, nsd;
       std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0);
-      diffusion_s_table( c, trans_weight, alpha_sc, ndmax, delta, sd, ap, nsd );
+      nsd = diffusion_s_table( c, trans_weight, alpha, ndmax, delta, sd, ap );
       std::vector<double> correct_sd {0.8939586849, 0.8460637169, 
         0.6261350235,    0.4069039776,    0.2516455797,    0.1539260520, 
         9.4590007147E-2, 5.8718258693E-2, 3.6870200714E-2, 2.3411295948E-2, 
@@ -53,13 +53,14 @@ TEST_CASE( "diffusion s-table generation" ){
         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
         0.0, 0.0, 0.0, 0.0, 0.0};
+      REQUIRE( nsd == 45 );
       equal_vec(sd,correct_sd);
       equal_vec(ap,correct_ap);
     } // THEN
   } // GIVEN
   GIVEN( "translational weight, scaled alpha, spacing and empty vectors" ){
-    double c = 0.3, delta = 1.8, trans_weight = 0.5, alpha_sc = 0.8;
-    int ndmax = 20; double nsd = 0;
+    double c = 0.3, delta = 1.8, trans_weight = 0.5, alpha = 0.8;
+    int ndmax = 20, nsd;
     std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0);
     THEN( "the beta and translational scattering vectors are filled" ){
       std::vector<double> correct_ap{0.0, 1.8, 3.6, 5.4, 7.2, 9.0, 10.8, 12.6, 
@@ -69,10 +70,10 @@ TEST_CASE( "diffusion s-table generation" ){
         4.5268825E-4, 3.2527107E-4, 2.3830869E-4, 1.7735539E-4, 1.3370720E-4, 
         1.0189672E-4, 7.8370923E-5, 6.0754890E-5, 4.7423166E-5, 3.7240618E-5, 
         2.9400700E-5, 0.0};
-      diffusion_s_table( c, trans_weight, alpha_sc, ndmax, delta, sd, ap, nsd );
+      nsd = diffusion_s_table( c, trans_weight, alpha, ndmax, delta, sd, ap );
+      equal( nsd, 19 );
       equal_vec(sd,correct_sd);
       equal_vec(ap,correct_ap);
- // for(auto entry : ap ){std::cout << entry << std::endl;}
 
     } // THEN
   } // GIVEN
@@ -83,19 +84,22 @@ TEST_CASE( "diffusion s-table generation" ){
 TEST_CASE( "free gas s-table generation" ){
   GIVEN( "trans. weight, alpha, delta and empty vectors" ){
     THEN( "the beta and translational scattering vectors are filled" ){
-      double delta = 1.4, trans_weight = 0.5, alpha_sc = 0.8;
-      int ndmax = 10; double  nsd = 0;
+      double delta = 1.4, trans_weight = 0.5, alpha = 0.8;
+      int ndmax = 10, nsd;
       std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0);
-      free_gas_s_table( trans_weight, alpha_sc, ndmax, delta, sd, ap, nsd );
-      std::vector<double> correct_sd {0.40358556, 0.23874321, 1.2187230E-2, 5.3685572E-5, 2.0407449E-8, 0.0, 0.0, 0.0, 0.0, 0.0};
-      std::vector<double> correct_ap {0.0, 1.4, 2.8, 4.2, 5.6, 0.0, 0.0, 0.0, 0.0, 0.0};
+      nsd = free_gas_s_table( trans_weight, alpha, ndmax, delta, sd, ap );
+      std::vector<double> correct_sd {0.40358556, 0.23874321, 1.2187230E-2, 
+        5.3685572E-5, 2.0407449E-8, 0.0, 0.0, 0.0, 0.0, 0.0};
+      std::vector<double> correct_ap {0.0, 1.4, 2.8, 4.2, 5.6, 0.0, 0.0, 0.0, 
+        0.0, 0.0};
+      equal( nsd, 5 );
       equal_vec(sd,correct_sd);
       equal_vec(ap,correct_ap);
     } // THEN
   } // GIVEN
   GIVEN( "translational weight, scaled alpha, spacing and empty vectors" ){
-    double delta = 1.2, trans_weight = 0.3, alpha_sc = 1.2;
-    int ndmax = 20; double nsd = 0;
+    double delta = 1.2, trans_weight = 0.3, alpha = 1.2;
+    int ndmax = 20, nsd;
     std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0);
     THEN( "the beta and translational scattering vectors are filled" ){
       std::vector<double> correct_ap {0.0, 1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 0.0, 
@@ -104,9 +108,10 @@ TEST_CASE( "free gas s-table generation" ){
         3.20802E-4, 5.33031E-7, 1.1986111752398333E-10, 3.647675E-15, 0.0, 
         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       
-      free_gas_s_table( trans_weight, alpha_sc, ndmax, delta, sd, ap, nsd );
-     equal_vec(ap,correct_ap);
-     equal_vec(sd,correct_sd);
+      nsd = free_gas_s_table( trans_weight, alpha, ndmax, delta, sd, ap );
+      equal( nsd, 7 );
+      equal_vec(ap,correct_ap);
+      equal_vec(sd,correct_sd);
 
     } // THEN
   } // GIVEN
