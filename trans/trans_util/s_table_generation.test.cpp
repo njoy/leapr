@@ -22,7 +22,7 @@ TEST_CASE( "diffusion s-table generation" ){
       double c = 2.0, delta = 0.2, trans_weight = 1.5, alpha = 0.1;
       int ndmax = 100, nsd;
       std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0);
-      nsd = diffusion_s_table( c, trans_weight, alpha, ndmax, delta, sd, ap );
+      nsd = diffusion_s_table( trans_weight, alpha, ndmax, delta, sd, ap, c );
       std::vector<double> correct_sd {0.8939586849, 0.8460637169, 
         0.6261350235,    0.4069039776,    0.2516455797,    0.1539260520, 
         9.4590007147E-2, 5.8718258693E-2, 3.6870200714E-2, 2.3411295948E-2, 
@@ -70,7 +70,7 @@ TEST_CASE( "diffusion s-table generation" ){
         4.5268825E-4, 3.2527107E-4, 2.3830869E-4, 1.7735539E-4, 1.3370720E-4, 
         1.0189672E-4, 7.8370923E-5, 6.0754890E-5, 4.7423166E-5, 3.7240618E-5, 
         2.9400700E-5, 0.0};
-      nsd = diffusion_s_table( c, trans_weight, alpha, ndmax, delta, sd, ap );
+      nsd = diffusion_s_table( trans_weight, alpha, ndmax, delta, sd, ap, c );
       equal( nsd, 19 );
       equal_vec(sd,correct_sd);
       equal_vec(ap,correct_ap);

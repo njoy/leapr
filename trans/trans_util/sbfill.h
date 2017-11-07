@@ -3,8 +3,8 @@
 #include <cmath>
 
 auto sbfill(std::vector<double>& sb, int nbt, double delta,
-  double be, std::vector<double>& s,std::vector<double>& betan,
-  int nbeta, int nbe, int ndmax){
+  double be, std::vector<double>& s,std::vector<double>& betan, int nbe, 
+  int ndmax){
   
   double bmin = -be - (nbt-1) * delta;
   double bmax = -be + (nbt-1) * delta + delta * 0.01;
@@ -15,7 +15,7 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
   }
   
   double slim = -225.e0;
-  int i = 0, j = nbeta-1;
+  int i = 0, j = betan.size()-1;
   double current, toLeft, arg, bet = bmin;
   bool foundRange = false;
   bool indexInRange = false; 
@@ -37,7 +37,7 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
       // I'm running out of room, foundRange gets set to true since I've 
       // narrowed down my location to either valid or invalid.
       if ( b > betan[j] ){   
-        if ( j + 1 == nbeta ){ 
+        if ( j + 1 == betan.size() ){ 
           indexInRange = b < 1.00001 * betan[j] ? true : false;
           foundRange = true;
         }
