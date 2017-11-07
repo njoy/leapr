@@ -47,8 +47,8 @@ TEST_CASE( "contin" ){
   GIVEN( "input values from input card and leapr subroutine" ){
     WHEN( "3rd order expansion, alpha & beta vals scaled by 0.0253/tev" ){
       THEN( "contin output matches expected value" ){
-        contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, tev, sc, 
-          nphon, itemp );
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+          tev, sc, nphon, itemp );
         std::vector<double> expected {6.474331963E-7, 7.658564709E-7, 
           8.842797456E-7, 1.121126294E-6, 1.594819393E-6, 1.294036143E-6, 
           1.530731302E-6, 1.767426462E-6, 2.240816781E-6, 3.187597419E-6, 
@@ -72,8 +72,8 @@ TEST_CASE( "contin" ){
           std::vector<double> ( ntempr, 0.0 ) ) );
       
       THEN( "contin output matches expected value" ){
-        contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, tev, sc, 
-          nphon, itemp );
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+          tev, sc, nphon, itemp );
         std::vector<double> expected {6.82096404E-5, 7.51470660E-5, 
           8.20844916E-5, 9.59593429E-5, 1.23709045E-4, 1.34940719E-4, 
           1.48666045E-4, 1.62391372E-4, 1.89842025E-4, 2.44743331E-4, 
@@ -93,8 +93,8 @@ TEST_CASE( "contin" ){
           std::vector<double> ( ntempr, 0.0 ) ) );
 
       THEN( "contin output matches expected value" ){
-        contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, tev, sc, 
-          nphon, itemp );
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+          tev, sc, nphon, itemp );
         std::vector<double> expected {1.37883996E-10, 1.58477481E-10, 
         1.79070966E-10, 2.20257936E-10, 3.02631876E-10, 2.75707903E-10, 
         3.16885898E-10, 3.58063894E-10, 4.40419886E-10, 6.05131869E-10, 

@@ -70,10 +70,11 @@ auto contin(std::vector<std::vector<std::vector<double>>>& sym_sab,
   // also change delta --> delta / tev where tev is temperature in eV. 
   // leapr.f90 calls this deltab
     
-  double lambda_s = start( phonon_dist, delta, tev, tbeta );
+  auto lambda_s_t_eff= start( phonon_dist, delta, tev, tbeta );
+  double lambda_s = std::get<0>(lambda_s_t_eff);
   phonon_exp( sym_sab, alpha, beta, phonon_dist, lambda_s, sc, arat, delta, 
               nphon, itemp );
-  return lambda_s;
+  return lambda_s_t_eff;
 
 }
 

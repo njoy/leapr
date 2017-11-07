@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
-
+#include "discre_util/bfill.h"
 
 auto discre(const double& sc, const std::vector<double>& alpha, 
   const std::vector<double>& beta, const double& tev, const double& lambda_s, 
-  std::vector<double>& osc_energies, std::vector<double>& osc_weights){
+  std::vector<double>& osc_energies, std::vector<double>& osc_weights,
+  const double& tbeta ){
   int maxbb = 2 * beta.size() + 1;
   int maxdd = 500;
   double bk = 8.617385E-5;
@@ -35,6 +36,8 @@ auto discre(const double& sc, const std::vector<double>& alpha,
     exb[i] = exp(-beta[i]*sc/2); 
     betan[i] = beta[i]*sc;
   }
-  for ( auto entry : exb ){ std::cout << entry << std::endl;}
+  std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
+  auto ndx = bfill( bex, rdbex, betan );
+  double wt = tbeta;
     
 }

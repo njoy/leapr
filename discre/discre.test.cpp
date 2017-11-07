@@ -12,8 +12,9 @@ TEST_CASE( "discre" ){
     double lambda_s = 2.2941534E-3;
     double sc = 1.0;
     double tev = 1.723477E-2;
+    double tbeta = 2.0;
 
-    discre( sc, alpha, beta, tev, lambda_s, osc_energies, osc_weights );
+    discre( sc, alpha, beta, tev, lambda_s, osc_energies, osc_weights, tbeta );
 
     std::cout << "Hello, world" << std::endl;
   } // GIVEN

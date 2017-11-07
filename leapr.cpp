@@ -46,42 +46,44 @@ int main(){
   bool done = false;
 
   std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
-      std::vector<std::vector<double>> (beta.size(), 
-      std::vector<double> ( ntempr, 0.0 ) ) );
+    std::vector<std::vector<double>> (beta.size(), 
+    std::vector<double> ( ntempr, 0.0 ) ) );
 
 
 
   while ( not done ){
-      if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
-      if ( isecs >  0 ){ 
-        std::cout << "Secondary scatterer" << std::endl;
-        arat = aws / awr; 
-      }
+    if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
+    if ( isecs >  0 ){ 
+      std::cout << "Secondary scatterer" << std::endl;
+      arat = aws / awr; 
+    }
       
-      for ( int itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
-        double temp = temp_vec[itemp];
-        double tev = bk * temp;
-        double sc = 1.0;
-        if ( lat == 1 ){ sc = therm/tev; }
+    for ( int itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
+      double temp = temp_vec[itemp];
+      double tev = bk * temp;
+      double sc = 1.0;
+      if ( lat == 1 ){ sc = therm/tev; }
 
-        if ( itemp == 1 or temp >= 0 ){
-          std::cout << "we want to read in tempdependent parameters" << std::endl;
-        } // if 1st temp or some positive temp, we want to calculate
-          // the temperature dependent parameters for this specifically 
+      if ( itemp == 1 or temp >= 0 ){
+        std::cout << "we want to read in tempdependent parameters" << std::endl;
+      } // if 1st temp or some positive temp, we want to calculate
+        // the temperature dependent parameters for this specifically 
 
-        // Continuous part of the distribution
-        double lambda_s = contin( sym_sab, ntempr, nphon, alpha, beta, delta, rho, tbeta, arat, tev, sc, itemp );
+      // Continuous part of the distribution
+      auto lambda_s_t_eff= contin( sym_sab, alpha, beta, rho, delta, tbeta,
+        arat, tev, sc, nphon, itemp );
+      double lambda_s = std::get<0>(lambda_s_t_eff);
+      double t_eff    = std::get<1>(lambda_s_t_eff);
        
-        std::cout << sym_sab[2][2][0] << std::endl;
-        // Translational part of distribution, if any
-        trans( alpha, beta, lat, trans_weight, delta, diffusion_const, sc, arat, 
-               tev, sym_sab, itemp, lambda_s );
+      std::cout << sym_sab[2][2][0] << std::endl;
+      // Translational part of distribution, if any
+      trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, 
+        itemp, lambda_s, sym_sab );
 
-        std::cout << sym_sab[2][2][0] << std::endl;
-      }
-      done = true;
+      std::cout << sym_sab[2][2][0] << std::endl;
+    }
+    done = true;
   }
-
 
     return 0;
 }
