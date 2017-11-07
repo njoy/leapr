@@ -7,28 +7,24 @@
 
 
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
-  const double& trans_weight, double delta, 
-  const double& diffusion, const double& sc, const double& arat,
-  std::vector<std::vector<std::vector<double>>>& sym_sab,
-  const int& itemp, const double& lambda_s ){
+  const double& trans_weight, double delta, const double& diffusion, 
+  const double& sc, const double& arat, const int& itemp, const double& lambda_s,
+  std::vector<std::vector<std::vector<double>>>& sym_sab ){
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
-  std::vector<double> sd(ndmax,0.0);
-  std::vector<double> ap(ndmax,0.0);
-  std::vector<double> sb(ndmax, 0.0);
-  std::vector<double> betan(beta.size(),0.0);
 
-  double nsd;
+  std::vector<double> sd(ndmax,0.0), ap(ndmax,0.0), sb(ndmax, 0.0),
+    betan(beta.size(),0.0);
 
+  double nsd, alpha_sc, ded;
   // loop over alpha values
   for ( auto a = 0; a < alpha.size(); ++a ){
-    double alpha_sc = alpha[a] * sc / arat;
-    double ded = 0.4*trans_weight*diffusion*alpha_sc / 
+    alpha_sc = alpha[a] * sc / arat;
+    ded = 0.4*trans_weight*diffusion*alpha_sc / 
                  sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
         
     if ( ded == 0 ){ ded = 0.2 * sqrt( trans_weight * alpha_sc );}
-    double deb = 10.0 * alpha_sc * delta;
-    delta = deb;
+    delta = 10.0 * alpha_sc * delta;
     if ( ded < delta ){ delta = ded; }
     nsd = diffusion == 0 ? free_gas_s_table( trans_weight, alpha_sc, ndmax, 
                                              delta, sd, ap ) : 
@@ -45,9 +41,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
         double be = betan[b];
 
         // prepare table of continuous ss on new interval
-        b += 1;
-        sbfill( sb, nsd, delta, be, ap, betan, b, ndmax );
-        b -= 1;
+        sbfill( sb, nsd, delta, be, ap, betan, ndmax );
 
         // convolve s-transport with s-continuous
         double s = 0;
@@ -63,7 +57,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
                 
         double st = terps(sd,nsd,delta,be);
 
-        if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s )*st; }
+        if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
         sym_sab[a][b][itemp] = s;
 
       } // for beta

@@ -3,7 +3,7 @@
 #include <cmath>
 
 auto sbfill(std::vector<double>& sb, int nbt, double delta,
-  double be, std::vector<double>& s,std::vector<double>& betan, int nbe, 
+  double be, std::vector<double>& s,std::vector<double>& betan, 
   int ndmax){
   
   double bmin = -be - (nbt-1) * delta;

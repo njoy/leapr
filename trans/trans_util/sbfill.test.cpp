@@ -21,9 +21,9 @@ TEST_CASE( "sbfill" ){
       ap[i] = (i+1)*0.0001;
     }
     std::vector<double> betan {0.15, 0.18, 0.22};
-    int nbt = 2545, ibeta = 0;
+    int nbt = 2545;
     double delta = 1.791435E-3, be = 0.15;
-    sbfill(sb, nbt, delta, be, ap, betan, ibeta, ndmax );
+    sbfill(sb, nbt, delta, be, ap, betan, ndmax );
 
 
     std::vector<double> correct {0.0, 0.0, 0.0, 0.0, 0.0, 2.995926E-4,
@@ -146,7 +146,7 @@ TEST_CASE( "sbfill" ){
     2.004963E-4, 2.038049E-4, 2.071682E-4, 2.105870E-4, 2.140621E-4, 
     2.175947E-4, 2.211855E-4, 2.248356E-4, 2.285459E-4, 2.323175E-4, 
     2.361512E-4, 2.400483E-4, 0.0, 0.0, 0.0};
-    sbfill(sb, nbt, delta, be, ap, betan, ibeta, ndmax );
+    sbfill(sb, nbt, delta, be, ap, betan, ndmax );
     j = 0;
     for ( int i = 2429; i < 2679; ++i ){
       equal( sb[i], correct[j] );
@@ -175,7 +175,7 @@ TEST_CASE( "sbfill" ){
       8.3454283E-6, 5.5168360E-6, 3.6469643E-6, 4.0461258E-6, 6.1097007E-6, 
       9.2257245E-6, 1.3930959E-5, 2.1035923E-5, 3.1764507E-5, 4.7964804E-5, 
       7.2427455E-5, 1.0936636E-4, 1.6514458E-4, 2.1798446E-4, 2.6092250E-4};
-    sbfill(sb, nbt, delta, be, ap, betan, ibeta, ndmax );
+    sbfill(sb, nbt, delta, be, ap, betan, ndmax );
     for ( int i = 2541; i < 2565; ++i ){
       equal( sb[i], correct[j] );
       j += 1;
@@ -190,11 +190,10 @@ TEST_CASE( "sbfill" ){
         ap[i] = (i+1)*0.0001;
       }
       std::vector<double> betan {0.15, 0.18, 0.22};
-      int nbt = 2545, ibeta = 0;
+      int nbt = 2545;
       double delta = 1.791435E-3, be = 0.15;
       THEN( "an exception is thrown" ){
-        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ibeta, 
-          ndmax ) );
+        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ndmax ) );
       } // THEN
     } // WHEN
 
@@ -206,11 +205,10 @@ TEST_CASE( "sbfill" ){
         ap[i] = (i+1)*0.0001;
       }
       std::vector<double> betan {0.15, 0.18, 0.22};
-      int nbt = 2545, ibeta = 0;
+      int nbt = 2545;
       double delta = 1.791435E-3, be = 0.15;
       THEN( "an exception is thrown" ){
-        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ibeta, 
-          ndmax ) );
+        REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ndmax ) );
       } // THEN
     } // WHEN
   } // GIVEN

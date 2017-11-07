@@ -30,7 +30,7 @@ TEST_CASE( "trans" ){
     double lambda_s = 0.002;
 
     trans( alpha, beta, trans_weight, delta, diffusion_const,
-            sc, arat, sym_sab, itemp, lambda_s );
+            sc, arat, itemp, lambda_s, sym_sab );
     std::vector<double> correct{ 0.23049978, 0.25982880, 0.19141505, 
       0.62197701, 0.58781315, 0.39163902, 1.08210491, 0.92354902, 
       0.64343974, 1.41011128, 1.18123544, 0.84745080};
@@ -62,7 +62,7 @@ TEST_CASE( "trans" ){
     double lambda_s = 2.5236078E-3;
 
     trans( alpha, beta, trans_weight, delta, diffusion_const,
-            sc, arat, sym_sab, itemp, lambda_s );
+            sc, arat, itemp, lambda_s, sym_sab );
     std::vector<double> correct {0.92601235894, 0.61808459249, 
       0.4026621598, 0.2607989292, 0.2444620547, 1.0791262271, 
       0.7478653475, 0.5053651418, 0.3344515293, 0.3160592329, 
