@@ -7,9 +7,9 @@
 
 
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
-  const int lat, const double& trans_weight, double delta, 
+  const double& trans_weight, double delta, 
   const double& diffusion, const double& sc, const double& arat,
-  const double& tev, std::vector<std::vector<std::vector<double>>>& sym_sab,
+  std::vector<std::vector<std::vector<double>>>& sym_sab,
   const int& itemp, const double& lambda_s ){
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
@@ -39,32 +39,32 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
         betan[i] = beta[i] * sc;
         ap[i] = sym_sab[a][i][itemp];
       }
+
       // loop over beta values
-      for ( int ibeta = 0; ibeta < beta.size(); ++ibeta ){
-        double s = 0;
-        double be = betan[ibeta];
+      for ( int b = 0; b < beta.size(); ++b ){
+        double be = betan[b];
 
         // prepare table of continuous ss on new interval
-        int nbt = nsd;
-        ibeta += 1;
-        sbfill( sb, nbt, delta, be, ap, betan, ibeta, ndmax );
-        ibeta -= 1;
+        b += 1;
+        sbfill( sb, nsd, delta, be, ap, betan, b, ndmax );
+        b -= 1;
 
         // convolve s-transport with s-continuous
-        for ( int i = 0; i < nbt; ++i ){
+        double s = 0;
+        for ( int i = 0; i < nsd; ++i ){
           double f = 2*(i%2)+2;
-          if ( i == 0 or i == nbt - 1 ){ f = 1; }
+          if ( i == 0 or i == nsd - 1 ){ f = 1; }
                     
-          s = s + f*sd[i]*sb[nbt+i-1];
-          s = s + f*sd[i]*sb[nbt-i-1]*exp(-i*delta);
+          s = s + f*sd[i]*sb[nsd+i-1];
+          s = s + f*sd[i]*sb[nsd-i-1]*exp(-i*delta);
 
         }
         s = s < 1e-30 ? 0 : s * delta / 3;
                 
-        double st = terps(sd,nbt,delta,be);
+        double st = terps(sd,nsd,delta,be);
 
         if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s )*st; }
-        sym_sab[a][ibeta][itemp] = s;
+        sym_sab[a][b][itemp] = s;
 
       } // for beta
     } // if nsd > 0
