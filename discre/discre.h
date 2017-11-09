@@ -1,11 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "discre_util/bfill.h"
+#include "discre_util/exts.h"
+#include "discre_util/prepareParams.h"
 
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
   const std::vector<double>& beta, const double& tev, const double& lambda_s, 
-  std::vector<double>& osc_energies, std::vector<double>& osc_weights,
+  std::vector<double>& energy, std::vector<double>& weights,
   const double& tbeta, std::vector<double>& t_eff_vec, 
   const std::vector<double>& temp_vec, int itemp ){
   int maxbb = 2 * beta.size() + 1;
@@ -13,25 +16,27 @@ auto discre(const double& sc, const double& scaling,
   double bk = 8.617385E-5;
 
   // Set up oscillator parameters
-  int weight = 0;
-  std::vector<double> osc_energies_norm ( osc_energies.size(), 0.0 );
-  for ( auto i = 0; i < osc_energies.size(); ++i ){
-    osc_energies_norm[i] = osc_energies[i] / tev;
-    weight += osc_weights[i];
-  }
-  double tsave = 0.0;
+  double weight, tsave;
+  std::vector<double> energyNorm ( energy.size(), 0.0 );
+  std::vector<double> ar(50, 0.0), dist(50, 0.0), dbw(50, 0.0);
+  prepareParams(energy, weights, tev, energyNorm, weight, tsave,ar, dist,dbw, bk );
+//  for ( auto i = 0; i < energy.size(); ++i ){
+//    energyNorm[i] = energy[i] / tev;
+//    weight += weights[i];
+//  }
+
+//  double tsave = 0.0;
   
-  std::vector<double> eb(50, 0.0), ar(50, 0.0), dist(50, 0.0), dbw(50, 0.0);
-  double sn, cn;
-  for ( auto i = 0; i < osc_energies.size(); ++i ){
-    eb[i] = exp( osc_energies_norm[i] / 2 );
-    sn = (eb[i] - (1/eb[i]))/2;
-    cn = (eb[i] + (1/eb[i]))/2;
-    ar[i] = osc_weights[i] / ( sn * osc_energies_norm[i] );
-    dist[i] = osc_weights[i] * osc_energies[i] * cn / ( 2*sn );
-    tsave += dist[i] / bk;
-    dbw[i] = ar[i] * cn;
-  }
+//  double sinh_term, cosh_term, tanh_term;
+//  for ( auto i = 0; i < energy.size(); ++i ){
+//    sinh_term = sinh( 0.5*energyNorm[i] );
+//    cosh_term = cosh( 0.5*energyNorm[i] );
+//    tanh_term = tanh( 0.5*energyNorm[i] );
+//    ar[i]   = weights[i] / ( sinh_term * energyNorm[i] );
+//    dist[i] = 0.5 * weights[i] * energy[i] / tanh_term;
+//    tsave += dist[i] / bk;
+//    dbw[i] = ar[i] * cosh_term;
+//  }
   
   // Prepare functions of beta
   std::vector<double> exb ( beta.size(), 0.0 ), betan ( beta.size(), 0.0 );
