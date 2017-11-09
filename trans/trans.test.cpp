@@ -28,12 +28,16 @@ TEST_CASE( "trans" ){
     double arat = 1.0;
     int itemp = 0;
     double lambda_s = 0.002;
+    std::vector<double> t_eff_vec = {13.5};
+    std::vector<double> temp_vec = {200.0};
+    double tbeta = 2.1;
 
-    trans( alpha, beta, trans_weight, delta, diffusion_const,
-            sc, arat, itemp, lambda_s, sym_sab );
+    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, itemp, 
+      lambda_s, tbeta, t_eff_vec, temp_vec,  sym_sab );
     std::vector<double> correct{ 0.23049978, 0.25982880, 0.19141505, 
       0.62197701, 0.58781315, 0.39163902, 1.08210491, 0.92354902, 
       0.64343974, 1.41011128, 1.18123544, 0.84745080};
+    double correct_t_eff_val = 16.12676056;
     int i = 0;
     for ( auto beta_temp : sym_sab ){
       for ( auto temp_vec : beta_temp ){
@@ -41,6 +45,7 @@ TEST_CASE( "trans" ){
         i += 1;
       } // temp
     } // beta and temp
+    equal( t_eff_vec[0], correct_t_eff_val );
   } // GIVEN
   GIVEN( "other input" ){
     std::vector<double> alpha {0.8, 1.0, 1.4, 1.5};
@@ -60,15 +65,19 @@ TEST_CASE( "trans" ){
     double arat = 1.0;
     int itemp = 0;
     double lambda_s = 2.5236078E-3;
+    std::vector<double> t_eff_vec = {117.2};
+    std::vector<double> temp_vec = {800.0};
+    double tbeta = 5.1;
 
-    trans( alpha, beta, trans_weight, delta, diffusion_const,
-            sc, arat, itemp, lambda_s, sym_sab );
+    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, itemp, 
+      lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
     std::vector<double> correct {0.92601235894, 0.61808459249, 
       0.4026621598, 0.2607989292, 0.2444620547, 1.0791262271, 
       0.7478653475, 0.5053651418, 0.3344515293, 0.3160592329, 
       1.3359968514, 1.0435211230, 0.7531824364, 0.5472561336, 
       0.5385673429, 2.0990244422, 1.7440234835, 1.4013032062, 
       1.0787827232, 1.0696952350 };
+    double correct_t_eff_val = 121.1929824;
     int i = 0;
     for ( auto beta_temp_vec : sym_sab ){
       for ( auto temp_vec : beta_temp_vec ){
@@ -76,6 +85,7 @@ TEST_CASE( "trans" ){
         i += 1;
       } // for temp value
     } // for beta, temp values
+    equal( t_eff_vec[0], correct_t_eff_val );
   } // GIVEN
 } // TEST CASE
  

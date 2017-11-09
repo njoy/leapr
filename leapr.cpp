@@ -49,7 +49,7 @@ int main(){
     std::vector<std::vector<double>> (beta.size(), 
     std::vector<double> ( ntempr, 0.0 ) ) );
 
-
+  std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
 
   while ( not done ){
     if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
@@ -73,12 +73,15 @@ int main(){
       auto lambda_s_t_eff= contin( sym_sab, alpha, beta, rho, delta, tbeta,
         arat, tev, sc, nphon, itemp );
       double lambda_s = std::get<0>(lambda_s_t_eff);
-      double t_eff    = std::get<1>(lambda_s_t_eff);
        
+      // update the effective temperature list
+      t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
+
       std::cout << sym_sab[2][2][0] << std::endl;
+
       // Translational part of distribution, if any
       trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, 
-        itemp, lambda_s, sym_sab );
+        itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
 
       std::cout << sym_sab[2][2][0] << std::endl;
     }

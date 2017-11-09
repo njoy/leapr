@@ -8,7 +8,9 @@
 
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   const double& trans_weight, double delta, const double& diffusion, 
-  const double& sc, const double& arat, const int& itemp, const double& lambda_s,
+  const double& sc, const double& arat, const int& itemp, 
+  const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
+  const std::vector<double>& temp_vec, 
   std::vector<std::vector<std::vector<double>>>& sym_sab ){
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
@@ -63,6 +65,12 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
       } // for beta
     } // if nsd > 0
   } // for alpha
+  
+  // Update the effective temperature
+  t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
+                     ( tbeta + trans_weight );
+
+
 }
 
 

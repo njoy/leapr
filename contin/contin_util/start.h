@@ -37,6 +37,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   for ( int i = 0; i < p.size(); ++i ){
    p[i] = p[i] * exp( delta * i / 2 ) / lambda_s;
   }
+  
   return std::make_tuple( lambda_s, t_eff );
 }
 
