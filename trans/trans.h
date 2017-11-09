@@ -8,7 +8,7 @@
 
 auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   const double& trans_weight, double delta, const double& diffusion, 
-  const double& sc, const double& arat, const int& itemp, 
+  const double& sc, const double& scaling, const int& itemp, 
   const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
   const std::vector<double>& temp_vec, 
   std::vector<std::vector<std::vector<double>>>& sym_sab ){
@@ -21,7 +21,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   double nsd, alpha_sc, ded;
   // loop over alpha values
   for ( auto a = 0; a < alpha.size(); ++a ){
-    alpha_sc = alpha[a] * sc / arat;
+    alpha_sc = alpha[a] * scaling;
     ded = 0.4*trans_weight*diffusion*alpha_sc / 
                  sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
         

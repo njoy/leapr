@@ -8,7 +8,7 @@
 void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab, 
   const std::vector<double>& alpha, const std::vector<double>& beta,
   std::vector<double>& t1, const double& lambda_s, const double& sc,
-  const double& arat, const double& delta, const int nphon, const int itemp ){
+  const double& scaling, const double& delta, const int nphon, const int itemp ){
  
   std::vector<double> xa(alpha.size(),0.0);
 
@@ -24,8 +24,8 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
   double add, exx;
   // Start the phonon expansion with t1
   for( int a = 0; a < alpha.size(); ++a ){
-    xa[a] = log(alpha[a] * sc * lambda_s / arat );
-    exx = -lambda_s * alpha[a] * sc / arat + xa[a];
+    xa[a] = log(alpha[a] * scaling * lambda_s );
+    exx = -lambda_s * alpha[a] * scaling + xa[a];
     exx = exx > exp_lim ? exp(exx) : 0;
 
     for( int b = 0; b < beta.size(); ++b ){
@@ -42,8 +42,8 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
     tnow = convol(t1, tlast, delta);
 
     for( int a = 0; a < alpha.size(); ++a ){
-      xa[a] +=  log(lambda_s * alpha[a] * sc / ( arat * ( n + 1 ) ) );
-      exx = -lambda_s * alpha[a] * sc / arat + xa[a];
+      xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
+      exx = -lambda_s * alpha[a] * scaling + xa[a];
       exx = exx > exp_lim ? exp(exx) : 0;
             
       for( int b = 0; b < beta.size(); ++b ){
@@ -63,7 +63,7 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
 auto contin(std::vector<std::vector<std::vector<double>>>& sym_sab, 
   const std::vector<double>& alpha, const std::vector<double>& beta,
   std::vector<double>& phonon_dist, double& delta, const double& tbeta,
-  const double& arat, const double& tev, const double& sc, const int nphon,
+  const double& scaling, const double& tev, const double& sc, const int nphon,
   const int itemp ){
 
   // Start calculates the T1 term, described in Eq. 525 calling start will 
@@ -72,7 +72,7 @@ auto contin(std::vector<std::vector<std::vector<double>>>& sym_sab,
     
   auto lambda_s_t_eff= start( phonon_dist, delta, tev, tbeta );
   double lambda_s = std::get<0>(lambda_s_t_eff);
-  phonon_exp( sym_sab, alpha, beta, phonon_dist, lambda_s, sc, arat, delta, 
+  phonon_exp( sym_sab, alpha, beta, phonon_dist, lambda_s, sc, scaling, delta, 
               nphon, itemp );
   return lambda_s_t_eff;
 

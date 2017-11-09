@@ -25,14 +25,14 @@ TEST_CASE( "trans" ){
     double delta = 220.0;
     double diffusion_const = 1.5;
     double sc = 1.0;
-    double arat = 1.0;
+    double scaling = 1.0;
     int itemp = 0;
     double lambda_s = 0.002;
     std::vector<double> t_eff_vec = {13.5};
     std::vector<double> temp_vec = {200.0};
     double tbeta = 2.1;
 
-    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, itemp, 
+    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling, itemp, 
       lambda_s, tbeta, t_eff_vec, temp_vec,  sym_sab );
     std::vector<double> correct{ 0.23049978, 0.25982880, 0.19141505, 
       0.62197701, 0.58781315, 0.39163902, 1.08210491, 0.92354902, 
@@ -62,14 +62,14 @@ TEST_CASE( "trans" ){
     double delta = 220.0;
     double diffusion_const = 1.5;
     double sc = 1.0;
-    double arat = 1.0;
+    double scaling = 1.0;
     int itemp = 0;
     double lambda_s = 2.5236078E-3;
     std::vector<double> t_eff_vec = {117.2};
     std::vector<double> temp_vec = {800.0};
     double tbeta = 5.1;
 
-    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, itemp, 
+    trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling, itemp, 
       lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
     std::vector<double> correct {0.92601235894, 0.61808459249, 
       0.4026621598, 0.2607989292, 0.2444620547, 1.0791262271, 

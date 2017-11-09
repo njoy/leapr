@@ -34,13 +34,13 @@ TEST_CASE( "contin" ){
     std::vector<std::vector<double>> ( beta.size(),
       std::vector<double> ( ntempr, 0.0 ) ) );
 
-  double delta = 0.1;      double tbeta = 1.0; double arat  = 1.0; 
-  double tev = 0.01723477; double sc = 0.0253 / tev;
+  double delta = 0.1;      double tbeta = 1.0; 
+  double tev = 0.01723477; double sc = 0.0253 / tev; double scaling = sc;
 
   GIVEN( "input values from input card and leapr subroutine" ){
     WHEN( "3rd order expansion, alpha & beta vals scaled by 0.0253/tev" ){
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling,
           tev, sc, nphon, itemp );
         double correct_lambda_s = 4.38473153E-2;
         double correct_t_eff    = 12.279863466;
@@ -61,7 +61,7 @@ TEST_CASE( "contin" ){
       } // THEN
     } // WHEN
     WHEN( "6th order exp, alpha & beta vals scaled, and small grid space" ){
-      nphon = 6; lat = 3; delta = 0.04; sc = 1.0;
+      nphon = 6; lat = 3; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
@@ -69,7 +69,7 @@ TEST_CASE( "contin" ){
           std::vector<double> ( ntempr, 0.0 ) ) );
       
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling, 
           tev, sc, nphon, itemp );
         double correct_lambda_s = 0.11157823;
         double correct_t_eff    = 4.91699518;
@@ -86,7 +86,7 @@ TEST_CASE( "contin" ){
       } // THEN
     } // WHEN
     WHEN( "6th order exp, user-defined normalizationand large grid space" ){
-      delta = 4.; tbeta = 2.0; sc = 1.0;
+      delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
@@ -94,7 +94,7 @@ TEST_CASE( "contin" ){
           std::vector<double> ( ntempr, 0.0 ) ) );
 
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, arat, 
+        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling, 
           tev, sc, nphon, itemp );
         double correct_lambda_s = 2.179428E-3;
         double correct_t_eff    = 491.1882921;

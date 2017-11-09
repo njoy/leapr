@@ -2,10 +2,12 @@
 #include <vector>
 #include "discre_util/bfill.h"
 
-auto discre(const double& sc, const std::vector<double>& alpha, 
+auto discre(const double& sc, const double& scaling, 
+  const std::vector<double>& alpha, 
   const std::vector<double>& beta, const double& tev, const double& lambda_s, 
   std::vector<double>& osc_energies, std::vector<double>& osc_weights,
-  const double& tbeta ){
+  const double& tbeta, std::vector<double>& t_eff_vec, 
+  const std::vector<double>& temp_vec, int itemp ){
   int maxbb = 2 * beta.size() + 1;
   int maxdd = 500;
   double bk = 8.617385E-5;
@@ -18,6 +20,7 @@ auto discre(const double& sc, const std::vector<double>& alpha,
     weight += osc_weights[i];
   }
   double tsave = 0.0;
+  
   std::vector<double> eb(50, 0.0), ar(50, 0.0), dist(50, 0.0), dbw(50, 0.0);
   double sn, cn;
   for ( auto i = 0; i < osc_energies.size(); ++i ){
@@ -39,5 +42,12 @@ auto discre(const double& sc, const std::vector<double>& alpha,
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
   auto ndx = bfill( bex, rdbex, betan );
   double wt = tbeta;
-    
+  double tbart = t_eff_vec[itemp]/temp_vec[itemp];
+     
+  // Main alpha loop
+  for ( auto a = 0; a < alpha.size(); ++a ){
+    double dwf = exp( -alpha[a]*scaling*lambda_s );
+    std::cout << dwf << std::endl;
+  }
+
 }

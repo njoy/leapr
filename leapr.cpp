@@ -63,7 +63,7 @@ int main(){
       double tev = bk * temp;
       double sc = 1.0;
       if ( lat == 1 ){ sc = therm/tev; }
-
+      double scaling = sc/arat;
       if ( itemp == 1 or temp >= 0 ){
         std::cout << "we want to read in tempdependent parameters" << std::endl;
       } // if 1st temp or some positive temp, we want to calculate
@@ -71,7 +71,7 @@ int main(){
 
       // Continuous part of the distribution
       auto lambda_s_t_eff= contin( sym_sab, alpha, beta, rho, delta, tbeta,
-        arat, tev, sc, nphon, itemp );
+        scaling, tev, sc, nphon, itemp );
       double lambda_s = std::get<0>(lambda_s_t_eff);
        
       // update the effective temperature list
@@ -80,7 +80,7 @@ int main(){
       std::cout << sym_sab[2][2][0] << std::endl;
 
       // Translational part of distribution, if any
-      trans( alpha, beta, trans_weight, delta, diffusion_const, sc, arat, 
+      trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
         itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
 
       std::cout << sym_sab[2][2][0] << std::endl;
