@@ -10,7 +10,8 @@ auto discre(const double& sc, const double& scaling,
   const std::vector<double>& beta, const double& tev, const double& lambda_s, 
   std::vector<double>& energy, std::vector<double>& weights,
   const double& tbeta, std::vector<double>& t_eff_vec, 
-  const std::vector<double>& temp_vec, int itemp ){
+  const std::vector<double>& temp_vec, int itemp,
+  std::vector<std::vector<std::vector<double>>>& sym_sab ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
   double bk = 8.617385E-5;
@@ -19,11 +20,10 @@ auto discre(const double& sc, const double& scaling,
   // Prepare functions of beta
   double weight, tsave;
   std::vector<double> ar(50,0.0), dist(50,0.0), dbw(50,0.0), 
-                      energyNorm(energy.size(),0.0);
+    energyNorm(energy.size(),0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
 
-  std::vector<double> exb (beta.size(),0.0 , betan(beta.size(),0.0);
-  prepareParams(energy, weights, tev, energyNorm, weight, tsave, ar, dist,dbw, bk, exb, betan, beta, sc );
-  
+  prepareParams(energy, weights, tev, energyNorm, weight, tsave, ar, dist,dbw,
+    bk, exb, betan, beta, sc );
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
   auto ndx = bfill( bex, rdbex, betan );
@@ -33,7 +33,31 @@ auto discre(const double& sc, const double& scaling,
   // Main alpha loop
   for ( auto a = 0; a < alpha.size(); ++a ){
     double dwf = exp( -alpha[a]*scaling*lambda_s );
- //   std::cout << dwf << std::endl;
+    std::vector<double> sex ( maxbb, 0.0 );
+    std::vector<double> input ( beta.size(), 0.0 );
+    for ( auto b = 0; b < beta.size(); ++b ){
+      input[b] = sym_sab[a][b][itemp];
+    }
+    exts( input, sex, exb, betan );
+
+//    for ( auto entry : sex ){ std::cout << entry << std::endl; }
+
+    std::vector<double> sexpb (beta.size(), 0.0);
+    // Initialize delta loop
+    std::vector<double> ben ( maxdd, 0.0 );
+    std::vector<double> wtn ( maxdd, 0.0 );
+    wtn[0] = 1;
+    int nn = 1;
+    int n = 0;
+    
+    // Loop over all oscillators
+    for ( auto i = 0; i < energy.size(); ++i ){
+      double dwc = alpha[a]*scaling*dbw[i];
+      double x   = alpha[a]*scaling*ar[i];
+      std::cout << dwc << "     " << x << std::endl;
+    }   
+    return;
   }
+
 
 }
