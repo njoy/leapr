@@ -9,6 +9,6 @@ TEST_CASE( "bfact" ){
     double x   = 8.213274e-3;
     double dwc = 1.282379e-2;
     double beta_i = 2.030778478;
-    bfact(x, dwc, beta_i );
+    bfact(x, dwc, beta_i, bplus, bminus );
   } // GIVEN
 } // TEST CASE
