@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
 
-auto bfact( double& x, double& dwc, double& beta_i, std::vector<double>& bplus,
-  std::vector<double>& bminus ){
+auto bfact( const double& x, const double& dwc, const double& beta_i, 
+  std::vector<double>& bplus, std::vector<double>& bminus ){
+
+  
   double c0=3.75, c1=1., c2=3.5156229, c3=3.0899424, c4=1.2067492, 
     c5=0.2659732, c6=0.0360768, c7=0.0045813, c8=0.39894228, c9=0.01328592, 
     c10=0.00225319, c11=0.00157565, c12=0.00916281, c13=0.02057706, 
@@ -51,11 +53,12 @@ auto bfact( double& x, double& dwc, double& beta_i, std::vector<double>& bplus,
       }  
    } 
 
-   auto rat = bessi1/bn[1];
+   auto rat = bessi1/bn[0];
    for ( auto i = 0; i < imax; ++i ){ 
       bn[i]=bn[i]*rat;
       if (bn[i] < 1.0e-30) { bn[i] = 0.0; }
-    }
+   }
+
    // apply exponential terms to bessel functions
    double bzero, arg;
    if (y <= 1.0){
@@ -64,12 +67,12 @@ auto bfact( double& x, double& dwc, double& beta_i, std::vector<double>& bplus,
          bminus[i]=0;
          bplus[i]=0;
          if (bn[i] != 0.0){
-            arg=-dwc-i*beta_i/2;
+            arg=-dwc-(i+1)*beta_i/2;
             bplus[i]=0;
             bplus[i]=exp(arg)*bn[i];
             if (bplus[i] < 1e-30 ) bplus[i]=0;
             bminus[i]=0;
-            arg=-dwc+i*beta_i/2;
+            arg=-dwc+(i+1)*beta_i/2;
             bminus[i]=exp(arg)*bn[i];
             if (bminus[i] < 1.0e-30 ) bminus[i]=0;
         }
@@ -98,6 +101,6 @@ auto bfact( double& x, double& dwc, double& beta_i, std::vector<double>& bplus,
          } 
       } 
    } 
-   return;
+   return bzero;
 
 }
