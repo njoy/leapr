@@ -21,7 +21,6 @@ auto bfact( double& x, double& dwc, double& beta_i ){
       double v = 1/y;
       bessi0=(c8+v*(c9+v*(c10+v*(-c11+v*(c12+v*(-c13+v*(c14+v*(-c15+v*c16))))))))/sqrt(x);
     }
-    std::cout << bessi0 << std::endl;
 
     // compute bessi1
     double bessi1;
@@ -34,16 +33,72 @@ auto bfact( double& x, double& dwc, double& beta_i ){
       bessi1=c28+v*(-c29+v*(-c30+v*(c31+v*(-c32+v*bessi1))));
       bessi1=bessi1/sqrt(x);
     }
-    std::cout << bessi1 << std::endl;
 
+   // generate higher orders by reverse recursion
+    std::vector<double> bn ( 50, 0.0 );
+   int imax=50;
+   bn[imax-1]=0;
+   bn[imax-1-1]=1;
+   int i=imax-1;
+   while (i > 0){
+      bn[i-1-1]=bn[i+1-1]+i*(2/x)*bn[i-1];
+      i=i-1;
+      if (bn[i-1] >= 1e10){ 
+         for ( auto j = i; j < imax; ++j ){
+            bn[j-1]=bn[j-1]/1.0e10;
+         } 
+      }  
+   } 
 
-    /*
-
-   if (y.le.one) then
-      u=y*y
-      bessi1=   else
-   endif
-*/
+   auto rat = bessi1/bn[1];
+   for ( auto i = 0; i < imax; ++i ){ 
+      bn[i]=bn[i]*rat;
+      if (bn[i] < 1.0e-30) { bn[i] = 0.0; }
+    }
+   std::vector<double> bminus (50, 0.0), bplus (50, 0.0);
+   // apply exponential terms to bessel functions
+   double bzero, arg;
+   if (y <= 1.0){
+      bzero=bessi0*exp(-dwc);
+      for ( auto i = 0; i < imax; ++i ){
+         bminus[i]=0;
+         bplus[i]=0;
+         if (bn[i] != 0.0){
+            arg=-dwc-i*beta_i/2;
+            bplus[i]=0;
+            bplus[i]=exp(arg)*bn[i];
+            if (bplus[i] < 1e-30 ) bplus[i]=0;
+            bminus[i]=0;
+            arg=-dwc+i*beta_i/2;
+            bminus[i]=exp(arg)*bn[i];
+            if (bminus[i] < 1.0e-30 ) bminus[i]=0;
+        }
+         else{
+            bplus[i]=0;
+            bminus[i]=0;
+         } 
+      } 
+   } else{
+      bzero=bessi0*exp(-dwc+x);
+      for ( auto i = 0; i < imax; ++i ){
+         bminus[i]=0;
+         bplus[i]=0;
+         if (bn[i] != 0.0 ){
+            bplus[i]=0;
+            arg=-dwc-i*beta_i/2+x;
+            bplus[i]=exp(arg)*bn[i];
+            if (bplus[i] < 1.0e-30) bplus[i]=0;
+            bminus[i]=0;
+            arg=-dwc+i*beta_i/2+x;
+            bminus[i]=exp(arg)*bn[i];
+            if (bminus[i] < 1.0e-30) bminus[i]=0;
+         } else {
+            bplus[i]=0;
+            bminus[i]=0;
+         } 
+      } 
+   } 
+   return;
 
   std::cout << "Hello, world" << std::endl;
 
