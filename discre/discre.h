@@ -4,6 +4,7 @@
 #include "discre_util/bfill.h"
 #include "discre_util/exts.h"
 #include "discre_util/prepareParams.h"
+#include "discre_util/bfact.h"
 
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
@@ -40,12 +41,12 @@ auto discre(const double& sc, const double& scaling,
     }
     exts( input, sex, exb, betan );
 
-//    for ( auto entry : sex ){ std::cout << entry << std::endl; }
-
-    std::vector<double> sexpb (beta.size(), 0.0);
     // Initialize delta loop
+    std::vector<double> sexpb (beta.size(), 0.0);
     std::vector<double> ben ( maxdd, 0.0 );
+    std::vector<double> bes ( maxdd, 0.0 );
     std::vector<double> wtn ( maxdd, 0.0 );
+    std::vector<double> wts ( maxdd, 0.0 );
     wtn[0] = 1;
     int nn = 1;
     int n = 0;
@@ -54,7 +55,27 @@ auto discre(const double& sc, const double& scaling,
     for ( auto i = 0; i < energy.size(); ++i ){
       double dwc = alpha[a]*scaling*dbw[i];
       double x   = alpha[a]*scaling*ar[i];
-      std::cout << dwc << "     " << x << std::endl;
+      std::vector<double> bminus (50,0.0), bplus(50,0.0);
+      double bzero = bfact( x, dwc, energy[i], bplus, bminus );
+
+      // do convolution for delta function
+      for ( auto m = 0; m < nn; ++m ){
+        double besn = ben[m];
+        double wtsn = wtn[m]*bzero;
+        if ( besn <= 0 or wtsn >= 1e-8 ){
+          if ( n < maxdd ){
+            bes[n] = besn;
+            wts[n] = wtsn;
+            n += 1;
+          }
+        }
+      }
+      
+      // negative n terms
+
+
+      return;
+
     }   
     return;
   }
