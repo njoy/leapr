@@ -4,7 +4,7 @@
 #include "discre_util/bfill.h"
 #include "discre_util/exts.h"
 #include "discre_util/prepareParams.h"
-#include "discre_util/bfact.h"
+#include "discre_util/oscLoopFuncs.h"
 
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
@@ -50,13 +50,14 @@ auto discre(const double& sc, const double& scaling,
     wtn[0] = 1;
     int nn = 1;
     int n = 0;
-    
+  
+/*    
     // Loop over all oscillators
     for ( auto i = 0; i < energy.size(); ++i ){
       double dwc = alpha[a]*scaling*dbw[i];
       double x   = alpha[a]*scaling*ar[i];
       std::vector<double> bminus (50,0.0), bplus(50,0.0);
-      double bzero = bfact( x, dwc, energy[i], bplus, bminus );
+      double bzero = bfact( x, dwc, energyNorm[i], bplus, bminus );
 
       // do convolution for delta function
       for ( auto m = 0; m < nn; ++m ){
@@ -70,13 +71,17 @@ auto discre(const double& sc, const double& scaling,
           }
         }
       }
-      
+      n -= 1;
       // negative n terms
-
+      negativeTerms( i, n, energyNorm[i], bminus, wts, wtn, bes, ben, nn );
+      // negative n terms
+      positiveTerms( i, n, energyNorm[i], bplus, wts, wtn, bes, ben, nn );
+      for ( auto entry : wts ) { std::cout << entry << std::endl;  }
 
       return;
 
     }   
+    */
     return;
   }
 
