@@ -2,45 +2,27 @@
 #include <vector>
 #include "bfact.h"
 
-void negativeTerms( int i, int& n, const double& normalizedEnergy, 
-  const std::vector<double>& bminus,
+void posNegTerms( int i, int& n, const double& normalizedEnergy, 
+  const std::vector<double>& b_minus_or_plus,
   std::vector<double>& wts, const std::vector<double>& wtn, 
-  std::vector<double>& bes, const std::vector<double>& ben, const int nn){
+  std::vector<double>& bes, const std::vector<double>& ben, const int nn,
+  int pos_or_neg ){
 
   int k = 0;
 
   while ( k < 50 ){
     k += 1;
-    if ( bminus[k-1] <= 0 ){ return; } 
+    if ( b_minus_or_plus[k-1] <= 0 ){ return; } 
     for ( auto m = 0; m <= nn; ++m ){
-      if ( wtn[m] * bminus[k-1] >= 1e-8 and n < bes.size() ){
+      if ( wtn[m] * b_minus_or_plus[k-1] >= 1e-8 and n < bes.size() ){
         n += 1;
-        bes[n] = ben[m] - k * normalizedEnergy;
-        wts[n] = wtn[m] * bminus[k-1];
+        bes[n] = ben[m] + pos_or_neg * k * normalizedEnergy;
+        wts[n] = wtn[m] * b_minus_or_plus[k-1];
       }
     }
   }
 }
 
-void positiveTerms( int i, int& n, const double& normalizedEnergy, 
-  const std::vector<double>& bplus,
-  std::vector<double>& wts, const std::vector<double>& wtn, 
-  std::vector<double>& bes, const std::vector<double>& ben, const int nn){
-
-  int k = 0;
-
-  while ( k < 50 ){
-    k += 1;
-    if ( bplus[k-1] <= 0 ){ return; } 
-    for ( auto m = 0; m <= nn; ++m ){
-      if ( wtn[m] * bplus[k-1] >= 1e-8 and n < bes.size() ){
-        n += 1;
-        bes[n] = ben[m] + k * normalizedEnergy;
-        wts[n] = wtn[m] * bplus[k-1];
-      }
-    }
-  }
-}
 
 void oscillatorLoop( std::vector<double>& alpha,
   std::vector<double>& dbw, std::vector<double>& ar, const double& scaling,
@@ -74,10 +56,10 @@ void oscillatorLoop( std::vector<double>& alpha,
     n -= 1;
 
     // negative n terms
-    negativeTerms( i, n, energyNorm[i], bminus, wts, wtn, bes, ben, nn );
+    posNegTerms( i, n, energyNorm[i], bminus, wts, wtn, bes, ben, nn, -1 );
 
     // positive n terms
-    positiveTerms( i, n, energyNorm[i], bplus, wts, wtn, bes, ben, nn );
+    posNegTerms( i, n, energyNorm[i], bplus, wts, wtn, bes, ben, nn, 1 );
 
     // continue loop
     nn = n;
@@ -87,7 +69,6 @@ void oscillatorLoop( std::vector<double>& alpha,
     }
     wt += weight[i];
     tbart += dist[i] / ( bk * temp );
-
 
   }   
   return;
