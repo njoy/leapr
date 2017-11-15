@@ -6,7 +6,7 @@
 TEST_CASE( "discre" ){
   GIVEN( "input" ){
     std::vector<double> alpha { 0.1, 0.2, 0.4, 0.8, 1.6 };
-    std::vector<double> beta  { 0.0, 0.15, 0.30, 0.60, 1.20 };
+    std::vector<double> beta  { 0.10, 0.15, 0.30, 0.60, 1.20 };
     std::vector<double> osc_energies { 0.035, 0.05 };
     std::vector<double> osc_weights  { 0.2, 0.8 };
     std::vector<double> t_eff_vec { 81178.935219 };

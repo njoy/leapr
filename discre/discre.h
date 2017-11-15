@@ -48,40 +48,43 @@ auto discre(const double& sc, const double& scaling,
     std::vector<double> wtn ( maxdd, 0.0 );
     std::vector<double> wts ( maxdd, 0.0 );
     wtn[0] = 1;
-    int nn = 1;
-    int n = 0;
-  
-/*    
-    // Loop over all oscillators
-    for ( auto i = 0; i < energy.size(); ++i ){
-      double dwc = alpha[a]*scaling*dbw[i];
-      double x   = alpha[a]*scaling*ar[i];
-      std::vector<double> bminus (50,0.0), bplus(50,0.0);
-      double bzero = bfact( x, dwc, energyNorm[i], bplus, bminus );
+    
+    int nn = oscillatorLoop( alpha, dbw, ar, scaling, wts, wtn, bes, ben, 
+      energyNorm, a, maxdd, energy.size(), wt, tbart, weights, dist, 
+      temp_vec[itemp] );
 
-      // do convolution for delta function
-      for ( auto m = 0; m < nn; ++m ){
-        double besn = ben[m];
-        double wtsn = wtn[m]*bzero;
-        if ( besn <= 0 or wtsn >= 1e-8 ){
-          if ( n < maxdd ){
-            bes[n] = besn;
-            wts[n] = wtsn;
-            n += 1;
-          }
-        }
+    // Sort the discrete lines, and throw out the smallest ones
+    int n = nn;
+    for ( auto i = 1; i < n; ++i ){
+      for ( auto j = i+1; j < n+1; ++j ){
+        if ( wts[j] > wts[i] ){
+          auto save = wts[j];
+          wts[j] = wts[i];
+          wts[i] = save;
+          save = bes[j];
+          bes[j] = bes[i];
+          bes[i] = save;
+        } 
       }
-      n -= 1;
-      // negative n terms
-      negativeTerms( i, n, energyNorm[i], bminus, wts, wtn, bes, ben, nn );
-      // negative n terms
-      positiveTerms( i, n, energyNorm[i], bplus, wts, wtn, bes, ben, nn );
-      for ( auto entry : wts ) { std::cout << entry << std::endl;  }
+    }
+    
+    int i = 0;
+    int idone = 0;
+    while ( i < nn ){
+      i += 1;
+      n = i;
+      if ( wts[i-1] < 1.0e-6 and i > 5 ){ break; }
+    }
 
-      return;
-
-    }   
-    */
+    for ( auto m = 0; m < n; ++m ){
+      for ( auto j = 0; j < beta.size(); ++j ){
+        auto be = -betan[j] - bes[m];
+       // std::cout << be << std::endl;
+      } 
+    }
+    
+    //for ( auto entry : bes ){ std::cout << entry << std::endl; }
+    //std::cout << nn << std::endl;
     return;
   }
 

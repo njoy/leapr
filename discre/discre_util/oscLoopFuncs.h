@@ -24,18 +24,18 @@ void posNegTerms( int i, int& n, const double& normalizedEnergy,
 }
 
 
-void oscillatorLoop( std::vector<double>& alpha,
+auto oscillatorLoop( const std::vector<double>& alpha,
   std::vector<double>& dbw, std::vector<double>& ar, const double& scaling,
   std::vector<double>& wts, std::vector<double>& wtn, std::vector<double>& bes,
   std::vector<double>& ben, std::vector<double>& energyNorm, int a, int maxdd,
   int numOscillators, double& wt, double& tbart, std::vector<double>& weight,
-  std::vector<double>& dist, double& temp ){
+  std::vector<double>& dist, const double& temp ){
   double bk = 8.617385E-5;
   int nn = 1;
-
+  int n;
   // Loop over all oscillators
   for ( auto i = 0; i < numOscillators; ++i ){
-    int n = 0;
+    n = 0;
     double dwc = alpha[a]*scaling*dbw[i];
     double x   = alpha[a]*scaling*ar[i];
     std::vector<double> bminus (50,0.0), bplus(50,0.0);
@@ -71,7 +71,7 @@ void oscillatorLoop( std::vector<double>& alpha,
     tbart += dist[i] / ( bk * temp );
 
   }   
-  return;
+  return nn;
 }
 
 
