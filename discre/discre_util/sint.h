@@ -1,20 +1,21 @@
 #include <iostream>
 #include <vector>
 
-auto sint(double& x, std::vector<double>& bex, std::vector<double>& rdbex,
-  std::vector<double>& sex, std::vector<double>& betan, int b, double& alpha,
-  double& wt, double& tbart, int nbx ){
+auto sint(const double& x, const std::vector<double>& bex, 
+  const std::vector<double>& rdbex, const std::vector<double>& sex,
+  const std::vector<double>& betan, int b, const double& alpha,
+  const double& wt, const double& tbart, int nbx ){
   // Interpolates in scattering function, using SCT approximation to 
   // extrapolate outside the range in memory
   
-  double sv, ex, sint, pi = 3.1415926535;
+  double sv, ex, sint, pi = 3.1415926;
   if ( abs(x) > betan[b] ){
-    if ( alpha <= 0.0 ){
+    if ( alpha <= 0.0 ){                     // OPTION A
       sv = 0.0;
-    } else {
+    } else {                                 // OPTION B
       ex = -(wt*alpha-abs(x))*(wt*alpha-abs(x))/(4*wt*alpha*tbart);
       if ( x > 0.0 ){ ex = ex - x; }
-      sv = exp(ex/(4*pi*wt*alpha*tbart));
+      sv = exp(ex)/(4*pi*wt*alpha*tbart);
     }
     return sv;
   } 
@@ -24,7 +25,7 @@ auto sint(double& x, std::vector<double>& bex, std::vector<double>& rdbex,
   // bisect for x
   int idone = 0;
   while ( idone == 0 ){
-    if ( x == bex[k2] ){
+    if ( x == bex[k2] ){                   // OPTION C
       sv = sex[k2];
       return sv;
     }

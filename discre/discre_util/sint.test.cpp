@@ -2,6 +2,15 @@
 #include "../../catch.hpp"
 #include "sint.h"
 
+void equal( double a, double b ){
+  if (b == 0.0){ 
+    REQUIRE( b-a < 1e-6 );
+    return;
+  }
+  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
+}
+
+
 
 TEST_CASE( "sint" ){
   GIVEN( "inputs" ){
@@ -16,6 +25,49 @@ TEST_CASE( "sint" ){
       2.2224546, 2.1952465, 1.5059710, 0.0};
   
 
-    sint( x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx );
+    auto sintOut = sint( x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx );
+    equal( sintOut, 1.0 );
+
+
+    WHEN( "OPTION A" ){
+      THEN( "correct values are output" ){
+        x = -1.201; alpha = -0.1;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 0.0 );
+        x = 1.201; alpha = -1e-5;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 0.0 );
+      } // THEN
+    } // WHEN
+
+    WHEN( "OPTION B" ){
+      THEN( "correct values are output" ){
+        x = 1.201; alpha = 0.1;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 2.548608E-4 );
+
+        x = -1.201; alpha = 1e-5;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 1.654202E-16 );
+      
+      } // THEN
+    } // WHEN
+
+    WHEN( "OPTION C" ){
+      THEN( "correct values are output" ){
+        x = -0.1;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 1.0 );
+        x = -0.15;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 2.0 );
+
+        x = -0.3;
+        sintOut = sint(x, bex, rdbex, sex, betan, b, alpha, wt, tbart, nbx);
+        equal( sintOut, 3.0 );
+
+
+      } // THEN
+    } // WHEN
   } // GIVEN
 } // TEST CASE
