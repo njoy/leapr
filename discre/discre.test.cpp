@@ -27,9 +27,10 @@ TEST_CASE( "discre" ){
     double scaling = 1.0;
     double tev = 1.723477E-2;
     double tbeta = 2.0;
+    double twt = 0.3;
     int itemp = 0;
     discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, osc_weights, 
-        tbeta, t_eff_vec, temp_vec, itemp, sym_sab );
+        tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
 
   } // GIVEN
 } // TEST CASE

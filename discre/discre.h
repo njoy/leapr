@@ -5,6 +5,7 @@
 #include "discre_util/exts.h"
 #include "discre_util/prepareParams.h"
 #include "discre_util/oscLoopFuncs.h"
+#include "discre_util/sint.h"
 
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
@@ -12,7 +13,7 @@ auto discre(const double& sc, const double& scaling,
   std::vector<double>& energy, std::vector<double>& weights,
   const double& tbeta, std::vector<double>& t_eff_vec, 
   const std::vector<double>& temp_vec, int itemp,
-  std::vector<std::vector<std::vector<double>>>& sym_sab ){
+  std::vector<std::vector<std::vector<double>>>& sym_sab,double twt  ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
   double bk = 8.617385E-5;
@@ -27,7 +28,7 @@ auto discre(const double& sc, const double& scaling,
     bk, exb, betan, beta, sc );
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
-  auto ndx = bfill( bex, rdbex, betan );
+  auto nbx = bfill( bex, rdbex, betan );
   double wt = tbeta;
   double tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
@@ -54,37 +55,73 @@ auto discre(const double& sc, const double& scaling,
       temp_vec[itemp] );
 
     // Sort the discrete lines, and throw out the smallest ones
-    int n = nn;
+    int n = nn; double save;
     for ( auto i = 1; i < n; ++i ){
       for ( auto j = i+1; j < n+1; ++j ){
         if ( wts[j] > wts[i] ){
-          auto save = wts[j];
-          wts[j] = wts[i];
-          wts[i] = save;
-          save = bes[j];
-          bes[j] = bes[i];
-          bes[i] = save;
+          save = wts[j]; wts[j] = wts[i]; wts[i] = save;
+          save = bes[j]; bes[j] = bes[i]; bes[i] = save;
         } 
       }
     }
     
     int i = 0;
-    int idone = 0;
     while ( i < nn ){
       i += 1;
       n = i;
       if ( wts[i-1] < 1.0e-6 and i > 5 ){ break; }
     }
 
+    // Add the continuous part to the scattering law
     for ( auto m = 0; m < n; ++m ){
-      for ( auto j = 0; j < beta.size(); ++j ){
-        auto be = -betan[j] - bes[m];
-       // std::cout << be << std::endl;
+      for ( auto b = 0; b < beta.size(); ++b ){
+        auto beta_val = -betan[b] - bes[m];
+        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, alpha[a], 
+                                 tbeta + twt, tbart, nbx);
+        if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }
     
-    //for ( auto entry : bes ){ std::cout << entry << std::endl; }
-    //std::cout << nn << std::endl;
+    // Add the delta functions to the scattering law 
+    // delta(0.0) is saved fro the incoherent elastic scattering
+    int j, jj;
+    double add;
+    if ( twt <= 0.0 ){
+      int m = 0, idone = 0;
+      while ( m < n and idone == 0 ){
+        m += 1;
+        if ( dwf < 1.0e-10 ){
+          idone = 1;
+        } else {
+          if ( bes[m-1] < 0.0 ){
+            double be = -bes[m-1];
+            if ( be < betan[beta.size()-2] ){
+              double db = 1000;
+              idone = 0;
+              j = 0;
+              while ( j < beta.size()-1 and idone == 0 ){
+                j += 1;
+                int jj = j;
+                if ( abs(be-betan[j-1] )>db ){
+                  idone = 1;
+                } else {
+                  db = abs(be-betan[j-1]);
+                }
+              }
+              if ( jj <=2 ){
+                add = wts[m-1]/betan[jj-1];
+              } else {
+                add = 2 * wts[m-1]/(betan[jj-1]-betan[jj-2]);
+              }
+              add *= dwf;
+              if ( add >= 1.0e-20 ){ sexpb[jj-2] += add; }
+            }
+          }
+        }
+      }
+    }
+      
+
     return;
   }
 
