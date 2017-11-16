@@ -8,87 +8,59 @@ auto sint(const double& x, const std::vector<double>& bex,
   // Interpolates in scattering function, using SCT approximation to 
   // extrapolate outside the range in memory
   
-  std::cout << "\n" << std::endl;
+  // Note that tbart is likely \bar{T_s}/T, which can be found via Eq. 530
+  
   double sv, ex, sint, pi = 3.1415926;
+  
+  // Short Collision Time approximation
+  // PROBLEM -- This SCT does not match Eq. 528. Please check. 
+ 
   if ( abs(x) > betan[b] ){
-    if ( alpha <= 0.0 ){                     // OPTION A
-      std::cout <<"A"<<std::endl;    
-      sv = 0.0;
-    } else {                                 // OPTION B1
-      std::cout <<"B"<<std::endl;
+    if ( alpha <= 0.0 ){ // The formula for short collision time approximation
+      return 0.0;        // is only valid for positive alpha, else get complex
+                         // S(a,-b) (square root)
+    } 
+    else {  // This implements the short collision time (SCT) approximaation
+            // which is detailed in Eq. 528 of NJOY manual
       ex = -(wt*alpha-abs(x))*(wt*alpha-abs(x))/(4*wt*alpha*tbart);
-      if ( x > 0.0 ){ 
-        std::cout <<"B2"<<std::endl;        // OPTION B2
-        ex = ex - x; 
-      }
-      sv = exp(ex)/(4*pi*wt*alpha*tbart);
+
+      // If x is positive, model it as if it was negative, and then multiply
+      // by a e^(-x), since S(a,b) = e^-beta * S(a,-b) in Eq. 529
+      if ( x > 0.0 ){ ex = ex - x; }
+
+      return exp(ex)/(4*pi*wt*alpha*tbart); // Continue with Eq. 528
     }
-    return sv;
   } 
   
   // interpolation
-  int k1 = 1, k2 = b, k3 = nbx;
+  int xLeft = 1, xMid = b+1, xRight = nbx;
+
   // bisect for x
   int idone = 0;
 
   while ( idone == 0 ){
-    if ( x == bex[k2] ){                   // OPTION C
-      sv = sex[k2];
-      std::cout <<"C"<<std::endl;
-      return sv;
+    if ( x == bex[xMid-1] ){ // If desired point is in the middle of our two
+      return sex[xMid-1];    // boundaries, we have our exact point
     }
-    if ( x > bex[k2] ){               
-      k1 = k2;
-      k2 = (k3-k2)/2 + k2;
-      if ( k3-k1 <= 1 ){                   // OPTION D
-        idone = 1; 
-        std::cout <<"D"<<std::endl;
-      }
+    if ( x > bex[xMid-1] ){  // If desired point is to the right of midpoint,
+      xLeft = xMid;          // shift everything right and continue
+      xMid = (xRight-xMid)/2 + xMid;
     } 
-    else {
-      k3 = k2;
-      k2 = (k2-k1)/2 + k1;                 // OPTION E
-      if ( k3-k1 <= 1 ){ 
-        idone = 1;
-        std::cout <<"E"<<std::endl;
-      }
+    else {                  // If desired point is to the left of midpoint,
+      xRight = xMid;        // shift everything left and continue
+      xMid = (xMid-xLeft)/2 + xLeft;  
+    }
+
+    if ( xRight-xLeft <= 1 ){ // If we've narrowed down the region to one span
+      idone = 1;              // one grid spacing, quit
     }
   }
-  std::cout << k1 << "    " << k2 << "     " << k3 << std::endl;
   double ss1, ss3;
-  if ( sex[k1] <= 0.0 ){
-    ss1 = -225.0;                         // OPTION F
-    std::cout <<"F"<<std::endl;
-  } else {
-    ss1 = log( sex[k1] );                 // OPTION G
-    std::cout << sex[k1-1] << std::endl;
-    std::cout <<"G"<<std::endl;
-  }
-  if ( sex[k3] <= 0.0 ){
-    ss3 = -225.0;                         // OPTION H
-    std::cout <<"H"<<std::endl;
-  } else {
-    ss3 = log( sex[k3] );                 // OPTION I
-    std::cout <<"I"<<std::endl;
-  }
-  std::cout << "ss1:   " << ss1 << std::endl;
-  std::cout << "ss3:   " << ss3 << std::endl;
+  ss1 = sex[xLeft-1]  > 0.0 ? log( sex[xLeft-1]  ) : -225.0;
+  ss3 = sex[xRight-1] > 0.0 ? log( sex[xRight-1] ) : -225.0;
   
-  ex = ( (bex[k3]-x)*ss1+(x-bex[k1])*ss3 ) * rdbex[k1];
-  std::cout << "ex:    " << ex << std::endl;
-  std::cout << rdbex[k1] << std::endl;
-  sv = 0;
-  if ( ex > -225.0 ){ 
-    sv = exp(ex);                        // OPTION J
-    std::cout <<"J"<<std::endl;
-  }
-  std::cout << "sv:    " << sv << std::endl;
-  return sv;
+  ex = ( (bex[xRight-1]-x)*ss1+(x-bex[xLeft-1])*ss3 ) * rdbex[xLeft-1];
 
-  
+  return ex <= -225.0 ? 0.0 : exp(ex);
 
-
-  
-  std::cout << "Hello, world!" << std::endl;
-  return 3.0;
 }
