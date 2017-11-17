@@ -81,7 +81,7 @@ auto discre(const double& sc, const double& scaling,
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }
-    
+/*    
     // Add the delta functions to the scattering law 
     // delta(0.0) is saved fro the incoherent elastic scattering
     int j, jj;
@@ -120,7 +120,7 @@ auto discre(const double& sc, const double& scaling,
         }
       }
     }
-      
+ */     
 
     return;
   }
