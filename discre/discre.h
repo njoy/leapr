@@ -8,6 +8,10 @@
 #include "discre_util/sint.h"
 #include "discre_util/addDeltaFuncs.h"
 
+void swap( double& a, double& b ){
+  double c = a; a = b; b = c;
+}
+
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
   const std::vector<double>& beta, const double& tev, const double& lambda_s, 
@@ -22,19 +26,21 @@ auto discre(const double& sc, const double& scaling,
   // Set up oscillator parameters
   // Prepare functions of beta
   double weight, tsave;
+
   std::vector<double> ar(50,0.0), dist(50,0.0), dbw(50,0.0), 
     energyNorm(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
+
   prepareParams(energy, weights, tev, energyNorm, weight, tsave, ar, dist,dbw,
     bk, exb, betan, beta, sc );
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
-  auto nbx = bfill( bex, rdbex, betan );
+  int nbx = bfill( bex, rdbex, betan );
   double wt = tbeta;
   double tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
   // Main alpha loop
   for ( auto a = 0; a < alpha.size(); ++a ){
-    double dwf = exp( -alpha[a]*scaling*lambda_s );
+
     std::vector<double> sex ( maxbb, 0.0 );
     std::vector<double> input ( beta.size(), 0.0 );
     for ( auto b = 0; b < beta.size(); ++b ){
@@ -44,13 +50,10 @@ auto discre(const double& sc, const double& scaling,
 
     // Initialize delta loop
     std::vector<double> sexpb (beta.size(), 0.0);
-    std::vector<double> ben ( maxdd, 0.0 );
     std::vector<double> bes ( maxdd, 0.0 );
-    std::vector<double> wtn ( maxdd, 0.0 );
     std::vector<double> wts ( maxdd, 0.0 );
-    wtn[0] = 1;
     
-    int nn = oscillatorLoop( alpha, dbw, ar, scaling, wts, wtn, bes, ben, 
+    int nn = oscillatorLoop( alpha, dbw, ar, scaling, wts, bes,  
       energyNorm, a, maxdd, energy.size(), wt, tbart, weights, dist, 
       temp_vec[itemp] );
     // Sort the discrete lines, and throw out the smallest ones
@@ -58,8 +61,8 @@ auto discre(const double& sc, const double& scaling,
     for ( auto i = 1; i < n; ++i ){
       for ( auto j = i+1; j < n+1; ++j ){
         if ( wts[j] > wts[i] ){
-          save = wts[j]; wts[j] = wts[i]; wts[i] = save;
-          save = bes[j]; bes[j] = bes[i]; bes[i] = save;
+          swap( wts[j], wts[i] );
+          swap( bes[j], bes[i] );
         } 
       }
     }
@@ -82,13 +85,12 @@ auto discre(const double& sc, const double& scaling,
     }
 
     // Add the delta functions to the scattering law
+    double dwf = exp( -alpha[a]*scaling*lambda_s );
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
 
     // Record the results
     for ( auto j = 0; j < betan.size(); ++j ){
       sym_sab[a][j][itemp] = sexpb[j];
     }
-
   }
-
 }

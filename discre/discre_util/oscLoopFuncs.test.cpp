@@ -16,7 +16,7 @@ TEST_CASE( "negative n terms loop" ){
   std::vector<double> bminus (50, 0.0), bes (maxdd, 0.0), wts (maxdd, 0.0),
                       wtn (maxdd, 0.0), ben (maxdd, 0.0);
  GIVEN( "inputs" ){
-    int i = 0, n = 0, nn = 1;
+    int n = 0, nn = 1;
     double wtsn = 0.987274731, besn = 0.0, normEnergy = 2.03077847;
     wts[0] = 0.9872747318, wtn[0] = 1.0;
 
@@ -24,7 +24,7 @@ TEST_CASE( "negative n terms loop" ){
     bminus[3] = 6.79325E-10; bminus[4] = 1.54018E-12; bminus[5] = 2.909946E-15; 
     bminus[6] = 4.71249E-18; bminus[7] = 6.67767E-21; bminus[8] = 8.410987E-24;
 
-    posNegTerms( i, n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
+    posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     
     THEN( "values are correct" ){
       equal( n, 3 );
@@ -47,13 +47,13 @@ TEST_CASE( "negative n terms loop" ){
     std::fill( wts.begin(), wts.end(), 0.0 );
     std::fill( bes.begin(), bes.end(), 0.0 );
     wts[0] = 0.8; wtn[0] = 1.0;
-    int i = 0, n = 0, nn = 1;
+    int n = 0, nn = 1;
     double normEnergy = 2.5;
     std::fill( bminus.begin(), bminus.end(), 0.0 );
     bminus[0] = 1.0; bminus[1] = 2.0;
     for ( auto i = 2; i < 10; ++i ){ bminus[i] = bminus[i-1] + bminus[i-2];}
     
-    posNegTerms( i, n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
+    posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     std::vector<double> besVals {0.0, -2.5, -5.0, -7.5, -10.0, -12.5, -15.0, 
       -17.5, -20.0, -22.5, -25.0};
     std::vector<double> wtsVals {0.8, 1.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 
@@ -89,7 +89,7 @@ TEST_CASE( "positive terms" ){
     bplus[0] = 0.08;   bplus[1] = 0.06;  bplus[2] = 0.04;  bplus[3] = 0.02;
     bplus[4] = 0.008;  bplus[5] = 0.006; bplus[6] = 0.004; bplus[7] = 0.002;
     bplus[8] = 0.0008; bplus[9] = 0.0006;
-    posNegTerms( i, n, normalizedEnergy, bplus, wts, wtn, bes, ben, nn, 1 ); 
+    posNegTerms( n, normalizedEnergy, bplus, wts, wtn, bes, ben, nn, 1 ); 
     
     THEN( "values are correct" ){
       std::vector<double> besVals {0.0, -2.5, -5.0, -7.5, -10.0, -12.5, -15.0, 
@@ -123,18 +123,17 @@ TEST_CASE( "oscillator loop" ){
     double scaling = 1.0, wt = 2.0, tbart = 405.894676, temp = 200.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
-      dbw(50, 0.0), wtn(maxdd, 0.0), ben(maxdd, 0.0), ar(50, 0.0), dist(50,0.0);
+      dbw(50, 0.0), ar(50, 0.0), dist(50,0.0);
 
     energyNorm[0] = 2.030778; energyNorm[1] = 2.901112;
     dist[0] = 4.55739E-3; dist[1] = 2.232634E-2;
     dbw[0] = 0.128237; dbw[1] = 0.307831;
     ar[0] = 8.213274E-2; ar[1] =  0.1368162;
-    wtn[0] = 1.0;
 
     std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
     std::vector<double> weight{0.2, 0.8};
 
-    oscillatorLoop( alpha, dbw, ar, scaling, wts, wtn, bes, ben, energyNorm, 
+    oscillatorLoop( alpha, dbw, ar, scaling, wts, bes, energyNorm, 
       a, maxdd, numOscillators, wt, tbart, weight, dist, temp );
 
     THEN( "ouput is correct" ){
