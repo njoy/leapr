@@ -8,48 +8,36 @@ auto addDeltaFuncs( const double twt, const double dwf,
 
   // Add the delta functions to the scattering law 
   // delta(0.0) is saved fro the incoherent elastic scattering
-  int j, jj;
-  double add;
-  if ( twt <= 0.0 ){
-    std::cout << "HERE" << std::endl;
-    int m = 0, idone = 0;
-    while ( m < n and idone == 0 ){
-      std::cout << m << std::endl;
-      m += 1;
-      if ( dwf < 1.0e-10 ){
-        idone = 1;
-      } else {
-        if ( bes[m-1] < 0.0 ){
-        std::cout << "HERE I AM" << std::endl;
-          double be = -bes[m-1];
-          if ( be < betan[betan.size()-2] ){
-        std::cout << "HERE I AM" << std::endl;
-            double db = 1000;
-            idone = 0;
-            j = 0;
-            while ( j < betan.size()-1 and idone == 0 ){
-              j += 1;
-              jj = j;
-              if ( abs(be-betan[j-1] )>db ){
-                idone = 1;
-              } else {
-                db = abs(be-betan[j-1]);
-              }
-            }
-            if ( jj <=2 ){
-              add = wts[m-1]/betan[jj-1];
-            } else {
-              add = 2 * wts[m-1]/(betan[jj-1]-betan[jj-2]);
-            }
-            std::cout << "ADD:    " << add << std::endl; 
-            add *= dwf;
-            if ( add >= 1.0e-20 ){ sexpb[jj-2] += add; }
+  
+  if ( twt > 0.0  or dwf < 1.0e-10 ){ return; }
+
+  int j, jj, m = 0;
+  bool done = false;
+  double add, db, be;
+
+  while ( m < n ){
+    m += 1;
+    if ( bes[m-1] < 0.0 ){
+      be = -bes[m-1];
+      if ( be < betan[betan.size()-2] ){
+        db = 1000;
+        j = 0;
+        while ( j < betan.size()-1 and not done ){
+          j += 1;
+          jj = j;
+          if ( abs(be-betan[j-1] ) > db ){
+            done = true;
+          } else {
+            db = abs(be-betan[j-1]);
           }
         }
+
+        add = j > 2 ? 2 * dwf * wts[m-1]/(betan[jj-1]-betan[jj-3]) :
+                          dwf * wts[m-1]/betan[jj-1];
+
+        if ( add >= 1.0e-20 ){ sexpb[jj-2] += add; }
+        if ( done ){ return; }
       }
     }
   }
-      
-
-  std::cout << "Hello, world!" << std::endl;
 }

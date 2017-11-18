@@ -52,11 +52,42 @@ TEST_CASE( "helper function to add delta functions to scattering law" ){
   GIVEN( "some neg bes vals have smaller mag. than the 2nd largeset beta val" ){
     sexpb = { 0.1, 0.2,  0.3,  0.4,  0.5  };
     betan[3] = 2.3; betan[4] = 2.5;
-  //  for ( auto entry : bes ) { std::cout << entry << std::endl; }
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n );
-    THEN( "sexpb is correctl amended" ){
-      for ( auto entry : sexpb ){ std::cout << entry << std::endl; }
-     // equal_vec( sexpb, {0.1,0.2,0.3002511747,0.4,0.5} );
+    THEN( "sexpb is correctly amended" ){
+      equal_vec( sexpb, {0.1,0.2,0.3002511747,0.4,0.5} );
     } // THEN
   } // GIVEN
+
+  GIVEN( "Large difference between beta values and bes values" ){
+    sexpb = { 0.1, 0.2,  0.3,  0.4,  0.5  };
+    betan = { 1001, 1002, 1003, 1004, 1005 };
+    addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n );
+    THEN( "reslting index jj is so small you can't access the (jj-2)th beta" ){
+      equal_vec( sexpb, {0.1000269475,0.2,0.3,0.4,0.5} );
+    } // THEN
+    WHEN( "twt value is changed from one negative val to another" ){
+      sexpb = { 0.1, 0.2,  0.3,  0.4,  0.5  };
+      twt = -15.0;
+      THEN( "no change in output" ){
+        addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n );
+        equal_vec( sexpb, {0.1000269475,0.2,0.3,0.4,0.5} );
+      } // THEN
+    } // WHEN
+  } // GIVEN
+
+
+  GIVEN( "A small (< 1.0e-10) vallue for dwt" ){
+    sexpb = { 0.1, 0.2,  0.3,  0.4,  0.5  };
+    betan = { 1001, 1002, 1003, 1004, 1005 };
+    dwf = 9.9e-11;
+    addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n );
+    THEN( "no change to sexpbc" ){
+      equal_vec( sexpb, {0.1,0.2,0.3,0.4,0.5} );
+    } // THEN
+  } // GIVEN
+
+
+
 } // TEST CASE
+
+  //  for ( auto entry : bes ) { std::cout << entry << std::endl; }
