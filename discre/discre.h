@@ -6,6 +6,7 @@
 #include "discre_util/prepareParams.h"
 #include "discre_util/oscLoopFuncs.h"
 #include "discre_util/sint.h"
+#include "discre_util/addDeltaFuncs.h"
 
 auto discre(const double& sc, const double& scaling, 
   const std::vector<double>& alpha, 
@@ -76,54 +77,32 @@ auto discre(const double& sc, const double& scaling,
     for ( auto m = 0; m < n; ++m ){
       for ( auto b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
-        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, alpha[a], 
-                                 tbeta + twt, tbart, nbx);
+        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, 
+            alpha[a], tbeta + twt, tbart, nbx);
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }
-/*    
-    // Add the delta functions to the scattering law 
-    // delta(0.0) is saved fro the incoherent elastic scattering
-    int j, jj;
-    double add;
-    if ( twt <= 0.0 ){
-      int m = 0, idone = 0;
-      while ( m < n and idone == 0 ){
-        m += 1;
-        if ( dwf < 1.0e-10 ){
-          idone = 1;
-        } else {
-          if ( bes[m-1] < 0.0 ){
-            double be = -bes[m-1];
-            if ( be < betan[beta.size()-2] ){
-              double db = 1000;
-              idone = 0;
-              j = 0;
-              while ( j < beta.size()-1 and idone == 0 ){
-                j += 1;
-                int jj = j;
-                if ( abs(be-betan[j-1] )>db ){
-                  idone = 1;
-                } else {
-                  db = abs(be-betan[j-1]);
-                }
-              }
-              if ( jj <=2 ){
-                add = wts[m-1]/betan[jj-1];
-              } else {
-                add = 2 * wts[m-1]/(betan[jj-1]-betan[jj-2]);
-              }
-              add *= dwf;
-              if ( add >= 1.0e-20 ){ sexpb[jj-2] += add; }
-            }
-          }
+
+    // Add the delta functions to the scattering law
+    addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
+
+    // Record the results
+    for ( auto j = 0; j < betan.size(); ++j ){
+      sym_sab[a][j][itemp] = sexpb[j];
+    }
+
+  }
+   // std::cout << "\n\n\n" << std::endl;
+    //for ( auto entry : sexpb ){ std::cout << entry << std::endl; }
+    for ( auto a1 : sym_sab ){ 
+      for ( auto a2 : a1 ){
+        for ( auto a3 : a2 ){
+          std::cout << a3 << std::endl;
         }
       }
     }
- */     
 
-    return;
-  }
+
 
 
 }

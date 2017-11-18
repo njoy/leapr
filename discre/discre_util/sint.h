@@ -15,7 +15,7 @@ auto sint(const double& x, const std::vector<double>& bex,
   // Short Collision Time approximation
   // PROBLEM -- This SCT does not match Eq. 528. Please check. 
  
-  if ( abs(x) > betan[b] ){
+  if ( abs(x) > betan[betan.size()-1] ){
     if ( alpha <= 0.0 ){ // The formula for short collision time approximation
       return 0.0;        // is only valid for positive alpha, else get complex
                          // S(a,-b) (square root)
