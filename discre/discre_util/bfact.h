@@ -3,8 +3,6 @@
 
 auto bfact( const double& x, const double& dwc, const double& beta_i, 
   std::vector<double>& bplus, std::vector<double>& bminus ){
-
-  
     
    // compute bessi0
   double bessi0;

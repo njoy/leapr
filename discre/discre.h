@@ -23,8 +23,7 @@ auto discre(const double& sc, const double& scaling,
   // Prepare functions of beta
   double weight, tsave;
   std::vector<double> ar(50,0.0), dist(50,0.0), dbw(50,0.0), 
-    energyNorm(energy.size(),0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
-
+    energyNorm(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
   prepareParams(energy, weights, tev, energyNorm, weight, tsave, ar, dist,dbw,
     bk, exb, betan, beta, sc );
 
@@ -54,7 +53,6 @@ auto discre(const double& sc, const double& scaling,
     int nn = oscillatorLoop( alpha, dbw, ar, scaling, wts, wtn, bes, ben, 
       energyNorm, a, maxdd, energy.size(), wt, tbart, weights, dist, 
       temp_vec[itemp] );
-
     // Sort the discrete lines, and throw out the smallest ones
     int n = nn; double save;
     for ( auto i = 1; i < n; ++i ){
@@ -92,17 +90,5 @@ auto discre(const double& sc, const double& scaling,
     }
 
   }
-   // std::cout << "\n\n\n" << std::endl;
-    //for ( auto entry : sexpb ){ std::cout << entry << std::endl; }
-    for ( auto a1 : sym_sab ){ 
-      for ( auto a2 : a1 ){
-        for ( auto a3 : a2 ){
-          std::cout << a3 << std::endl;
-        }
-      }
-    }
-
-
-
 
 }
