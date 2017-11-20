@@ -11,7 +11,7 @@ int main(){
   // Card2
     // Title goes here
   // Card3
-    int ntempr = 1, iprint = 1, nphon = 6;
+    int ntempr = 1, iprint = 1, nphon = 3;
   // Card4
     int mat = 26; double za = 126.0;
   // Card5
@@ -23,7 +23,7 @@ int main(){
   // Card8
     std::vector<double> alpha { 0.10, 0.20, 0.40, 0.80, 1.60 };
   // Card9
-    std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
+    std::vector<double> beta  { 0.10, 0.15, 0.30, 0.60, 1.20 };
   // Card10
    // double temp = 200.0;
     std::vector<double> temp_vec {200.0};
@@ -33,10 +33,14 @@ int main(){
     std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
   // Card13
 //    double twt = 0.3, c = 0.1, tbeta = 2.0;
-    double trans_weight = 0.03, diffusion_const = 1.0, tbeta = 2.0;
+    double trans_weight = 0.3, diffusion_const = 1.0, tbeta = 2.0;
   // Card14
-    int nd = 0;
-  
+    int nd = 2;
+  // Card15
+    std::vector<double> oscEnergies {1.0, 2.0};
+  // Card16
+    std::vector<double> oscWeights {0.3, 0.4};
+    
   double bk = 8.617385e-5;
   double therm = 0.0253;
 
@@ -70,20 +74,22 @@ int main(){
         // the temperature dependent parameters for this specifically 
 
       // Continuous part of the distribution
-      auto lambda_s_t_eff= contin( sym_sab, alpha, beta, rho, delta, tbeta,
+      std::cout << "  " << std::endl;
+      auto lambda_s_t_eff = contin( sym_sab, alpha, beta, rho, delta, tbeta,
         scaling, tev, sc, nphon, itemp );
       double lambda_s = std::get<0>(lambda_s_t_eff);
-       
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
       // update the effective temperature list
       t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
 
-      std::cout << sym_sab[2][2][0] << std::endl;
+      //std::cout << sym_sab[0][0][0] << std::endl;
 
       // Translational part of distribution, if any
       trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
         itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
 
-      std::cout << sym_sab[2][2][0] << std::endl;
     }
     done = true;
   }
