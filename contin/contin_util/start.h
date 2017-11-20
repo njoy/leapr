@@ -13,14 +13,10 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507
   double beta = delta;
-  double exp_val_0 = std::exp(delta/2);
-  double exp_increment = exp_val_0;
-  
-  p[0] = p[1] / (std::pow(delta,2));
+  p[0] = p[1] / ( delta * delta );
   for ( int i = 1; i < p.size(); ++i ){
-    p[i] = p[i] / ( beta * ( exp_increment - std::pow(exp_increment, -1) ) );
-    // increment values for next iteration
-    beta += delta; exp_increment *= exp_val_0;
+    p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
+    beta += delta; 
   }
 
   // normalize p so now it integrates to tbeta

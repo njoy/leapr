@@ -42,8 +42,7 @@ TEST_CASE( "contin" ){
       THEN( "contin output matches expected value" ){
         auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling,
           tev, sc, nphon, itemp );
-        double correct_lambda_s = 4.38473153E-2;
-        double correct_t_eff    = 12.279863466;
+        double correct_lambda_s = 4.38473153E-2, correct_t_eff = 12.279863466;
         std::vector<double> expected {6.474331963E-7, 7.658564709E-7, 
           8.842797456E-7, 1.121126294E-6, 1.594819393E-6, 1.294036143E-6, 
           1.530731302E-6, 1.767426462E-6, 2.240816781E-6, 3.187597419E-6, 
@@ -111,5 +110,5 @@ TEST_CASE( "contin" ){
       } // THEN
     } // WHEN
   } // GIVEN 
-} // test case
+} // TEST CASE
 

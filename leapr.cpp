@@ -4,6 +4,7 @@
 
 #include "contin/contin.h"
 #include "trans/trans.h"
+#include "discre/discre.h"
 
 int main(){
   // Card1
@@ -78,17 +79,29 @@ int main(){
       auto lambda_s_t_eff = contin( sym_sab, alpha, beta, rho, delta, tbeta,
         scaling, tev, sc, nphon, itemp );
       double lambda_s = std::get<0>(lambda_s_t_eff);
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      // update the effective temperature list
+
+     // update the effective temperature list
       t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
 
       //std::cout << sym_sab[0][0][0] << std::endl;
 
       // Translational part of distribution, if any
-      trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-        itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
+      if ( trans_weight > 0.0 ){
+        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
+      }
+      if ( oscEnergies.size() > 0 ){
+        discre( sc, scaling, alpha, beta, tev, lambda_s, oscEnergies, 
+        oscWeights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, trans_weight );
+      }
+ 
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
+      std::cout << sym_sab[3][3][0] << std::endl;
+      std::cout << sym_sab[4][4][0] << std::endl;
+
+
 
     }
     done = true;

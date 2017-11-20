@@ -10,50 +10,50 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
   std::vector<double>& t1, const double& lambda_s, const double& sc,
   const double& scaling, const double& delta, const int nphon, const int itemp ){
  
-  std::vector<double> xa(alpha.size(),0.0);
-
-  double exp_lim = -250.0, tiny = 1e-30;
- 
-  int npn = t1.size();
-
-  std::vector<double> tnow( nphon*t1.size(), 0.0 );
-  std::vector<double> tlast(nphon*t1.size(),0.0);
+  std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
+    tlast(nphon*t1.size(),0.0);
 
   for( int i = 0; i < t1.size(); ++i ){ tlast[i] = t1[i]; }
 
   double add, exx;
-  // Start the phonon expansion with t1
-  for( int a = 0; a < alpha.size(); ++a ){
-    xa[a] = log(alpha[a] * scaling * lambda_s );
-    exx = -lambda_s * alpha[a] * scaling + xa[a];
-    exx = exx > exp_lim ? exp(exx) : 0;
-
-    for( int b = 0; b < beta.size(); ++b ){
-      add = exx * interpolate( t1, delta, beta[b] * sc );
-      sym_sab[a][b][itemp] = add < tiny ? 0 : add;
-
-    } // for b in beta
-  } // for a in alpha
 
   // Do the phonon expansion sum 
-  for( int n = 1; n < nphon; ++n ){
+  int npn = t1.size();
+  for( int n = 0; n < nphon; ++n ){
+    if ( n >= 1 ){
+      tnow = convol(t1, tlast, delta);
+    }
 
-    npn = t1.size() + npn - 1;
-    tnow = convol(t1, tlast, delta);
+    if ( n == 0 ){
+      // Start the phonon expansion with t1
+      for( int a = 0; a < alpha.size(); ++a ){
+        xa[a] = log( alpha[a] * scaling * lambda_s );
+        exx = -lambda_s * alpha[a] * scaling + xa[a];
+        exx = exx > -250.0 ? exp(exx) : 0;
+
+        for( int b = 0; b < beta.size(); ++b ){
+          add = exx * interpolate( t1, delta, beta[b] * sc );
+          sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
+        } // for b in beta
+      } // for a in alpha
+    }
+
+   if ( n >= 1 ){
 
     for( int a = 0; a < alpha.size(); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
       exx = -lambda_s * alpha[a] * scaling + xa[a];
-      exx = exx > exp_lim ? exp(exx) : 0;
+      exx = exx > -250.0 ? exp(exx) : 0;
             
       for( int b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, delta, beta[b]*sc );
-        sym_sab[a][b][itemp] += add < tiny ? 0 : add;
+        sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
 
       } // for b in beta
     } // for a in alpha
-
-    for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+      npn = t1.size() + npn - 1;
+      for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+    }
   
   } // for n in nphon (maxn in leapr.f90) 
 }
