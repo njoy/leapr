@@ -7,54 +7,56 @@
 
 void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab, 
   const std::vector<double>& alpha, const std::vector<double>& beta,
-  std::vector<double>& t1, const double& lambda_s, const double& sc,
-  const double& scaling, const double& delta, const int nphon, const int itemp ){
+  std::vector<double>& t1, const double& lambda_s, const double& sc, const
+  double& scaling, const double& delta, const int nphon, const int itemp ){
  
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
 
-  for( int i = 0; i < t1.size(); ++i ){ tlast[i] = t1[i]; }
+  int npn = t1.size();
+  for( int i = 0; i < npn; ++i ){ tlast[i] = t1[i]; }
+  // This will populate tlast and tnow with blocks, each the same size as t1,
+  // corresponding to each order of phonon expansion (nphon). npn is used to 
+  // track which block we're at. So we start out with the size of t1, then it
+  // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
+  
   double add, exx;
 
   // Do the phonon expansion sum 
-  int npn = t1.size();
+  // For this, we treat the first iteration slightly different than the all
+  // subsequent iterations, because all subsequent iterations require
+  // convolution with the one before it. This is following Eq. 526
+  
   for( int n = 0; n < nphon; ++n ){
-    if ( n >= 1 ){
-      tnow = convol(t1, tlast, delta);
-    }
 
-    if ( n == 0 ){
-      // Start the phonon expansion with t1
-      for( int a = 0; a < alpha.size(); ++a ){
-        xa[a] = log( alpha[a] * scaling * lambda_s );
-        exx = -lambda_s * alpha[a] * scaling + xa[a];
-        exx = exx > -250.0 ? exp(exx) : 0;
-
-        for( int b = 0; b < beta.size(); ++b ){
-          add = exx * interpolate( t1, delta, beta[b] * sc );
-          sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
-        } // for b in beta
-      } // for a in alpha
-    }
-
-   if ( n >= 1 ){
+    // If not the first iteration, we'll need to convolve the current t vector
+    // with the last one (Following Eq. 526)
+    if ( n >= 1 ){ tnow = convol(t1, tlast, delta); }
 
     for( int a = 0; a < alpha.size(); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
-      exx = -lambda_s * alpha[a] * scaling + xa[a];
-      exx = exx > -250.0 ? exp(exx) : 0;
-            
-      for( int b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate(tnow, delta, beta[b]*sc );
-        sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
 
+      exx = -lambda_s * alpha[a] * scaling + xa[a];
+      // If the exponential value is really small, we'll cut it off since it
+      // won't make too much a difference anyway
+      if ( exx <= -250.0 ){ continue; }
+      exx = exp(exx);
+
+      for( int b = 0; b < beta.size(); ++b ){
+        add = n == 0 ? exx * interpolate( t1,   delta, beta[b]*sc );
+                       exx * interpolate( tnow, delta, beta[b]*sc );
+        sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
       } // for b in beta
     } // for a in alpha
-      npn = t1.size() + npn - 1;
+
+    if ( n >= 1 ){
+      // tnow and tlast will be populated with nphon-many iterations of t1 info,
+      // so npn here is being pushed forward by t1 length so that we can get
+      // to the next block of vector
+      npn += t1.size() - 1;
       for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
-  
   } // for n in nphon (maxn in leapr.f90) 
 }
 

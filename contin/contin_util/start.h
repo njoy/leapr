@@ -11,7 +11,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   delta = delta / tev; // make delta is unitless
 
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
-  // points delta apart. This follows Eq. 507
+  // points delta apart. This follows Eq. 507.
   double beta = delta;
   p[0] = p[1] / ( delta * delta );
   for ( int i = 1; i < p.size(); ++i ){

@@ -55,8 +55,8 @@ auto diffusion_s_table( const double& trans_weight, const double& alpha_sc,
     beta += delta; j += 1;
 
     // nsd must always be odd for use with Simpson's rule.
-    if (j%2 == 1 and ( (j+1 >= ndmax ) or 
-                       (1e-7*s_diffusion[0]>=s_diffusion[j-1]) ) ){ 
+    if ( ( (j+1 >= ndmax) or (1e-7*s_diffusion[0] >= s_diffusion[j-1]) ) and
+       ( j%2 == 1 ) ){
       return j;
     } // if break
   } // while

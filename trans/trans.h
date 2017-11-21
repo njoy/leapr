@@ -23,7 +23,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   for ( auto a = 0; a < alpha.size(); ++a ){
     alpha_sc = alpha[a] * scaling;
     ded = 0.4*trans_weight*diffusion*alpha_sc / 
-                 sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
+          sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
         
     if ( ded == 0 ){ ded = 0.2 * sqrt( trans_weight * alpha_sc );}
     delta = 10.0 * alpha_sc * delta;
