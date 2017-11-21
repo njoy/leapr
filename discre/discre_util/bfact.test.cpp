@@ -50,8 +50,7 @@ TEST_CASE( "bfact" ){
       5.285001E-14, 1.179242E-17, 2.192702E-21, 3.494699E-25, 4.873578E-29};
     std::vector<double> bminusStart = {1.834671E-2, 2.055597E-4, 1.535421E-6, 
       8.601593E-9, 3.854963E-11, 1.439728E-13, 4.608864E-16, 1.290968E-18, 
-      3.214286E-21, 
-      7.202715E-24};
+      3.214286E-21, 7.202715E-24};
     THEN( "the outputs bplus, bminus, and bzero are correct" ){
       for ( auto i = 0; i < bminusStart.size(); ++i ){
         equal( bminus[i], bminusStart[i] );
