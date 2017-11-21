@@ -28,9 +28,9 @@ auto discre(const double& sc, const double& scaling,
   double weight, tsave;
 
   std::vector<double> ar(50,0.0), dist(50,0.0), dbw(50,0.0), 
-    energyNorm(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
+    betaVals(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
 
-  prepareParams(energy, weights, tev, energyNorm, weight, tsave, ar, dist, dbw,
+  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, dist, dbw,
     bk, exb, betan, beta, sc );
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
@@ -54,7 +54,7 @@ auto discre(const double& sc, const double& scaling,
     std::vector<double> wts ( maxdd, 0.0 );
     
     int nn = oscillatorLoop( alpha, dbw, ar, scaling, wts, bes,  
-      energyNorm, a, maxdd, energy.size(), wt, tbart, weights, dist, 
+      betaVals, a, maxdd, energy.size(), wt, tbart, weights, dist, 
       temp_vec[itemp] );
     // Sort the discrete lines, and throw out the smallest ones
     int n = nn; double save;

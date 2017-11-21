@@ -2,7 +2,7 @@
 #include <vector>
 #include "bfact.h"
 
-void posNegTerms( int& n, const double& normalizedEnergy, 
+void posNegTerms( int& n, const double& beta_i, 
   const std::vector<double>& b_minus_or_plus,
   std::vector<double>& wts, const std::vector<double>& wtn, 
   std::vector<double>& bes, const std::vector<double>& ben, const int nn,
@@ -16,7 +16,7 @@ void posNegTerms( int& n, const double& normalizedEnergy,
     for ( auto m = 0; m < nn; ++m ){
       if ( wtn[m] * b_minus_or_plus[k-1] >= 1e-8 and n < bes.size() ){
         n += 1;
-        bes[n] = ben[m] + pos_or_neg * k * normalizedEnergy;
+        bes[n] = ben[m] + pos_or_neg * k * beta_i;
         wts[n] = wtn[m] * b_minus_or_plus[k-1];
       }
     }
@@ -27,9 +27,12 @@ void posNegTerms( int& n, const double& normalizedEnergy,
 auto oscillatorLoop( const std::vector<double>& alpha,
   std::vector<double>& dbw, std::vector<double>& ar, const double& scaling,
   std::vector<double>& wts, std::vector<double>& bes,
-  std::vector<double>& energyNorm, int a, int maxdd,
+  std::vector<double>& betaVals, int a, int maxdd,
   int numOscillators, double& wt, double& tbart, std::vector<double>& weight,
   std::vector<double>& dist, const double& temp ){
+  /* Note that the betaVals vector is a vector whose entries are the oscillator
+   * energies scaled by temp in eV, thus making them beta values.
+   */
 
   std::vector<double> ben( maxdd, 0.0 ), wtn( maxdd, 0.0 ); wtn[0] = 1.0;
 
@@ -41,7 +44,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     double dwc = alpha[a]*scaling*dbw[i];
     double x   = alpha[a]*scaling*ar[i];
     std::vector<double> bminus (50,0.0), bplus(50,0.0);
-    double bzero = bfact( x, dwc, energyNorm[i], bplus, bminus );
+    double bzero = bfact( x, dwc, betaVals[i], bplus, bminus );
     
     // do convolution for delta function
     n = 0;
@@ -55,10 +58,10 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     n -= 1;
 
     // negative n terms
-    posNegTerms( n, energyNorm[i], bminus, wts, wtn, bes, ben, nn, -1 );
+    posNegTerms( n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1 );
 
     // positive n terms
-    posNegTerms( n, energyNorm[i], bplus,  wts, wtn, bes, ben, nn, 1  );
+    posNegTerms( n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1  );
 
     // continue loop
     for ( auto m = 0; m <= n; ++m ){
