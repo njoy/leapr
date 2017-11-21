@@ -84,15 +84,11 @@ int main(){
       t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
 
       //std::cout << sym_sab[0][0][0] << std::endl;
-
+ 
       // Translational part of distribution, if any
       if ( trans_weight > 0.0 ){
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
-      }
-      if ( oscEnergies.size() > 0 ){
-        discre( sc, scaling, alpha, beta, tev, lambda_s, oscEnergies, 
-        oscWeights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, trans_weight );
       }
  
       std::cout << sym_sab[0][0][0] << std::endl;
@@ -100,7 +96,20 @@ int main(){
       std::cout << sym_sab[2][2][0] << std::endl;
       std::cout << sym_sab[3][3][0] << std::endl;
       std::cout << sym_sab[4][4][0] << std::endl;
+      std::cout << "    " << std::endl;
 
+
+      if ( oscEnergies.size() > 0 ){
+        discre( sc, scaling, alpha, beta, tev, lambda_s, oscEnergies, 
+        oscWeights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, trans_weight );
+      }
+ 
+      std::cout << "    " << std::endl;
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
+      std::cout << sym_sab[3][3][0] << std::endl;
+      std::cout << sym_sab[4][4][0] << std::endl;
 
 
     }

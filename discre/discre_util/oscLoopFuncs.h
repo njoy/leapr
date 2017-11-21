@@ -13,7 +13,7 @@ void posNegTerms( int& n, const double& normalizedEnergy,
   while ( k < 50 ){
     k += 1;
     if ( b_minus_or_plus[k-1] <= 0 ){ return; } 
-    for ( auto m = 0; m <= nn; ++m ){
+    for ( auto m = 0; m < nn; ++m ){
       if ( wtn[m] * b_minus_or_plus[k-1] >= 1e-8 and n < bes.size() ){
         n += 1;
         bes[n] = ben[m] + pos_or_neg * k * normalizedEnergy;
@@ -45,8 +45,8 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     
     // do convolution for delta function
     n = 0;
-    for ( auto m = 0; m <= nn; ++m ){
-      if ( (ben[m] < 0 or wtn[m]*bzero >= 1e-8) and n < maxdd ){
+    for ( auto m = 0; m < nn; ++m ){
+      if ( (ben[m] <= 0 or wtn[m]*bzero >= 1e-8) and n < maxdd ){
         bes[n] = ben[m];
         wts[n] = wtn[m]*bzero;
         n += 1;
@@ -68,7 +68,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     wt += weight[i];
     tbart += dist[i] / ( bk * temp );
 
-    nn = n;
+    nn = n + 1;
 
   }   
   return n;

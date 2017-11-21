@@ -44,7 +44,7 @@ void phonon_exp( std::vector<std::vector<std::vector<double>>>& sym_sab,
       exx = exp(exx);
 
       for( int b = 0; b < beta.size(); ++b ){
-        add = n == 0 ? exx * interpolate( t1,   delta, beta[b]*sc );
+        add = n == 0 ? exx * interpolate( t1,   delta, beta[b]*sc ):
                        exx * interpolate( tnow, delta, beta[b]*sc );
         sym_sab[a][b][itemp] += add < 1e-30 ? 0 : add;
       } // for b in beta

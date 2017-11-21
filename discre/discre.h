@@ -75,7 +75,7 @@ auto discre(const double& sc, const double& scaling,
     }
 
     // Add the continuous part to the scattering law
-    for ( auto m = 0; m < n; ++m ){
+    for ( auto m = 0; m <= n; ++m ){
       for ( auto b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
         auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, 

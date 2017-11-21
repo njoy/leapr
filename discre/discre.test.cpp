@@ -6,10 +6,10 @@
 
 void equal( double a, double b ){
   if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
+    REQUIRE( b-a < 1e-5 );
     return;
   }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
+  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-5 );
 }
 
 void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a, 
