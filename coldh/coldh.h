@@ -1,11 +1,14 @@
 #include <iostream>
 #include <vector>
-
+#include "coldh_util/terpk.h"
+#include "../discre/discre_util/bfill.h"
 
 auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
     const std::vector<double>& tempr, double scaling, 
-    std::vector<double>& alpha ){
+    const std::vector<double>& alpha, const std::vector<double>& beta, 
+    double& dka, std::vector<double>& ska, int nbeta, int lat,
+    std::vector<std::vector<std::vector<double>>>& sym_sab ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -28,9 +31,11 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   double sampcd = 0.668;
   double sampih = 2.526;
   double sampid = 0.403;
+  double therm = 0.0253;
 
   
   int law = ncold + 1;
+  int maxbb = 2 * beta.size() + 1;
   double de, x, amassm, bp, sampc, sampi, wt, tbart;
 
 
@@ -61,6 +66,55 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     double alp = wt * al;
     double waven = angst * sqrt( amassm * tev * eV * al ) / hbar;
     double y = bp * waven;
+    double sk = terpk( ska, dka, waven );
+
+    // spin-correlation factors
+    double swe, swo, snorm;
+    //std::cout << law << std::endl;
+    if (law == 2){ 
+      swe=sampi*sampi/3;
+      swo=sk*sampc*sampc+2*sampi*sampi/3;
+    } else if ( law == 3 ){
+      swe=sk*sampc*sampc;
+      swo=sampi*sampi;
+    } else if ( law == 4 ){
+      swe=sk*sampc*sampc+5*sampi*sampi/8;
+      swo=3*sampi*sampi/8;
+    } else if (law == 5){ 
+      swe=3*sampi*sampi/4;
+      swo=sk*sampc*sampc+sampi*sampi/4;
+    }
+    snorm=sampi*sampi+sampc*sampc;
+    swe=swe/snorm;
+    swo=swo/snorm;
+
+    //std::cout << snorm << std::endl;
+   // std::cout << swe << std::endl;
+   // std::cout << swo << std::endl;
+   // std::cout << "   "  << std::endl;
+
+    // prepare arrays for sint
+    std::vector<double> betan(nbeta, 0.0 );
+    std::vector<double> exb(nbeta, 0.0 );
+    std::vector<double> bex(maxbb, 0.0 );
+    std::vector<double> rdbex(maxbb, 0.0 );
+    if (a == 1){ 
+      for ( auto b = 0; b < nbeta; ++b ){
+          double be=beta[b];
+          if (lat == 1){ be = be * therm / tev; }
+          exb[b] = exp(-be/2);
+          betan[b] = be;
+      } 
+      bfill(bex,rdbex,betan);
+      for ( auto entry : bex ){ std::cout << entry << std::endl; }
+
+      return;
+    }
+    // exts(ssm(1,nal,itemp),sex,exb,betan,nbeta,maxbb)
+
+ 
+
+    //return;
   }
     
 
