@@ -2,6 +2,7 @@
 #include <vector>
 #include "coldh_util/terpk.h"
 #include "../discre/discre_util/bfill.h"
+#include "../discre/discre_util/exts.h"
 
 auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
@@ -88,17 +89,13 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     swe=swe/snorm;
     swo=swo/snorm;
 
-    //std::cout << snorm << std::endl;
-   // std::cout << swe << std::endl;
-   // std::cout << swo << std::endl;
-   // std::cout << "   "  << std::endl;
-
     // prepare arrays for sint
     std::vector<double> betan(nbeta, 0.0 );
     std::vector<double> exb(nbeta, 0.0 );
     std::vector<double> bex(maxbb, 0.0 );
+    std::vector<double> sex(maxbb, 0.0 );
     std::vector<double> rdbex(maxbb, 0.0 );
-    if (a == 1){ 
+    if (a == 0){ 
       for ( auto b = 0; b < nbeta; ++b ){
           double be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
@@ -106,15 +103,19 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
           betan[b] = be;
       } 
       bfill(bex,rdbex,betan);
-      for ( auto entry : bex ){ std::cout << entry << std::endl; }
-
-      return;
     }
-    // exts(ssm(1,nal,itemp),sex,exb,betan,nbeta,maxbb)
+    std::vector<double> input ( beta.size(), 0.0 ); 
+    for ( auto b = 0; b < beta.size(); ++b ){
+      input[b] = sym_sab[a][b][itemp];
+    }
+    exts( input, sex, exb, betan );
+    for ( auto entry : sex ){ std::cout << entry << std::endl; }
+
+
 
  
 
-    //return;
+    return;
   }
     
 
