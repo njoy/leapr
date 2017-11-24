@@ -9,7 +9,7 @@ void equal( double a, double b ){
 
 
 TEST_CASE( "cn" ){
-  GIVEN( "kdel == 0" ){
+  GIVEN( "sum of jj, ll, and nn is even" ){
     THEN( "the correct value is returned" ){
       equal( cn( 1, 0, 1 ), 1.0 );
       equal( cn( 2, 0, 2 ), 1.0 );
@@ -22,7 +22,7 @@ TEST_CASE( "cn" ){
     }
   }
 
-  GIVEN( "kdel != 0" ){
+  GIVEN( "the sum of jj, ll, and nn is odd" ){
     THEN( "a value of 0.0 is returned" ){
       equal( cn( 2, 0, 3 ), 0.0 );
       equal( cn( 2, 0, 5 ), 0.0 );
