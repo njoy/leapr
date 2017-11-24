@@ -11,6 +11,27 @@ void equal( double a, double b ){
 
 
 TEST_CASE( "sjbes" ){
+  GIVEN( "inputs that are out of range" ){
+    WHEN( "n >= 30,000 or x > 30,000" ){
+      THEN( "value of 0.0 is returned" ){
+        equal( sjbes(30000,5), 0.0 );
+        equal( sjbes(0,30000), 0.0 );
+        equal( sjbes(30000,30001), 0.0 );
+        equal( sjbes(30000,29999), 0.0 );
+        equal( sjbes(29999,30001), 0.0 );
+      } // THEN
+    } // WHEN
+    WHEN( "either x or n is negative" ){
+      THEN( "value of 0.0 is returned" ){
+        equal( sjbes(-1,20), 0.0 );
+        equal( sjbes(-1,-1), 0.0 );
+        equal( sjbes(-1,0), 0.0 );
+        equal( sjbes(1,-1), 0.0 );
+      } // THEN
+    } // WHEN
+  } // GIVEN
+
+
   GIVEN( "compute normal values" ){
     WHEN( "n == 0" ){
       double x = 6e-4;
@@ -33,6 +54,7 @@ TEST_CASE( "sjbes" ){
       } // THEN
     } // WHEN
   } // GIVEN
+
   GIVEN( "not compute normal values" ){
     WHEN( "x < 0.2 and n = 0" ){
       double x = 7e-4;
@@ -64,19 +86,5 @@ TEST_CASE( "sjbes" ){
         equal( sjbes(1,x), 6.640038E-2 );
       } // THEN
     } // WHEN
-
-
-
-
-
-
-
-
-
-    int n = 1;
-    double x = 0.35;
-    equal( sjbes(n,x), 0.115243736 );
-
-
   } // GIVEN
 } // TEST CASE
