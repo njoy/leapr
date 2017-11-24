@@ -14,10 +14,10 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
   double pi = 3.14159265358979;
   for ( auto jj = 0; jj < jjmax; ++jj ){
     if ( jj < betan.size() ){
-      k = betan.size() - jj + 1;
+      k = betan.size() - jj;
       be = -betan[k-1];
     } else {
-      k = jj - betan.size() + 1;
+      k = jj - betan.size() + 2;
       be = betan[k-1];
     }
     int sn = 0;
@@ -56,7 +56,7 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
        // }
         snlg = snlg + tmp * add;
       }
-
+/*
       //--sum over the odd values of j-prime
       double snlk=0;
       for ( auto lp = 2; lp < 10; lp = lp + 2 ){
@@ -76,14 +76,13 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
         }
         snlk = snlk + tmp * add;
       }
+u
 
       //--continue the j loop
       sn=sn+snlg+snlk;
     }
 
-   // return;
     //--continue the beta loop
-    // THE LINE BELOE HERE IS CAUSING SEGMENTATION FAULT OH NO
     std::cout << k << std::endl;
     //if (jj <= betan.size()) sym_sab[a][k-1][itemp] = sn;
   //  if (jj >= betan.size()) ssp[a][k][itemp] = sn;
