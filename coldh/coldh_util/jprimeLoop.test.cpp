@@ -24,7 +24,7 @@ TEST_CASE( "jprime loop for odd values" ){
 
     double snlk = jPrimeOdd( total, alp, j, ifree, be, x, swo, pj, jj, bex, 
         rdbex, sex, betan, al, wt, tbart, maxbb, nbeta );
-    std::cout << snlk << std::endl;
+//    std::cout << snlk << std::endl;
     
     
 

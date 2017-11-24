@@ -78,12 +78,13 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
       }
 u
 
+    */
       //--continue the j loop
-      sn=sn+snlg+snlk;
+    //  sn=sn+snlg+snlk;
     }
 
     //--continue the beta loop
-    std::cout << k << std::endl;
+  //  std::cout << k << std::endl;
     //if (jj <= betan.size()) sym_sab[a][k-1][itemp] = sn;
   //  if (jj >= betan.size()) ssp[a][k][itemp] = sn;
   }

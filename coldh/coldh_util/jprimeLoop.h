@@ -17,6 +17,7 @@ auto jPrimeOdd(double& total, const double& alp, int j, int ifree,
     jp=lp-1;
     betap=(-j*(j+1)+jp*(jp+1))*x/2;
     auto tmp=(2*jp+1)*pj*swo*4;//*sumh(j,jp,y);
+    std::cout << tmp << std::endl;
     if (jj == 1 and tmp >= 1.0e-6) {
       total += tmp;
     }
