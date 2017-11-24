@@ -22,10 +22,9 @@ auto sjbes( int n, double x ){
 
   // compute normal values
   if (x <= 7.0e-4) {
-    std::cout << "HERE" << std::endl;
     w = 1;
     if (n == 0) {
-      bessel = w;
+      bessel = w;            
     } else if (n > 10) {
       bessel = 0;
     } else {
@@ -65,13 +64,15 @@ auto sjbes( int n, double x ){
       t3 = 0;
       t2 = 2.0e-38;
       for ( auto i = 0; i < nm; ++i ){
-        k = nm - i;
+        k = nm - i - 1;
         t1 = (2*k + 3) * z * t2 - t3;
-        if (n == k) sj = t1;
+        if (n == k){ sj = t1;}
         if (abs(t1) >= 1.0e25) {
           t1 = t1 / 1.0e25;
           t2 = t2 / 1.0e25;
           sj = sj / 1.0e25;
+          
+      std::cout << "HERE"<< std::endl;
         }
         t3 = t2;
         t2 = t1;
