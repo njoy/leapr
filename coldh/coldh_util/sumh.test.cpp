@@ -22,6 +22,7 @@ TEST_CASE( "sumh" ){
     WHEN( "j doesnt equal 0 and jp == 0" ){
       equal( sumh(1,0,1.5),  0.156953021 );
       equal( sumh(1,0,5e-3), 2.77776376E-6 );
+      equal( sumh(1,0,0.35), 1.32811188E-2 );
     }
 
 
