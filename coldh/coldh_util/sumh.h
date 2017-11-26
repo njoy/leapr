@@ -8,30 +8,16 @@ auto sumh(int j, int jp, double y){
   /* Does sum over Bessel functions and Clebsch-Gordon coefficients
    * for cold hydrogen or deuterium calculation.
    */ 
-  int imp, ipk1, mpk, ipk, n, n1, imk;
-  double sum1, sum2;
-  if (j == 0) {
-    sum2 = (sjbes(jp,y)*cn(j,jp,jp))*(sjbes(jp,y)*cn(j,jp,jp));
-  } 
-  else if (jp == 0) {
-    sum2 = (sjbes(j,y)*cn(j,0,j))*(sjbes(j,y)*cn(j,0,j));
-  }
-  else {
-    sum1 = 0;
-    imk = abs(j-jp) + 1;
-    ipk1 = j + jp + 1;
-    mpk = ipk1 - imk;
-    if (mpk <= 9) {
-      ipk = ipk1;
-    } else {
-      ipk = imk + 9;
-    }
-    for ( auto n = imk; n <= ipk; ++n ){
-      n1 = n - 1;
-      sum1 = sum1 + (sjbes(n1,y)*cn(j,jp,n1))*(sjbes(n1,y)*cn(j,jp,n1));
-    }
-    sum2 = sum1;
-   }
-   return sum2;
+  if      (j  == 0) { return std::pow( sjbes(jp, y) * cn(j, jp, jp), 2 ); } 
+  else if (jp == 0) { return std::pow( sjbes(j , y) * cn(j, 0,  j ), 2 ); }
 
+  int ipk, n, imk;
+  double sum1 = 0;
+
+  imk = abs(j-jp) + 1;
+  ipk = std::min(j+jp+2, abs(j-jp)+11);
+  for ( auto n = imk; n < ipk; ++n ){
+    sum1 += std::pow( sjbes(n-1,y) * cn(j,jp,n-1), 2 );
+  }
+  return sum1;
 }
