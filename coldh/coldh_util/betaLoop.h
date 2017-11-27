@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include "jprimeLoop.h"
 
 auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
     int a, int law, std::vector<std::vector<std::vector<double>>>& sym_sab ){
@@ -56,13 +58,14 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
        // }
         snlg = snlg + tmp * add;
       }
+      
 /*
       //--sum over the odd values of j-prime
       double snlk=0;
       for ( auto lp = 2; lp < 10; lp = lp + 2 ){
         jp=lp-1;
         betap=(-j*(j+1)+jp*(jp+1))*x/2;
-        int tmp=(2*jp+1)*pj*swo*4;//*sumh(j,jp,y);
+        int tmp=(2*jp+1)*pj*swo*4*sumh(j,jp,y);
         if (jj == 1 and tmp >= 1.0e-6) {
           total += tmp;
         }
