@@ -21,8 +21,8 @@ auto prepareParams( const std::vector<double>& energy,
 
     ar[i]   = weights[i] / ( sinh(0.5*betaVals[i]) * betaVals[i] );
     dist[i] = 0.5 * weights[i] * energy[i] / tanh(0.5*betaVals[i]);
+    dbw[i]  = weights[i] / ( tanh(0.5*betaVals[i]) * betaVals[i] );
     tsave  += dist[i] / bk;
-    dbw[i]  = ar[i] * cosh(0.5*betaVals[i]);
   }
 
   for ( auto b = 0; b < betan.size(); ++b ){

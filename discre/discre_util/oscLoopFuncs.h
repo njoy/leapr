@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-#include "bfact.h"
+#include <cmath>
+#include "oscLoopFuncs_util/bfact.h"
 
 void posNegTerms( int& n, const double& beta_i, 
   const std::vector<double>& b_minus_or_plus,
@@ -26,7 +27,7 @@ void posNegTerms( int& n, const double& beta_i,
 
 
 auto oscillatorLoop( const std::vector<double>& alpha,
-  std::vector<double>& dbw, std::vector<double>& ar, const double& scaling,
+  std::vector<double>& lambda_i, std::vector<double>& ar, const double& scaling,
   std::vector<double>& wts, std::vector<double>& bes,
   std::vector<double>& betaVals, int a, int maxdd,
   int numOscillators, double& wt, double& tbart, std::vector<double>& weight,
@@ -37,14 +38,20 @@ auto oscillatorLoop( const std::vector<double>& alpha,
 
   std::vector<double> ben( maxdd, 0.0 ), wtn( maxdd, 0.0 ); wtn[0] = 1.0;
 
-  double bk = 8.617385E-5, dwc, x, bzero;
+  double bk = 8.617385E-5, alpha_lambda_i, x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators
   for ( auto i = 0; i < numOscillators; ++i ){
     nn = n + 1;
-    dwc = alpha[a]*scaling*dbw[i];
-    x   = alpha[a]*scaling*ar[i];
+
+    alpha_lambda_i = alpha[a]*scaling*lambda_i[i];
+    //             = alpha*scaling*weight / (tanh(0.5*energy/tev) * energy/tev)
+    //             = scaled alpha * lambda_i (lambda_i defined in Eq. 538)
+    
+    x              = alpha[a]*scaling*ar[i];
+    //             = alpha*scaling*weight / (sinh(0.5*energy/tev) * energy/tev)
+    //             = argument for bessel function in Eq. 537
 
     /* bfact populates bplus and bminus with A_in terms from Eq. 537.
      * The nth entry of bplus or bminus corresponds to a specific alpha and 
@@ -55,7 +62,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
      * depending on the size of x.
      */
     std::vector<double> bminus (50,0.0), bplus(50,0.0);
-    bzero = bfact( x, dwc, betaVals[i], bplus, bminus );
+    bzero = bfact( x, alpha_lambda_i, betaVals[i], bplus, bminus );
     
     // do convolution for delta function
     n = 0;

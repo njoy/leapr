@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include "jprimeLoop.h"
+#include "betaLoop_util/jprimeLoop.h"
 
 auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
     int a, int law, std::vector<std::vector<std::vector<double>>>& sym_sab ){
@@ -31,7 +31,7 @@ auto betaLoop( std::vector<double>& betan, double alp, double x, int itemp,
     int ipo = law == 2 or law == 5 ? 2 : 1;
 
     //int jt1 = 2 * 3; // THIS IS REALLY WEIRD origialy 2 * jterm but jterm
-                     // always equals 3? Please check out
+                       // always equals 3? Please check out
     int jt1 = law == 2 or law == 5 ? 7 : 6;
 
     for ( auto l = ipo; l < jt1; l = l + 2 ){
