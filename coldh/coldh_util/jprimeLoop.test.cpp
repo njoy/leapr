@@ -24,9 +24,8 @@ TEST_CASE( "jprime loop for even values" ){
     for ( auto i = 0; i < sex.size(); ++i ){
       sex[i] = i + 1;
     }
-    double snlk = jPrimeEven( total, j, ifree, be, x, swe, pj, jj, bex, 
-        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
-    //std::cout << snlk << std::endl;
+    double snlk = jPrime( total, j, ifree, be, x, swe, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx, false );
     equal( snlk, 0.2353529421 );
  
 
@@ -46,8 +45,8 @@ TEST_CASE( "jprime loop for odd values" ){
       2.2224546, 2.1952465, 1.5059710, 5.0 };
     std::vector<double> betan { 0.1, 0.15, 0.3, 0.6, 1.2 };
 
-    double snlk = jPrimeOdd( total, j, ifree, be, x, swo, pj, jj, bex, 
-        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
+    double snlk = jPrime( total, j, ifree, be, x, swo, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx, true );
     equal( snlk, 8.017576444 );
     
   } // GIVEN
@@ -65,8 +64,8 @@ TEST_CASE( "jprime loop for odd values" ){
     for ( auto i = 0; i < sex.size(); ++i ){
       sex[i] = i + 1;
     }
-    double snlk = jPrimeOdd( total, j, ifree, be, x, swo, pj, jj, bex, 
-        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
+    double snlk = jPrime( total, j, ifree, be, x, swo, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx, true );
     equal( snlk, 1.397417419 );
  
 
