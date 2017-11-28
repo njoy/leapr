@@ -10,11 +10,34 @@ void equal( double a, double b ){
 }
 
 
+TEST_CASE( "jprime loop for even values" ){
+  GIVEN( "inputs" ){
+    double total = 0.0, wt = 2.3, be = -1.2, al = 0.1, x = 0.8, 
+           swe = 0.9, pj = 0.4, y = 0.3, tbart = 950.0;
+    int j = 1, ifree = 0, jj = 0, nbeta = 5, nbx = 10;
+    std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
+      0.6, 1.2, 0.0 };
+    std::vector<double> rdbex { 1.6666666, 3.3333333, 6.6666666, 20.0, 5.0, 
+      20.0, 6.66666, 3.333333, 1.666666, 0.0, 0.0 };
+    std::vector<double> betan { 0.1, 0.15, 0.3, 0.6, 1.2 };
+    std::vector<double> sex(11,0.0);
+    for ( auto i = 0; i < sex.size(); ++i ){
+      sex[i] = i + 1;
+    }
+    double snlk = jPrimeEven( total, j, ifree, be, x, swe, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
+    //std::cout << snlk << std::endl;
+    equal( snlk, 0.2353529421 );
+ 
+
+  } // GIVEN
+
+} // TEST CASE
 TEST_CASE( "jprime loop for odd values" ){
   GIVEN( "inputs" ){
-    double total = 0.02, alp = 0.23, wt = 2.3, be = -1.2, al = 0.1, x = 0.85, 
+    double total = 0.02, wt = 2.3, be = -1.2, al = 0.1, x = 0.85, 
            swo = 0.87, pj = 0.48, y = 0.35, tbart = 950.0;
-    int j = 1, ifree = 0, jj = 0, maxbb = 11, nbeta = 5, nbx = 10;
+    int j = 1, ifree = 0, jj = 0, nbeta = 5, nbx = 10;
     std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
       0.6, 1.2, 0.0 };
     std::vector<double> rdbex { 1.6666666, 3.3333333, 6.6666666, 20.0, 5.0, 
@@ -23,27 +46,27 @@ TEST_CASE( "jprime loop for odd values" ){
       2.2224546, 2.1952465, 1.5059710, 5.0 };
     std::vector<double> betan { 0.1, 0.15, 0.3, 0.6, 1.2 };
 
-    double snlk = jPrimeOdd( total, alp, j, ifree, be, x, swo, pj, jj, bex, 
-        rdbex, sex, betan, al, wt, tbart, maxbb, nbeta, y, nbx );
+    double snlk = jPrimeOdd( total, j, ifree, be, x, swo, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
     equal( snlk, 8.017576444 );
     
   } // GIVEN
 
   GIVEN( "other inputs" ){
-    double total = 0.0, alp = 0.23, wt = 2.3, be = -1.2, al = 0.1, x = 0.8, 
+    double total = 0.0, wt = 2.3, be = -1.2, al = 0.1, x = 0.8, 
            swo = 0.9, pj = 0.4, y = 0.3, tbart = 950.0;
-    int j = 1, ifree = 0, jj = 0, maxbb = 11, nbeta = 5, nbx = 10;
+    int j = 1, ifree = 0, jj = 0, nbeta = 5, nbx = 10;
     std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
       0.6, 1.2, 0.0 };
     std::vector<double> rdbex { 1.6666666, 3.3333333, 6.6666666, 20.0, 5.0, 
       20.0, 6.66666, 3.333333, 1.666666, 0.0, 0.0 };
-    std::vector<double> sex(11,0.0);
     std::vector<double> betan { 0.1, 0.15, 0.3, 0.6, 1.2 };
+    std::vector<double> sex(11,0.0);
     for ( auto i = 0; i < sex.size(); ++i ){
       sex[i] = i + 1;
     }
-    double snlk = jPrimeOdd( total, alp, j, ifree, be, x, swo, pj, jj, bex, 
-        rdbex, sex, betan, al, wt, tbart, maxbb, nbeta, y, nbx );
+    double snlk = jPrimeOdd( total, j, ifree, be, x, swo, pj, jj, bex, 
+        rdbex, sex, betan, al, wt, tbart, nbeta, y, nbx );
     equal( snlk, 1.397417419 );
  
 
