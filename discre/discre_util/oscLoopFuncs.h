@@ -9,15 +9,16 @@ void posNegTerms( int& n, const double& beta_i,
   int pos_or_neg ){
 
   int k = 0;
-
-  while ( k < 50 ){
-    k += 1;
-    if ( b_minus_or_plus[k-1] <= 0 ){ return; } 
+  /* There are 50 entries in bplus and bminus (not all of them necessarily
+   * nonzero). Loop through them. 
+   */
+  for ( auto k = 0; k < 50; ++k ){
+    if ( b_minus_or_plus[k] <= 0 ){ return; } 
     for ( auto m = 0; m < nn; ++m ){
-      if ( wtn[m] * b_minus_or_plus[k-1] >= 1e-8 and n < bes.size() ){
+      if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < bes.size() ){
         n += 1;
-        bes[n] = ben[m] + pos_or_neg * k * beta_i;
-        wts[n] = wtn[m] * b_minus_or_plus[k-1];
+        bes[n] = ben[m] + pos_or_neg * (k+1) * beta_i;
+        wts[n] = wtn[m] * b_minus_or_plus[k];
       }
     }
   }
@@ -36,15 +37,25 @@ auto oscillatorLoop( const std::vector<double>& alpha,
 
   std::vector<double> ben( maxdd, 0.0 ), wtn( maxdd, 0.0 ); wtn[0] = 1.0;
 
-  double bk = 8.617385E-5;
-  int n, nn = 1;
+  double bk = 8.617385E-5, dwc, x, bzero;
+  int n = 0, nn = 0;
 
   // Loop over all oscillators
   for ( auto i = 0; i < numOscillators; ++i ){
-    double dwc = alpha[a]*scaling*dbw[i];
-    double x   = alpha[a]*scaling*ar[i];
+    nn = n + 1;
+    dwc = alpha[a]*scaling*dbw[i];
+    x   = alpha[a]*scaling*ar[i];
+
+    /* bfact populates bplus and bminus with A_in terms from Eq. 537.
+     * The nth entry of bplus or bminus corresponds to a specific alpha and 
+     * i value. The bzero output is either 
+     *                 I0(x)*e^(-alpha*lambda_i)
+     * or 
+     *                I0(x)*e^(-alpha*lambda_i+x)
+     * depending on the size of x.
+     */
     std::vector<double> bminus (50,0.0), bplus(50,0.0);
-    double bzero = bfact( x, dwc, betaVals[i], bplus, bminus );
+    bzero = bfact( x, dwc, betaVals[i], bplus, bminus );
     
     // do convolution for delta function
     n = 0;
@@ -64,14 +75,13 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     posNegTerms( n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1  );
 
     // continue loop
+    // Copy first n entries of permanent array into our temporary arrays
     for ( auto m = 0; m <= n; ++m ){
       ben[m] = bes[m];
       wtn[m] = wts[m];
     }
     wt += weight[i];
     tbart += dist[i] / ( bk * temp );
-
-    nn = n + 1;
 
   }   
   return n;
