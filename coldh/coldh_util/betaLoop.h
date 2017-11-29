@@ -2,31 +2,37 @@
 #include <vector>
 #include <cmath>
 #include "betaLoop_util/jprimeLoop.h"
+#include "betaLoop_util/bt.h"
 
 auto betaLoop( const std::vector<double>& betan, 
   const std::vector<double>& rdbex, const std::vector<double>& bex,
   const std::vector<double>& sex, const double& alphaVal, const double& wt, 
-  const double& tbart, const double& x, const double& y, int itemp, int nbx,
-  int a, int b, int law, std::vector<std::vector<std::vector<double>>>& sym_sab ){
+  const double& tbart, const double& x, const double& y, const double& swe, 
+  const double& swo, int itemp, int nbx,
+  int a, int b, int law, std::vector<std::vector<std::vector<double>>>& sym_sab, 
+  std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
   //--loop over all beta values
   //    results for positive beta go into ssp
   //    results for negative beta go into sym_sab
-  double pj, swo, swe;
+  double pj;
   int ifree = 0;
   int jjmax = 2 * betan.size() - 1;
   int k, jp, j;
-  double add, betap, be, snlg, snlk;
+  double add, betap, be, snlg, snlk, sn;
   double pi = 3.14159265358979;
   for ( auto jj = 0; jj < jjmax; ++jj ){
     if ( jj < betan.size() ){
       k = betan.size() - jj;
-      be = -betan[k-1];
+      be = betan[k-1];
     } else {
       k = jj - betan.size() + 2;
       be = betan[k-1];
     }
-    int sn = 0;
+    if ( jj < betan.size()-1 ){
+      be = -be;
+    }
     double total = 0;
+    sn = 0;
 
     //--loop over all oscillators
     // para-h2: j=0,2,....; ortho-h2: j=1,3,....
@@ -40,18 +46,19 @@ auto betaLoop( const std::vector<double>& betan,
     for ( auto l = ipo; l < jt1; l = l + 2 ){
       j = l - 1;
 
-   //   call bt(j,pj,x)
-    snlg = jPrime( total, j, be, x, swe, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, b, y, nbx, false );
-    snlk = jPrime( total, j, be, x, swo, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, b, y, nbx, true  );
+      bt(j,pj,x);
+      // Get even
+      snlg = jPrime( total, j, be, x, swe, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, b, y, nbx, false );
+      // Get odd
+      snlk = jPrime( total, j, be, x, swo, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, b, y, nbx, true  );
 
       //--continue the j loop
-    //  sn=sn+snlg+snlk;
+      sn = sn + snlg + snlk;
     }
 
     //--continue the beta loop
-  //  std::cout << k << std::endl;
-    //if (jj <= betan.size()) sym_sab[a][k-1][itemp] = sn;
-  //  if (jj >= betan.size()) ssp[a][k][itemp] = sn;
+      if (jj < betan.size()) sym_sab[a][k-1][itemp] = sn;
+      if (jj >= betan.size()-1) sym_sab_2[a][k-1][itemp] = sn;
   }
 
 }

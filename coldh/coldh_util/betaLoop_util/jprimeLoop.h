@@ -26,7 +26,7 @@ auto jPrime( double& total, int j, const double& be, const double& x,
 
     tmp = (2*jp+1) * pj * sw * 4 * sumh(j,jp,y);
     if (jj == 0 and tmp >= 1.0e-6) { total += tmp; }
-    snl += tmp * sint(bn,bex,rdbex,sex,betan,b,al,wt,tbart,nbx);
+    snl += tmp * sint(bn,bex,rdbex,sex,betan,betan.size(),al,wt,tbart,nbx);
 
   }
   return snl;
