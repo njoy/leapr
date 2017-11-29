@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "coldh_util/terpk.h"
+#include "coldh_util/betaLoop.h"
 #include "../discre/discre_util/bfill.h"
 #include "../discre/discre_util/exts.h"
 
@@ -9,7 +10,8 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     const std::vector<double>& tempr, double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
     double& dka, std::vector<double>& ska, int nbeta, int lat,
-    std::vector<std::vector<std::vector<double>>>& sym_sab ){
+    std::vector<std::vector<std::vector<double>>>& sym_sab,
+    std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -34,7 +36,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   double sampid = 0.403;
   double therm = 0.0253;
 
-  
+  int nbx; 
   int law = ncold + 1;
   int maxbb = 2 * beta.size() + 1;
   double de, x, amassm, bp, sampc, sampi, wt, tbart;
@@ -109,14 +111,24 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
       input[b] = sym_sab[a][b][itemp];
     }
     exts( input, sex, exb, betan );
-    for ( auto entry : sex ){ std::cout << entry << std::endl; }
+
+    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, swe, swo, itemp, nbx, a, law, sym_sab, sym_sab_2 );
+
+  }
+    std::cout << "   " << std::endl;
+    for ( auto a : sym_sab ){ 
+      for ( auto b : a ){
+        std::cout << b[0] << std::endl;
+      } 
+    }
+
+    
 
 
 
  
 
     return;
-  }
     
 
 

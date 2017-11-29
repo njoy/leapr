@@ -7,7 +7,7 @@ auto jPrime( double& total, int j, const double& be, const double& x,
   const double& sw, const double& pj, int jj, const std::vector<double>& bex, 
   const std::vector<double>& rdbex, const std::vector<double>& sex, 
   const std::vector<double>& betan, const double& al, const double& wt, 
-  const double& tbart, int b, const double& y, int nbx, bool odd ){
+  const double& tbart, const double& y, int nbx, bool odd ){
 
   //--sum over the odd or even values of j-prime
   
