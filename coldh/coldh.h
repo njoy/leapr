@@ -42,6 +42,12 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   double de, x, amassm, bp, sampc, sampi, wt, tbart;
 
 
+  std::vector<double> exb(maxbb, 0.0 );
+  std::vector<double> betan(nbeta, 0.0 );
+  std::vector<double> bex(maxbb, 0.0 );
+  std::vector<double> sex(maxbb, 0.0 );
+  std::vector<double> rdbex(maxbb, 0.0 );
+ 
 
   if ( law > 3 ){
     de = ded;
@@ -92,12 +98,8 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     swo=swo/snorm;
 
     // prepare arrays for sint
-    std::vector<double> betan(nbeta, 0.0 );
-    std::vector<double> exb(nbeta, 0.0 );
-    std::vector<double> bex(maxbb, 0.0 );
-    std::vector<double> sex(maxbb, 0.0 );
-    std::vector<double> rdbex(maxbb, 0.0 );
-    if (a == 0){ 
+    
+   if (a == 0){ 
       for ( auto b = 0; b < nbeta; ++b ){
           double be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
@@ -114,15 +116,16 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
 
     betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, swe, swo, itemp, nbx, a, law, sym_sab, sym_sab_2 );
 
-  }
     std::cout << "   " << std::endl;
     for ( auto a : sym_sab ){ 
       for ( auto b : a ){
         std::cout << b[0] << std::endl;
       } 
     }
+    if ( a == 1 ){return; }
 
     
+  }
 
 
 
