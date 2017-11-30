@@ -5,6 +5,7 @@
 #include "contin/contin.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
+//#include "coldh/coldh.h"
 
 int main(){
   // Card1
@@ -16,7 +17,7 @@ int main(){
   // Card4
     int mat = 26; double za = 126.0;
   // Card5
-    double awr = 8.93478, spr = 6.15; int npr = 1, iel = 2;
+    double awr = 8.93478, spr = 6.15; int npr = 1, iel = 2; int ncold = 0;
   // Card6
     int nss = 0; double aws = 0.0;
   // Card7
@@ -41,6 +42,9 @@ int main(){
     std::vector<double> oscEnergies {1.0, 2.0};
   // Card16
     std::vector<double> oscWeights {0.3, 0.4};
+  // Card17 
+    int nka = 4; double dka = 0.01;
+    std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
     
   double bk = 8.617385e-5;
   double therm = 0.0253;
@@ -53,6 +57,13 @@ int main(){
   std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
     std::vector<std::vector<double>> (beta.size(), 
     std::vector<double> ( ntempr, 0.0 ) ) );
+
+  // This is only going to be used by coldh
+  std::vector<std::vector<std::vector<double>>> sym_sab_2( alpha.size(),
+    std::vector<std::vector<double>> (beta.size(), 
+    std::vector<double> ( ntempr, 0.0 ) ) );
+
+
 
   std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
 
@@ -111,6 +122,12 @@ int main(){
       std::cout << sym_sab[3][3][0] << std::endl;
       std::cout << sym_sab[4][4][0] << std::endl;
 
+
+
+ //     if ( ncold != 0 ){
+ //       coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, t_eff_vec, temp_vec,
+ //         scaling, alpha, beta, dka, kappaVals, nbeta, lat, sym_sab, sym_sab_2 );
+ //     }
 
     }
     done = true;
