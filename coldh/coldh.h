@@ -106,7 +106,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
           exb[b] = exp(-be/2);
           betan[b] = be;
       } 
-      bfill(bex,rdbex,betan);
+      nbx = bfill(bex,rdbex,betan);
     }
     std::vector<double> input ( beta.size(), 0.0 ); 
     for ( auto b = 0; b < beta.size(); ++b ){
@@ -114,42 +114,20 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     }
     exts( input, sex, exb, betan );
 
+    //std::cout << "  " << std::endl;
+    //for ( auto entry : sex ) { std::cout << "------  " << entry << std::endl;}
+    //std::cout << "  " << std::endl;
     betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, swe, swo, itemp, nbx, a, law, sym_sab, sym_sab_2 );
 
-    std::cout << "   " << std::endl;
-    for ( auto a : sym_sab ){ 
-      for ( auto b : a ){
-        std::cout << b[0] << std::endl;
-      } 
-    }
-    if ( a == 1 ){return; }
-
-    
+   
   }
-
-
-
+//    std::cout << "   " << std::endl;
+//    for ( auto a : sym_sab ){ 
+//      for ( auto b : a ){
+//        std::cout << b[0] << std::endl;
+//      } 
+//    }
  
-
     return;
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    
 }   

@@ -23,10 +23,10 @@ auto jPrime( double& total, int j, const double& be, const double& x,
 
     betap = ( -j * (j+1) + jp * (jp+1) ) * x * 0.5;
     bn = be + betap;
-
     tmp = (2*jp+1) * pj * sw * 4 * sumh(j,jp,y);
     if (jj == 0 and tmp >= 1.0e-6) { total += tmp; }
-    snl += tmp * sint(bn,bex,rdbex,sex,betan,betan.size()-1,al,wt,tbart,nbx);
+    auto add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,al,wt,tbart,nbx);
+    snl += tmp * add;
 
   }
   return snl;
