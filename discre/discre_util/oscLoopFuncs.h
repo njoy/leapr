@@ -88,6 +88,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       wtn[m] = wts[m];
     }
     wt += weight[i];
+    // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += dist[i] / ( bk * temp );
 
   }   

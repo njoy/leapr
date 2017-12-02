@@ -27,17 +27,18 @@ auto discre(const double& sc, const double& scaling,
   // Prepare functions of beta
   double weight, tsave;
 
-  std::vector<double> ar(50,0.0), dist(50,0.0), lambda_i(50,0.0), 
+  std::vector<double> ar(50,0.0), t_eff_consts(50,0.0), lambda_i(50,0.0), 
     betaVals(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
 
-  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, dist, lambda_i,
+  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, t_eff_consts, lambda_i,
     bk, exb, betan, beta, sc );
-  /* vec --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
+  /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
-   *     --> betaVals = [ energy / tev ]
-   *     --> dist = [ 0.5 * weight * energy / tanh( 0.5 * energy / tev ) ]
+   * --> betaVals = [ energy / tev ]
+   * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / tev ) ]
+   *             This is used to calculate the effective temperature Eq. 544
+   * --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
    *             This is lambda_i, defined in Eq. 538. Used for Eq. 537.
-   *     --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
    */
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
@@ -48,18 +49,21 @@ auto discre(const double& sc, const double& scaling,
   // Main alpha loop
   for ( auto a = 0; a < alpha.size(); ++a ){
 
-    std::vector<double> sex ( maxbb, 0.0 );
+   
+    // Get all sym_sab entries for a given alpha and temperature (vary beta)
+    // for use in exts
     std::vector<double> input ( beta.size(), 0.0 );
     for ( auto b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[a][b][itemp];
     }
-    exts( input, sex, exb, betan );
+
+    std::vector<double> sex = exts( input, exb, betan );
 
     // Initialize delta loop
     std::vector<double> sexpb(beta.size(),0.0), bes(maxdd,0.0), wts(maxdd,0.0);
     
     int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
-      betaVals, a, maxdd, energy.size(), wt, tbart, weights, dist, 
+      betaVals, a, maxdd, energy.size(), wt, tbart, weights, t_eff_consts, 
       temp_vec[itemp] );
 
     // Sort the discrete lines, and throw out the smallest ones

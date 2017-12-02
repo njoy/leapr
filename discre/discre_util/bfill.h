@@ -49,4 +49,6 @@ auto bfill( std::vector<double>& bex, std::vector<double>& rdbex,
     
   return k - 1;
   // returning what leapr calls "nbx" 
+  // This is the number of entries in the bex and rdbex vectors before you get
+  // to the 1 or 2 zeros at the end
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-auto terpk( std::vector<double>& ska, double& delta, double& x ){
+auto terpk( const std::vector<double>& ska, double& delta, double& x ){
   /* Interpolates in a table of ska(kappa) for a required kappa
    */
   int i = x / delta;

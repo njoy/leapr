@@ -46,7 +46,6 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   std::vector<double> exb(maxbb, 0.0 );
   std::vector<double> betan(nbeta, 0.0 );
   std::vector<double> bex(maxbb, 0.0 );
-  std::vector<double> sex(maxbb, 0.0 );
   std::vector<double> rdbex(maxbb, 0.0 );
  
 
@@ -113,7 +112,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     for ( auto b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[a][b][itemp];
     }
-    exts( input, sex, exb, betan );
+    auto sex = exts( input, exb, betan );
 
     betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, swe, swo, itemp, 
        nbx, a, law, sym_sab, sym_sab_2 );

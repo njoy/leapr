@@ -26,16 +26,15 @@ TEST_CASE( "exts" ){
       6.549547E-3, 1.876351E-3};
     std::vector<double> exb {1.0, 0.9277434, 0.8607079, 0.7408182, 0.5488116,
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    std::vector<double> sex (exb.size(), 0.0);
     WHEN( "First beta value is really small (<=1e-9)" ){
-      exts( sexpb, sex, exb, beta );
+      auto sex = exts( sexpb, exb, beta );
       std::vector<double> correctSex {1.876351E-3, 6.549547E-3, 2.393197E-2, 
         9.052783E-2, 53.06972, 7.791802E-2, 1.772923E-2, 3.594467E-3, 
         5.651460E-4, 0.0, 0.0};
       equal_vec( sex, correctSex );
       
       beta = { 1.0e-9, 0.15, 0.30, 0.60, 1.20 };
-      exts( sexpb, sex, exb, beta );
+      sex = exts( sexpb, exb, beta );
       equal_vec( sex, correctSex );
 
     } // WHEN
@@ -47,13 +46,11 @@ TEST_CASE( "exts" ){
       std::vector<double> correctSex =  {1.876351E-3, 6.549547E-3, 2.393197E-2, 
         9.052783E-2, 0.1992005, 0.1992005, 7.791802E-2, 1.772923E-2, 
         3.594467E-3, 5.651460E-4, 0.0};
-      exts( sexpb, sex, exb, beta );
+      auto sex = exts( sexpb, exb, beta );
       equal_vec( sex, correctSex );
 
-
-
       beta  = { 1.1e-9, 0.15, 0.30, 0.60, 1.20 };
-      exts( sexpb, sex, exb, beta );
+      sex = exts( sexpb, exb, beta );
       equal_vec( sex, correctSex );
     } // WHEN 
   } // GIVEN

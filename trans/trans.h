@@ -66,7 +66,7 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
     } // if nsd > 0
   } // for alpha
   
-  // Update the effective temperature
+  // Update the effective temperature, following Eq. 536
   t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
                      ( tbeta + trans_weight );
 

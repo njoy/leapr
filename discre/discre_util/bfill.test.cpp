@@ -52,15 +52,15 @@ TEST_CASE( "bfill" ){
       std::vector<double> rdbex ( maxbb, 0.0 );
       std::vector<double> beta { 1.1e-9, 0.15, 0.30, 0.60, 1.20 };
       REQUIRE( bfill(bex, rdbex, beta) == 10 );
-      std::vector<double> correct_bex {-1.2, -0.6, -0.3, -0.15, 0.0, 0.15, 
-        0.3, 0.6, 1.2, 0.0, 0.0};
+      std::vector<double> correct_bex {-1.2, -0.6, -0.3, -0.15, -1.1e-9, 1.1e-9, 
+        0.15, 0.3, 0.6, 1.2, 0.0};
       std::vector<double> correct_rdbex {1.6666666, 3.3333333, 6.666666, 
-        6.666666, 6.666666, 6.666666, 3.3333333, 1.6666666, 0.0, 0.0, 0.0};
+        6.6666666, 4.545455e8, 6.6666666, 6.66666666, 3.3333333, 1.6666666, 
+        0.0, 0.0 };
       THEN( "the vectors returned are correct" ){
-      //  equal_vec( bex, correct_bex );
-      //  equal_vec( rdbex, correct_rdbex );
+        equal_vec( bex, correct_bex );
+        equal_vec( rdbex, correct_rdbex );
       } // THEN
-      
     } // WHEN
   } // GIVEN
 } // TEST CASE
