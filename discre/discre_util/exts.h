@@ -19,8 +19,8 @@ std::vector<double> exts( const std::vector<double>& sexpb,
 
   std::vector<double> sex ( 2 * sexpb.size() + 1, 0.0 );
 
-  // Here we reverse the vector sexpb and put it in the beginning
-  // of sex.
+  // Here we reverse the vector sexpb and put it in the beginning of sex.
+  
   std::reverse_copy(std::begin(sexpb), std::end(sexpb), std::begin(sex) );
 
   int k = beta[0] <= 1.0e-9 ? beta.size() + 1 : beta.size() + 2;

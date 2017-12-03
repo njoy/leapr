@@ -9,12 +9,14 @@ void posNegTerms( int& n, const double& beta_i,
   std::vector<double>& bes, const std::vector<double>& ben, const int nn,
   int pos_or_neg ){
 
-  int k = 0;
   /* There are 50 entries in bplus and bminus (not all of them necessarily
    * nonzero). Loop through them. 
    */
   for ( auto k = 0; k < 50; ++k ){
+    // It doesn't really make sense for b_minus_or_plus[k] to be negative
+    // right? That's definitely wrong, right? It can be 0 just not < 0
     if ( b_minus_or_plus[k] <= 0 ){ return; } 
+
     for ( auto m = 0; m < nn; ++m ){
       if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < bes.size() ){
         n += 1;
@@ -30,8 +32,31 @@ auto oscillatorLoop( const std::vector<double>& alpha,
   std::vector<double>& lambda_i, std::vector<double>& ar, const double& scaling,
   std::vector<double>& wts, std::vector<double>& bes,
   std::vector<double>& betaVals, int a, int maxdd,
-  int numOscillators, double& wt, double& tbart, std::vector<double>& weight,
-  std::vector<double>& dist, const double& temp ){
+  int numOscillators, double& wt, double& tbart, std::vector<double>& weights,
+  std::vector<double>& t_eff_consts, const double& temp ){
+  /* alpha          --> yup
+   * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
+   *                    --defined in Eq. 538, evaluated in prepareParams.h
+   * ar             --> weight / ( sinh( 0.5 * energy / tev ) * energy / tev )
+   *                    --bessel arg from Eq. 537, evaluated in prepareParams.h
+   * scaling        --> sc / arat
+   *                    --input into discre, will be sent in from leapr
+   * wts            --> blank vector with maxdd = 500 entries
+   * bes            --> blank vector with maxdd = 500 entries
+   * betaVals       --> energy / tev
+   * a              --> alpha index
+   * maxdd          --> 500
+   * numOscillators --> yes
+   * wt             --> tbeta
+   * tbart          --> T_eff / temp  ( t_eff_vec[itemp] / temp_vec[itemp] )
+   * weights        --> vector of delta function weights
+   * t_eff_consts   --> 0.5 * weight * energy / tanh( 0.5 * energy / tev )
+   *                    --defined in Eq. 544, evaluated in prepareParams.h
+   *                    --in leapr.f90, this is called dist
+   */
+
+
+
   /* Note that the betaVals vector is a vector whose entries are the oscillator
    * energies scaled by temp in eV, thus making them beta values.
    */
@@ -87,9 +112,9 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       ben[m] = bes[m];
       wtn[m] = wts[m];
     }
-    wt += weight[i];
+    wt += weights[i];
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
-    tbart += dist[i] / ( bk * temp );
+    tbart += t_eff_consts[i] / ( bk * temp );
 
   }   
   return n;

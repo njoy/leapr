@@ -60,7 +60,7 @@ auto discre(const double& sc, const double& scaling,
     std::vector<double> sex = exts( input, exb, betan );
 
     // Initialize delta loop
-    std::vector<double> sexpb(beta.size(),0.0), bes(maxdd,0.0), wts(maxdd,0.0);
+    std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
     
     int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
       betaVals, a, maxdd, energy.size(), wt, tbart, weights, t_eff_consts, 
@@ -85,6 +85,7 @@ auto discre(const double& sc, const double& scaling,
     }
 
     // Add the continuous part to the scattering law
+    std::vector<double> sexpb(beta.size(),0.0);
     for ( auto m = 0; m <= n; ++m ){
       for ( auto b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
