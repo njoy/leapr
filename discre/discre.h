@@ -39,6 +39,9 @@ auto discre(const double& sc, const double& scaling,
    *             This is used to calculate the effective temperature Eq. 544
    * --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
    *             This is lambda_i, defined in Eq. 538. Used for Eq. 537.
+   * --> exb = [ exp( -beta * sc / 2 ) ]
+   *          This is used in calculating the sex vector, since to go from 
+   *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
@@ -57,7 +60,17 @@ auto discre(const double& sc, const double& scaling,
       input[b] = sym_sab[a][b][itemp];
     }
 
+    // input = sym_sab values for constant temp and alpha. 
+    // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
+    //         order to go between S(a,b) and S(a,-b) 
     std::vector<double> sex = exts( input, exb, betan );
+    // sex is populated with sym_sab entries, such that 
+    //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
+    //                             or 
+    //         sex = [ s3 s2 s1 s2*exp(-beta) s3*exp(-beta) 0 0 ]
+    //                (dependinng on first beta value)
+    // The exp(-beta) values are explained above, because of Eq. 509
+
 
     // Initialize delta loop
     std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
