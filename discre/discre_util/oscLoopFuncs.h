@@ -9,6 +9,22 @@ void posNegTerms( int& n, const double& beta_i,
   std::vector<double>& bes, const std::vector<double>& ben, const int nn,
   int pos_or_neg ){
 
+  /* The point of these loops are to prepare wts and bes for the summation in
+   * Eq. 542, which involves a sum of sums of sums etc, so we're really 
+   * interested in getting cross terms here. 
+   *
+   * For the first oscillator (i=1), wts would potentially look like
+   * wts = [ F(i=1,n=-1), F(i=1,n=-2), ..., F(i=1,n=1), F(i=1,n=2), ... ]
+   * except not really, because we only count not-small entries (>1e-8)
+   *
+   * For the second oscillator (i=2) we add in cross terms wherever is nice
+   * wts = [ F(i=1,n=-1)*F(i=2,n=-1), F(i=1,n=-1)*F(i=2,i=-2), ... ]
+   * given, of course, that they're reasonably large enough
+   *
+   * So hopefully after calling this enough, wts will be quite populated with
+   * a lot of F(i_a,n_b)*F(i_c,n_d)*F(i_e,n_f)*.... terms. 
+   */
+
   /* There are 50 entries in bplus and bminus (not all of them necessarily
    * nonzero). Loop through them. 
    */
@@ -95,11 +111,20 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       if ( (ben[m] <= 0 or wtn[m]*bzero >= 1e-8) and n < maxdd ){
         bes[n] = ben[m];
         wts[n] = wtn[m]*bzero;
+        // Why are we multiplying by bzero? Because that's the A_(i,n) term for
+        // n = 0, which we need to sum over. But notice that in bfact we 
+        // populate a bplus and a bminus, and are kind of implicitly leaving
+        // n=0 out. So we're accounting for this here. In the manual (pg. 713)
+        // it states that we want to worry about the n=0 term first, so that's
+        // what we're kind of doing. 
         n += 1;
       }
     }
     n -= 1;
 
+    // Read the description for posNegTerms to get a better feel for this.
+    // Basically we're going to be populating wts with A_i,n terms muliplied
+    // by each other, for many different i and n. 
     // negative n terms
     posNegTerms( n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1 );
 

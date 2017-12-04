@@ -80,9 +80,11 @@ auto discre(const double& sc, const double& scaling,
       temp_vec[itemp] );
 
     // Sort the discrete lines, and throw out the smallest ones
+    // Except for the first value, we're sorting wts and bes so that wts values
+    // are in decreasing order.
     int n = nn; double save;
-    for ( auto i = 1; i < n; ++i ){
-      for ( auto j = i+1; j < n+1; ++j ){
+    for ( auto i = 1; i < n-1; ++i ){
+      for ( auto j = i+1; j < n; ++j ){
         if ( wts[j] > wts[i] ){
           swap( wts[j], wts[i] );
           swap( bes[j], bes[i] );
@@ -102,6 +104,9 @@ auto discre(const double& sc, const double& scaling,
     for ( auto m = 0; m <= n; ++m ){
       for ( auto b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
+        // This is explicitly evaluating Eq. 542, where wts is W_k(alpha), and
+        // bes is a vector populated with beta_k values. sint is used to 
+        // interpolate for the beta - beta_k piece of the equation.
         auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, 
             alpha[a], tbeta + twt, tbart, nbx);
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
