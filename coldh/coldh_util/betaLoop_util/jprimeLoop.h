@@ -25,7 +25,7 @@ auto jPrime( double& total, int j, const double& be, const double& x,
     bn = be + betap;
     tmp = (2*jp+1) * pj * sw * 4 * sumh(j,jp,y);
     if (jj == 0 and tmp >= 1.0e-6) { total += tmp; }
-    if ( free == true ) {
+    if ( free ) {
       double alp = al * wt;
       ex = -std::pow(alp-abs(bn),2)/(4*alp);
       if ( bn > 0.0 ){ ex -= bn; }
