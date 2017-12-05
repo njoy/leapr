@@ -10,7 +10,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
     const std::vector<double>& tempr, double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
-    double& dka, std::vector<double>& ska, int nbeta, int lat,
+    double& dka, std::vector<double>& ska, int nbeta, int lat, bool free, 
     std::vector<std::vector<std::vector<double>>>& sym_sab,
     std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
   /* Convolve current scattering law with discrete rotational modes for ortho
@@ -23,15 +23,22 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
    */
 
   double angst = 1.0e-8;
-  double eV = 1.60217733e-12;
-  double massH = 1.6726231E-24;
-  double massD = 3.343568E-24;
-  double hbar = 1.05457266e-27;
+  double eV = 1.60217733e-12;    // This is weird, you say? Yes, it is. 1 ev
+                                 // should, in normal society, be 1.602e-19 J,
+                                 // but alas we're just going to multiply this
+                                 // by 1e7 because this is njoy
+  double mass_H = 1.6726231E-24; // Mass of H in grams
+  double mass_D = 3.343568E-24;  // Mass of D in grams
+  double hbar = 1.05457266e-27;  // You might be thinking this doesn't look
+                                 // quite right. You'd be correct. It should 
+                                 // be ...e-34 for hbar --> [J*s], but no we
+                                 // have it in [1e-7 J * s] because that's a 
+                                 // good idea
   double therm = 0.0253;
 
   int nbx; 
   int maxbb = 2 * beta.size() + 1;
-  double de, x, amassm, bp, scatLenCoh, scatLenIncoh, wt, tbart;
+  double de, x, mass_H2_D2, bp, scat_length_c, scat_len_i, wt, tbart;
 
 
   std::vector<double> exb(maxbb, 0.0 );
@@ -43,18 +50,18 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   // Either Ortho Deuterium or Para Deuterium 
   if ( ncold > 2 ){
     de = 0.0074;
-    amassm = 6.69E-24;
-    bp = hbar * sqrt( 2 /( de*eV*massD ) ) / ( 2 * angst ); 
-    scatLenCoh = 0.668;
-    scatLenIncoh = 0.403;
+    mass_H2_D2 = 6.69E-24;    // Mass of D2 in grams
+    bp = hbar * sqrt( 2 /( de*eV*mass_D ) ) / ( 2 * angst ); 
+    scat_length_c = 0.668;
+    scat_len_i = 0.403;
   } 
   // Either Ortho Hydrogen or Para Hydrogen
   else {
     de = 0.0147;
-    amassm = 3.3465E-24;
-    bp = hbar * sqrt( 2 /( de*eV*massH ) ) / ( 2 * angst );
-    scatLenCoh = 0.356;
-    scatLenIncoh = 2.526;
+    mass_H2_D2 = 3.3465E-24;  // Mass of H2 in grams
+    bp = hbar * sqrt( 2 /( de*eV*mass_H ) ) / ( 2 * angst );
+    scat_length_c = 0.356;
+    scat_len_i = 2.526;
   }
 
   x = de / tev;
@@ -66,7 +73,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   for ( auto a = 0; a < alpha.size(); ++a ){
     double al = alpha[a]*scaling;
     double alp = wt * al;
-    double waven = angst * sqrt( amassm * tev * eV * al ) / hbar;
+    double waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
     double y = bp * waven;
     double sk = terpk( ska, dka, waven );
 
@@ -78,27 +85,27 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     // -----------------------------------------------------------------------
     // Ortho Hydrogen
     if (ncold == 1){ 
-      evenSum = scatLenIncoh * scatLenIncoh/3;
-      oddSum = sk * scatLenCoh * scatLenCoh + 2 * scatLenIncoh * scatLenIncoh / 3;
+      evenSum = scat_len_i * scat_len_i/3;
+      oddSum  = sk * scat_length_c * scat_length_c + 2 * scat_len_i * scat_len_i / 3;
     } 
     // Para Hydrogen
     else if ( ncold == 2 ){
-      evenSum = sk * scatLenCoh * scatLenCoh;
-      oddSum = scatLenIncoh * scatLenIncoh;
+      evenSum = sk * scat_length_c * scat_length_c;
+      oddSum = scat_len_i * scat_len_i;
     } 
     // Ortho Deuterium
     else if ( ncold == 3 ){
-      evenSum = sk * scatLenCoh * scatLenCoh + 5 * scatLenIncoh * scatLenIncoh / 8;
-      oddSum = 3 * scatLenIncoh * scatLenIncoh / 8;
+      evenSum = sk * scat_length_c * scat_length_c + 5 * scat_len_i * scat_len_i / 8;
+      oddSum = 3 * scat_len_i * scat_len_i / 8;
     } 
     // Para Deuterium
     else if ( ncold == 4){ 
-      evenSum = 3 * scatLenIncoh * scatLenIncoh / 4;
-      oddSum = sk * scatLenCoh * scatLenCoh + scatLenIncoh * scatLenIncoh / 4;
+      evenSum = 3 * scat_len_i * scat_len_i / 4;
+      oddSum = sk * scat_length_c * scat_length_c + scat_len_i * scat_len_i / 4;
     }
 
-    evenSum = evenSum / (scatLenIncoh * scatLenIncoh + scatLenCoh * scatLenCoh);
-    oddSum = oddSum / (scatLenIncoh * scatLenIncoh + scatLenCoh * scatLenCoh);
+    evenSum = evenSum / (scat_len_i * scat_len_i + scat_length_c * scat_length_c);
+    oddSum = oddSum / (scat_len_i * scat_len_i + scat_length_c * scat_length_c);
 
     // prepare arrays for sint
     
@@ -118,7 +125,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     auto sex = exts( input, exb, betan );
 
     betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSum, oddSum, itemp, 
-       nbx, a, ncold, sym_sab, sym_sab_2 );
+       nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
    
   }

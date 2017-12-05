@@ -54,6 +54,7 @@ TEST_CASE( "coldh" ){
     double trans_weight = 0.3;
     double scaling = 1.0;
     double dka = 0.2;
+    bool free = false;
     int nbeta = 5, lat = 3;
     std::vector<double> tempf {193093.99765};
     std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
@@ -64,7 +65,7 @@ TEST_CASE( "coldh" ){
     std::vector<double> tempr {200.0};
 
     coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
-      scaling, alpha, beta, dka, ska, nbeta, lat, sym_sab, sym_sab_2 );
+      scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 1.7113874, 3.3919859, 5.0714083, 
       6.7348452, 8.4218850, 7.6149802, 8.8664244, 10.115396, 11.306691, 
@@ -93,6 +94,7 @@ TEST_CASE( "coldh" ){
     double scaling = 1.0;
     double dka = 0.0001;
     int nbeta = 5, lat = 3;
+    bool free = false;
     std::vector<double> tempf {193093.99765};
     std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
     std::vector<double> beta {0.10, 0.15, 0.30, 0.60, 1.2};
@@ -102,7 +104,7 @@ TEST_CASE( "coldh" ){
     std::vector<double> tempr {200.0};
 
     coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
-      scaling, alpha, beta, dka, ska, nbeta, lat, sym_sab, sym_sab_2 );
+      scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 1.3287711, 2.6267533, 3.9235595, 
       5.2043802, 6.5088037, 7.6149802, 8.8664244, 10.115396, 11.306691, 
@@ -126,7 +128,7 @@ TEST_CASE( "coldh" ){
     ska = { 0.1, 0.2, 0.3, 0.5, 0.8, 1.13 };
 
     coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
-      scaling, alpha, beta, dka, ska, nbeta, lat, sym_sab, sym_sab_2 );
+      scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
 
     equal_vec_mega_vec( sym_sab, correctSymSab );
@@ -145,6 +147,7 @@ TEST_CASE( "coldh" ){
     double trans_weight = 0.3;
     double scaling = 1.0;
     double dka = 10.0;
+    bool free = false;
     int nbeta = 5, lat = 3;
     std::vector<double> tempf {193093.99765};
     std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
@@ -155,7 +158,7 @@ TEST_CASE( "coldh" ){
     std::vector<double> tempr {200.0};
 
     coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
-      scaling, alpha, beta, dka, ska, nbeta, lat, sym_sab, sym_sab_2 );
+      scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 4.712662, 9.394536, 14.07523, 18.73994,
       23.42826, 26.36307, 30.73920, 35.11286, 39.42884, 43.86060, 43.00731, 

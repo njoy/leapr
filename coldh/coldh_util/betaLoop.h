@@ -8,8 +8,8 @@ auto betaLoop( const std::vector<double>& betan,
   const std::vector<double>& rdbex, const std::vector<double>& bex,
   const std::vector<double>& sex, const double& alphaVal, const double& wt, 
   const double& tbart, const double& x, const double& y, const double& swe, 
-  const double& swo, int itemp, int nbx,
-  int a, int ncold, std::vector<std::vector<std::vector<double>>>& sym_sab, 
+  const double& swo, int itemp, int nbx, int a, int ncold, bool free, 
+  std::vector<std::vector<std::vector<double>>>& sym_sab, 
   std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
   //--loop over all beta values
   //    results for positive beta go into ssp
@@ -47,9 +47,9 @@ auto betaLoop( const std::vector<double>& betan,
 
       bt(j,pj,x);
       // Get even
-      snlg = jPrime( total, j, be, x, swe, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, y, nbx, false );
+      snlg = jPrime( total, j, be, x, swe, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, y, nbx, false, free );
       // Get odd
-      snlk = jPrime( total, j, be, x, swo, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, y, nbx, true  );
+      snlk = jPrime( total, j, be, x, swo, pj, jj, bex, rdbex, sex, betan, alphaVal, wt, tbart, y, nbx, true,  free );
 
       //--continue the j loop
       sn = sn + snlg + snlk;
