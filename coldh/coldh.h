@@ -24,23 +24,14 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
 
   double angst = 1.0e-8;
   double eV = 1.60217733e-12;
-  double deh = 0.0147;
-  double ded = 0.0074; 
-  double amassh = 3.3465E-24;
-  double amassd = 6.69E-24;
-  double pmass = 1.6726231E-24;
-  double dmass = 3.343568E-24;
+  double massH = 1.6726231E-24;
+  double massD = 3.343568E-24;
   double hbar = 1.05457266e-27;
-  double sampch = 0.356;
-  double sampcd = 0.668;
-  double sampih = 2.526;
-  double sampid = 0.403;
   double therm = 0.0253;
 
   int nbx; 
-  int law = ncold + 1;
   int maxbb = 2 * beta.size() + 1;
-  double de, x, amassm, bp, sampc, sampi, wt, tbart;
+  double de, x, amassm, bp, scatLenCoh, scatLenIncoh, wt, tbart;
 
 
   std::vector<double> exb(maxbb, 0.0 );
@@ -49,25 +40,27 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
   std::vector<double> rdbex(maxbb, 0.0 );
  
 
-  if ( law > 3 ){
-    de = ded;
-    amassm = amassd;
-    bp = hbar * sqrt(2/(ded*eV*dmass)) / ( 2 * angst ); 
-    sampc = sampcd;
-    sampi = sampid;
-  } else {
-    de = deh;
-    amassm = amassh;
-    bp = hbar/2*sqrt(2/(deh*eV*pmass))/angst;
-    sampc = sampch;
-    sampi = sampih;
+  // Either Ortho Deuterium or Para Deuterium 
+  if ( ncold > 2 ){
+    de = 0.0074;
+    amassm = 6.69E-24;
+    bp = hbar * sqrt( 2 /( de*eV*massD ) ) / ( 2 * angst ); 
+    scatLenCoh = 0.668;
+    scatLenIncoh = 0.403;
+  } 
+  // Either Ortho Hydrogen or Para Hydrogen
+  else {
+    de = 0.0147;
+    amassm = 3.3465E-24;
+    bp = hbar * sqrt( 2 /( de*eV*massH ) ) / ( 2 * angst );
+    scatLenCoh = 0.356;
+    scatLenIncoh = 2.526;
   }
 
   x = de / tev;
   wt = trans_weight + tbeta;
   tbart = tempf[itemp] / tempr[itemp];
 
-  //std::cout << bp << std::endl;
 
 
   for ( auto a = 0; a < alpha.size(); ++a ){
@@ -78,24 +71,34 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     double sk = terpk( ska, dka, waven );
 
     // spin-correlation factors
-    double swe, swo, snorm;
-    //std::cout << law << std::endl;
-    if (law == 2){ 
-      swe=sampi*sampi/3;
-      swo=sk*sampc*sampc+2*sampi*sampi/3;
-    } else if ( law == 3 ){
-      swe=sk*sampc*sampc;
-      swo=sampi*sampi;
-    } else if ( law == 4 ){
-      swe=sk*sampc*sampc+5*sampi*sampi/8;
-      swo=3*sampi*sampi/8;
-    } else if (law == 5){ 
-      swe=3*sampi*sampi/4;
-      swo=sk*sampc*sampc+sampi*sampi/4;
+    double evenSum, oddSum;
+    // -----------------------------------------------------------------------
+    // Thie is meant to recreate the table on pg. 662 of the manual, where we
+    // get the A (even) and B (odd) terms for the summation in Eq. 567.
+    // -----------------------------------------------------------------------
+    // Ortho Hydrogen
+    if (ncold == 1){ 
+      evenSum = scatLenIncoh * scatLenIncoh/3;
+      oddSum = sk * scatLenCoh * scatLenCoh + 2 * scatLenIncoh * scatLenIncoh / 3;
+    } 
+    // Para Hydrogen
+    else if ( ncold == 2 ){
+      evenSum = sk * scatLenCoh * scatLenCoh;
+      oddSum = scatLenIncoh * scatLenIncoh;
+    } 
+    // Ortho Deuterium
+    else if ( ncold == 3 ){
+      evenSum = sk * scatLenCoh * scatLenCoh + 5 * scatLenIncoh * scatLenIncoh / 8;
+      oddSum = 3 * scatLenIncoh * scatLenIncoh / 8;
+    } 
+    // Para Deuterium
+    else if ( ncold == 4){ 
+      evenSum = 3 * scatLenIncoh * scatLenIncoh / 4;
+      oddSum = sk * scatLenCoh * scatLenCoh + scatLenIncoh * scatLenIncoh / 4;
     }
-    snorm=sampi*sampi+sampc*sampc;
-    swe=swe/snorm;
-    swo=swo/snorm;
+
+    evenSum = evenSum / (scatLenIncoh * scatLenIncoh + scatLenCoh * scatLenCoh);
+    oddSum = oddSum / (scatLenIncoh * scatLenIncoh + scatLenCoh * scatLenCoh);
 
     // prepare arrays for sint
     
@@ -114,8 +117,8 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
     }
     auto sex = exts( input, exb, betan );
 
-    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, swe, swo, itemp, 
-       nbx, a, law, sym_sab, sym_sab_2 );
+    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSum, oddSum, itemp, 
+       nbx, a, ncold, sym_sab, sym_sab_2 );
 
    
   }

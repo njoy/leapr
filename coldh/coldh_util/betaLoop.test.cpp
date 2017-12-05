@@ -57,11 +57,11 @@ TEST_CASE( "beta loop helper function" ){
     double tbart = 820;
     int itemp = 0, nbx = 10;
     int a = 0;
-    int law = 2;
+    int ncold = 1;
     auto sym_sab = populateSymSab( alpha, betan, true );
     auto sym_sab_2 = populateSymSab( alpha, betan, false );
     betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
-      itemp, nbx, a, law, sym_sab, sym_sab_2 );
+      itemp, nbx, a, ncold, sym_sab, sym_sab_2 );
 
     std::vector<double> correct_sym_sab { 0.882913433, 0.649954077, 0.550346135,
       0.394586983, 0.202842464, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 
@@ -92,11 +92,11 @@ TEST_CASE( "beta loop helper function" ){
     double tbart = 820;
     int itemp = 0, nbx = 10;
     int a = 0;
-    int law = 2;
+    int ncold = 1;
     auto sym_sab = populateSymSab( alpha, betan, true );
     auto sym_sab_2 = populateSymSab( alpha, betan, false );
     betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
-      itemp, nbx, a, law, sym_sab, sym_sab_2 );
+      itemp, nbx, a, ncold, sym_sab, sym_sab_2 );
 
     std::vector<double> correct_sym_sab { 1.02763700, 0.395247529, 0.237150220,
       0.158101736, 8.66802482E-2, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0,
@@ -126,11 +126,11 @@ TEST_CASE( "beta loop helper function" ){
     double tbart = 820;
     int itemp = 0, nbx = 10;
     int a = 0;
-    int law = 2;
+    int ncold = 1;
     auto sym_sab = populateSymSab( alpha, betan, true );
     auto sym_sab_2 = populateSymSab( alpha, betan, false );
     betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
-      itemp, nbx, a, law, sym_sab, sym_sab_2 );
+      itemp, nbx, a, ncold, sym_sab, sym_sab_2 );
 
     std::vector<double> correct_sym_sab { 0.790490930, 1.58097809, 2.37146522, 
       3.16195249, 3.70600979, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 
@@ -161,11 +161,11 @@ TEST_CASE( "beta loop helper function" ){
     double tbart = 950;
     int itemp = 0, nbx = 10;
     int a = 0;
-    int law = 2;
+    int ncold = 1;
     auto sym_sab = populateSymSab( alpha, betan, true );
     auto sym_sab_2 = populateSymSab( alpha, betan, false );
     betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
-      itemp, nbx, a, law, sym_sab, sym_sab_2 );
+      itemp, nbx, a, ncold, sym_sab, sym_sab_2 );
 
     std::vector<double> correct_sym_sab { 1.70316846, 3.37656089, 5.04886254, 
       6.69968895, 7.86359423, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 

@@ -6,7 +6,10 @@ auto sint(const double& x, const std::vector<double>& bex,
   const std::vector<double>& betan, int b, const double& alpha,
   const double& wt, const double& tbart, int nbx ){
   // Interpolates in scattering function, using SCT approximation to 
-  // extrapolate outside the range in memory
+  // extrapolate outside the range in memory. For discre, the point of this 
+  // function is to help evaluate the S(a,b-b_k) part of Eq. 542. Note that 
+  // (b-b_k) is given as input "x". If we can use SCT we will, else we'll have
+  // to interpolate on log(S)
   
   // Note that tbart is likely \bar{T_s}/T, which can be found via Eq. 530
   

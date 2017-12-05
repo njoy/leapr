@@ -9,7 +9,7 @@ auto betaLoop( const std::vector<double>& betan,
   const std::vector<double>& sex, const double& alphaVal, const double& wt, 
   const double& tbart, const double& x, const double& y, const double& swe, 
   const double& swo, int itemp, int nbx,
-  int a, int law, std::vector<std::vector<std::vector<double>>>& sym_sab, 
+  int a, int ncold, std::vector<std::vector<std::vector<double>>>& sym_sab, 
   std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
   //--loop over all beta values
   //    results for positive beta go into ssp
@@ -33,15 +33,14 @@ auto betaLoop( const std::vector<double>& betan,
     }
     double total = 0;
     sn = 0;
-
     //--loop over all oscillators
     // para-h2: j=0,2,....; ortho-h2: j=1,3,....
     // ortho-d2: j=0,2,....; para-d2: j=1,3,....
-    int ipo = law == 2 or law == 5 ? 2 : 1;
+    int ipo = ncold == 1 or ncold == 4 ? 2 : 1;
 
     //int jt1 = 2 * 3; // THIS IS REALLY WEIRD origialy 2 * jterm but jterm
                        // always equals 3? Please check out
-    int jt1 = law == 2 or law == 5 ? 7 : 6;
+    int jt1 = ncold == 1 or ncold == 4 ? 7 : 6;
 
     for ( auto l = ipo; l < jt1; l = l + 2 ){
       j = l - 1;

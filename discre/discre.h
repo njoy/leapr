@@ -78,6 +78,11 @@ auto discre(const double& sc, const double& scaling,
     int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
       betaVals, a, maxdd, energy.size(), wt, tbart, weights, t_eff_consts, 
       temp_vec[itemp] );
+    // oscillator loop is mean to, for a given alpha and beta, populate the wts
+    // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
+    // populate bes with entries of beta_k again for various k.
+    // So at this point all we need to do is sum over k for W_k*S(a,b-b_k)
+
 
     // Sort the discrete lines, and throw out the smallest ones
     // Except for the first value, we're sorting wts and bes so that wts values
