@@ -24,14 +24,12 @@ void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a,
   }
 }
 
-
-
-auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>& beta, bool is_normal ){
-  std::vector<std::vector<std::vector<double>>> sym_sab(alpha.size(),
-    std::vector<std::vector<double>>(beta.size(),std::vector<double>(1,0.0)));
+auto populateSymSab( int a_size, int b_size, bool is_normal ){
+  std::vector<std::vector<std::vector<double>>> sym_sab(a_size,
+    std::vector<std::vector<double>>(b_size,std::vector<double>(1,0.0)));
   int i = 1;
-  for ( auto a = 0; a < alpha.size(); ++a ){
-    for ( auto b = 0; b < beta.size(); ++b ){
+  for ( auto a = 0; a < a_size; ++a ){
+    for ( auto b = 0; b < b_size; ++b ){
       if ( is_normal ){ sym_sab[a][b][0] = i; }
       else {sym_sab[a][b][0] = 0; }
       i += 1;
@@ -42,145 +40,101 @@ auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>
 
 
 TEST_CASE( "beta loop helper function" ){
+  std::vector<double> 
+    betan { 0.1, 0.15, 0.30, 0.60, 1.20 },
+    rdbex { 1.6, 3.3, 6.6, 20, 5, 20, 6.6, 3.3, 1.6, 0, 0 },
+    bex { -.02, -.006, -.003, -.0015, -.001, .001, .0015, .003, .006, .02, 0 },
+    sex { 0.1, 0.2, 0.3, 0.5, 0.8, 1.3, 2.1, 3.4, 5.5, 8.9, 14.4 },
+    correct_sym_sab (25, 0.0), correct_sym_sab_2 (25, 0.0);
 
-  GIVEN( "inputs" ){
-    std::vector<double> alpha { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> betan { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> rdbex { 1.6, 3.3, 6.6, 20, 5.0, 20, 6.6, 3.3, 1.6, 
-      0.0, 0.0 };
-    std::vector<double> bex { -0.02, -0.006, -0.003, -0.0015, -0.001, 0.001, 0.0015, 0.003, 
-      0.006, 0.02, 0.0 };
-    std::vector<double> sex { 0.1, 0.2, 0.3, 0.5, 0.8, 1.3, 2.1, 3.4, 5.5, 8.9, 14.4 };
-    double alpha_val = 0.1;
-    double x = 3.2, y = 4.3, swe = 1.42, swo = 2.41;
-    double wt = 1.5;
-    double tbart = 820;
-    int itemp = 0, nbx = 10;
-    int a = 0;
-    int ncold = 1;
+  double alpha = 0.1, x = 3.2, y = 4.3, swe = 1.42, swo = 2.41, wt = 1.5, tbart = 820;
+  int itemp = 0, nbx = 10, a = 0, ncold = 1;
+
+  auto sym_sab   = populateSymSab( 5, 5, true );
+  auto sym_sab_2 = populateSymSab( 5, 5, false );
+
+
+  GIVEN( "molecular translations are assumed to not be free" ){
     bool free = false;
-    auto sym_sab = populateSymSab( alpha, betan, true );
-    auto sym_sab_2 = populateSymSab( alpha, betan, false );
-    betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
+    betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
       itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
-    std::vector<double> correct_sym_sab { 0.882913433, 0.649954077, 0.550346135,
-      0.394586983, 0.202842464, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 
-      14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0  };
+    correct_sym_sab = { 0.882913433, 0.649954077, 0.550346135, 0.394586983, 
+      0.202842464, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
+      22, 23, 24, 25  };
 
-    std::vector<double> correct_sym_sab_2 { 0.8829134, 0.9175721, 1.029927, 
-      1.297595, 2.059706, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    correct_sym_sab_2 = { 0.8829134, 0.9175721, 1.029927, 1.297595, 2.059706, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     
-    equal_vec_mega_vec( sym_sab, correct_sym_sab );
-    equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
-
+    THEN( "output scattering laws are correct" ){
+      equal_vec_mega_vec( sym_sab, correct_sym_sab );
+      equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
+    } // THEN
   } // GIVEN
 
 
 
   GIVEN( "inputs" ){
-    std::vector<double> alpha { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> betan { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> rdbex { 1.6, 3.3, 6.6, 20, 5.0, 20, 6.6, 3.3, 1.6, 
-      0.0, 0.0 };
     std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
       0.6, 1.2, 0.0 };
-    std::vector<double> sex { 0.1, 0.2, 0.3, 0.5, 0.8, 1.3, 2.1, 3.4, 5.5, 8.9, 14.4 };
-    double alpha_val = 0.1;
-    double x = 3.2, y = 4.3, swe = 1.42, swo = 2.41;
-    double wt = 1.5;
-    double tbart = 820;
-    int itemp = 0, nbx = 10;
-    int a = 0;
-    int ncold = 1;
     bool free = false;
-    auto sym_sab = populateSymSab( alpha, betan, true );
-    auto sym_sab_2 = populateSymSab( alpha, betan, false );
-    betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
+    betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
       itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
-    std::vector<double> correct_sym_sab { 1.02763700, 0.395247529, 0.237150220,
-      0.158101736, 8.66802482E-2, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0,
-      14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0 }; 
+    correct_sym_sab = { 1.02763700, 0.395247529, 0.237150220, 0.158101736, 
+      8.66802482E-2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+      21, 22, 23, 24, 25 }; 
 
-    std::vector<double> correct_sym_sab_2 { 1.02763700, 1.66002658, 2.68765983,
-      4.34768245, 6.44628349, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    correct_sym_sab_2 = { 1.02763700, 1.66002658, 2.68765983, 4.34768245, 
+      6.44628349, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     
-    equal_vec_mega_vec( sym_sab, correct_sym_sab );
-    equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
-
+    
+    THEN( "output scattering laws are correct" ){
+      equal_vec_mega_vec( sym_sab, correct_sym_sab );
+      equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
+    } // THEN
   } // GIVEN
 
+  bex = { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 0.6, 1.2, 0.0 };
+  sex = { 5, 4, 3, 2, 1, 1, 1, 2, 2, 1, 5 };
 
   GIVEN( "inputs" ){
-    std::vector<double> alpha { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> betan { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> rdbex { 1.6, 3.3, 6.6, 20, 5.0, 20, 6.6, 3.3, 1.6, 
-      0.0, 0.0 };
-    std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
-      0.6, 1.2, 0.0 };
-    std::vector<double> sex { 5, 4, 3, 2, 1, 1, 1, 2, 2, 1, 5 };
-    double alpha_val = 0.1;
-    double x = 3.2, y = 4.3, swe = 1.42, swo = 2.41;
-    double wt = 1.5;
-    double tbart = 820;
-    int itemp = 0, nbx = 10;
-    int a = 0;
-    int ncold = 1;
+    x = 3.2; y = 4.3; swe = 1.42; swo = 2.41; wt = 1.5; tbart = 820;
     bool free = false;
-    auto sym_sab = populateSymSab( alpha, betan, true );
-    auto sym_sab_2 = populateSymSab( alpha, betan, false );
-    betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
+    betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
       itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
-    std::vector<double> correct_sym_sab { 0.790490930, 1.58097809, 2.37146522, 
-      3.16195249, 3.70600979, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 
-      14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0 };
+    correct_sym_sab = { 0.790490930, 1.58097809, 2.37146522, 3.16195249, 
+      3.70600979, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
+      22, 23, 24, 25 };
 
-    std::vector<double> correct_sym_sab_2 { 0.790490930, 0.790490910, 
-      1.58097789, 1.58097781, 0.790490664, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } ;
-    
-    
-    equal_vec_mega_vec( sym_sab, correct_sym_sab );
-    equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
-
-
+    correct_sym_sab_2 = { 0.790490930, 0.790490910, 1.58097789, 1.58097781, 
+      0.790490664, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+     
+    THEN( "output scattering laws are correct" ){
+      equal_vec_mega_vec( sym_sab, correct_sym_sab );
+      equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
+    } // THEN
   } // GIVEN
 
   GIVEN( "inputs" ){
-    std::vector<double> alpha { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> betan { 0.1, 0.15, 0.30, 0.60, 1.20 };
-    std::vector<double> rdbex { 1.6, 3.3, 6.6, 20, 5.0, 20, 6.6, 3.3, 1.6, 
-      0.0, 0.0 };
-    std::vector<double> bex { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 
-      0.6, 1.2, 0.0 };
-    std::vector<double> sex { 5, 4, 3, 2, 1, 1, 1, 2, 2, 1, 5 };
-    double alpha_val = 0.1;
-    double x = 0.85, y = 0.35, swe = 0.32, swo = 0.87;
-    double wt = 2.3;
-    double tbart = 950;
-    int itemp = 0, nbx = 10;
-    int a = 0;
-    int ncold = 1;
+    x = 0.85; y = 0.35; swe = 0.32; swo = 0.87; wt = 2.3; tbart = 950;
+
     bool free = false;
-    auto sym_sab = populateSymSab( alpha, betan, true );
-    auto sym_sab_2 = populateSymSab( alpha, betan, false );
-    betaLoop( betan, rdbex, bex, sex, alpha_val, wt, tbart, x, y, swe, swo, 
+    betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
       itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
-    std::vector<double> correct_sym_sab { 1.70316846, 3.37656089, 5.04886254, 
-      6.69968895, 7.86359423, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 
-      14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0 };
-    std::vector<double> correct_sym_sab_2 { 1.70316846, 1.70258735, 3.37159930,
-      3.36200407, 1.68666467, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    correct_sym_sab = { 1.70316846, 3.37656089, 5.04886254, 6.69968895, 
+      7.86359423, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
+      22, 23, 24, 25 };
+    correct_sym_sab_2 = { 1.70316846, 1.70258735, 3.37159930, 3.36200407, 
+      1.68666467, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     
-    equal_vec_mega_vec( sym_sab, correct_sym_sab );
-    equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
-
+    
+    THEN( "output scattering laws are correct" ){
+      equal_vec_mega_vec( sym_sab, correct_sym_sab );
+      equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
+    } // THEN
 
   } // GIVEN
 } // TEST CASE
