@@ -15,6 +15,7 @@ auto betaLoop( const std::vector<double>& betan,
   //    results for positive beta go into ssp
   //    results for negative beta go into sym_sab
   double pj;
+  int ifree = 0;
   int jjmax = 2 * betan.size() - 1;
   int k, jp, j;
   double add, betap, be, snlg, snlk, sn;

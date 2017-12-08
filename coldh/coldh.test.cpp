@@ -44,27 +44,22 @@ auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>
 
 
 TEST_CASE( "coldh" ){
-  GIVEN( "inputs" ){
-    int itemp = 0;
-    double temp = 200.0;
-    double tev = 1.723477e-2;
-    double sc = 1.0;
-    int ncold = 1;
-    double tbeta = 2.0;
-    double trans_weight = 0.3;
-    double scaling = 1.0;
-    double dka = 0.2;
-    bool free = false;
-    int nbeta = 5, lat = 3;
-    std::vector<double> tempf {193093.99765};
-    std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
-    std::vector<double> beta {0.10, 0.15, 0.30, 0.60, 1.2};
-    std::vector<double> ska { 1.1, 2.2, 3.3, 5.5, 8.8, 13.13 };
-    auto sym_sab = populateSymSab( alpha, beta, true );
-    auto sym_sab_2 = populateSymSab( alpha, beta, false );
-    std::vector<double> tempr {200.0};
 
-    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
+  std::vector<double> tempf {193093.99765}, alpha {0.1, 0.2, 0.4, 0.8, 1.6},
+    beta {0.10, 0.15, 0.30, 0.60, 1.2}, ska { 1.1, 2.2, 3.3, 5.5, 8.8, 13.13 };
+
+  double temp = 200.0, tev = 1.723477e-2, sc = 1.0, tbeta = 2.0, 
+    trans_weight = 0.3, scaling = 1.0, dka = 0.2;
+
+  int itemp = 0, ncold = 1, nbeta = 5, lat = 3;
+
+  bool free = false;
+
+  auto sym_sab = populateSymSab( alpha, beta, true );
+  auto sym_sab_2 = populateSymSab( alpha, beta, false );
+
+  GIVEN( "inputs" ){
+      coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, 
       scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 1.7113874, 3.3919859, 5.0714083, 
@@ -77,33 +72,17 @@ TEST_CASE( "coldh" ){
       3.8402507, 13.088162, 12.312841, 11.499779, 9.2237236, 5.4789194, 
       16.788298, 15.438241, 14.144248, 11.221266, 6.6252107, 17.308492, 
       15.813446, 14.417152, 11.526322, 6.8941688 };
+
     equal_vec_mega_vec( sym_sab, correctSymSab );
     equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
     
   } // GIVEN
 
 
-  GIVEN( "inputs again" ){
-    int itemp = 0;
-    double temp = 200.0;
-    double tev = 1.723477e-2;
-    double sc = 1.0;
-    int ncold = 1;
-    double tbeta = 2.0;
-    double trans_weight = 0.3;
-    double scaling = 1.0;
-    double dka = 0.0001;
-    int nbeta = 5, lat = 3;
-    bool free = false;
-    std::vector<double> tempf {193093.99765};
-    std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
-    std::vector<double> beta {0.10, 0.15, 0.30, 0.60, 1.2};
-    std::vector<double> ska { 0.1, 0.2, 0.3, 0.5, 0.8, 1.13 };
-    auto sym_sab = populateSymSab( alpha, beta, true );
-    auto sym_sab_2 = populateSymSab( alpha, beta, false );
-    std::vector<double> tempr {200.0};
+  GIVEN( "small step size" ){
+    dka = 0.0001;
 
-    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
+    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, 
       scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 1.3287711, 2.6267533, 3.9235595, 
@@ -127,7 +106,7 @@ TEST_CASE( "coldh" ){
  
     ska = { 0.1, 0.2, 0.3, 0.5, 0.8, 1.13 };
 
-    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
+    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, 
       scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
 
@@ -138,26 +117,10 @@ TEST_CASE( "coldh" ){
 
 
   GIVEN( "really large step size" ){
-    int itemp = 0;
-    double temp = 200.0;
-    double tev = 1.723477e-2;
-    double sc = 1.0;
-    int ncold = 1;
-    double tbeta = 2.0;
-    double trans_weight = 0.3;
-    double scaling = 1.0;
-    double dka = 10.0;
-    bool free = false;
-    int nbeta = 5, lat = 3;
-    std::vector<double> tempf {193093.99765};
-    std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
-    std::vector<double> beta {0.10, 0.15, 0.30, 0.60, 1.2};
-    std::vector<double> ska { 100.001, 5.002, 0.003 };
-    auto sym_sab = populateSymSab( alpha, beta, true );
-    auto sym_sab_2 = populateSymSab( alpha, beta, false );
-    std::vector<double> tempr {200.0};
+    dka = 10.0;
+    ska = { 100.001, 5.002, 0.003 };
 
-    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, tempr, 
+    coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, 
       scaling, alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
 
     std::vector<double> correctSymSab { 4.712662, 9.394536, 14.07523, 18.73994,
@@ -170,11 +133,8 @@ TEST_CASE( "coldh" ){
       40.40555, 37.69436, 30.12187, 17.76729, 50.71420, 46.46355, 42.41879, 
       33.33124, 19.39806, 45.48792, 41.22266, 37.28116, 29.20083, 16.998312 };
 
-    
-
     equal_vec_mega_vec( sym_sab, correctSymSab );
     equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
-
 
     sym_sab = populateSymSab( alpha, beta, true );
     sym_sab_2 = populateSymSab( alpha, beta, false );

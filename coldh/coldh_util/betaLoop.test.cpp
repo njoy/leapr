@@ -3,6 +3,7 @@
 #include "betaLoop.h"
 
 void equal( double a, double b ){
+  //std::cout << a << "    "  << b << std::endl;
   if (b == 0.0){ 
     REQUIRE( b-a < 1e-5 );
     return;
@@ -130,25 +131,20 @@ TEST_CASE( "beta loop helper function" ){
 
     bex = { -1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 0.6, 1.2, 0.0 };
     
-      std::cout << "\n\n\n\n\n\n"<< std::endl;
-
     //------------------------------------------------------------------------
     correct_sym_sab =  { 0.518806235, 0.575763580, 0.554572267, 0.410837243, 
       9.16701822E-2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
       21, 22, 23, 24, 25 }; 
-    correct_sym_sab_2 = { 0.518806235, 0.495564322, 0.410837296, 0.225472850, 2.76505342E-2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    correct_sym_sab_2 = { 0.5188062, 0.4955643, 0.4108372, 0.2254724, 
+      2.762366E-2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     THEN( "output scattering laws are correct" ){
       betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
         itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
       equal_vec_mega_vec( sym_sab, correct_sym_sab );
-      std::cout << sym_sab[0][1][0] << std::endl;
-      std::cout << sym_sab_2[0][1][0] << std::endl;
-    //  equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
+      equal_vec_mega_vec( sym_sab_2, correct_sym_sab_2 );
     } // THEN
     //------------------------------------------------------------------------
     //------------------------------------------------------------------------
- 
-
 
   } // GIVEN
 } // TEST CASE

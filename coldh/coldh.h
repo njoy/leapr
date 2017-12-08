@@ -6,9 +6,9 @@
 #include "../discre/discre_util/exts.h"
 
 
-auto coldh( int itemp, double temp, double tev, double sc, int ncold,
+auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
-    const std::vector<double>& tempr, double scaling, 
+    double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
     double& dka, std::vector<double>& ska, int nbeta, int lat, bool free, 
     std::vector<std::vector<std::vector<double>>>& sym_sab,
@@ -66,7 +66,7 @@ auto coldh( int itemp, double temp, double tev, double sc, int ncold,
 
   x = de / tev;
   wt = trans_weight + tbeta;
-  tbart = tempf[itemp] / tempr[itemp];
+  tbart = tempf[itemp] / temp;
 
 
 
