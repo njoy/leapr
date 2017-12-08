@@ -130,6 +130,4 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
    
   }
  
-    return;
-   
 }   
