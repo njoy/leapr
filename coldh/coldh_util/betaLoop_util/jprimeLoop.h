@@ -21,19 +21,20 @@ auto jPrime( double& total, int j, const double& be, const double& x,
 
   for ( auto jp = start; jp < end; jp = jp + 2 ){
 
-    betap = ( -j * (j+1) + jp * (jp+1) ) * x * 0.5;
-    bn = be + betap;
+    bn = be + ( -j*(j+1) + jp*(jp+1) ) * x * 0.5;
     tmp = (2*jp+1) * pj * sw * 4 * sumh(j,jp,y);
+
     if (jj == 0 and tmp >= 1.0e-6) { total += tmp; }
+
     if ( free ) {
-      double alp = al * wt;
-      ex = -std::pow(alp-abs(bn),2)/(4*alp);
+      ex = -std::pow(al*wt-abs(bn),2)/(4*al*wt);
       if ( bn > 0.0 ){ ex -= bn; }
-      add = exp(ex)/sqrt(4*pi*alp);
+      add = exp(ex)/sqrt(4*pi*al*wt);
     }
     else{
       add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,al,wt,tbart,nbx);
     }
+
     snl += tmp * add;
 
   }
