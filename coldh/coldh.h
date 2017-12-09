@@ -34,17 +34,13 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
                                  // be ...e-34 for hbar --> [J*s], but no we
                                  // have it in [1e-7 J * s] because that's a 
                                  // good idea
-  double therm = 0.0253;
 
-  int nbx; 
-  int maxbb = 2 * beta.size() + 1;
-  double de, x, mass_H2_D2, bp, scat_length_c, scat_len_i, wt, tbart;
+  int nbx, maxbb = 2 * beta.size() + 1;
 
+  double de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, tbart, therm = 0.0253;
 
-  std::vector<double> exb(maxbb, 0.0 );
-  std::vector<double> betan(nbeta, 0.0 );
-  std::vector<double> bex(maxbb, 0.0 );
-  std::vector<double> rdbex(maxbb, 0.0 );
+  std::vector<double> exb(maxbb, 0.0 ), betan(nbeta, 0.0 ), bex(maxbb, 0.0 ), 
+    rdbex(maxbb, 0.0 );
  
 
   // Either Ortho Deuterium or Para Deuterium 
@@ -52,16 +48,16 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     de = 0.0074;
     mass_H2_D2 = 6.69E-24;    // Mass of D2 in grams
     bp = hbar * sqrt( 2 /( de*eV*mass_D ) ) / ( 2 * angst ); 
-    scat_length_c = 0.668;
-    scat_len_i = 0.403;
+    scatLenC = 0.668;
+    scatLenI = 0.403;
   } 
   // Either Ortho Hydrogen or Para Hydrogen
   else {
     de = 0.0147;
     mass_H2_D2 = 3.3465E-24;  // Mass of H2 in grams
     bp = hbar * sqrt( 2 /( de*eV*mass_H ) ) / ( 2 * angst );
-    scat_length_c = 0.356;
-    scat_len_i = 2.526;
+    scatLenC = 0.356;
+    scatLenI = 2.526;
   }
 
   x = de / tev;
@@ -72,40 +68,45 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
 
   for ( auto a = 0; a < alpha.size(); ++a ){
     double al = alpha[a]*scaling;
-    double alp = wt * al;
     double waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
     double y = bp * waven;
     double sk = terpk( ska, dka, waven );
 
     // spin-correlation factors
-    double evenSum, oddSum;
+    double evenSumConst, oddSumConst;
     // -----------------------------------------------------------------------
     // Thie is meant to recreate the table on pg. 662 of the manual, where we
     // get the A (even) and B (odd) terms for the summation in Eq. 567.
     // -----------------------------------------------------------------------
     // Ortho Hydrogen
     if (ncold == 1){ 
-      evenSum = scat_len_i * scat_len_i/3;
-      oddSum  = sk * scat_length_c * scat_length_c + 2 * scat_len_i * scat_len_i / 3;
+      evenSumConst = scatLenI * scatLenI / 3;
+      oddSumConst  = sk * scatLenC * scatLenC + 2 * scatLenI * scatLenI / 3;
     } 
     // Para Hydrogen
     else if ( ncold == 2 ){
-      evenSum = sk * scat_length_c * scat_length_c;
-      oddSum = scat_len_i * scat_len_i;
+      evenSumConst = scatLenC * scatLenC * sk;
+      oddSumConst  = scatLenI * scatLenI;
     } 
     // Ortho Deuterium
     else if ( ncold == 3 ){
-      evenSum = sk * scat_length_c * scat_length_c + 5 * scat_len_i * scat_len_i / 8;
-      oddSum = 3 * scat_len_i * scat_len_i / 8;
+      evenSumConst = sk * scatLenC * scatLenC + 5 * scatLenI * scatLenI / 8;
+      oddSumConst  = 3  * scatLenI * scatLenI / 8;
     } 
     // Para Deuterium
     else if ( ncold == 4){ 
-      evenSum = 3 * scat_len_i * scat_len_i / 4;
-      oddSum = sk * scat_length_c * scat_length_c + scat_len_i * scat_len_i / 4;
+      evenSumConst = 3  * scatLenI * scatLenI / 4;
+      oddSumConst  = sk * scatLenC * scatLenC + scatLenI * scatLenI / 4;
     }
 
-    evenSum = evenSum / (scat_len_i * scat_len_i + scat_length_c * scat_length_c);
-    oddSum = oddSum / (scat_len_i * scat_len_i + scat_length_c * scat_length_c);
+    // Both the ortho and para scattering laws (Eq. 567-568) are multiplied by
+    // a (4*pi/sigma_b) term (where sigma_b is the characteristic bound cross
+    // section, 
+    //    sigma_b = 4*pi*(Incoh Scattering Len^2 + Coh Scattering Len^2 ).
+    // So to account for the 4*pi/sigma_b term, we divide by 
+    //          Incoh Scattering Len^2 + Coh Scattering Len^2
+    evenSumConst /= scatLenI * scatLenI + scatLenC * scatLenC;
+    oddSumConst  /= scatLenI * scatLenI + scatLenC * scatLenC;
 
     // prepare arrays for sint
     
@@ -124,7 +125,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     }
     auto sex = exts( input, exb, betan );
 
-    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSum, oddSum, itemp, 
+    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSumConst, oddSumConst, itemp, 
        nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
    

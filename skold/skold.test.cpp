@@ -51,6 +51,7 @@ TEST_CASE( "skold" ){
     std::vector<double> beta   { 0.10, 0.15, 0.30, 0.60, 1.2 };
     std::vector<double> skappa { 1.20, 2.30, 3.40 };
     skold( cfrac, itemp, temp, alpha, beta, skappa, ntempr, awr, lat, nka, dka, scaling, symsab );
+    REQUIRE( true );
   
 
 
