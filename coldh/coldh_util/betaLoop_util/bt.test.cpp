@@ -10,14 +10,22 @@ void equal( double a, double b ){
 
 
 TEST_CASE( "bt" ){
-  GIVEN( "inputs" ){
+  GIVEN( "odd input value for j" ){
     int j = 1;
     double pj = 0.0, x = 0.85;
     bt( j, pj, x );
     equal( pj, 0.48388278 );
+
+    x = 0.35;
+    bt( j, pj, x );
+    equal( pj, 0.34887661 );
+
+    j = 5;
+    bt( j, pj, x );
+    equal( pj, 9.52577E-3 );
   } // GIVEN
 
-  GIVEN( "inputs" ){
+  GIVEN( "even input value for j" ){
     int j = 2;
     double pj = 0.0, x = 3.85;
     bt( j, pj, x );

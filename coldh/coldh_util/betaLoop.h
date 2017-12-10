@@ -43,6 +43,17 @@ auto betaLoop( const std::vector<double>& betan,
 
     for ( auto j = start; j < end; j = j + 2 ){
 
+      /* This calcualtes Pj, the statistic weighting factor for Eq. 567 - 568.
+       * 
+       *                  ( 2j + 1 ) * exp( - j*(j+1)*x ) 
+       * Pj = -----------------------------------------------------------------
+       *                     sum (2*k+1)e^(-k*(k+1)*x)
+       *
+       * where the sum is over even 1-->19 if j is odd (ortho h or para d), or
+       * over 0-->18 if j is even (para h or ortho d)
+       *
+       */
+
       bt(j,pj,x);
 
       // Perform inner sum over even values (inner sum in Eq. 567-568 that is
