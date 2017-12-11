@@ -1,23 +1,18 @@
 #include <vector>
 
-auto helper(int k, bool isA ){
-  double s = 0;
-  double fact = 1;
+auto helper(int k, bool isEven ){
+  double s = 0, fact = 1;
   for ( auto i = 0; i < k; ++i ){
-    int zi = i + 1;
-    s = s + log(zi);
+    s += log(i+1);
   }
-  if ( s > 0.0 ){
-    fact = exp(s);
-  }
-  return isA ? sqrt(fact) : fact;
+  if ( s > 0.0 ){ fact = exp(s); }
+  return isEven ? sqrt(fact) : fact;
 }
 
 auto cn( int jj, int ll, int nn ){
   /* Calculates Clebsch-Gordon coefficients for cold hydrogen or 
-   * deuterium calculation
+   * deuterium calculation. 
    */
-  int i, kdet, kdel, ka1, ka2, ka3, ka4, kb1, kb2, kb3, kb4, iwign;
   double s, fact, zi, a1, a2, a3, a4, b1, b2, b3, b4, rat, wign;
 
   // if sum of three inputs is even, continue. Else return 0.0

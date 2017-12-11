@@ -10,7 +10,7 @@ void equal( double a, double b ){
 
 TEST_CASE( "cn" ){
   GIVEN( "sum of jj, ll, and nn is even" ){
-    THEN( "the correct value is returned" ){
+    THEN( "value of spherical bessel function is correctly returned" ){
       equal( cn( 1, 0, 1 ), 1.0 );
       equal( cn( 2, 0, 2 ), 1.0 );
       equal( cn( 1, 3, 2 ), -0.65465367 );
