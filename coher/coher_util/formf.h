@@ -14,21 +14,21 @@ double formf( int lat, int l1, int l2, int l3 ){
    double e1,e2,e3, c1=7.54e0, c2=4.24e0, c3=11.31e0, pi=3.14159265358979;
    if (lat == 1) {
       //  graphite
-      i=l3/2;
-      if ((2*i) != l3) {
-        return sin(pi*(l1-l2)/3)*(pi*(l1-l2));
+     i=l3/2;
+     if ((2*i) != l3) {
+        return sin(pi*(l1-l2)/3)*sin(pi*(l1-l2)/3);
       }
       else {
-         return (6+10*cos(2*pi*(l1-l2)/3))/4;
+        return (6+10*cos(2*pi*(l1-l2)/3))/4;
       }
    }
    else if (lat == 2) {
-      //  beryllium
-      return 1+cos(2*pi*(2*l1+4*l2+3*l3)/6);
+     //  beryllium
+     return 1+cos(2*pi*(2*l1+4*l2+3*l3)/6);
     }
    else if (lat == 3) {
-      //  beryllium oxide
-      return (1+cos(2*pi*(2*l1+4*l2+3*l3)/6))*(c1+c2+c3*cos(3*pi*l3/4));
+     //  beryllium oxide
+     return (1+cos(2*pi*(2*l1+4*l2+3*l3)/6))*(c1+c2+c3*cos(3*pi*l3/4));
     }
    else if (lat == 4 or lat == 5) {
       // fcc lattices

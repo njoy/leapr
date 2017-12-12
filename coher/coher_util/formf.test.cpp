@@ -11,17 +11,47 @@ void equal( double a, double b ){
 
 TEST_CASE( "formf" ){
   GIVEN( "graphite input" ){
-    int lat = 2, l1 = 0, l2 = 0, l3 = 1;
     equal( formf( 1, 0, 0, 0 ), 4 );
     equal( formf( 1, 1, 0, 0 ), 0.25 );
     equal( formf( 1, 0, 1, 0 ), 0.25 );
     equal( formf( 1, 0, 0, 1 ), 0 );
     equal( formf( 1, 1, 1, 0 ), 4 );
-//    equal( formf( 1, 1, 0, 1 ), 0.75 );
-//    equal( formf( 1, 0, 1, 1 ), 0.75 );
+    equal( formf( 1, 1, 0, 1 ), 0.75 );
+    equal( formf( 1, 0, 1, 1 ), 0.75 );
     equal( formf( 1, 1, 1, 1 ), 0 );
+    equal( formf( 1, 1, 2, 3 ), 0.75 );
+    equal( formf( 1, 1, 0, 3 ), 0.75 );
+    equal( formf( 1, 1, 4, 0 ), 4 );
+    equal( formf( 1, 0, 4, 8 ), 0.25 );
   } // GIVEN
+
   GIVEN( "beryllium input" ){
+    equal( formf( 2, 0, 0, 0 ), 2 );
+    equal( formf( 2, 1, 0, 0 ), 0.5 );
+    equal( formf( 2, 0, 1, 0 ), 0.5 );
     equal( formf( 2, 0, 0, 1 ), 0 );
+    equal( formf( 2, 1, 1, 0 ), 2 );
+    equal( formf( 2, 1, 0, 1 ), 1.5 );
+    equal( formf( 2, 0, 1, 1 ), 1.5 );
+    equal( formf( 2, 1, 1, 1 ), 0 );
+    equal( formf( 2, 1, 2, 3 ), 1.5 );
+    equal( formf( 2, 1, 0, 3 ), 1.5 );
+    equal( formf( 2, 1, 4, 0 ), 2 );
+    equal( formf( 2, 0, 4, 8 ), 0.5 );
+  } // GIVEN
+
+  GIVEN( "beryllium oxide input" ){
+    equal( formf( 3, 0, 0, 0 ), 46.18 );
+    equal( formf( 3, 1, 0, 0 ), 11.545 );
+    equal( formf( 3, 0, 1, 0 ), 11.545 );
+    equal( formf( 3, 0, 0, 1 ), 0 );
+    equal( formf( 3, 1, 1, 0 ), 46.18 );
+    equal( formf( 3, 1, 0, 1 ), 5.67393345 );
+    equal( formf( 3, 0, 1, 1 ), 5.67393345 );
+    equal( formf( 3, 1, 1, 1 ), 0 );
+    equal( formf( 3, 1, 2, 3 ), 29.6660665 );
+    equal( formf( 3, 1, 0, 3 ), 29.6660665 );
+    equal( formf( 3, 1, 4, 0 ), 46.18 );
+    equal( formf( 3, 0, 4, 8 ), 11.545 );
   } // GIVEN
 } // TEST CASE
