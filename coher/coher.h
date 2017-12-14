@@ -68,24 +68,25 @@ auto bccLatticeFactors( double& phi, double& ulim, double& twopis, int& i1m,
 
 
 
-auto hexagonalLatticeFactors( int l1, int i2m, double phi, double a, int i1m, 
-  double i3m, double w1, int i2, double w2, double tsq, double w3,
-  int l2, int l3, double c1, double c2, int lat, double tau, double w, int nw,
-  int tsqx, std::vector<double>& b, int k, int ifl, double f, double eps, int i,
-  int wint, double twopis, int idone, int t2, double ulim, int imax, double x,
+auto hexagonalLatticeFactors( double a, 
+  double tsq,
+  double c1, double c2, int lat, double tau, int nw,
+  int tsqx, std::vector<double>& b, int ifl, double f, double eps, int i,
+  int wint, double twopis, int t2, double ulim, int imax,
   double c ){
   // compute lattice factors for hexagonal lattices
-  phi=ulim/twopis;
-  i1m=int(a*sqrt(phi));
+  int idone;
+  double phi=ulim/twopis, w;
+  int i1m=int(a*sqrt(phi)), l1, l2, l3, i2m, i3m, w1, w2, w3;
   i1m=i1m+1;
-  k=0;
+  int k=0;
   for ( auto i1 = 1; i1 < i1m; ++i1 ){
      l1=i1-1;
      i2m=int((l1+sqrt(3*(a*a*phi-l1*l1)))/2);
      i2m=i2m+1;
      for ( auto i2 = i1; i2 < i2m; ++i2 ){
         l2=i2-1;
-        x=phi-c1*(l1*l1+l2*l2-l1*l2);
+        double x=phi-c1*(l1*l1+l2*l2-l1*l2);
         i3m=0;
         if (x > 0 ) i3m=int(c*sqrt(x));
         i3m=i3m+1;
@@ -315,19 +316,17 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   nw=maxb;
 
 
-hexagonalLatticeFactors( l1, i2m, phi, a, i1m, i3m, w1, i2, w2, tsq, w3, l2, 
-  l3, c1, c2, lat, tau, w, nw, tsqx, b, k, ifl, f, eps, i,
-  wint, twopis, idone, t2, ulim, imax, x,
-  c );
+hexagonalLatticeFactors( a, tsq, c1, c2, lat, tau, nw, tsqx, b, ifl, f, eps, 
+  i, wint, twopis, t2, ulim, imax, c );
   // compute lattice factors for hexagonal lattices
 
   // compute lattice factors for fcc lattices
   //210 continue
   // if (lat > 5) go to 215
   phi=ulim/twopis;
-   i1m=int(a*sqrt(phi));
-   i1m=15;
-   k=0;
+  i1m=int(a*sqrt(phi));
+  i1m=15;
+  k=0;
    for ( auto i1 = -i1m; i1 < i1m; ++i1 ){
       i2m=i1m;
       for ( auto i2 = -i2m; i2 < i2m; ++i2 ){ 
