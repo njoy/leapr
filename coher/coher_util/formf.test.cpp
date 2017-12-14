@@ -54,4 +54,47 @@ TEST_CASE( "formf" ){
     equal( formf( 3, 1, 4, 0 ), 46.18 );
     equal( formf( 3, 0, 4, 8 ), 11.545 );
   } // GIVEN
+
+  GIVEN( "fcc lattice input" ){
+    equal( formf( 4, 0, 0, 0 ), 16 );
+    equal( formf( 4, 1, 0, 0 ), 16 );
+    equal( formf( 4, 0, 1, 0 ), 16 );
+    equal( formf( 4, 0, 0, 1 ), 16 );
+    equal( formf( 4, 1, 1, 0 ), 16 );
+    equal( formf( 4, 1, 0, 1 ), 16 );
+    equal( formf( 4, 0, 1, 1 ), 16 );
+    equal( formf( 4, 1, 1, 1 ), 16 );
+    equal( formf( 4, 1, 2, 3 ), 16 );
+    equal( formf( 4, 1, 0, 3 ), 16 );
+    equal( formf( 4, 1, 4, 0 ), 16 );
+    equal( formf( 4, 0, 4, 8 ), 16 );
+    equal( formf( 5, 0, 0, 0 ), 16 );
+    equal( formf( 5, 1, 0, 0 ), 16 );
+    equal( formf( 5, 0, 1, 0 ), 16 );
+    equal( formf( 5, 0, 0, 1 ), 16 );
+    equal( formf( 5, 1, 1, 0 ), 16 );
+    equal( formf( 5, 1, 0, 1 ), 16 );
+    equal( formf( 5, 0, 1, 1 ), 16 );
+    equal( formf( 5, 1, 1, 1 ), 16 );
+    equal( formf( 5, 1, 2, 3 ), 16 );
+    equal( formf( 5, 1, 0, 3 ), 16 );
+    equal( formf( 5, 1, 4, 0 ), 16 );
+    equal( formf( 5, 0, 4, 8 ), 16 );
+  } // GIVEN
+
+ GIVEN( "bcc lattice input" ){
+    equal( formf( 6, 0, 0, 0 ), 4 );
+    equal( formf( 6, 1, 0, 0 ), 4 );
+    equal( formf( 6, 0, 1, 0 ), 4 );
+    equal( formf( 6, 0, 0, 1 ), 4 );
+    equal( formf( 6, 1, 1, 0 ), 4 );
+    equal( formf( 6, 1, 0, 1 ), 4 );
+    equal( formf( 6, 0, 1, 1 ), 4 );
+    equal( formf( 6, 1, 1, 1 ), 4 );
+    equal( formf( 6, 1, 2, 3 ), 4 );
+    equal( formf( 6, 1, 0, 3 ), 4 );
+    equal( formf( 6, 1, 4, 0 ), 4 );
+    equal( formf( 6, 0, 4, 8 ), 4 );
+  } // GIVEN
+
 } // TEST CASE

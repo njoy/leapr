@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "coher_util/formf.h"
 
 double tausq( int m1, int m2, int m3, double c1, double c2, double twopis ){
   return (c1*(m1*m1+m2*m2+m1*m2)+(m3*m3*c2))*twopis;
@@ -11,6 +12,56 @@ double taufcc( int m1, int m2, int m3, double c1, double twothd, double twopis )
 
 double taubcc( int m1, int m2, int m3, double c1, double twopis ){
   return c1*(m1*m1+m2*m2+m3*m3+m1*m2+m2*m3+m1*m3)*twopis;
+}
+
+auto sqrtLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
+  int k, double& st, double& sf ){
+  // sort lattice factors
+  
+  for ( auto i = 1; i < imax; ++i ){
+    jmin=i+1;
+    for ( auto j = jmin; j < k; ++j ){
+      if (b[ifl+2*j-2-1] < b[ifl+2*i-2-1]) {
+        st=b[ifl+2*i-2-1];
+        sf=b[ifl+2*i-1-1];
+        b[ifl+2*i-2-1]=b[ifl+2*j-2-1];
+        b[ifl+2*i-1-1]=b[ifl+2*j-1-1];
+        b[ifl+2*j-2-1]=st;
+        b[ifl+2*j-1-1]=sf;
+      }
+    }
+  }
+}
+
+auto bccLatticeFactors( double& phi, double& ulim, double& twopis, int& i1m,
+    int& k, int& i2m, int& i3m, double& tau, double& w, std::vector<double>& b,
+    int ifl, double& tsq, double& f, double& wint, int imax, double& t2, 
+    int lat, int nw, double& a, double& c1 ){
+   // compute lattice factors for bcc lattices
+  //215 continue
+   phi=ulim/twopis;
+   i1m=int(a*sqrt(phi));
+   i1m=15;
+   k=0;
+   for ( auto i1 = -i1m; i1 < i1m; ++i1 ){
+      i2m=i1m;
+      for (auto i2 = -i2m; i2 < i2m; ++i2 ){
+         i3m=i1m;
+         for ( auto i3 = -i3m; i3 < i3m; ++i3 ){
+            tsq=taubcc(i1,i2,i3,c1,twopis);
+            if (tsq > 0 and tsq <= ulim) {
+               tau=sqrt(tsq);
+               w=exp(-tsq*t2*wint)/tau;
+               f=w*formf(lat,i1,i2,i3);
+               k=k+1;
+               if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
+               b[ifl+2*k-2-1]=tsq;
+               b[ifl+2*k-1-1]=f;
+            }
+          }
+      }
+   }
+   imax=k-1;
 }
 
 
@@ -236,33 +287,14 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
    imax=k-1;
    //go to 220
 
+
+bccLatticeFactors( phi, ulim, twopis, i1m, k, i2m, i3m, tau, w, b, ifl, tsq, 
+    f, wint, imax, t2, lat, nw, a, c1 );
    // compute lattice factors for bcc lattices
-  //215 continue
-   phi=ulim/twopis;
-   i1m=int(a*sqrt(phi));
-   i1m=15;
-   k=0;
-   for ( auto i1 = -i1m; i1 < i1m; ++i1 ){
-      i2m=i1m;
-      for (auto i2 = -i2m; i2 < i2m; ++i2 ){
-         i3m=i1m;
-         for ( auto i3 = -i3m; i3 < i3m; ++i3 ){
-            tsq=taubcc(i1,i2,i3,c1,twopis);
-            if (tsq > 0 and tsq <= ulim) {
-               tau=sqrt(tsq);
-               w=exp(-tsq*t2*wint)/tau;
-               f=w*formf(lat,i1,i2,i3);
-               k=k+1;
-               if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-               b[ifl+2*k-2-1]=tsq;
-               b[ifl+2*k-1-1]=f;
-            }
-          }
-      }
-   }
-   imax=k-1;
 
    // sort lattice factors
+  sqrtLatticeFactors( jmin, b, ifl, imax, k, st, sf );
+ 
 
   // 220 continue
   for ( auto i = 1; i < imax; ++i ){
