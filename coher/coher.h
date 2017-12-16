@@ -1,20 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "coher_util/formf.h"
-
-
-
-double tausq( int m1, int m2, int m3, double c1, double c2, double twopis ){
-  return (c1*(m1*m1+m2*m2+m1*m2)+(m3*m3*c2))*twopis;
-}
-
-double taufcc( int m1, int m2, int m3, double c1, double twothd, double twopis ){
-  return c1*(m1*m1+m2*m2+m3*m3+twothd*m1*m2+twothd*m1*m3-twothd*m2*m3)*twopis;
-}
-
-double taubcc( int m1, int m2, int m3, double c1, double twopis ){
-  return c1*(m1*m1+m2*m2+m3*m3+m1*m2+m2*m3+m1*m3)*twopis;
-}
+#include "coher_util/hexagonalFactorsHelper.h"
 
 auto sqrtLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
   int k, double& st, double& sf ){
@@ -81,85 +68,69 @@ auto hexagonalLatticeFactors( double a,
   i1m=i1m+1;
   int k=0;
   for ( auto i1 = 1; i1 < i1m; ++i1 ){
-     l1=i1-1;
-     i2m=int((l1+sqrt(3*(a*a*phi-l1*l1)))/2);
-     i2m=i2m+1;
-     for ( auto i2 = i1; i2 < i2m; ++i2 ){
-        l2=i2-1;
-        double x=phi-c1*(l1*l1+l2*l2-l1*l2);
-        i3m=0;
-        if (x > 0 ) i3m=int(c*sqrt(x));
-        i3m=i3m+1;
-        for ( auto i3 = 1; i3 < i3m; ++i3 ){
-           l3=i3-1;
-           w1=2;
-           if (l1 == l2) w1=1;
-           w2=2;
-           if (l1 == 0 or l2 == 0) w2=1;
-           if (l1 == 0 and l2 == 0) w2=1;
-           if (l1 == 0 and l2 == 0) w2=w2/2;
-           w3=2;
-           if (l3 == 0) w3=1;
-           tsq=tausq(l1,l2,l3,c1,c2,twopis);
-           if (tsq > 0 and tsq <= ulim) {
-              tau=sqrt(tsq);
-              w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
-              f=w*formf(lat,l1,l2,l3);
-              if (k <= 0 or tsq <= tsqx) {
-                 k=k+1;
-                 if ((2*k) > nw) std::cout << "ERROR" << std::endl; 
-                 b[ifl+2*k-2-1]=tsq;
-                 b[ifl+2*k-1-1]=f;
-              }
-              else {
-                 i=0;
-                 idone=0;
-                 while (i < k and idone == 0){
-                    i=i+1;
-                    if (tsq >= b[ifl+2*i-2-1] and tsq < (1+eps)*b[ifl+2*i-2-1]) {
-                      b[ifl+2*i-1-1]=b[ifl+2*i-1-1]+f;
-                      idone=1;
-                    } 
-                 }
-                 if (idone == 0) {
-                    k=k+1;
-                    if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-                    b[ifl+2*k-2-1]=tsq;
-                    b[ifl+2*k-1-1]=f;
-                 }
-              } 
-            }
-           tsq=tausq(l1,-l2,l3,c1,c2,twopis);
-           if (tsq > 0 and tsq <= ulim) {
-              tau=sqrt(tsq);
-              w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
-              f=w*formf(lat,l1,-l2,l3);
-              if (k <= 0 or tsq <= tsqx) {
-                 k=k+1;
-                 if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-                 b[ifl+2*k-2-1]=tsq;
-                 b[ifl+2*k-1-1]=f;
-              }
-              else {
-                 i=0;
-                 idone=0;
-                 while (i < k and idone == 0){
-                    i=i+1;
-                    if (tsq >= b[ifl+2*i-2-1] and tsq < (1+eps)*b[ifl+2*i-2-1]) {
-                       b[ifl+2*i-1-1]=b[ifl+2*i-1-1]+f;
-                       idone=1;
-                    }
-                 }
-                 if (idone == 0) {
-                    k=k+1;
-                    if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-                    b[ifl+2*k-2-1]=tsq;
-                    b[ifl+2*k-1-1]=f;
-                  }
-                }
-             }
+    l1=i1-1;
+    i2m=int((l1+sqrt(3*(a*a*phi-l1*l1)))/2);
+    i2m=i2m+1;
+    for ( auto i2 = i1; i2 < i2m; ++i2 ){
+      l2=i2-1;
+      double x=phi-c1*(l1*l1+l2*l2-l1*l2);
+      i3m=0;
+      if (x > 0 ) i3m = int(c*sqrt(x));
+      i3m=i3m+1;
+      for ( auto i3 = 1; i3 < i3m; ++i3 ){
+        l3=i3-1;
+        w1=2;
+        if (l1 == l2) w1=1;
+        w2=2;
+        if (l1 == 0 or  l2 == 0) w2=1;
+        if (l1 == 0 and l2 == 0) w2=1;
+        if (l1 == 0 and l2 == 0) w2=w2/2;
+        w3=2;
+        if (l3 == 0) w3=1;
+        tsq=tausq(l1,l2,l3,c1,c2,twopis);
+
+
+        hexagonalLatticeFactorsHelper( lat, l1, l2, l3, w, k, tsq, tsqx, b, 
+          ifl, i, idone, ulim, t2, w1, w2, w3, wint, nw, eps );
+ 
+
+
+
+        tsq = tausq(l1,-l2,l3,c1,c2,twopis);
+
+
+        if (tsq > 0 and tsq <= ulim) {
+          tau=sqrt(tsq);
+          w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
+          f=w*formf(lat,l1,-l2,l3);
+        if (k <= 0 or tsq <= tsqx) {
+          k=k+1;
+          if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
+          b[ifl+2*k-2-1]=tsq;
+          b[ifl+2*k-1-1]=f;
+          std::cout << ifl+2*k-2-1 << std::endl;
         }
-     }
+        else {
+          i=0;
+          idone=0;
+          while (i < k and idone == 0){
+            i=i+1;
+            if (tsq >= b[ifl+2*i-2-1] and tsq < (1+eps)*b[ifl+2*i-2-1]) {
+              b[ifl+2*i-1-1]=b[ifl+2*i-1-1]+f;
+              idone=1;
+            }
+          }
+          if (idone == 0) {
+            k=k+1;
+            if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
+            b[ifl+2*k-2-1]=tsq;
+            b[ifl+2*k-1-1]=f;
+          }
+        }
+
+      } // 3
+    } // 2
+  } // 1
   }
   imax=k-1;
   //go to 220
