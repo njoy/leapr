@@ -91,8 +91,12 @@ auto hexagonalLatticeFactors( double a,
 
 
         if (tsq > 0 and tsq <= ulim) {
+          tau=sqrt(tsq);
+          w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
+          f=w*formf(lat,l1,l2,l3);
+
           hexagonalLatticeFactorsHelper( lat, l1, l2, l3, w, k, tsq, tsqx, b, 
-            ifl, i, idone, ulim, t2, w1, w2, w3, wint, nw, eps );
+            ifl, i, idone, ulim, t2, w1, w2, w3, wint, nw, eps, f );
         }
  
 

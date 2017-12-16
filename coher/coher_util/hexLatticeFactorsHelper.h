@@ -4,16 +4,13 @@
 #include "formf.h"
 
 
-auto hexagonalLatticeFactorsHelper( const int& lat, const int& l1, const int& l2, 
-  const int& l3, double& w, int& k, const double& tsq, const double& tsqx, 
-  std::vector<double>& b, const int& ifl, int& i,
-  const double& ulim, const int& t2, const double& w1, const double& w2, 
-  const double& w3, const double& wint, const int& nw, const double& eps ){
+auto hexLatticeFactorsHelper( int& k, const double& tsq, 
+  const double& tsqx, std::vector<double>& b, const int& ifl, int& i,
+  const double& wint, const int& nw, const double& eps, 
+  double f ){
 
-  double f, tau;
-  tau=sqrt(tsq);
-  w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
-  f=w*formf(lat,l1,l2,l3);
+  double tau;
+
   if (k <= 0 or tsq <= tsqx) {
     k=k+1;
     if ((2*k) > nw) std::cout << "ERROR" << std::endl; 
