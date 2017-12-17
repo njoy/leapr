@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
-#include "../../catch.hpp"
+#include "../../../catch.hpp"
 #include "hexLatticeFactorsHelper.h"
 
 void equal( double a, double b ){

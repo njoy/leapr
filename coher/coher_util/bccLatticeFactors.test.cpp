@@ -22,11 +22,11 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 TEST_CASE( "Function to Compute BCC Lattice Factors" ){
   double ulim = 9.6e19, twopis = 39.4, wint = 0, t2 = 5.7e-6, 
     a = 2.8e-8, c1 = 1.5e15;
-  int k = 1, ifl = 1, imax = 0, lat = 6;
+  int ifl = 1, lat = 6;
   std::vector<double> b (60000, 0.0);
   GIVEN( "inputs" ){
     THEN( "outputs" ){
-      bccLatticeFactors( ulim, twopis, k, b, ifl, wint, imax, t2, lat, a, c1 );
+      int imax = bccLatticeFactors( ulim, twopis, b, ifl, wint, t2, lat, a, c1 );
       std::vector<double> b_0_to_100 { 7.97850038E+19, 4.47815741E-10, 
         7.62981036E+19, 4.57934242E-10, 7.29294035E+19, 4.68391128E-10, 
         6.96789033E+19, 4.79191756E-10, 6.65466032E+19, 4.90339686E-10, 
@@ -122,6 +122,8 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         4.47815741E-10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
       for ( auto i = 0; i < 50; ++i ){ equal( b[59549+i], b_59549_to_59590[i] ); }
+
+      REQUIRE( imax == 29789 );
 
     } // THEN
   } // GIVEN
