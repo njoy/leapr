@@ -7,7 +7,7 @@
 
 auto hexLatticeFactors( double a, double tsq, double c1, double c2, 
   int lat, int nw, double tsqx, std::vector<double>& b, int ifl, 
-  int i, double wint, double twopis, int t2, double ulim, 
+  int i, double wint, double twopis, double t2, double ulim, 
   int imax, double c ){
   double tau, f, eps = 5e-2;
   // compute lattice factors for hexagonal lattices
@@ -29,7 +29,6 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
       i3m=i3m+1;
       for ( auto i3 = 1; i3 <= i3m; ++i3 ){
 
-      //  std::cout << i1 << "    " << i2 << "    " << i3 << "    " << k << std::endl;
         l3=i3-1;
         w1=2;
         if (l1 == l2) w1=1;
@@ -47,11 +46,7 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
           w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
           f=w*formf(lat,l1,l2,l3);
           hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f );
-      //  std::cout << k << "    " << i1 << "    " << i2 << "    " << i3 << "    " << b[2] << std::endl;
         }
- 
-        //std::cout << i1 << "    " << i2 << "    " << i3 << "    " << b[13] << std::endl;
-        
 
         tsq = tausq(l1,-l2,l3,c1,c2,twopis);
 
@@ -63,7 +58,6 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
           if (k <= 0 or tsq <= tsqx) {
             k=k+1;
             if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-         //   if ( ifl+2*k-3 == 13 ){ std::cout << "AHH " << std::endl; }
             b[ifl+2*k-2-1]=tsq;
             b[ifl+2*k-1-1]=f;
           }
@@ -72,8 +66,10 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
             idone=0;
             while (i < k and idone == 0){
               i=i+1;
-              if (tsq >= b[ifl+2*i-2-1] and tsq < (1+eps)*b[ifl+2*i-2-1]) {
-                b[ifl+2*i-1-1]=b[ifl+2*i-1-1]+f;
+              if (tsq >= b[ifl+2*i-3] and tsq < (1+eps)*b[ifl+2*i-3]) {
+      if (ifl+2*i-2 == 13 ) std::cout << "HERE" << std::endl;
+
+                b[ifl+2*i-2]=b[ifl+2*i-2]+f;
                 idone=1;
               }
             }
@@ -86,9 +82,13 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
           }
 
         } 
+
+        std::cout << i1 << "    " << i2 << "    " << i3 << "    " << b[13] << "\n" << std::endl;
+        if ( i1 == 1 and i2 == 6 and i3 == 5){ return; }
+        
+
       } // 3
     } // 2
-    return;
   } // 1
   imax=k-1;
   //go to 220

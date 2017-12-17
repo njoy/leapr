@@ -13,7 +13,13 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.
   double beta = delta;
-  p[0] = p[1] / ( delta * delta );
+  // What if the first phonon rho value is equal to zero? Then P(beta) is 
+  // undefined, which just won't do. So to be safe we approximate the first 
+  // value P(beta_0) with a Taylor series. sinh(b/2) ~= b/2 + (b/2)^3/3! + ...,
+  // so rho / ( 2 * b * sinh( b/2 ) ) --> rho / ( 2 * b * ( b/2 + ... ) )
+  //                                  --> rho / ( b * b )
+  
+  p[0] = p[1] / ( beta * beta );
   for ( int i = 1; i < p.size(); ++i ){
     p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
     beta += delta; 
