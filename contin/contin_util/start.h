@@ -1,7 +1,3 @@
-#include <vector>
-#include <tuple>
-#include <cmath>
-#include <iostream>
 #include "start_util/start_util.h"
 
 auto start( std::vector<double>& p, double& delta, const double& tev, 

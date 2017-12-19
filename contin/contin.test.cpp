@@ -30,7 +30,7 @@ TEST_CASE( "contin" ){
   std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
   std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
 
-  std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+  std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
     std::vector<std::vector<double>> ( beta.size(),
       std::vector<double> ( ntempr, 0.0 ) ) );
 
@@ -40,8 +40,9 @@ TEST_CASE( "contin" ){
   GIVEN( "input values from input card and leapr subroutine" ){
     WHEN( "3rd order expansion, alpha & beta vals scaled by 0.0253/tev" ){
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling,
-          tev, sc, nphon, itemp );
+        auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab );
+
         double correct_lambda_s = 4.38473153E-2, correct_t_eff = 12.279863466;
         std::vector<double> expected {6.474331963E-7, 7.658564709E-7, 
           8.842797456E-7, 1.121126294E-6, 1.594819393E-6, 1.294036143E-6, 
@@ -54,7 +55,7 @@ TEST_CASE( "contin" ){
           3.979478204E-5, 4.707463949E-5, 5.435449694E-5, 6.891421183E-5, 
           9.803364162E-5, 7.638863877E-5, 9.036457859E-5, 1.043405184E-4, 
           1.322923980E-4, 1.881961573E-4};
-        equal_vec_mega_vec( sym_sab, expected );
+        equal_vec_mega_vec( symSab, expected );
         equal( std::get<0>(output), correct_lambda_s );
         equal( std::get<1>(output), correct_t_eff    );
       } // THEN
@@ -63,15 +64,14 @@ TEST_CASE( "contin" ){
       nphon = 6; lat = 3; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+      std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
         std::vector<std::vector<double>> ( beta.size(),
           std::vector<double> ( ntempr, 0.0 ) ) );
       
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling, 
-          tev, sc, nphon, itemp );
-        double correct_lambda_s = 0.11157823;
-        double correct_t_eff    = 4.91699518;
+        auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab );
+        double correct_lambda_s = 0.11157823, correct_t_eff    = 4.91699518;
         std::vector<double> expected {6.82096404E-5, 7.51470660E-5, 
           8.20844916E-5, 9.59593429E-5, 1.23709045E-4, 1.34940719E-4, 
           1.48666045E-4, 1.62391372E-4, 1.89842025E-4, 2.44743331E-4, 
@@ -79,7 +79,7 @@ TEST_CASE( "contin" ){
           4.78960557E-4, 5.05599918E-4, 5.57045626E-4, 6.08491333E-4, 
           7.11382748E-4, 9.17165579E-4, 9.26780041E-4, 1.02112863E-3, 
           1.11547723E-3, 1.30417442E-3, 1.68156881E-3};
-        equal_vec_mega_vec( sym_sab, expected );
+        equal_vec_mega_vec( symSab, expected );
         equal( std::get<0>(output), correct_lambda_s );
         equal( std::get<1>(output), correct_t_eff    );
       } // THEN
@@ -88,13 +88,14 @@ TEST_CASE( "contin" ){
       delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+      std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
         std::vector<std::vector<double>> ( beta.size(),
           std::vector<double> ( ntempr, 0.0 ) ) );
 
       THEN( "contin output matches expected value" ){
-        auto output = contin( sym_sab, alpha, beta, rho, delta, tbeta, scaling, 
-          tev, sc, nphon, itemp );
+        auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab );
+
         double correct_lambda_s = 2.179428E-3;
         double correct_t_eff    = 491.1882921;
         std::vector<double> expected {1.37883996E-10, 1.58477481E-10, 
@@ -104,7 +105,7 @@ TEST_CASE( "contin" ){
         1.20973637E-09, 1.10139053E-09, 1.26588730E-09, 1.43038407E-09, 
         1.75937760E-09, 2.41736468E-09, 2.19894405E-09, 2.52736456E-09, 
         2.85578506E-09, 3.51262608E-09, 4.82630810E-09};
-        equal_vec_mega_vec( sym_sab, expected );
+        equal_vec_mega_vec( symSab, expected );
         equal( std::get<0>(output), correct_lambda_s );
         equal( std::get<1>(output), correct_t_eff    );
       } // THEN
