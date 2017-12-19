@@ -6,9 +6,33 @@
 
 auto start( std::vector<double>& p, double& delta, const double& tev, 
   const double& tbeta ){
-  // start makes delta unitless, changing it to what leapr.f90 calls deltab
-  
-  delta = delta / tev; // make delta is unitless
+  /* Inputs
+   * ------------------------------------------------------------------------
+   * p     : excitation frequency spectrum, a function of beta. Originally 
+   *         provided by user via Card12
+   * delta : desired spacing for the continuous spectrum. This amends beta
+   *         values and is originally provided via Card11
+   * tev   : temperature in eV. Calculated as T * k_b in leapr.cpp
+   * tbeta : normalization for the continuous frequency spectrum. Note that 
+   *         the freq. spectrum rho should integrate to 1 (Eq. 508). Well tbeta
+   *         is the scaling away from 1, if the user wants. Provided in Card13
+   * 
+   * Operations
+   * ------------------------------------------------------------------------
+   * * Raw freq. spectrum rho(beta) [p] is altered to be P(beta) following 
+   *   Eq. 507. It is then normalized and scaled. New P(beta) now exists in p.
+   * * Debye-Waller coefficient is calculated, along with effective temperature
+   * * P(beta) is turned into T1(beta), following Eq. 525. T1(beta) is in p.
+   * 
+   * Outputs
+   * ------------------------------------------------------------------------
+   * * T1(beta) exists in the vector p
+   * * A tuple containing the Debye-Waller coefficient and effective temperature
+   *   is returned.
+   *
+   */
+
+  delta = delta / tev; // make delta is unitless (leapr.f90 calls this deltab)
 
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.
@@ -36,9 +60,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  for ( int i = 0; i < p.size(); ++i ){
-   p[i] = p[i] * exp( delta * i / 2 ) / lambda_s;
-  }
+  for ( int i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
   
   return std::make_tuple( lambda_s, t_eff );
 }

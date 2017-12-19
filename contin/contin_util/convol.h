@@ -17,15 +17,12 @@ auto convol( const std::vector<double>& t1, const std::vector<double>& t2,
       if ( t1[j] > 0 ){   // continue if the jth entry of t1 is positive
                           // If it's zero or negative, ignore since
                           // it won't contribute to to t3
-        f1 = 0.0;
-        if ( i1 - 1 <=  int(t1.size()) ){
-          f1 = t2[ i1 ]*exp( -j*delta );
-        }
+        f1 = i1 - 1 > int(t1.size()) ? 0 : t2[i1]*exp(-j*delta);
 
-        f2 = 0;
-        if ( i2 >= 0 and   i2  <= int(t1.size()) ){ f2 = t2[ i2 ]; }
-        if ( i2 <  0 and -i2-2 <= int(t1.size()) ){ f2 = t2[-i2 ] *
-                                                          exp( i2 * delta ); };
+        if      ( i2 >= 0 and   i2  <= int(t1.size()) ){ f2 = t2[ i2 ]; }
+        else if ( i2 <  0 and -i2-2 <= int(t1.size()) ){ f2 = t2[-i2 ] *
+                                                              exp( i2*delta ); }
+        else{ f2 = 0; }
 
         if ( 0 < j and j < t1.size() - 1 ){
           t3[i] += t1[j] * (f1+f2);
