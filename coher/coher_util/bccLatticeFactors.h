@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include "formf.h" 
 #include "smallFuncs.h" 
 

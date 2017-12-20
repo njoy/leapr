@@ -8,6 +8,9 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
   if (k <= 0 or tsq <= tsqx) {
     k += 1;
     if ((2*k) > nw) std::cout << "ERROR" << std::endl; 
+
+      if ( abs(1.80558e-8 - f) < 1e-11 ){ std::cout << tsq << "    " << b[ifl+2*k-3] << "     " << k << "    " << ifl+2*k-3<<  std::endl; }
+
     b[ifl+2*k-3] = tsq;
     b[ifl+2*k-2] = f;
   }
@@ -17,9 +20,12 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
     int i = 0;
     while ( i < k ){
       i += 1;
-      if ( tsq >= b[ifl+2*i-3] and tsq < 1.05 * b[ifl+2*i-3] ) {
+
+      //  if ( abs(1.80558e-8 - f) < 1e-11 ){ std::cout << tsq << "    " << b[ifl+2*i-3] << "     " << i << "    " << ifl+2*i-3<<  std::endl; }
+      if ( tsq > b[ifl+2*i-3] and tsq < 1.05 * b[ifl+2*i-3] ) {
         b[ifl+2*i-2] += f;
 
+        if ( abs(1.80558e-8 - f) < 1e-11 ){ std::cout << " OH BABY "<< f  << std::endl; }
         return;
       } 
     }

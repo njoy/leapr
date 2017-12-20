@@ -46,46 +46,23 @@ auto hexLatticeFactors( double a, double tsq, double c1, double c2,
           w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
           f=w*formf(lat,l1,l2,l3);
           hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f );
+          std::cout << i1 << "    " << i2 << "    " << i3 << "    " << b[13] << "\n" << std::endl;
         }
 
         tsq = tausq(l1,-l2,l3,c1,c2,twopis);
+
+
+        if ( i1 == 1 and i2 == 6 and i3 == 2){ return; }
 
 
         if (tsq > 0 and tsq <= ulim) {
           tau=sqrt(tsq);
           w=exp(-tsq*t2*wint)*w1*w2*w3/tau;
           f=w*formf(lat,l1,-l2,l3);
-          if (k <= 0 or tsq <= tsqx) {
-            k=k+1;
-            if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-            b[ifl+2*k-2-1]=tsq;
-            b[ifl+2*k-1-1]=f;
-          }
-          else {
-            i=0;
-            idone=0;
-            while (i < k and idone == 0){
-              i=i+1;
-              if (tsq >= b[ifl+2*i-3] and tsq < (1+eps)*b[ifl+2*i-3]) {
-      if (ifl+2*i-2 == 13 ) std::cout << "HERE" << std::endl;
-
-                b[ifl+2*i-2]=b[ifl+2*i-2]+f;
-                idone=1;
-              }
-            }
-            if (idone == 0) {
-              k=k+1;
-              if ((2*k) > nw) std::cout << "storage exceeded" << std::endl;
-              b[ifl+2*k-2-1]=tsq;
-              b[ifl+2*k-1-1]=f;
-            }
-          }
-
-        } 
-
-        std::cout << i1 << "    " << i2 << "    " << i3 << "    " << b[13] << "\n" << std::endl;
-        if ( i1 == 1 and i2 == 6 and i3 == 5){ return; }
-        
+          hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f );
+        }
+ 
+       
 
       } // 3
     } // 2
