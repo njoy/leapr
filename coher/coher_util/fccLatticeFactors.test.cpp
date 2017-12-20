@@ -13,14 +13,14 @@ void equal( double a, double b ){
 
 
 TEST_CASE( "Function to Compute FCC Lattice Factors" ){
-  double twothd = 0.666666667, twopis = 39.5;
-  int lat = 4;
+  int lat = 4, ifl = 1, nw = 60000;
+  double w = 0, t2 = 3.5e-5, c1 = 1.5e15, wint = 0, ulim = 9.6e19, a = 2e-8, 
+    twothd = 0.666666667, twopis = 39.5;
   std::vector<double> b (60000, 0.0);
-  int ifl = 1;
-  double w = 0;
-  int nw = 60000, imax = 5;
-  double t2 = 3.5e-5, c1 = 1.5e15, wint = 0, ulim = 9.6e19, a = 2e-8;
-  fccLatticeFactors( twothd, twopis, lat, b, ifl, w, nw, t2, imax, c1, wint, ulim, a );
+
+  int imax = fccLatticeFactors( twothd, twopis, lat, b, ifl, w, nw, t2, c1, wint, ulim, a );
+  REQUIRE( imax ==  29789 );
+
   std::vector<double> b_0_99 { 4.88812504E+19, 2.28848899E-9, 4.7163E+19, 
     2.32980337E-9, 4.55632504E+19, 2.37035085E-9, 4.4082E+19, 2.40984625E-9, 
     4.27192503E+19, 2.44798172E-9, 4.1475E+19, 2.48443010E-9, 4.03492503E+19, 
