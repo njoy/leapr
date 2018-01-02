@@ -22,20 +22,22 @@ auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   // loop over alpha values
   for ( auto a = 0; a < alpha.size(); ++a ){
     alpha_sc = alpha[a] * scaling;
-    ded = 0.4*trans_weight*diffusion*alpha_sc / 
-          sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
-        
-    if ( ded == 0 ){ ded = 0.2 * sqrt( trans_weight * alpha_sc );}
-    delta = 10.0 * alpha_sc * delta;
-    if ( ded < delta ){ delta = ded; }
-    nsd = diffusion == 0 ? free_gas_s_table( trans_weight, alpha_sc, ndmax, 
-                                             delta, sd, ap ) : 
+
+    ded = diffusion == 0 ? 
+      0.2 * sqrt( trans_weight * alpha_sc ) :
+      0.4 * trans_weight * diffusion * alpha_sc / 
+        sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
+
+    delta = std::min( ded, 10.0 * alpha_sc * delta );
+
+    nsd = diffusion == 0 ? free_gas_s_table ( trans_weight, alpha_sc, ndmax, 
+                                             delta, sd ) : 
                            diffusion_s_table( trans_weight, alpha_sc, ndmax, 
-                                             delta, sd, ap, diffusion );
+                                             delta, sd, diffusion );
     if ( nsd > 1 ){
-      for ( int i = 0; i < beta.size(); ++i ){
-        betan[i] = beta[i] * sc;
-        ap[i] = sym_sab[a][i][itemp];
+      for ( int b = 0; b < beta.size(); ++b ){
+        betan[b] = beta[b] * sc;
+        ap[b] = sym_sab[a][b][itemp];
       }
 
       // loop over beta values

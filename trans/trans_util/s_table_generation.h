@@ -5,8 +5,7 @@
 
 
 auto free_gas_s_table(const double& trans_weight, const double& alpha_sc, 
-  const int& ndmax, const double& delta, std::vector<double>& s_free, 
-  std::vector<double>& ap ){
+  const int& ndmax, const double& delta, std::vector<double>& s_free ){
   /* This creates a table of translational S(a,-b) values in the array s_free, 
    * where the table is evaluated at beta spaces of delta. This translational 
    * S(a,-b) can be used for free gasses, but can also represent the 
@@ -19,7 +18,6 @@ auto free_gas_s_table(const double& trans_weight, const double& alpha_sc,
     // Eq. 533 in the NJOY manual
     s_free[j] = exp( - 0.25 * (wal-beta) * (wal-beta) / wal ) / 
                   sqrt( 4 * M_PI * wal );
-    ap[j] = beta;
     beta += delta; j += 1;
     // nsd must always be odd for use with Simpson's rule.
     if ( (j%2 == 1) and ( j+1 >= ndmax or 1e-7*s_free[0] >= s_free[j-1] ) ){
@@ -31,7 +29,7 @@ auto free_gas_s_table(const double& trans_weight, const double& alpha_sc,
 
 auto diffusion_s_table( const double& trans_weight, const double& alpha_sc, 
   const int& ndmax, const double& delta, std::vector<double>& s_diffusion, 
-  std::vector<double>& ap, const double& diffusion){
+  const double& diffusion){
   /* This creates a table of translational S(a,-b) values in the array s_free, 
    * where the table is evaluated at beta spaces of delta. This translational 
    * S(a,-b) can be used for free gasses, but can also represent the 
@@ -51,7 +49,6 @@ auto diffusion_s_table( const double& trans_weight, const double& alpha_sc,
     s_diffusion[j] *= expTerm <= 1 ? exp( 2*wda*diffusion + beta/2 ) :
                                      exp( 2*wda*diffusion + beta/2 - expTerm); 
 
-    ap[j] = beta;
     beta += delta; j += 1;
 
     // nsd must always be odd for use with Simpson's rule.

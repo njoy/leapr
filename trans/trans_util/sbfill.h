@@ -2,9 +2,38 @@
 #include <vector>
 #include <cmath>
 
-void sbfill(std::vector<double>& sb, int nbt, double delta,
-  double be, std::vector<double>& s,std::vector<double>& betan, 
-  int ndmax){
+void sbfill(std::vector<double>& sb, int nbt, double delta, double be, 
+  std::vector<double>& s,std::vector<double>& betan, int ndmax){
+
+  /* Overview
+   * ------------------------------------------------------------------------
+   * This is used, according to the manual pg. 711, to remap the current 
+   * scattering law onto the same beta grid that the trans law is prepared on.
+   * This is so that when trans later does convolution on the existant and 
+   * translational scattering laws, it's easier. 
+   *
+   * Inputs
+   * ------------------------------------------------------------------------
+   * sb      : empty vector with ndmax ( max[ beta size, 1e6 ] )
+   * nbt     : number of iterations that s_table_generation took to converge
+   *           so this is basically the number of nonzero values in sd vector
+   * delta   : spacing used while calculating sd vector (which in the manual
+   *           is S_t(a,b)). This was calculated early on in trans.h
+   * be      : beta value
+   * s       : vector of existing S(a,b) values --> [S(a,b0), S(a,b1), ...]
+   * betan   : beta vector
+   * ndmax   : max[ beta size, 1e6 ]
+   * 
+   * Operations
+   * ------------------------------------------------------------------------
+   * * 
+   * 
+   * Outputs
+   * ------------------------------------------------------------------------
+   * * 
+   */
+
+
   
   double bmin = -be - (nbt-1) * delta;
   double bmax = -be + (nbt-1) * delta + delta * 0.01;
