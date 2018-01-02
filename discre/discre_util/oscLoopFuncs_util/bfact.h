@@ -76,7 +76,7 @@ auto bfact( const double& x, const double& dwc, const double& beta_i,
   
   int nmax=50, i = 49;
   In[nmax-1] = 0; In[nmax-2] = 1;
-  while (i > 0){
+  while (i > 1){
     In[i-2] = In[i] + 2 * i * In[i-1] / x;
     i = i - 1;
     if (In[i-1] >= 1.0e10){ 

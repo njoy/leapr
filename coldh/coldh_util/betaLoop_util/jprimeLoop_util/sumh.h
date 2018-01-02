@@ -14,8 +14,8 @@ auto sumh(int j, int jp, double y){
   int end, n, start;
   double sum1 = 0;
 
-  start = abs(j-jp) + 1;
-  end = std::min(j+jp+2, abs(j-jp)+11);
+  start = std::abs(j-jp) + 1;
+  end = std::min(j+jp+2, std::abs(j-jp)+11);
   for ( auto n = start; n < end; ++n ){
     sum1 += std::pow( sjbes(n-1,y) * cn(j,jp,n-1), 2 );
     // sjbes is used to calculate the spherical bessel function j_l

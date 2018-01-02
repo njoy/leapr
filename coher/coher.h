@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "coher_util/formf.h"
-#include "coher_util/hexagonalFactors.h"
+#include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 
 auto sqrtLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,

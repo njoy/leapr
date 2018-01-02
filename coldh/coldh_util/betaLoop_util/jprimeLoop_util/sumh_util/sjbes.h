@@ -49,7 +49,7 @@ double sjbes( int n, double y ){
         t1 = (2*k + 3) * t2 / y - t3;
 
         if (n == k){ sj = t1;}
-        if (abs(t1) >= 1.0e25) {
+        if (std::abs(t1) >= 1.0e25) {
           t1 = t1 / 1.0e25;
           t2 = t2 / 1.0e25;
           sj = sj / 1.0e25;

@@ -71,12 +71,6 @@ auto oscillatorLoop( const std::vector<double>& alpha,
    *                    --in leapr.f90, this is called dist
    */
 
-
-
-  /* Note that the betaVals vector is a vector whose entries are the oscillator
-   * energies scaled by temp in eV, thus making them beta values.
-   */
-
   std::vector<double> ben( maxdd, 0.0 ), wtn( maxdd, 0.0 ); wtn[0] = 1.0;
 
   double bk = 8.617385E-5, alpha_lambda_i, x, bzero;

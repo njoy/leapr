@@ -2,7 +2,7 @@
 #include <vector>
 #include <cmath>
 
-auto sbfill(std::vector<double>& sb, int nbt, double delta,
+void sbfill(std::vector<double>& sb, int nbt, double delta,
   double be, std::vector<double>& s,std::vector<double>& betan, 
   int ndmax){
   
@@ -21,7 +21,7 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
   bool indexInRange = false; 
   
   while (bet < bmax){
-    double b=abs(bet);
+    double b=std::abs(bet);
 
     // search for correct beta range
     foundRange = false;
@@ -85,7 +85,6 @@ auto sbfill(std::vector<double>& sb, int nbt, double delta,
     i = i + 1;
     bet = bet + delta;
   }
-  return 0;
 }
 
 

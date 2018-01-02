@@ -38,6 +38,8 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // value P(beta_0) with a Taylor series. sinh(b/2) ~= b/2 + (b/2)^3/3! + ...,
   // so rho / ( 2 * b * sinh( b/2 ) ) --> rho / ( 2 * b * ( b/2 + ... ) )
   //                                  --> rho / ( b * b )
+  // This is is following what the manual instructs on pg. 651 near bottom, that
+  // the solid-type spectrum must vary as b^2 as b goes to zero.
   
   p[0] = p[1] / ( beta * beta );
   for ( int i = 1; i < p.size(); ++i ){

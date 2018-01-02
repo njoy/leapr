@@ -18,14 +18,14 @@ auto sint(const double& x, const std::vector<double>& bex,
   // Short Collision Time approximation
   // PROBLEM -- This SCT does not match Eq. 528. Please check. 
  
-  if ( abs(x) > betan[betan.size()-1] ){
+  if ( std::abs(x) > betan[betan.size()-1] ){
     if ( alpha <= 0.0 ){ // The formula for short collision time approximation
       return 0.0;        // is only valid for positive alpha, else get complex
                          // S(a,-b) (square root)
     } 
     else {  // This implements the short collision time (SCT) approximaation
             // which is detailed in Eq. 528 of NJOY manual
-      ex = -(wt*alpha-abs(x))*(wt*alpha-abs(x))/(4*wt*alpha*tbart);
+      ex = -(wt*alpha-std::abs(x))*(wt*alpha-std::abs(x))/(4*wt*alpha*tbart);
 
       // If x is positive, model it as if it was negative, and then multiply
       // by a e^(-x), since S(a,b) = e^-beta * S(a,-b) in Eq. 529

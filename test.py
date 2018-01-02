@@ -33,6 +33,7 @@ def get_all_test_files():
 
 def run_test(test):
     my_str = "g++ -std=c++14 " + test 
+    my_str = "g++ " + test 
     os.system(my_str)
     try: 
         output = subprocess.check_output(["./a.out"])

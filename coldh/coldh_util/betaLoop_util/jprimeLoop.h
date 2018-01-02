@@ -38,7 +38,7 @@ auto jPrime( double& total, int j, const double& be, const double& x,
       // If molecular translations are assumed to be free, we calculate the 
       // S_f(a,b) by using Eq. 569-570. This will be subsequently used in 
       // Eq. 567-568.
-      ex = -std::pow(al*wt-abs(bn),2)/(4*al*wt);
+      ex = -std::pow(al*wt-std::abs(bn),2)/(4*al*wt);
       if ( bn > 0.0 ){ ex -= bn; }
       add = exp(ex)/sqrt(4*pi*al*wt);
     }

@@ -25,10 +25,10 @@ auto addDeltaFuncs( const double twt, const double dwf,
         while ( j < betan.size()-1 and not done ){
           j += 1;
           jj = j;
-          if ( abs(be-betan[j-1] ) > db ){
+          if ( std::abs(be-betan[j-1] ) > db ){
             done = true;
           } else {
-            db = abs(be-betan[j-1]);
+            db = std::abs(be-betan[j-1]);
           }
         }
 
