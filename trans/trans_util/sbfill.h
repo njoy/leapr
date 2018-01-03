@@ -26,18 +26,37 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
    * 
    * Operations
    * ------------------------------------------------------------------------
-   * * 
+   * * Establish the range bmin --> bmax across which we want to create a 
+   *   unionized grid. We take -beta and go nbt*delta to the left and 
+   *   nbt*delta to the right, since nbt is the number of S_t(a,b) values 
+   *   that we computed in s_table_generation.
+   * * We're going to march across the bmin, bmax range. bet is the value
+   *   between bmin and bmax that we're currently at, and b is it's abs. val.
+   * * Given a normalized beta grid betan [ beta0, beta1, betan2, ... ]
+   *   find the pair ( beta_i, beta_(i+1) ) such that b lies between them. 
+   *   This is done in the while(not foundRange) loop.
+   * * Once we know where this s_table_generation's beta value roughly lies, 
+   *   we linearly interpolate to find its corresponding value, and then
+   *   have the S(a,b) value that corresponds to it. 
    * 
    * Outputs
    * ------------------------------------------------------------------------
    * * 
    */
 
-
+  for ( auto entry : s ){ std::cout << entry << std::endl; }
   
+  // nbt is the number of S_t(a,b) values that were computed in 
+  // s_table_generation. So we want to take -beta and look at the values that
+  // lie in the +- nbt interval. Since s_table_generation used a spacing of 
+  // delta (this is the delta that was computed in trans.h), we need to scale
+  // our steps by that.
   double bmin = -be - (nbt-1) * delta;
   double bmax = -be + (nbt-1) * delta + delta * 0.01;
 
+  // This is the same as 
+  // if ( 2 * nbt - 0.99 > ndmax ){
+  // which is effectively the same as 2*nbt > ndmax, since ndmax is an int
   if ( 1 + (bmax-bmin) / delta > ndmax){ 
     std::cout <<  "Oh no! Error in contin's sbfill." << std::endl;
     throw std::exception();
@@ -46,11 +65,10 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
   double slim = -225.e0;
   int i = 0, j = betan.size()-1;
   double current, toLeft, arg, bet = bmin;
-  bool foundRange = false;
-  bool indexInRange = false; 
+  bool foundRange = false, indexInRange = false; 
   
   while (bet < bmax){
-    double b=std::abs(bet);
+    double b = std::abs(bet);
 
     // search for correct beta range
     foundRange = false;
@@ -59,12 +77,13 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
       // If desired point is to the right of current point, and I still have 
       // plenty of beta values to the right that I can explore, I'll just 
       // increase my index and keep searching. 
-      // If I'm at last point adn my desired point is ``basically'' 
+      // If I'm at last point and my desired point is ``basically'' 
       // where I'm at, then I'll say that j is the index of my correct point 
       // (indexInRange = true). If not then I know that desired point is 
       // between j and j + 1 ( where j + 1 not valid index ). Either way if
       // I'm running out of room, foundRange gets set to true since I've 
       // narrowed down my location to either valid or invalid.
+      std::cout << betan[j] << std::endl;
       if ( b > betan[j] ){   
         if ( j + 1 == betan.size() ){ 
           indexInRange = b < 1.00001 * betan[j] ? true : false;

@@ -5,12 +5,12 @@
 #include "../catch.hpp"
 
 void equal( double a, double b ){
-    if( b == 0 ){ REQUIRE( (a-b) < 1e-4 ); }
-    if( b != 0 ){ REQUIRE ( std::abs( (a-b)/(b) ) < 1e-4 ); }
+  if( b == 0 ){ REQUIRE( (a-b) < 1e-4 ); }
+  if( b != 0 ){ REQUIRE ( std::abs( (a-b)/(b) ) < 1e-4 ); }
 }
 
 TEST_CASE( "trans" ){
-  GIVEN( "inputs" ){
+  GIVEN( "diffusive case" ){
     std::vector<double> alpha {0.10,  0.20,  0.40, 0.50};
     std::vector<double> beta  {0.15,  0.18,  0.22};
     std::vector<double> temps {200.0}; 

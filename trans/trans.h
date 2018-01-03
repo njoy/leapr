@@ -6,7 +6,7 @@
 #include "trans_util/terps.h"
 
 
-auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
+void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   const double& trans_weight, double delta, const double& diffusion, 
   const double& sc, const double& scaling, const int& itemp, 
   const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 

@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "../../catch.hpp"
 #include "sbfill.h"
-#include <iostream>
 
 
 
@@ -14,6 +13,22 @@ void equal( double a, double b ){
 
 TEST_CASE( "sbfill" ){
   GIVEN( "invalid inputs" ){
+    int ndmax = 6;
+    std::vector<double> sb( ndmax, 0.0 );
+    std::vector<double> ap( ndmax );
+    for ( int i = 0; i < ap.size(); ++i ){
+      ap[i] = (i+1)*0.0001;
+    }
+    std::vector<double> betan {0.15, 0.21, 0.22};
+    int nbt = 3;
+    double delta = 1E-3, be = 0.2;
+    sbfill(sb, nbt, delta, be, ap, betan, ndmax );
+
+
+
+
+
+	  /*
     int ndmax = 5100;
     std::vector<double> sb (ndmax,0.0); 
     std::vector<double> ap (ndmax,0.0); 
@@ -211,5 +226,6 @@ TEST_CASE( "sbfill" ){
         REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ndmax ) );
       } // THEN
     } // WHEN
+    */
   } // GIVEN
 } // TEST CASE
