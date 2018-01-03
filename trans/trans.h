@@ -45,10 +45,31 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
    * 
    * Operations
    * ------------------------------------------------------------------------
+   * * Calculate the appropriate spacing for which the translational S(a,b)
+   *   contribution will be computed. 
+   * * Compute the translational S(a,b) contribution, S_t(a,b). This is computed
+   *   differently depending on whether the translational component is diffusive
+   *   (for liquid) or a free gas. This is done with s_table_generation. The
+   *   S_t(a,b) values are put in sabTrans vector.
+   * * Fill vector sab with interpolated values of the existant scattering law. 
+   *   For each value that S_t(a,b) was computed at, we log-interpolate the
+   *   existing S(a,b) to get the scattering law value at that beta, and put it
+   *   in the sab vector. Notice that sab may now have a different beta spacing
+   *   delta than the original S(a,b) had. 
+   * * Convolve sab and sabTrans. This is to account for the latter term in 
+   *   Eq. 535.
+   * * Multiply the values of sabTrans by exponential term to account for first
+   *   term in Eq. 535.
+   * * Save values in the final sym_sab table.
    *
    *  
    * Outputs
    * ------------------------------------------------------------------------
+   * * The amended S(a,b), which is stored in sym_sab, is amended. Formerly, it
+   *   containted only influence from the continuous distribution of solid type
+   *   frequency distribution. Now it accounts for translational motion of 
+   *   either liquids or gasses.
+   * * The effective temperature is altered according to Eq. 536.
    */
 
 
@@ -88,20 +109,26 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
         sbfill( sab, nsd, delta, be, ap, betan, ndmax );
 
         // convolve s-transport with s-continuous
+	// This convolution is done via Simpson's rule. For a nice introduction
+	// check out "A high-order fast method for computing convolution 
+	// integral with smooth kernel" by Ji Qiang. 
         double s = 0;
         for ( int i = 0; i < nsd; ++i ){
           // f = 2 if i is even, 4 if i is odd, except 1 at boundaries
           double f = 2*(i%2)+2;
           if ( i == 0 or i == nsd - 1 ){ f = 1; }
                     
-          s = s + f*sabTrans[i]*sab[nsd+i-1] + f*sabTrans[i]*sab[nsd-i-1]*exp(-i*delta);
+          s += f * sabTrans[i] * sab[nsd+i-1] + 
+               f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
 
         }
         s = s < 1e-30 ? 0 : s * delta / 3;
                 
+
         double st = terps(sabTrans,nsd,delta,be);
 
-	// This accounts for the first term in Eq. 535
+	// This accounts for the first term in Eq. 535, which is a delta 
+	// function contribution corresponding to the zeroth term in Eq. 523
         if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
 
         sym_sab[a][b][itemp] = s;
