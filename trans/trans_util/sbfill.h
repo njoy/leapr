@@ -36,15 +36,28 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
    *   find the pair ( beta_i, beta_(i+1) ) such that b lies between them. 
    *   This is done in the while(not foundRange) loop.
    * * Once we know where this s_table_generation's beta value roughly lies, 
-   *   we linearly interpolate to find its corresponding value, and then
+   *   we log interpolate to find its corresponding value, and then
    *   have the S(a,b) value that corresponds to it. 
+   *   So if I find that this value of b is in between beta3 and beta4, then
+   *   I record into sb[i] 
+   *       exp(  linearly interpolate log( S(a,b3) ) and log( S(a,b4) ) )
+   * * March forward so that you do this for every bet/b value between bmin
+   *   and bmax. If one of these bet/b values is outside betan range, set the
+   *   sb[i] value equal to zero.
    * 
    * Outputs
    * ------------------------------------------------------------------------
-   * * 
+   * * I have a set of beta values that interest me, that range from bmin to
+   *   bmax. This range is centered about a specific beta value, and its size is
+   *   determined by nbt (the number of interesting S_t(a,b) values from 
+   *   s_table_generation). 
+   * * For each beta value in this specific grid, I interpolate to find its
+   *   approximate value in my existing S(a,b) table that was generated from
+   *   contin. 
+   * * So sb is a vector that through sbfill is populated with S(a,bi) where 
+   *   bi is the ith beta value across this specific grid
    */
 
-  for ( auto entry : s ){ std::cout << entry << std::endl; }
   
   // nbt is the number of S_t(a,b) values that were computed in 
   // s_table_generation. So we want to take -beta and look at the values that
@@ -58,13 +71,17 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
   // if ( 2 * nbt - 0.99 > ndmax ){
   // which is effectively the same as 2*nbt > ndmax, since ndmax is an int
   if ( 1 + (bmax-bmin) / delta > ndmax){ 
-    std::cout <<  "Oh no! Error in contin's sbfill." << std::endl;
+    std::cout << "Oh no! Error in contin's sbfill." << std::endl;
+    std::cout << "To appropriately represent S_t(a,b), there were" << std::endl;
+    std::cout << "nbt many values computed. Since we want to " << std::endl;
+    std::cout << "reflect this about a beta value in the positive" << std::endl;
+    std::cout << "and negative directions, we need 2*nbt spaces" << std::endl;
+    std::cout << "available. There are too few values available." << std::endl;
     throw std::exception();
   }
   
-  double slim = -225.e0;
   int i = 0, j = betan.size()-1;
-  double current, toLeft, arg, bet = bmin;
+  double current, toLeft, arg, bet = bmin, slim = -225e0;
   bool foundRange = false, indexInRange = false; 
   
   while (bet < bmax){
@@ -83,7 +100,6 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
       // between j and j + 1 ( where j + 1 not valid index ). Either way if
       // I'm running out of room, foundRange gets set to true since I've 
       // narrowed down my location to either valid or invalid.
-      std::cout << betan[j] << std::endl;
       if ( b > betan[j] ){   
         if ( j + 1 == betan.size() ){ 
           indexInRange = b < 1.00001 * betan[j] ? true : false;
@@ -114,9 +130,9 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
     if ( indexInRange ){
 
       // Don't take the log of a negative number
-      current = s[j] < 0 ? slim : log( s[j] );
+      current = s[j]   < 0 ? slim : log( s[j]   );
       toLeft  = s[j-1] < 0 ? slim : log( s[j-1] );
-      
+
       sb[i] = current + (b-betan[j])*(toLeft-current)/(betan[j-1]-betan[j]);
 
       if (bet > 0) { sb[i] = sb[i] - bet; }

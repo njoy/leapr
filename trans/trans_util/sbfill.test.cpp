@@ -3,32 +3,14 @@
 #include "sbfill.h"
 
 
-
 void equal( double a, double b ){
     if( b == 0 ){ REQUIRE( (a-b) < 1e-6 ); }
     if( b != 0 ){ REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 ); }
 }
 
 
-
 TEST_CASE( "sbfill" ){
   GIVEN( "invalid inputs" ){
-    int ndmax = 6;
-    std::vector<double> sb( ndmax, 0.0 );
-    std::vector<double> ap( ndmax );
-    for ( int i = 0; i < ap.size(); ++i ){
-      ap[i] = (i+1)*0.0001;
-    }
-    std::vector<double> betan {0.15, 0.21, 0.22};
-    int nbt = 3;
-    double delta = 1E-3, be = 0.2;
-    sbfill(sb, nbt, delta, be, ap, betan, ndmax );
-
-
-
-
-
-	  /*
     int ndmax = 5100;
     std::vector<double> sb (ndmax,0.0); 
     std::vector<double> ap (ndmax,0.0); 
@@ -39,7 +21,6 @@ TEST_CASE( "sbfill" ){
     int nbt = 2545;
     double delta = 1.791435E-3, be = 0.15;
     sbfill(sb, nbt, delta, be, ap, betan, ndmax );
-
 
     std::vector<double> correct {0.0, 0.0, 0.0, 0.0, 0.0, 2.995926E-4,
     2.942014E-4, 2.889072E-4, 2.837082E-4, 2.786028E-4, 2.735893E-4, 
@@ -226,6 +207,5 @@ TEST_CASE( "sbfill" ){
         REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ndmax ) );
       } // THEN
     } // WHEN
-    */
   } // GIVEN
 } // TEST CASE
