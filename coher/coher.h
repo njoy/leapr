@@ -111,7 +111,7 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
 
   // initialize.
   twopis = (2*pi)*(2*pi);
-  amne = amassn * amu;
+  amne = amassn * amu;          // Mass of neutron in g ( 1.6749286E-24 )
   econ = ev*8*(amne/hbar)/hbar;
   recon = 1/econ;
   tsqx = econ/20;
