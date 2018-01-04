@@ -26,50 +26,6 @@ auto sqrtLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
 
 
 
-auto end( int ifl, std::vector<double>& b, int k, int jmin, double recon, 
-  double& bel, int nbe, int maxb, int j, double& be, double toler, double bs,
-  double scon, double sf, double st, int nw, double ulim, int imax ){
-
-  // Sort lattice factors
-  // 220 continue
-  for ( auto i = 1; i < imax; ++i ){
-    jmin=i+1;
-    for ( auto j = jmin; j < k; ++j ){
-      if (b[ifl+2*j-2-1] < b[ifl+2*i-2-1]) {
-        st = b[ifl+2*i-2-1];
-        sf = b[ifl+2*i-1-1];
-        b[ifl+2*i-2-1] = b[ifl+2*j-2-1];
-        b[ifl+2*i-1-1] = b[ifl+2*j-1-1];
-        b[ifl+2*j-2-1] = st;
-        b[ifl+2*j-1-1] = sf;
-      }
-    }
-  }
-  k = k + 1;
-  b[ifl+2*k-2-1] = ulim;
-  b[ifl+2*k-1-1] = b[ifl+2*k-3-1];
-  nw = 2 * k;
-
-  // convert to practical units and combine duplicate bragg edges.
-  bel=-1;
-  j=0;
-  for ( auto i = 1; i < k; ++i ){
-    be = b[ifl+2*i-2-1]*recon;
-    bs = b[ifl+2*i-1-1]*scon;
-    if (be-bel < toler) {
-      b[ifl+2*j-1-1] = b[ifl+2*j-1-1] + bs;
-    }
-    else {
-      j = j+1;
-      b[ifl+2*j-2-1] = be;
-      b[ifl+2*j-1-1] = bs;
-      bel=be;
-    }
-  }
-  nbe = j;
-  maxb = 2 * nbe;
-}
-
 
 auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b, 
   double emax ){
