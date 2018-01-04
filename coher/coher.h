@@ -30,6 +30,7 @@ auto end( int ifl, std::vector<double>& b, int k, int jmin, double recon,
   double& bel, int nbe, int maxb, int j, double& be, double toler, double bs,
   double scon, double sf, double st, int nw, double ulim, int imax ){
 
+  // Sort lattice factors
   // 220 continue
   for ( auto i = 1; i < imax; ++i ){
     jmin=i+1;
