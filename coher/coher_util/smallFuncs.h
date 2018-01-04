@@ -1,16 +1,23 @@
 
 
 
-double tausq( int m1, int m2, int m3, double c1, double c2, double twopis ){
-  return (c1*(m1*m1+m2*m2+m1*m2)+(m3*m3*c2))*twopis;
+double tausq( int l1, int l2, int l3, double c1, double c2 ){
+  /* This is mean to sort of evaluate Eq. 558. The it does evaluate it, but
+   * multiplied by an extra factor of 2pi.
+   * This is the reciprocal lattice vector length for hexagonal lattice 
+   * (e.g. graphite). 
+   */
+  return (c1*(l1*l1+l2*l2+l1*l2)+(l3*l3*c2))*4*M_PI*M_PI;
 }
 
-double taufcc( int m1, int m2, int m3, double c1, double twothd, double twopis ){
-  return c1*(m1*m1+m2*m2+m3*m3+twothd*m1*m2+twothd*m1*m3-twothd*m2*m3)*twopis;
+double taufcc( int l1, int l2, int l3, double c1 ){
+	double twopis = 4*M_PI*M_PI;
+	double twothd=2/3;
+  return c1*(l1*l1+l2*l2+l3*l3+twothd*l1*l2+twothd*l1*l3-twothd*l2*l3)*twopis;
 }
 
-double taubcc( int m1, int m2, int m3, double c1, double twopis ){
-  return c1*(m1*m1+m2*m2+m3*m3+m1*m2+m2*m3+m1*m3)*twopis;
+double taubcc( int l1, int l2, int l3, double c1, double twopis ){
+  return c1*(l1*l1+l2*l2+l3*l3+l1*l2+l2*l3+l1*l3)*twopis;
 }
 
 
