@@ -1,15 +1,14 @@
 #define CATCH_CONFIG_MAIN
 #include "../catch.hpp" 
 #include "discre.h"
-#include <iostream> 
 
 
 void equal( double a, double b ){
   if (b == 0.0){ 
-    REQUIRE( b-a < 1e-5 );
+    REQUIRE( b-a < 1e-6 );
     return;
   }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-5 );
+  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
 }
 
 void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a, 
@@ -55,8 +54,8 @@ TEST_CASE( "discre" ){
 
       int itemp = 0;
 
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, osc_weights, 
-          tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.9575582, 1.914953, 2.872356, 
         3.829659, 4.807700, 5.501617, 6.418366, 7.335187, 8.251386, 9.253313, 
@@ -80,8 +79,8 @@ TEST_CASE( "discre" ){
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
       int itemp = 0;
 
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, osc_weights, 
-          tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.7125247, 1.321226, 1.681776, 2.414681,
         3.053423, 2.268664, 3.482821, 3.839385, 5.171756, 5.720471, 2.353392, 
@@ -92,7 +91,6 @@ TEST_CASE( "discre" ){
         equal_vec_mega_vec( sym_sab, correctSymSab );
       } // THEN
     } // WHEN
-
 
     WHEN( "oscillator weights add up to 1" ){
       std::vector<double> osc_energies{0.1, 0.5}, osc_weights{0.4, 0.6},
@@ -105,8 +103,8 @@ TEST_CASE( "discre" ){
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
       int itemp = 0;
 
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, 
-          osc_weights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.8323044, 1.665653, 2.505608, 
         3.415392, 4.259058, 4.128312, 4.839682, 5.601205, 7.150784, 8.046933, 
@@ -129,8 +127,8 @@ TEST_CASE( "discre" ){
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
       int itemp = 0;
 
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, 
-          osc_weights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.83835105, 1.6777545, 2.5238118, 
         3.4402043, 4.2899999, 4.1885133, 4.9102577, 5.6828846, 7.2550608, 
@@ -155,8 +153,8 @@ TEST_CASE( "discre" ){
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
       int itemp = 0;
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, 
-          osc_weights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.8313648, 1.663253, 2.498450, 
         3.368623, 4.205679, 4.132822, 4.833326, 5.558994, 6.680081, 7.473300, 
@@ -180,8 +178,8 @@ TEST_CASE( "discre" ){
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
       int itemp = 0;
 
-      discre( sc, scaling, alpha, beta, tev, lambda_s, osc_energies, 
-          osc_weights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, twt );
+      discre( itemp, sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+              temp_vec, osc_energies, osc_weights, t_eff_vec, sym_sab );
 
       std::vector<double> correctSymSab {0.9690026, 1.938005, 2.907007, 
         3.876010, 4.845013, 5.633796, 6.572763, 7.511729, 8.450695, 9.389661, 

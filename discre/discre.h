@@ -12,13 +12,14 @@ void swap( double& a, double& b ){
   double c = a; a = b; b = c;
 }
 
-auto discre(const double& sc, const double& scaling, 
-  const std::vector<double>& alpha, 
-  const std::vector<double>& beta, const double& tev, const double& lambda_s, 
+auto discre( int itemp, const double& sc, const double& scaling, 
+  const double& tev, const double& lambda_s, const double& twt, 
+  const double& tbeta, const std::vector<double>& alpha, 
+  const std::vector<double>& beta, const std::vector<double>& temp_vec, 
   std::vector<double>& energy, std::vector<double>& weights,
-  const double& tbeta, std::vector<double>& t_eff_vec, 
-  const std::vector<double>& temp_vec, int itemp,
-  std::vector<std::vector<std::vector<double>>>& sym_sab,double twt  ){
+  std::vector<double>& t_eff_vec, 
+  std::vector<std::vector<std::vector<double>>>& sym_sab
+  ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
   double bk = 8.617385E-5;
@@ -30,8 +31,8 @@ auto discre(const double& sc, const double& scaling,
   std::vector<double> ar(50,0.0), t_eff_consts(50,0.0), lambda_i(50,0.0), 
     betaVals(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
 
-  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, t_eff_consts, lambda_i,
-    bk, exb, betan, beta, sc );
+  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, t_eff_consts,
+    lambda_i, bk, exb, betan, beta, sc );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
    * --> betaVals = [ energy / tev ]
@@ -46,13 +47,12 @@ auto discre(const double& sc, const double& scaling,
 
   std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
   int nbx = bfill( bex, rdbex, betan );
-  double wt = tbeta;
-  double tbart = t_eff_vec[itemp]/temp_vec[itemp];
+  double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
+
   // Main alpha loop
   for ( auto a = 0; a < alpha.size(); ++a ){
 
-   
     // Get all sym_sab entries for a given alpha and temperature (vary beta)
     // for use in exts
     std::vector<double> input ( beta.size(), 0.0 );
@@ -87,7 +87,7 @@ auto discre(const double& sc, const double& scaling,
     // Sort the discrete lines, and throw out the smallest ones
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
-    int n = nn; double save;
+    int n = nn; 
     for ( auto i = 1; i < n-1; ++i ){
       for ( auto j = i+1; j < n; ++j ){
         if ( wts[j] > wts[i] ){
@@ -96,17 +96,16 @@ auto discre(const double& sc, const double& scaling,
         } 
       }
     }
-    
-    int i = 0;
-    while ( i < nn ){
-      i += 1;
-      n = i;
-      if ( wts[i-1] < 1.0e-6 and i > 5 ){ break; }
+
+    n = 0;
+    while ( n < nn ){
+      n += 1;
+      if ( wts[n-1] < 1e-6 and n > 5 ){ break; }
     }
 
     // Add the continuous part to the scattering law
     std::vector<double> sexpb(beta.size(),0.0);
-    for ( auto m = 0; m <= n; ++m ){
+    for ( auto m = 0; m < n; ++m ){
       for ( auto b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
         // This is explicitly evaluating Eq. 542, where wts is W_k(alpha), and
@@ -123,8 +122,8 @@ auto discre(const double& sc, const double& scaling,
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
 
     // Record the results
-    for ( auto j = 0; j < betan.size(); ++j ){
-      sym_sab[a][j][itemp] = sexpb[j];
+    for ( auto b = 0; b < betan.size(); ++b ){
+      sym_sab[a][b][itemp] = sexpb[b];
     }
   }
 }

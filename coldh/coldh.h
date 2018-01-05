@@ -39,8 +39,8 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
 
   double de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, tbart, therm = 0.0253;
 
-  std::vector<double> exb(maxbb, 0.0 ), betan(nbeta, 0.0 ), bex(maxbb, 0.0 ), 
-    rdbex(maxbb, 0.0 );
+  std::vector<double> exb(maxbb, 0.0), betan(nbeta, 0.0), bex(maxbb, 0.0), 
+    rdbex(maxbb, 0.0);
  
 
   // Either Ortho Deuterium or Para Deuterium 
@@ -55,14 +55,16 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
   else {
     de = 0.0147;
     mass_H2_D2 = 3.3465E-24;  // Mass of H2 in grams
+    // It seems like this is trying to be a/2, as defined on pg. 662, but when
+    // I plug in values it seems to be 2 orders of magnitude off.
     bp = hbar * sqrt( 2 /( de*eV*mass_H ) ) / ( 2 * angst );
     scatLenC = 0.356;
     scatLenI = 2.526;
   }
 
   x = de / tev;
-  wt = trans_weight + tbeta;
-  tbart = tempf[itemp] / temp;
+  wt = trans_weight + tbeta;   // Translational weight
+  tbart = tempf[itemp] / temp; // Effective temperature
 
 
 
@@ -70,6 +72,10 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     double al = alpha[a]*scaling;
     double waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
     double y = bp * waven;
+
+    // We interpolate S(kappa) to get the corresponding value that we will use
+    // for the Vineyard approximation. 
+    // We will replace a_c^2 with S(kappa)*a_c^2, as is stated on pg. 663.
     double sk = terpk( ska, dka, waven );
 
     // spin-correlation factors
@@ -78,15 +84,22 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     // Thie is meant to recreate the table on pg. 662 of the manual, where we
     // get the A (even) and B (odd) terms for the summation in Eq. 567.
     // -----------------------------------------------------------------------
+    
+    // Note that this differs slightly from Eq. 567-568, in that some of the 
+    // terms are being multiplied by this sk term. This is S(kappa), which
+    // is used to account for intermolecular coherence (if there is a 
+    // correlation between positions of nearby molecules). S(kappa) is also 
+    // called the static structure factor
+    
     // Ortho Hydrogen
     if (ncold == 1){ 
-      evenSumConst = scatLenI * scatLenI / 3;
+      evenSumConst =      scatLenI * scatLenI / 3;
       oddSumConst  = sk * scatLenC * scatLenC + 2 * scatLenI * scatLenI / 3;
     } 
     // Para Hydrogen
     else if ( ncold == 2 ){
-      evenSumConst = scatLenC * scatLenC * sk;
-      oddSumConst  = scatLenI * scatLenI;
+      evenSumConst = sk * scatLenC * scatLenC;
+      oddSumConst  =      scatLenI * scatLenI;
     } 
     // Ortho Deuterium
     else if ( ncold == 3 ){
@@ -125,8 +138,8 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     }
     auto sex = exts( input, exb, betan );
 
-    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSumConst, oddSumConst, itemp, 
-       nbx, a, ncold, free, sym_sab, sym_sab_2 );
+    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSumConst, 
+      oddSumConst, itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
    
   }

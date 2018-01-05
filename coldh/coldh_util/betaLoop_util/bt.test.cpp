@@ -12,36 +12,32 @@ void equal( double a, double b ){
 TEST_CASE( "bt" ){
   GIVEN( "odd input value for j" ){
     int j = 1;
-    double pj = 0.0, x = 0.85;
-    bt( j, pj, x );
+    double pj, x = 0.85;
+    pj = bt( j, x );
     equal( pj, 0.48388278 );
 
     x = 0.35;
-    bt( j, pj, x );
+    pj = bt( j, x );
     equal( pj, 0.34887661 );
 
     j = 5;
-    bt( j, pj, x );
+    pj = bt( j, x );
     equal( pj, 9.52577E-3 );
   } // GIVEN
 
   GIVEN( "even input value for j" ){
     int j = 2;
-    double pj = 0.0, x = 3.85;
-    bt( j, pj, x );
+    double pj, x = 3.85;
+    pj = bt( j, x );
     equal( pj, 2.40889540E-5 );
 
-    pj = 10.0;
-    bt( j, pj, x );
-    equal( pj, 2.40889540E-5 );
-    
     j = 4;
-    bt( j, pj, x );
+    pj = bt( j, x );
     equal( pj, 8.5675066E-17 );
 
     j = 6;
     x = 0.005;
-    bt( j, pj, x );
+    pj = bt( j, x );
     equal( pj, 4.76258212E-2 );
 
   } // GIVEN
