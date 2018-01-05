@@ -72,6 +72,11 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   econ = ev*8*(amne/hbar)/hbar;
   recon = 1/econ;
   tsqx = econ/20;
+
+  // For hexagonal materials the lattice is described by two constants, a and c,
+  // which are defined below. Among other things this is used to define the 
+  // reciprocal lattice vector lengths, which is done using tausq. The other
+  // reciprocal lattice vector lengths require only one constant.
   if (lat == 1){
      // graphite constants.
      a=gr1;
@@ -112,18 +117,19 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
      scoh=fe4/natom;
   }
 
+  scon = std::pow( scoh*4*M_PI, 2 );
   if (lat < 4) {
      c1=4/(3*a*a);
      c2=1/(c*c);
-     scon=scoh*(4*pi)*scoh*(4*pi)/(2*a*a*c*sqrt3*econ);
+     scon /= (2*a*a*c*sqrt3*econ);
   }
-  else if (lat >= 4 and lat <= 5) {
+  else if (lat == 4 or lat == 5) {
      c1=3/(a*a);
-     scon=scoh*(4*pi)*scoh*(4*pi)/(16*a*a*a*econ);
+     scon/=(16*a*a*a*econ);
   }
   else if (lat == 6) {
      c1=2/(a*a);
-     scon=scoh*(4*pi)*scoh*(4*pi)/(8*a*a*a*econ);
+     scon/=(8*a*a*a*econ);
   }
   wint=0;
   t2=hbar/(2*amu*amsc);
@@ -132,7 +138,7 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   nw=maxb;
 
 
-hexagonalLatticeFactors( a, tsq, c1, c2, lat, tau, nw, tsqx, b, ifl, f, eps, 
+  hexLatticeFactors( a, tsq, c1, c2, lat, tau, nw, tsqx, b, ifl, f, eps, 
   i, wint, twopis, t2, ulim, imax, c );
   // compute lattice factors for hexagonal lattices
 
@@ -173,42 +179,5 @@ bccLatticeFactors( phi, ulim, twopis, i1m, k, i2m, i3m, tau, w, b, ifl, tsq,
   sqrtLatticeFactors( jmin, b, ifl, imax, k, st, sf );
  
 
-  // 220 continue
-  for ( auto i = 1; i < imax; ++i ){
-      jmin=i+1;
-      for ( auto j = jmin; j < k; ++j ){
-         if (b[ifl+2*j-2-1] < b[ifl+2*i-2-1]) {
-            st=b[ifl+2*i-2-1];
-            sf=b[ifl+2*i-1-1];
-            b[ifl+2*i-2-1]=b[ifl+2*j-2-1];
-            b[ifl+2*i-1-1]=b[ifl+2*j-1-1];
-            b[ifl+2*j-2-1]=st;
-            b[ifl+2*j-1-1]=sf;
-         }
-      }
-  }
-   k=k+1;
-   b[ifl+2*k-2-1]=ulim;
-   b[ifl+2*k-1-1]=b[ifl+2*k-3-1];
-   nw=2*k;
-
-   // convert to practical units and combine duplicate bragg edges.
-   bel=-1;
-   j=0;
-   for ( auto i = 1; i < k; ++i ){
-      be=b[ifl+2*i-2-1]*recon;
-      bs=b[ifl+2*i-1-1]*scon;
-      if (be-bel < toler) {
-         b[ifl+2*j-1-1]=b[ifl+2*j-1-1]+bs;
-      }
-      else {
-         j=j+1;
-         b[ifl+2*j-2-1]=be;
-         b[ifl+2*j-1-1]=bs;
-         bel=be;
-      }
-   }
-   nbe=j;
-   maxb=2*nbe;
 }
 
