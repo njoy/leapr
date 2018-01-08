@@ -1,11 +1,11 @@
 #include <iostream> 
 #include <vector>
 #include <cmath>
-
+#include <tuple>
 #include "contin/contin.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
-//#include "coldh/coldh.h"
+#include "coldh/coldh.h"
 
 int main(){
   // Card1
@@ -87,8 +87,8 @@ int main(){
 
       // Continuous part of the distribution
       std::cout << "  " << std::endl;
-      auto lambda_s_t_eff = contin( sym_sab, alpha, beta, rho, delta, tbeta,
-        scaling, tev, sc, nphon, itemp );
+      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
+        sc, rho, alpha, beta, sym_sab );
       double lambda_s = std::get<0>(lambda_s_t_eff);
 
      // update the effective temperature list
@@ -111,8 +111,8 @@ int main(){
 
 
       if ( oscEnergies.size() > 0 ){
-        discre( sc, scaling, alpha, beta, tev, lambda_s, oscEnergies, 
-        oscWeights, tbeta, t_eff_vec, temp_vec, itemp, sym_sab, trans_weight );
+        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
+          beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
       }
  
       std::cout << "    " << std::endl;
@@ -124,10 +124,12 @@ int main(){
 
 
 
- //     if ( ncold != 0 ){
- //       coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, t_eff_vec, temp_vec,
- //         scaling, alpha, beta, dka, kappaVals, nbeta, lat, sym_sab, sym_sab_2 );
- //     }
+      if ( ncold != 0 ){
+	bool free = false;
+        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, t_eff_vec, 
+	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
+	  sym_sab_2 );
+      }
 
     }
     done = true;

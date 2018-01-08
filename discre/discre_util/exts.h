@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 
 std::vector<double> exts( const std::vector<double>& sexpb,

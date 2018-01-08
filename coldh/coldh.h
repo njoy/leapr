@@ -2,8 +2,6 @@
 #include <vector>
 #include "coldh_util/terpk.h"
 #include "coldh_util/betaLoop.h"
-#include "../discre/discre_util/bfill.h"
-#include "../discre/discre_util/exts.h"
 
 
 auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,

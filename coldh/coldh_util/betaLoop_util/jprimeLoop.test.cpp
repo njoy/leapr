@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include "../../../catch.hpp"
+#include "../../../discre/discre_util/sint.h"
 #include "jprimeLoop.h"
 
 

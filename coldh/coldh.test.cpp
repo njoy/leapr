@@ -1,5 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "../catch.hpp"
+#include "../discre/discre_util/sint.h"
+#include "../discre/discre_util/bfill.h"
+#include "../discre/discre_util/exts.h"
 #include "coldh.h"
 
 

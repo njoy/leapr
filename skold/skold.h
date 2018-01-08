@@ -46,36 +46,41 @@ auto skold( double cfrac, int itemp, double tev,
    * Outputs
    * ------------------------------------------------------------------------
    * * SymSab is the modified S(a,b), following the above description of 
-   *   the Skold Approximation.
+   *   the Skold Approximation. 
    */
 
 
   /* use skold approximation to add in the effects
    * of intermolecular coherence.
    */
-  int kk;
+  int i;
   double sk, ap, waven, amassn = 1.008664904, 
-         amu = 1.6605402e-24, bk = 8.617385e-5, hbar = 1.05457266e-27, 
-         ev  = 1.60217733e-12;
+         amu = 1.6605402e-27, bk = 8.617385e-5, hbar = 1.05457266e-34, 
+         ev  = 1.60217733e-19;
 
-  std::vector<double> scoh ( 1000, 0.0 );
+  std::vector<double> scoh( alpha.size() );
   // apply the skold approximation
   for ( auto b = 0; b < beta.size(); ++b ){
     for ( auto a = 0; a < alpha.size(); ++a ){
+
       // Getting a value in units of inverse angstroms so that we can happily
       // interpolate it in our skappa table
-      waven = 1.0e-8 * sqrt(2*awr*amassn*amu*tev*ev*alpha[a]*scaling)/hbar;
+      waven = 1.0e-10 * sqrt(2*awr*amassn*amu*tev*ev*alpha[a]*scaling)/hbar;
+      // tev*ev = temperature in Joules
+      // amassn*amu = neutron mass in kg
+
       // Interpolate to find the waven value in the skappa input 
       sk = terpk(skappa,dka,waven);
       ap = alpha[a] / sk;
       for ( auto a2 = 0; a2 < alpha.size(); ++a2 ){
-        kk = a2;
+        i = a2;
         if (ap < alpha[a2]){ break; }
       }
-      if (kk == 0) kk = 1;
+      if (i == 0) i = 1;
 
-      terp1( alpha[kk-1], symSab[kk-1][b][itemp], alpha[kk], 
-             symSab[kk][b][itemp], ap, scoh[a], 5 );
+      // Interpolate to calculate S(a',b) where a' = a/S(k)
+      terp1( alpha[i-1], symSab[i-1][b][itemp], alpha[i], 
+             symSab[i][b][itemp], ap, scoh[a], 5 );
       scoh[a] *= sk;
     }
     // Amend the existing scattering law by combining a piece of it with a 

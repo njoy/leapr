@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "jprimeLoop_util/sumh.h"
-#include "../../../discre/discre_util/sint.h"
+//#include "../../../discre/discre_util/sint.h"
 
 auto jPrime( double& total, int j, const double& be, const double& x, 
   const double& sumConst, const double& pj, int jj, const std::vector<double>& bex, 

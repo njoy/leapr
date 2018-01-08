@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "../../catch.hpp"
+#include "../../discre/discre_util/sint.h"
 #include "betaLoop.h"
 
 void equal( double a, double b ){
