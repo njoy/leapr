@@ -4,7 +4,6 @@
 #include "hexLatticeFactors.h"
 
 void equal( double a, double b ){
-  std::cout << a << "     " << b << std::endl;
   if (b == 0.0){ 
     REQUIRE( std::abs(b-a) < 1e-6 );
     return;
