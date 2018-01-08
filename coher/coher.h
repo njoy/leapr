@@ -4,7 +4,7 @@
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 
-auto sqrtLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
+auto sortLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
   int k, double& st, double& sf ){
   // sort lattice factors
   

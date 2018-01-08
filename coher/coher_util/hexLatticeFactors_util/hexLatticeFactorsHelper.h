@@ -20,8 +20,8 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
 
     while ( i < k ){
       i += 1;
+      std::cout << 1.05*b[16] << "    " << tsq << std::endl;
       if ( tsq >= b[ifl+2*i-3] and tsq < 1.05 * b[ifl+2*i-3] ) {
-	std::cout << ":(" << "    " << tsq << "    " << b[ifl+2*i-3] << "   " << ifl+2*i-3 << std::endl;
         b[ifl+2*i-2] += f;
 	return;
       } // if
@@ -30,6 +30,7 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
     k += 1;
     b[ifl+2*k-3] = tsq;
     b[ifl+2*k-2] = f;
+    std::cout << "HERE" << std::endl;
 
   } // else
 }
