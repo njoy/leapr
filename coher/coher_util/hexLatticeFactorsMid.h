@@ -3,15 +3,14 @@
 #include "hexLatticeFactorsInner.h"
 
 
-auto hexLatticeFactorsMid( double a, double tsq, double c1, double c2, 
-  int lat, int nw, double tsqx, std::vector<double>& b, int ifl, 
-  int i, double wint, double t2, double ulim, 
-  int imax, double c, int i1, int i2m, int l1 ){
+auto hexLatticeFactorsMid( double& a, double& tsq, double& c1, double& c2, 
+  int& lat, int& nw, double& tsqx, std::vector<double>& b, int& ifl, 
+  int& i, double& wint, double& t2, double& ulim, 
+  int& imax, double& c, int& i1, int& i2m, int& l1, int& k ){
   double tau, f;
   // compute lattice factors for hexagonal lattices
-  int idone;
   double phi=ulim/(4*M_PI*M_PI), w, w1, w2, w3;
-  int l2, l3, i3m, k = 0;
+  int l2, l3, i3m;
 
   for ( auto i2 = i1; i2 <= i2m; ++i2 ){
 
@@ -27,9 +26,6 @@ auto hexLatticeFactorsMid( double a, double tsq, double c1, double c2,
 
 
   } // 2
-    for ( auto i = 0; i < 20; ++i ){ std::cout << b[i] << std::endl; }
-    return;
-
 }
 
 

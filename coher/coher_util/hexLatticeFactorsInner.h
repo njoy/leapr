@@ -32,7 +32,6 @@ auto hexLatticeFactorsInner( double& a, double& c1, double& c2,
       tau = sqrt(tsq);
       w = exp(-tsq*t2*wint)*w1*w2*w3/tau;
       f = w*formf(lat,l1,l2,l3);
-      //std::cout << "-----   " << k << "   " << tsqx << "   " << ifl  << "    " << i3 << std::endl;
       hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f, i );
     }
 
@@ -48,5 +47,4 @@ auto hexLatticeFactorsInner( double& a, double& c1, double& c2,
   } // 3
 
 }
-
 

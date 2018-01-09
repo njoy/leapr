@@ -23,14 +23,14 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   double a = 1e-9, c1 = 1.5e15, c2 = 2.5e15, tsqx = 9.6e17,
     t2 = 3.5e-5, ulim = 9.6e19, c = 3.58e-8, tsq = 0, wint = 0;
-  int i = 0, ifl = 1, lat = 3, nw = 60000, imax = 5;
+  int i = 0, ifl = 1, lat = 3, nw = 60000, imax = 5, k = 0;
   std::vector<double> b (60000, 0.0);
 
   int i1 = 1, l1 = 0, i2m = 2; 
   GIVEN( "few iterations" ){
     THEN( "outputs" ){
       hexLatticeFactorsMid( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
-          i, wint, t2, ulim, imax, c, i1, i2m, l1 );
+          i, wint, t2, ulim, imax, c, i1, i2m, l1, k );
       std::vector<double> bVals {98696046700994448., 0, 98696046700994448., 0,
         3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017,
 	3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017,
@@ -45,7 +45,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	2.5266187955454579E+019, 3.6727381091433330E-008, 2.8523157496587395E+019,
 	8.4903397195303887E-009, 3.1977519131122201E+019, 1.6657585989974948E-008,
 	3.5629272859058995E+019, 3.9727008566456193E-008, 3.9478418680397783E+019,
-	5.9819842155176793E-010, 4.3524956595138552E+019, 3.5948894753148489E-008,
+	5.9819842155176793E-010, 4.3524956595138552E+019, 3.5948894753148489E-008, 
 	4.7768886603281310E+019, 1.3631015975905929E-008 };
       for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
     } // THEN
@@ -55,7 +55,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   GIVEN( "a few more iterations" ){
     THEN( "outputs" ){
       hexLatticeFactorsMid( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
-          i, wint, t2, ulim, imax, c, i1, i2m, l1 );
+          i, wint, t2, ulim, imax, c, i1, i2m, l1, k );
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,
         3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017,
 	3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017,

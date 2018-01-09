@@ -12,7 +12,6 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
 
     b[ifl+2*k-3] = tsq;
     b[ifl+2*k-2] = f;
-
   }
 
   else {
@@ -20,6 +19,7 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
 
     while ( i < k ){
       i += 1;
+
       if ( tsq >= b[ifl+2*i-3] and tsq < 1.05 * b[ifl+2*i-3] ) {
         b[ifl+2*i-2] += f;
 	return;
