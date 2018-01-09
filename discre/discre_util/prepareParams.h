@@ -26,7 +26,7 @@ auto prepareParams( const std::vector<double>& energy,
   }
 
   for ( auto b = 0; b < betan.size(); ++b ){
-    exb[b] = exp( -beta[b]*sc*0.5 );
+    exb[b] = exp( -beta[b]*sc );
     betan[b] = beta[b]*sc;
   } 
 }

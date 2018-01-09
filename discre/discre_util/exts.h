@@ -35,7 +35,7 @@ std::vector<double> exts( const std::vector<double>& sexpb,
     // S(a,b) = exp( -beta ) * S(a,-b)    Eq. 509
     // Notice that we only apply this to half of the sex vector, since only
     // half of it needs to be flipped
-    sex[k-1] = sexpb[b]*exb[b]*exb[b];
+    sex[k-1] = sexpb[b]*exb[b];
     k += 1;
   }
   return sex;

@@ -72,7 +72,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     // spin-correlation factors
     double evenSumConst, oddSumConst;
     // -----------------------------------------------------------------------
-    // Thie is meant to recreate the table on pg. 662 of the manual, where we
+    // This is meant to recreate the table on pg. 662 of the manual, where we
     // get the A (even) and B (odd) terms for the summation in Eq. 567.
     // -----------------------------------------------------------------------
     
