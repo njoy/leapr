@@ -5,15 +5,15 @@
 #include "smallFuncs.h"
 
 
-auto hexLatticeFactorsInner( double a, double c1, double c2, 
-  int lat, int nw, double tsqx, std::vector<double>& b, int ifl, 
-  int i, double wint, double t2, double ulim,
-  int l1, int l2, int i3m ){
+auto hexLatticeFactorsInner( double& a, double& c1, double& c2, 
+  int& lat, int& nw, double& tsqx, std::vector<double>& b, int& ifl, 
+  int& i, double& wint, double& t2, double& ulim,
+  int& l1, int& l2, int& i3m, int& k ){
 
   // compute lattice factors for hexagonal lattices
   
   double w, w1, w2, w3, tsq, tau, f;
-  int l3, k = 0;
+  int l3; 
 
   for ( auto i3 = 1; i3 <= i3m; ++i3 ){
 
@@ -32,7 +32,8 @@ auto hexLatticeFactorsInner( double a, double c1, double c2,
       tau = sqrt(tsq);
       w = exp(-tsq*t2*wint)*w1*w2*w3/tau;
       f = w*formf(lat,l1,l2,l3);
-      hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f );
+      //std::cout << "-----   " << k << "   " << tsqx << "   " << ifl  << "    " << i3 << std::endl;
+      hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f, i );
     }
 
     tsq = tausq(l1,-l2,l3,c1,c2);
@@ -41,14 +42,10 @@ auto hexLatticeFactorsInner( double a, double c1, double c2,
       tau = sqrt(tsq);
       w = exp(-tsq*t2*wint)*w1*w2*w3/tau;
       f = w*formf(lat,l1,-l2,l3);
-      hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f );
+      hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f, i );
     }
 
   } // 3
-
-//  std::cout << "\n" << std::endl;
-//  for ( auto i = 0; i < 20; ++i ){ std::cout << b[i] << std::endl; }
-//  return;
 
 }
 

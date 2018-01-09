@@ -21,12 +21,14 @@ auto hexLatticeFactorsMid( double a, double tsq, double c1, double c2,
     i3m = 0;
     if (x > 0 ) i3m = int(c*sqrt(x));
     i3m = i3m + 1;
-	  std::cout << "i3m   " << i3m << std::endl;
 
     hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, i, wint, t2, 
-      ulim, l1, l2, i3m );
+      ulim, l1, l2, i3m, k );
+
 
   } // 2
+    for ( auto i = 0; i < 20; ++i ){ std::cout << b[i] << std::endl; }
+    return;
 
 }
 

@@ -22,7 +22,7 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   double a = 1e-9, c1 = 1.5e15, c2 = 2.5e15, tsqx = 9.6e17,
     t2 = 3.5e-5, ulim = 9.6e19, c = 3.58e-8, tsq = 0, wint = 0;
-  int i = 0, ifl = 1, lat = 3, nw = 60000, imax = 5;
+  int i = 0, ifl = 1, lat = 3, nw = 60000, imax = 5, k = 0;
   std::vector<double> b (60, 0.0);
 
   GIVEN( "l1 = 0, l2 = 0" ){
@@ -31,7 +31,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
         int l1 = 0, l2 = 0, i3m = 3;
         hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, 
-            i, wint, t2, ulim, l1, l2, i3m );
+            i, wint, t2, ulim, l1, l2, i3m, k );
 
         std::vector<double> bVals { 98696046700994448, 0, 98696046700994448, 0,
           3.947841868E+17, 3.749690408e-8, 3.947841868E+17, 3.749690408e-8 };
@@ -45,7 +45,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
         int l1 = 0, l2 = 0, i3m = 5;
         hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, 
-            i, wint, t2, ulim, l1, l2, i3m );
+            i, wint, t2, ulim, l1, l2, i3m, k );
 
         std::vector<double> bVals { 98696046700994448, 0, 98696046700994448, 0,
           3.947841868E+17, 3.749690408e-8, 3.947841868E+17, 3.749690408e-8,
@@ -60,7 +60,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
         int l1 = 0, l2 = 0, i3m = 15;
         hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, 
-            i, wint, t2, ulim, l1, l2, i3m );
+            i, wint, t2, ulim, l1, l2, i3m, k );
 
         std::vector<double> bVals { 98696046700994448, 0, 98696046700994448, 0,
           3.947841868E+17, 3.749690408e-8, 3.947841868E+17, 3.749690408e-8,
@@ -84,7 +84,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
         int l1 = 0, l2 = 1, i3m = 3;
         hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, 
-            i, wint, t2, ulim, l1, l2, i3m );
+            i, wint, t2, ulim, l1, l2, i3m, k );
 
         std::vector<double> bVals { 59217626960855968., 9.488519031E-008, 
           59217626960855968., 9.488519031E-008, 1.57913673E+17, 5.71129194E-008,
@@ -142,7 +142,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
         int l1 = 1, l2 = 1, i3m = 3;
         hexLatticeFactorsInner( a, c1, c2, lat, nw, tsqx, b, ifl, 
-            i, wint, t2, ulim, l1, l2, i3m );
+            i, wint, t2, ulim, l1, l2, i3m, k );
 
         std::vector<double> bVals { 1.7765288088256790E+017, 2.1912796067443682E-007, 
 		59217626960855968., 9.4885190311770216E-008, 2.7634892758356234E+017,

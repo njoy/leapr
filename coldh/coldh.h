@@ -46,8 +46,12 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     de = 0.0074;
     mass_H2_D2 = 6.69E-24;    // Mass of D2 in grams
     bp = hbar * sqrt( 2 /( de*eV*mass_D ) ) / ( 2 * angst ); 
-    scatLenC = 0.668;
-    scatLenI = 0.403;
+    scatLenC = 0.668; // If you want to see where these values probably come
+    scatLenI = 0.403; // from, consider looking at 
+    // https://www.ill.eu/en/science-technology/science-at-ill/why-and-how/
+    // neutron-techniques/introduction/
+    // Notice that the ratio of coherent to incoherent scattering length 
+    // that they report roughly matches the ratios here.
   } 
   // Either Ortho Hydrogen or Para Hydrogen
   else {

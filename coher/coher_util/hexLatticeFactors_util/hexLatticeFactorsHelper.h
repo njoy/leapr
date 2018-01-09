@@ -3,7 +3,7 @@
 
 auto hexLatticeFactorsHelper( int& k, const double& tsq, 
   const double& tsqx, std::vector<double>& b, const int& ifl,
-  const double& wint, const int& nw, const double& f ){
+  const double& wint, const int& nw, const double& f, int& i ){
  
   if (k <= 0 or tsq <= tsqx) {
     k += 1;
@@ -16,7 +16,7 @@ auto hexLatticeFactorsHelper( int& k, const double& tsq,
   }
 
   else {
-    int i = 0;
+    i = 0;
 
     while ( i < k ){
       i += 1;

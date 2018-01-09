@@ -35,7 +35,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	2.46740116e18, 2.2396046e-7, 3.55305768e18, 3.3377213359e-7,
 	4.836106288e18, 6.100306e-8 };
       //std::cout << b[13] << "      " << b_0_100[13] << std::endl;
-      //for( auto i = 0; i < b_0_100.size(); ++i ){ equal( b[i], b_0_100[i] ); }
+      for( auto i = 0; i < b_0_100.size(); ++i ){ equal( b[i], b_0_100[i] ); }
       //REQUIRE( true );
 
     } // THEN
