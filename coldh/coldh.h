@@ -20,22 +20,14 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
    * symmetric in beta
    */
 
-  double angst = 1.0e-8;
-  double eV = 1.60217733e-12;    // This is weird, you say? Yes, it is. 1 ev
-                                 // should, in normal society, be 1.602e-19 J,
-                                 // but alas we're just going to multiply this
-                                 // by 1e7 because this is njoy
-  double mass_H = 1.6726231E-24; // Mass of H in grams
-  double mass_D = 3.343568E-24;  // Mass of D in grams
-  double hbar = 1.05457266e-27;  // You might be thinking this doesn't look
-                                 // quite right. You'd be correct. It should 
-                                 // be ...e-34 for hbar --> [J*s], but no we
-                                 // have it in [1e-7 J * s] because that's a 
-                                 // good idea
-
+  double angst  = 1.0e-10,
+         eV     = 1.60217733e-19,  // elementary charge [J] 
+         mass_H = 1.6726231E-27,   // Mass of H in grams
+         mass_D = 3.343568E-27,    // Mass of D in grams
+         hbar   = 1.05457266e-34,  // planck constant [J*s]
+         de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, tbart, therm = 0.0253;
   int nbx, maxbb = 2 * beta.size() + 1;
 
-  double de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, tbart, therm = 0.0253;
 
   std::vector<double> exb(maxbb, 0.0), betan(nbeta, 0.0), bex(maxbb, 0.0), 
     rdbex(maxbb, 0.0);
@@ -44,22 +36,19 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
   // Either Ortho Deuterium or Para Deuterium 
   if ( ncold > 2 ){
     de = 0.0074;
-    mass_H2_D2 = 6.69E-24;    // Mass of D2 in grams
-    bp = hbar * sqrt( 2 /( de*eV*mass_D ) ) / ( 2 * angst ); 
+    mass_H2_D2 = 6.69E-27;    // Mass of D2 in kg
+    bp = hbar / ( angst * sqrt( 2*de*eV*mass_D ) ); 
     scatLenC = 0.668; // If you want to see where these values probably come
     scatLenI = 0.403; // from, consider looking at 
-    // https://www.ill.eu/en/science-technology/science-at-ill/why-and-how/
-    // neutron-techniques/introduction/
-    // Notice that the ratio of coherent to incoherent scattering length 
-    // that they report roughly matches the ratios here.
+    // https://www.ncnr.nist.gov/resources/n-lengths/elements/h.html
   } 
   // Either Ortho Hydrogen or Para Hydrogen
   else {
     de = 0.0147;
-    mass_H2_D2 = 3.3465E-24;  // Mass of H2 in grams
+    mass_H2_D2 = 3.3465E-27;  // Mass of H2 in kg
     // It seems like this is trying to be a/2, as defined on pg. 662, but when
     // I plug in values it seems to be 2 orders of magnitude off.
-    bp = hbar * sqrt( 2 /( de*eV*mass_H ) ) / ( 2 * angst );
+    bp = hbar / ( angst * sqrt( 2*de*eV*mass_H ) );
     scatLenC = 0.356;
     scatLenI = 2.526;
   }
