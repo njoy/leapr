@@ -11,6 +11,29 @@ void equal( double a, double b ){
   REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
 }
 
+void equalFcc( std::tuple<int,int,int,double>& a, double& b ){
+  equal( taufcc(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a) ), b );
+}
+
+TEST_CASE( "taufcc" ){
+  GIVEN( "inputs" ){
+    std::vector<std::tuple<int,int,int,double>> inputs
+      { {0,0,0,2}, {1,0,0,2}, {0,1,0,2}, {0,0,1,2}, {1,1,0,2},
+        {1,0,1,2}, {0,1,1,2}, {1,1,1,2}, {1,2,3,4}, {5,3,6,4},
+        {8,7,9,.1} };
+    std::vector<double> output { 0, 78.956835, 78.956835, 78.956835,
+	210.551561, 210.551561, 105.275780, 289.50839, 2105.51561, 
+	13896.403, 936.9544  };
+    
+    for ( auto i = 0; i < output.size(); ++i ){
+      equalFcc( inputs[i], output[i] );
+    }
+    
+  } // GIVEN
+} // TEST CASE
+
+
+
 
 TEST_CASE( "Function to Compute FCC Lattice Factors" ){
   int lat = 4, ifl = 1, nw = 60000;
@@ -18,7 +41,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
     twothd = 0.666666667, twopis = 39.5;
   std::vector<double> b (60000, 0.0);
 
-  int imax = fccLatticeFactors( twothd, twopis, lat, b, ifl, w, nw, t2, c1, wint, ulim, a );
+  int imax = fccLatticeFactors( lat, b, ifl, w, nw, t2, c1, wint, ulim, a );
   REQUIRE( imax ==  29789 );
 
   std::vector<double> b_0_99 { 4.88812504E+19, 2.28848899E-9, 4.7163E+19, 

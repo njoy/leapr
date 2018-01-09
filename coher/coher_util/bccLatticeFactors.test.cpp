@@ -18,6 +18,28 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
   }
 }
 
+void equalBcc( std::tuple<int,int,int,double>& a, double& b ){
+  equal( taubcc(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a) ), b );
+}
+
+
+TEST_CASE( "taubcc" ){
+  GIVEN( "inputs" ){
+    std::vector<std::tuple<int,int,int,double>> inputs
+      { {0,0,0,2}, {1,0,0,2}, {0,1,0,2}, {0,0,1,2}, {1,1,0,2},
+        {1,0,1,2}, {0,1,1,2}, {1,1,1,2}, {1,2,3,4}, {5,3,6,4},
+        {8,7,9,.1} };
+    std::vector<double> output { 0, 78.956835, 78.956835, 78.956835, 236.870506,
+      236.870506, 236.870506, 473.741011, 3947.84176, 21002.518165, 1519.9191 };
+    
+    for ( auto i = 0; i < output.size(); ++i ){
+      equalBcc( inputs[i], output[i] );
+    }
+    
+  } // GIVEN
+} // TEST CASE
+
+
 
 TEST_CASE( "Function to Compute BCC Lattice Factors" ){
   double ulim = 9.6e19, wint = 0, t2 = 5.7e-6, 

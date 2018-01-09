@@ -1,6 +1,12 @@
 #include "formf.h" 
-#include "smallFuncs.h" 
+//#include "smallFuncs.h" 
 
+// BCC
+double taubcc( int l1, int l2, int l3, double c1 ){
+  return c1 * ( l1*l1 + l2*l2 + l3*l3 + l1*l2 + l2*l3 + l1*l3 ) *
+	 4 * M_PI * M_PI;
+
+}
 
 auto bccLatticeFactors( const double& ulim,
   std::vector<double>& b, const int& ifl, const double& wint, 

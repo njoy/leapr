@@ -20,6 +20,30 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 }
 
 
+void equalHex( std::tuple<int,int,int,double,double>& a, double& b ){
+  equal( tausq(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a),
+               std::get<4>(a) ), b );
+}
+
+TEST_CASE( "tausq" ){
+  GIVEN( "inputs" ){
+    std::vector<std::tuple<int,int,int,double,double>> inputs
+      { {0,0,0,2,4}, {1,0,0,2,4}, {0,1,0,2,4}, {0,0,1,2,4}, {1,1,0,2,4}, 
+	{1,0,1,2,4}, {0,1,1,2,4}, {1,1,1,2,4}, {1,2,3,4,5}, {5,3,6,4,5},
+        {8,7,9,.1,.2} };
+    std::vector<double> output { 0, 78.956835, 78.956835, 157.91367041, 
+	236.870505, 236.870505, 236.870505, 394.78417604, 2881.924485, 
+	14843.885019, 1306.735642 };
+    
+    for ( auto i = 0; i < output.size(); ++i ){
+      equalHex( inputs[i], output[i] );
+    }
+  } // GIVEN
+} // TEST CASE
+
+
+
+
 TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   double a = 1e-9, c1 = 1.5e15, c2 = 2.5e15, tsqx = 9.6e17,
     t2 = 3.5e-5, ulim = 9.6e19, c = 3.58e-8, tsq = 0, wint = 0;

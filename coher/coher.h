@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
-#include "coher_util/formf.h"
+//#include "coher_util/formf.h"
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
+#include "coher_util/fccLatticeFactors.h"
 
 auto sortLatticeFactors( int jmin, std::vector<double>& b, int ifl, int imax,
   int k, double& st, double& sf ){
@@ -142,33 +143,7 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   i, wint, twopis, t2, ulim, imax, c );
   // compute lattice factors for hexagonal lattices
 
-  // compute lattice factors for fcc lattices
-  //210 continue
-  // if (lat > 5) go to 215
-  phi=ulim/twopis;
-  i1m=int(a*sqrt(phi));
-  i1m=15;
-  k=0;
-   for ( auto i1 = -i1m; i1 < i1m; ++i1 ){
-      i2m=i1m;
-      for ( auto i2 = -i2m; i2 < i2m; ++i2 ){ 
-         i3m=i1m;
-         for ( auto i3 = -i3m; i3 < i3m; ++i3 ){
-            tsq=taufcc(i1,i2,i3,c1,twothd,twopis);
-            if (tsq > 0 and tsq <= ulim) {
-               tau=sqrt(tsq);
-               w=exp(-tsq*t2*wint)/tau;
-               f=w*formf(lat,i1,i2,i3);
-               k=k+1;
-               if ((2*k) > nw) std::cout << "storage exceeded" << std::endl; 
-               b[ifl+2*k-2-1]=tsq;
-               b[ifl+2*k-1-1]=f;
-            }
-          }
-        }
-   }
-   imax=k-1;
-   //go to 220
+  fccLatticeFactors( lat, b, ifl, w, nw, t2, c1, wint, ulim, a );
 
 
 bccLatticeFactors( phi, ulim, twopis, i1m, k, i2m, i3m, tau, w, b, ifl, tsq, 
