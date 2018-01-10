@@ -4,37 +4,29 @@ void swap( double& a, double& b ){
   a = b; b = c;
 }
 
+auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k, 
+  int nw, double ulim, int imax ){
 
-auto sortLatticeFactors( std::vector<double>& b, int ifl, int imax,
-  int k, double& ulim ){
-  // sort lattice factors
-  int jmin; 
-  double st, sf;
-  for ( auto i = 1; i < imax; ++i ){
-    jmin=i+1;
-    for ( auto j = jmin; j < k; ++j ){
-      if (b[ifl+2*j-2-1] < b[ifl+2*i-2-1]) {
-        st = b[ifl+2*i-2-1];
-        sf = b[ifl+2*i-1-1];
-        b[ifl+2*i-2-1] = b[ifl+2*j-2-1];
-        b[ifl+2*i-1-1] = b[ifl+2*j-1-1];
-        b[ifl+2*j-2-1] = st;
-        b[ifl+2*j-1-1] = sf;
+  // Sort lattice factors
+  for ( auto i = 1; i <= imax; ++i ){
+    for ( auto j = i+1; j <= k; ++j ){
+      if (b[ifl+2*j-3] < b[ifl+2*i-3]) {
+	swap(b[ifl+2*i-3],b[ifl+2*j-3]);
+	swap(b[ifl+2*i-2],b[ifl+2*j-2]);
       }
     }
   }
-  k += 1;
+  k = k + 1;
   b[ifl+2*k-3] = ulim;
-  b[ifl+2*k-1] = b[ifl+2*k-4];
-  return 2*k;
+  b[ifl+2*k-2] = b[ifl+2*k-4];
+  nw = 2 * k;
 }
-
 
 
 auto end( int ifl, std::vector<double>& b, int k, double recon, int maxb, 
   double toler, double scon, int nw, double ulim, int imax ){
 
-  sortLatticeFactors( b, ifl, imax, k, ulim );
+  sortLatticeFactors( ifl, b, k, nw, ulim, imax );
 
   // convert to practical units and combine duplicate bragg edges.
 

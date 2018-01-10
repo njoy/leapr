@@ -101,7 +101,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      scoh=fe4/npr;
   }
 
-  scon = std::pow( scoh*4*M_PI, 2 );
+  scon = scoh*16*M_PI*M_PI;
   if (iel < 4) {
      c1=4/(3*a*a);
      c2=1/(c*c);
@@ -121,20 +121,19 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   ifl=1;
   nw=maxb;
 
-//  std::cout << iel << std::endl;
-//  std::cout << a << "   " << c << "   " << amsc << "   " << scoh << std::endl;
-
 
   if ( iel < 4 ){
     // compute lattice factors for hexagonal lattices
     int i1m = a*sqrt(phi) + 1;
-    hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
+    imax = hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
     i, wint, t2, ulim, imax, c, i1m );
+    k = imax + 1;
   }
 
   if ( iel < 6 ){
     // compute lattice factors for fcc lattices
-    fccLatticeFactors( iel, b, ifl, w, nw, t2, c1, wint, ulim, a );
+    imax = fccLatticeFactors( iel, b, ifl, w, nw, t2, c1, wint, ulim, a );
+    k = imax + 1;
   } 
 
   if ( iel == 6 ){
@@ -143,6 +142,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     k = imax + 1;
   }
 
+  
   end( ifl, b, k, recon, maxb, toler, scon, nw, ulim, imax );
  
   nbe = 1;
