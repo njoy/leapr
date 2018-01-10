@@ -6,10 +6,6 @@
 #include "coher_util/fccLatticeFactors.h"
 #include "coher_util/end.h"
 
-
-
-
-
 auto coher( int iel, int npr, int maxb, std::vector<double>& b, 
   double& emax ){
 
@@ -21,39 +17,61 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
    * of edges, maxb and emax are also there
    */
   int i,j,k,imax,ifl,nw,nbe;
-  double amne,econ,tsqx,a,c,amsc,scoh,c1,c2,recon,scon,wint,t2,
+  double amne,econ,tsqx,a,c,mass,scoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
-    gr1 = 2.4573e-8,
-    gr2 = 6.700e-8,
-    gr3 = 12.011,
-    gr4 = 5.50,
-    be1 = 2.2856e-8,
-    be2 = 3.5832e-8,
-    be3 = 9.01,
-    be4 = 7.53,
-    beo1 = 2.695e-8,
-    beo2 = 4.39e-8,
-    beo3 = 12.5,
-    beo4 = 1.0,
-    al1 = 4.04e-8,
-    al3 = 26.7495,
-    al4 = 1.495,
-    pb1 = 4.94e-8,
-    pb3 = 207.,
-    pb4 = 1.,
-    fe1 = 2.86e-8,
-    fe3 = 55.454,
-    fe4 = 12.9,
+
+    // Lattice Constants (a) in cm
+    // To get these values, honestly the wikipedia page isn't a bad palce to
+    // start. https://en.wikipedia.org/wiki/Lattice_constant. It has all
+    // these materials except for Be and BeO. Beryllium can be found at
+    // https://www.webelements.com/beryllium/crystal_structure.html, and
+    // BeO can be found in the paper "The lattice parameter and density of 
+    // beryllium oxide determined by precise x-ray methods" by Bellamy,
+    // Baker, and Livel, publlished in Journal of Nuclear Materials in 1962
+    aGraphite = 2.4573e-8,
+    aBe       = 2.2856e-8,
+    aBeO      = 2.695e-8,
+    aAl       = 4.04e-8,
+    aPb       = 4.94e-8,
+    aFe       = 2.86e-8,
+
+    // Lattice Constants (c) in cm
+    // See sources for lattice constants (a) for whereto get these
+    cGraphite = 6.700e-8,
+    cBe       = 3.5832e-8,
+    cBeO      = 4.39e-8,
+
+    // Mass of materials (amu)
+    massGraphite = 12.011,  
+    massBe       = 9.01,   
+    massAvgBeO   = 12.5,     // 1/2 BeO
+    alMass       = 26.7495,  // (a bit off?)
+    massPb       = 207.,        
+    massFe       = 55.454,   // (a bit off?)
+
+    // Effective bound coherent scattering cross section (b)
+    // To get this, check out "Neutron Scattering Lengths and Cross Sections"
+    // by Varley F. Sears, published 1992 in Neutron News.
+    // These values are all a little bit off, except for aluminum which is
+    // exactly correct, and lead which is comically wrong
+    xsCohGraphite = 5.50, 
+    xsCohBe       = 7.53,
+    xsCohBeO      = 1.0,
+    xsCohAl       = 1.495,
+    xsCohPb       = 1.,     // Right out. Should be ~10 b
+    xsCohFe       = 12.9,   
+
+
     toler = 1.e-6,
     eps = .05,
     amassn = 1.008664904,
-    amu = 1.6605402e-24,
-    ev = 1.60217733e-12,
-    hbar = 1.05457266e-27;
+    amu = 1.6605402e-27,
+    ev = 1.60217733e-19,
+    hbar = 1.05457266e-34;
 
   // initialize.
-  amne = amassn * amu;          // Mass of neutron in g ( 1.6749286E-24 )
-  econ = ev*8*(amne/hbar)/hbar;
+  amne = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
+  econ = 1e-4*ev*8*amne/(hbar*hbar);
   recon = 1/econ;
   tsqx = econ/20;
 
@@ -63,42 +81,42 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   // reciprocal lattice vector lengths require only one constant.
   if (iel == 1){
      // graphite constants.
-     a=gr1;
-     c=gr2;
-     amsc=gr3;
-     scoh=gr4/npr;
+     a = aGraphite;
+     c = cGraphite;
+     mass = massGraphite;
+     scoh = xsCohGraphite / npr;
   }
   else if (iel == 2) {
      //  beryllium constants
-     a=be1;
-     c=be2;
-     amsc=be3;
-     scoh=be4/npr;
+     a = aBe;
+     c = cBe;
+     mass = massBe;
+     scoh = xsCohBe / npr;
   }
   else if (iel == 3) {
      //  beryllium oxide constants
-     a=beo1;
-     c=beo2;
-     amsc=beo3;
-     scoh=beo4/npr;
+     a = aBeO;
+     c = cBeO;
+     mass = massAvgBeO;
+     scoh = xsCohBeO / npr;
   }
   else if (iel == 4) {
      // aluminum constants
-     a=al1;
-     amsc=al3;
-     scoh=al4/npr;
+     a = aAl;
+     mass = alMass;
+     scoh = xsCohAl / npr;
   }
   else if (iel == 5) {
      // lead constants
-     a=pb1;
-     amsc=pb3;
-     scoh=pb4/npr;
+     a = aPb;
+     mass = massPb;
+     scoh = xsCohPb / npr;
   }
   else if (iel == 6) {
      // iron constants
-     a=fe1;
-     amsc=fe3;
-     scoh=fe4/npr;
+     a = aFe;
+     mass = massFe;
+     scoh = xsCohFe / npr;
   }
 
   scon = scoh*16*M_PI*M_PI;
@@ -116,7 +134,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      scon/=(8*a*a*a*econ);
   }
   wint=0;
-  t2=hbar/(2*amu*amsc);
+  t2=1e10*hbar/(2*amu*mass);
   ulim=econ*emax;
   ifl=1;
   nw=maxb;
