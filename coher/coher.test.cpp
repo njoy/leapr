@@ -23,5 +23,16 @@ void equal_vec( std::vector<double> a, std::vector<double> b ){
 
 
 TEST_CASE( "coher" ){
-  REQUIRE( true );
+  GIVEN( "material of interest is iron" ){
+    WHEN( "inputs" ){
+      THEN( "outputs" ){
+        int iel = 6, npr = 1, maxb = 60000;
+	std::vector<double> b ( 60000, 0.0 );
+	double emax = 5.0;
+	coher( iel, npr, maxb, b, emax );
+        	
+        REQUIRE( true );
+      } // THEN
+    } // WHEN
+  } // GIVEN
 } // TEST CASE
