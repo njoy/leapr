@@ -1,8 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "hexLatticeFactors_util/hexLatticeFactorsHelper.h"
-#include "formf.h"
-//#include "smallFuncs.h"
+//#include "formf.h"
 
 // HEXAGONAL
 double tausq( int l1, int l2, int l3, double c1, double c2 ){
@@ -17,7 +16,7 @@ double tausq( int l1, int l2, int l3, double c1, double c2 ){
 
 
 
-int hexLatticeFactorsTop( double a, double tsq, double c1, double c2, 
+int hexLatticeFactors( double a, double tsq, double c1, double c2, 
   int lat, int nw, double tsqx, std::vector<double>& b, int ifl, 
   int i, double wint, double t2, double ulim, 
   int imax, double c, int i1m ){

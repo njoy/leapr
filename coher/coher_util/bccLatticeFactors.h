@@ -1,5 +1,4 @@
-#include "formf.h" 
-//#include "smallFuncs.h" 
+//#include "formf.h" 
 
 // BCC
 double taubcc( int l1, int l2, int l3, double c1 ){

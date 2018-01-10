@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-//#include "coher_util/formf.h"
+#include "coher_util/formf.h"
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 #include "coher_util/fccLatticeFactors.h"
@@ -33,7 +33,7 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   /* Compute Bragg energies and associated structure factors
    * for coherent elastic scattering from graphite, Be, or BeO.
    */
-  int i,j,k,imax,jmin,idone,ifl,i1m,nw,i1,i2,i3,l1,l2,l3,i2m,i3m;
+  int i,j,k,imax,jmin,idone,ifl,nw,i1,i2,i3,l1,l2,l3,i2m,i3m;
   double time,twopis,amne,econ,tsqx,a,c,amsc,scoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,st,sf,bel,be,bs;
   double gr1 = 2.4573e-8,
@@ -139,19 +139,19 @@ auto coher( int lat, int natom, int nbe, int maxb, std::vector<double> b,
   nw=maxb;
 
 
-  hexLatticeFactors( a, tsq, c1, c2, lat, tau, nw, tsqx, b, ifl, f, eps, 
-  i, wint, twopis, t2, ulim, imax, c );
   // compute lattice factors for hexagonal lattices
+  int i1m = a*sqrt(phi) + 1;
+  hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl,  
+  i, wint, t2, ulim, imax, c, i1m );
 
+  // compute lattice factors for fcc lattices
   fccLatticeFactors( lat, b, ifl, w, nw, t2, c1, wint, ulim, a );
 
+  // compute lattice factors for bcc lattices
+  bccLatticeFactors( ulim, b, ifl, wint, t2, lat, a, c1 );
 
-bccLatticeFactors( phi, ulim, twopis, i1m, k, i2m, i3m, tau, w, b, ifl, tsq, 
-    f, wint, imax, t2, lat, nw, a, c1 );
-   // compute lattice factors for bcc lattices
-
-   // sort lattice factors
-  sqrtLatticeFactors( jmin, b, ifl, imax, k, st, sf );
+  // sort lattice factors
+  sortLatticeFactors( jmin, b, ifl, imax, k, st, sf );
  
 
 }

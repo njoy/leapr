@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include "../../catch.hpp"
+#include "formf.h" 
 #include "fccLatticeFactors.h"
 
 void equal( double a, double b ){
