@@ -118,7 +118,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
       for ( auto b = 0; b < nbeta; ++b ){
           double be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
-          exb[b] = exp(-be/2);
+          exb[b] = exp(-be);
           betan[b] = be;
       } 
       nbx = bfill(bex,rdbex,betan);

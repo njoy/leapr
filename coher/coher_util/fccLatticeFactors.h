@@ -6,7 +6,7 @@ double taufcc( int l1, int l2, int l3, double c1 ){
 	 4 * M_PI * M_PI;
 }
 
-auto fccLatticeFactors( int lat, std::vector<double>& b, int ifl, double w, 
+auto fccLatticeFactors( int lat, std::vector<double>& b, int ifl,
   int nw, double t2, double c1, double wint, double ulim, double a ){
     
   // compute lattice factors for fcc lattices

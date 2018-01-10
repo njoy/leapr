@@ -17,10 +17,10 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
    * of edges, maxb and emax are also there
    */
   int i,j,k,imax,ifl,nw,nbe;
-  double amne,econ,tsqx,a,c,mass,scoh,c1,c2,recon,scon,wint,t2,
+  double amne,econ,tsqx,a,c,mass,xsCoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
 
-    // Lattice Constants (a) in cm
+    // Lattice Constants (a) in angstroms
     // To get these values, honestly the wikipedia page isn't a bad palce to
     // start. https://en.wikipedia.org/wiki/Lattice_constant. It has all
     // these materials except for Be and BeO. Beryllium can be found at
@@ -28,18 +28,18 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     // BeO can be found in the paper "The lattice parameter and density of 
     // beryllium oxide determined by precise x-ray methods" by Bellamy,
     // Baker, and Livel, publlished in Journal of Nuclear Materials in 1962
-    aGraphite = 2.4573e-8,
-    aBe       = 2.2856e-8,
-    aBeO      = 2.695e-8,
-    aAl       = 4.04e-8,
-    aPb       = 4.94e-8,
-    aFe       = 2.86e-8,
+    aGraphite = 2.4573,
+    aBe       = 2.2856,
+    aBeO      = 2.695,
+    aAl       = 4.04,
+    aPb       = 4.94,
+    aFe       = 2.86,
 
-    // Lattice Constants (c) in cm
+    // Lattice Constants (c) in angstroms
     // See sources for lattice constants (a) for whereto get these
-    cGraphite = 6.700e-8,
-    cBe       = 3.5832e-8,
-    cBeO      = 4.39e-8,
+    cGraphite = 6.700,
+    cBe       = 3.5832,
+    cBeO      = 4.39,
 
     // Mass of materials (amu)
     massGraphite = 12.011,  
@@ -64,10 +64,10 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
 
     toler = 1.e-6,
     eps = .05,
-    amassn = 1.008664904,
+    amassn = 1.008664904,   // mass of neutron in amu
     amu = 1.6605402e-27,
     ev = 1.60217733e-19,
-    hbar = 1.05457266e-34;
+    hbar = 1.05457266e-34;  // [J*s]
 
   // initialize.
   amne = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
@@ -84,46 +84,51 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      a = aGraphite;
      c = cGraphite;
      mass = massGraphite;
-     scoh = xsCohGraphite / npr;
+     xsCoh = xsCohGraphite / npr;
   }
   else if (iel == 2) {
      //  beryllium constants
      a = aBe;
      c = cBe;
      mass = massBe;
-     scoh = xsCohBe / npr;
+     xsCoh = xsCohBe / npr;
   }
   else if (iel == 3) {
      //  beryllium oxide constants
      a = aBeO;
      c = cBeO;
      mass = massAvgBeO;
-     scoh = xsCohBeO / npr;
+     xsCoh = xsCohBeO / npr;
   }
   else if (iel == 4) {
      // aluminum constants
      a = aAl;
      mass = alMass;
-     scoh = xsCohAl / npr;
+     xsCoh = xsCohAl / npr;
   }
   else if (iel == 5) {
      // lead constants
      a = aPb;
      mass = massPb;
-     scoh = xsCohPb / npr;
+     xsCoh = xsCohPb / npr;
   }
   else if (iel == 6) {
      // iron constants
      a = aFe;
      mass = massFe;
-     scoh = xsCohFe / npr;
+     xsCoh = xsCohFe / npr;
   }
 
-  scon = scoh*16*M_PI*M_PI;
+  // Convert lattice factors from angstroms to cm
+  a *= 1e-8; c *= 1e-8;
+
+  scon = xsCoh*16*M_PI*M_PI;
   if (iel < 4) {
      c1=4/(3*a*a);
      c2=1/(c*c);
-     scon /= (2*a*a*c*sqrt(3)*econ);
+     double volume = sqrt(3)*a*a*c/2;
+     scon *= 4/(volume*econ);
+     //scon /= (2*a*a*c*sqrt(3)*econ);
   }
   else if (iel == 4 or iel == 5) {
      c1=3/(a*a);
@@ -150,7 +155,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
 
   if ( iel < 6 ){
     // compute lattice factors for fcc lattices
-    imax = fccLatticeFactors( iel, b, ifl, w, nw, t2, c1, wint, ulim, a );
+    imax = fccLatticeFactors( iel, b, ifl, nw, t2, c1, wint, ulim, a );
     k = imax + 1;
   } 
 
