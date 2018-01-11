@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 #include "bessel_K1.h" 
 
 
