@@ -78,6 +78,9 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
   } // 1
 
 
+  //for ( auto i = 0; i < 20; ++i ){
+//	  std::cout << b[i] << std::endl; }
+
   imax = k - 1;
   return imax;
 

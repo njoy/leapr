@@ -26,11 +26,11 @@ TEST_CASE( "coher" ){
   std::vector<double> b ( 60000, 0.0 );
   double emax = 5.0;
 
-  GIVEN( "beryllium oxide is the requested material" ){
-    iel = 3;
+  GIVEN( "graphite is the requested material" ){
+    iel = 1;
     WHEN( "1 principal scattering atoms in compound" ){
       THEN( "bragg edges vector is correctly output" ){
-	coher( iel, npr, maxb, b, emax );
+	//coher( iel, npr, maxb, b, emax );
 	//std::vector<double> bVals { 
         //for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
 	//std::cout << b[0] << "    " << b[1] << "     " << b[2] << std::endl;
@@ -39,7 +39,29 @@ TEST_CASE( "coher" ){
     WHEN( "3 principal scattering atoms in compound" ){
       THEN( "bragg edges vector is correctly output" ){
         npr = 3;
-	coher( iel, npr, maxb, b, emax );
+	//coher( iel, npr, maxb, b, emax );
+        //std::vector<double> bVals { 
+       // for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+      } // THEN
+    } // WHEN
+  } // GIVEN
+
+
+
+  GIVEN( "beryllium oxide is the requested material" ){
+    iel = 3;
+    WHEN( "1 principal scattering atoms in compound" ){
+      THEN( "bragg edges vector is correctly output" ){
+	//coher( iel, npr, maxb, b, emax );
+	//std::vector<double> bVals { 
+        //for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+	//std::cout << b[0] << "    " << b[1] << "     " << b[2] << std::endl;
+      } // THEN
+    } // WHEN
+    WHEN( "3 principal scattering atoms in compound" ){
+      THEN( "bragg edges vector is correctly output" ){
+        npr = 3;
+	//coher( iel, npr, maxb, b, emax );
         //std::vector<double> bVals { 
        // for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN

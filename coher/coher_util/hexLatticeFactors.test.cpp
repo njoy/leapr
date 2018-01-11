@@ -4,6 +4,7 @@
 #include "hexLatticeFactors.h"
 
 void equal( double a, double b ){
+//	std::cout << a << "   " << b << std::endl;
   if (b == 0.0){ 
     REQUIRE( std::abs(b-a) < 1e-6 );
     return;
@@ -48,8 +49,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     t2 = 3.5e-5, ulim = 9.6e19, c = 3.58e-8, tsq = 0, wint = 0;
   int i = 0, ifl = 1, lat = 3, nw = 60000, imax = 5;
   std::vector<double> b (60000, 0.0);
-
   int i1m = 1;
+/*
   GIVEN( "few iterations" ){
     WHEN( "input constants are large" ){
       THEN( "outputs" ){
@@ -116,12 +117,14 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
   } // GIVEN
 
+  */
   i1m = 2;
   GIVEN( "few iterations" ){
     THEN( "outputs" ){
       int imax = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
           i, wint, t2, ulim, imax, c, i1m );
       //REQUIRE( imax == 51 );
+      /*
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448.,
         0, 3.9478418680397779E17, 3.7496904081434691E-8, 3.9478418680397779E17,
 	3.7496904081434691E-8, 8.8826442030895002E17, 0, 8.8826442030895002E17,
@@ -139,6 +142,9 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	4.8088048636505399E-8, 2.2206610507723751E19, 1.4429326414274293E-8,
 	2.5266187955454579E19, 8.2524210602627214E-8, 2.8523157496587395E19,
 	1.2735509579295717E-8 };
+      */
+      REQUIRE( imax == 51 );
+      std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
       for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
 
     } // THEN
@@ -149,8 +155,9 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   i1m = 10;
   GIVEN( "few iterations" ){
     THEN( "outputs" ){
-      hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
+      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
           i, wint, t2, ulim, imax, c, i1m );
+      /*
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448.,
         0, 3.9478418680397779E17, 3.7496904081434691E-8, 3.9478418680397779E17,
 	3.7496904081434691E-8, 8.8826442030895002E17, 0, 8.8826442030895002E17,
@@ -168,6 +175,10 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	4.8088048636505399E-8, 2.2206610507723751E19, 1.4429326414274293E-8,
 	2.5266187955454579E19, 8.2524210602627214E-8, 2.8523157496587395E19,
 	1.2735509579295717E-8 };
+  */
+      REQUIRE( imax == 51 );
+
+      std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
       for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
 
     } // THEN
