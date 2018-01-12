@@ -1,7 +1,10 @@
+#ifndef LEAPR_DISCRE_DISCREUTIL_SINT_HH
+#define LEAPR_DISCRE_DISCREUTIL_SINT_HH
+
 #include <iostream>
 #include <vector>
 
-auto sint(const double& x, const std::vector<double>& bex, 
+inline auto sint(const double& x, const std::vector<double>& bex, 
   const std::vector<double>& rdbex, const std::vector<double>& sex,
   const std::vector<double>& betan, int b, const double& alpha,
   const double& wt, const double& tbart, int nbx ){
@@ -67,3 +70,5 @@ auto sint(const double& x, const std::vector<double>& bex,
   return ex <= -225.0 ? 0.0 : exp(ex);
 
 }
+
+#endif

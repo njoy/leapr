@@ -1,8 +1,12 @@
+
+#ifndef COHER_COHERUTIL_FORMF
+#define COHER_COHERUTIL_FORMF
+
 #include <iostream>
 #include <vector>
 
 
-double formf( int lat, int l1, int l2, int l3 ){
+inline double formf( int lat, int l1, int l2, int l3 ){
   /* Overview
    * ------------------------------------------------------------------------
    * Computes form factors for the specified lattice.
@@ -83,3 +87,4 @@ double formf( int lat, int l1, int l2, int l3 ){
    }
 }
 
+#endif

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "hexLatticeFactors_util/hexLatticeFactorsHelper.h"
-//#include "formf.h"
+#include "coher/coher_util/formf.h" 
 
 // HEXAGONAL
 double tausq( int l1, int l2, int l3, double c1, double c2 ){

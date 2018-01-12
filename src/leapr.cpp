@@ -1,3 +1,4 @@
+#include <Eigen/Dense>
 #include <iostream> 
 #include <vector>
 #include <cmath>
@@ -45,7 +46,10 @@ int main(){
   // Card17 
     int nka = 4; double dka = 0.01;
     std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
-    
+
+
+    Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
+    std::cout << matrix1 << std::endl;
   double bk = 8.617385e-5;
   double therm = 0.0253;
 
