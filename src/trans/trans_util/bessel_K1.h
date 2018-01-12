@@ -1,8 +1,10 @@
-#include <iostream> 
+#ifndef TRANS_TRANSUTIL_BESSELK1GEN
+#define TRANS_TRANSUTIL_BESSELK1GEN
 #include <vector>
+#include <iostream> 
 #include <cmath>
 
-auto bessel_K1_gen(double x ){
+inline auto bessel_K1_gen(double x ){
   /* Computes the modified bessel function of the second kind, K1(x). For 
    * x values greater than 1, the exponential term is omitted.
    */ 
@@ -50,7 +52,7 @@ auto bessel_K1_gen(double x ){
   }
 }
 
-
+#endif
 
 
 
