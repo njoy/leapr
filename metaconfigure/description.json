@@ -1,0 +1,497 @@
+{
+  "compiler": {
+    "apple clang++": {
+      "minimum version": "8.0",
+      "osx": {
+        "flags": {
+          "base project": [],
+          "common": [
+            "-stdlib=libc++"
+          ],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      }
+    },
+    "g++": {
+      "linux": {
+        "flags": {
+          "base project": [],
+          "common": [],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3",
+            "-fsignaling-nans"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      },
+      "minimum version": "6.2",
+      "osx": {
+        "flags": {
+          "base project": [],
+          "common": [],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3",
+            "-fsignaling-nans"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      },
+      "windows": {
+        "flags": {
+          "base project": [],
+          "common": [],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3",
+            "-fsignaling-nans"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      }
+    },
+    "llvm clang++": {
+      "linux": {
+        "flags": {
+          "base project": [],
+          "common": [
+            "-stdlib=libstdc++"
+          ],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      },
+      "minimum version": "3.8",
+      "osx": {
+        "flags": {
+          "base project": [],
+          "common": [
+            "-stdlib=libc++"
+          ],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      },
+      "windows": {
+        "flags": {
+          "base project": [],
+          "common": [
+            "-stdlib=libc++"
+          ],
+          "coverage": [
+            "--coverage"
+          ],
+          "debug": [
+            "-O0",
+            "-g",
+            "-gdwarf-3"
+          ],
+          "link time optimization": [
+            "-flto"
+          ],
+          "nonportable optimization": [
+            "-march=native"
+          ],
+          "optimization": [
+            "-O3",
+            "-DNDEBUG"
+          ],
+          "profile generate": [
+            "-fprofile-generate='{profile_path}'"
+          ],
+          "profile use": [
+            "-fprofile-use='{profile_path}'"
+          ],
+          "static": [
+            "-static"
+          ],
+          "strict": [
+            "-Werror"
+          ],
+          "subproject": [],
+          "warning": [
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic"
+          ]
+        },
+        "standard": {
+          "c++11": "-std=c++11",
+          "c++14": "-std=c++14",
+          "c++98": "-std=c++98"
+        }
+      }
+    }
+  },
+  "driver": "src/leapr.cpp",
+  "file extension": {
+    "header files": [
+      "h++",
+      "hxx",
+      "hpp",
+      "hh",
+      "h"
+    ],
+    "implementation files": [
+      "c++",
+      "cxx",
+      "cpp",
+      "cc",
+      "C"
+    ]
+  },
+  "header files": [
+    "src/trans/trans.h",
+    "src/trans/trans_util/terps.h",
+    "src/trans/trans_util/s_table_generation.h",
+    "src/trans/trans_util/bessel_K1.h",
+    "src/trans/trans_util/sbfill.h",
+    "src/coher/coher.h",
+    "src/coher/coher_util/bccLatticeFactors.h",
+    "src/coher/coher_util/formf.h",
+    "src/coher/coher_util/hexLatticeFactors.h",
+    "src/coher/coher_util/fccLatticeFactors.h",
+    "src/coher/coher_util/end.h",
+    "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
+    "src/skold/skold.h",
+    "src/skold/skold_util/terp1.h",
+    "src/coldh/coldh.h",
+    "src/coldh/coldh_util/betaLoop.h",
+    "src/coldh/coldh_util/terpk.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop.h",
+    "src/coldh/coldh_util/betaLoop_util/bt.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/sjbes.h",
+    "src/contin/contin.h",
+    "src/contin/contin_util/convol.h",
+    "src/contin/contin_util/interpolate.h",
+    "src/contin/contin_util/start.h",
+    "src/contin/contin_util/start_util/start_util.h",
+    "src/discre/discre.h",
+    "src/discre/discre_util/oscLoopFuncs.h",
+    "src/discre/discre_util/sint.h",
+    "src/discre/discre_util/bfill.h",
+    "src/discre/discre_util/exts.h",
+    "src/discre/discre_util/prepareParams.h",
+    "src/discre/discre_util/addDeltaFuncs.h",
+    "src/discre/discre_util/oscLoopFuncs_util/bfact.h"
+  ],
+  "ignore pattern": "$^",
+  "implementation files": [
+    "src/leapr.cpp"
+  ],
+  "include path": "src",
+  "initialized": true,
+  "is external project": false,
+  "language": "c++",
+  "name": "leapr",
+  "standards": [
+    "c++98",
+    "c++11",
+    "c++14"
+  ],
+  "strict": true,
+  "test pattern": "test$",
+  "tests": {
+    "coher": [
+      "src/coher/test/coher.test.cpp"
+    ],
+    "coher.coher_util": [
+      "src/coher/coher_util/test/end.test.cpp",
+      "src/coher/coher_util/test/bccLatticeFactors.test.cpp",
+      "src/coher/coher_util/test/hexLatticeFactors.test.cpp",
+      "src/coher/coher_util/test/fccLatticeFactors.test.cpp",
+      "src/coher/coher_util/test/formf.test.cpp"
+    ],
+    "coher.coher_util.hexLatticeFactors_util": [
+      "src/coher/coher_util/hexLatticeFactors_util/test/hexLatticeFactorsHelper.test.cpp"
+    ],
+    "coldh": [
+      "src/coldh/test/coldh.test.cpp"
+    ],
+    "coldh.coldh_util": [
+      "src/coldh/coldh_util/test/terpk.test.cpp",
+      "src/coldh/coldh_util/test/betaLoop.test.cpp"
+    ],
+    "coldh.coldh_util.betaLoop_util": [
+      "src/coldh/coldh_util/betaLoop_util/test/bt.test.cpp",
+      "src/coldh/coldh_util/betaLoop_util/test/jprimeLoop.test.cpp"
+    ],
+    "coldh.coldh_util.betaLoop_util.jprimeLoop_util": [
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/test/sumh.test.cpp"
+    ],
+    "coldh.coldh_util.betaLoop_util.jprimeLoop_util.sumh_util": [
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/cn.test.cpp",
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/sjbes.test.cpp"
+    ],
+    "contin": [
+      "src/contin/test/contin.test.cpp"
+    ],
+    "contin.contin_util": [
+      "src/contin/contin_util/test/convol.test.cpp",
+      "src/contin/contin_util/test/start.test.cpp",
+      "src/contin/contin_util/test/interpolate.test.cpp"
+    ],
+    "contin.contin_util.start_util": [
+      "src/contin/contin_util/start_util/test/start_util.test.cpp"
+    ],
+    "discre": [
+      "src/discre/test/discre.test.cpp"
+    ],
+    "discre.discre_util": [
+      "src/discre/discre_util/test/prepareParams.test.cpp",
+      "src/discre/discre_util/test/exts.test.cpp",
+      "src/discre/discre_util/test/sint.test.cpp",
+      "src/discre/discre_util/test/bfill.test.cpp",
+      "src/discre/discre_util/test/addDeltaFuncs.test.cpp",
+      "src/discre/discre_util/test/oscLoopFuncs.test.cpp"
+    ],
+    "discre.discre_util.oscLoopFuncs_util": [
+      "src/discre/discre_util/oscLoopFuncs_util/test/bfact.test.cpp"
+    ],
+    "skold": [
+      "src/skold/test/skold.test.cpp"
+    ],
+    "skold.skold_util": [
+      "src/skold/skold_util/test/terp1.test.cpp"
+    ],
+    "trans": [
+      "src/trans/test/trans.test.cpp"
+    ],
+    "trans.trans_util": [
+      "src/trans/trans_util/test/s_table_generation.test.cpp",
+      "src/trans/trans_util/test/bessel_K1.test.cpp",
+      "src/trans/trans_util/test/sbfill.test.cpp",
+      "src/trans/trans_util/test/terps.test.cpp"
+    ]
+  },
+  "update": true
+}
