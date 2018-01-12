@@ -11,17 +11,6 @@ void equal( double a, double b ){
   REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
 }
 
-void equal_vec( std::vector<double> a, std::vector<double> b ){
-  REQUIRE( a.size() == b.size() );
-  for ( int i = 0; i < a.size(); ++i ){
-    equal( a[i], b[i] );
-  }
-}
-
-void equalBcc( std::tuple<int,int,int,double>& a, double& b ){
-  equal(taubcc(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a)), b);
-}
-
 
 TEST_CASE( "taubcc" ){
   GIVEN( "inputs" ){
@@ -32,10 +21,11 @@ TEST_CASE( "taubcc" ){
     std::vector<double> output { 0, 78.956835, 78.956835, 78.956835, 236.870506,
       236.870506, 236.870506, 473.741011, 3947.84176, 21002.518165, 1519.9191 };
     
-    for ( auto i = 0; i < output.size(); ++i ){
-      equalBcc( inputs[i], output[i] );
+    for ( size_t i = 0; i < output.size(); ++i ){
+      REQUIRE( taubcc( std::get<0>(inputs[i]), std::get<1>(inputs[i]),
+                       std::get<2>(inputs[i]), std::get<3>(inputs[i])) ==
+               Approx(output[i]).epsilon(1e-6) );
     }
-    
   } // GIVEN
 } // TEST CASE
 
@@ -61,7 +51,9 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         6.467228E-10, 3.665571E19, 6.606769E-10, 3.517527E19, 6.744368E-10, 
         3.381326E19, 6.878859E-10 };
 
-      for ( auto i = 0; i < 40; ++i ){ equal( b[i], b_0_39[i] ); }
+      for ( auto i = 0; i < 40; ++i ){ 
+        REQUIRE( b[i] == Approx(b_0_39[i]).epsilon(1e-6) );
+      }
 
       std::vector<double> b_1000_1039 { 2.877976E19, 7.456179E-10, 
         2.670714E19, 7.740093E-10, 2.475296E19, 8.039820E-10, 2.291722E19, 
@@ -73,7 +65,9 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         9.830126E18, 1.275793E-9, 9.652473E18, 1.287480E-9, 9.593255E18, 
         1.291448E-9, 9.652473E18, 1.287480E-9 }; 
 
-      for ( auto i = 0; i < 40; ++i ){ equal( b[1000+i], b_1000_1039[i] ); }
+      for ( auto i = 0; i < 40; ++i ){
+        REQUIRE( b[1000+i] == Approx(b_1000_1039[i]).epsilon(1e-6) );
+      }
 
       std::vector<double> b_51000_51039 { 1.166587E19, 1.171119E-9, 
         1.290944E19, 1.113284E-9, 1.427144E19, 1.058829E-9, 1.575188E19, 
@@ -85,7 +79,9 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         7.402203E18, 1.470210E-9, 6.928462E18, 1.519642E-9, 6.573156E18, 
         1.560173E-9, 6.336286E18, 1.589068E-9 };
 
-      for ( auto i = 0; i < 40; ++i ){ equal( b[51000+i], b_51000_51039[i] ); }
+      for ( auto i = 0; i < 40; ++i ){ 
+        REQUIRE( b[51000+i] == Approx(b_51000_51039[i]).epsilon(1e-6) );
+      }
 
     } // THEN
   } // GIVEN

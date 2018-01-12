@@ -59,7 +59,7 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
         tau = sqrt(tsq);
         w = exp(-tsq*t2*wint)*w1*w2*w3/tau;
         f = w*formf(lat,l1,l2,l3);
-        hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f, i );
+        hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, nw, f, i );
       }
 
       tsq = tausq(l1,-l2,l3,c1,c2);
@@ -68,7 +68,7 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
         tau = sqrt(tsq);
         w = exp(-tsq*t2*wint)*w1*w2*w3/tau;
         f = w*formf(lat,l1,-l2,l3);
-        hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, wint, nw, f, i );
+        hexLatticeFactorsHelper( k, tsq, tsqx, b, ifl, nw, f, i );
       }
 
     } // 3

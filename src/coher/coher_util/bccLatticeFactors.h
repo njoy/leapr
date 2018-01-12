@@ -12,7 +12,8 @@ auto bccLatticeFactors( const double& ulim,
   const double& t2, const int& lat, const double& a, const double& c1 ){
 
   // compute lattice factors for bcc lattices
-  int im, k = 0;
+  int im;
+  unsigned int k = 0;
   double tsq;
   im = int(a*sqrt(ulim/(4*M_PI*M_PI)));
   im = 15;
