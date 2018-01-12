@@ -29,8 +29,8 @@ auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>
   std::vector<std::vector<std::vector<double>>> sym_sab(alpha.size(),
     std::vector<std::vector<double>>(beta.size(),std::vector<double>(1,0.0)));
   int i = 1;
-  for ( auto a = 0; a < alpha.size(); ++a ){
-    for ( auto b = 0; b < beta.size(); ++b ){
+  for ( size_t a = 0; a < alpha.size(); ++a ){
+    for ( size_t b = 0; b < beta.size(); ++b ){
       sym_sab[a][b][0] = i;
       i += 1;
     }

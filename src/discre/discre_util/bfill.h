@@ -14,8 +14,8 @@ auto bfill( std::vector<double>& bex, std::vector<double>& rdbex,
 
   // Put the values of betan in the beginning of bex, in reverse order.
   // betan : [a,b,c,d,e] --> bex : [-e,-d,-c,-b,-a,0,0,0,0,0,0]
-  int k = betan.size();
-  for ( auto i = 0; i < betan.size(); ++i ){
+  size_t k = betan.size();
+  for ( size_t i = 0; i < betan.size(); ++i ){
     bex[i] = -betan[k-1];
     k = k - 1;
   }
@@ -37,13 +37,13 @@ auto bfill( std::vector<double>& bex, std::vector<double>& rdbex,
   // betan : [a,b,c,d,e] --> bex : [-e,-d,-c,-b,0,b,c,d,e,0,0]
   // or
   // betan : [a,b,c,d,e] --> bex : [-e,-d,-c,-b,-a,a,b,c,d,e,0]
-  for( auto i = 1; i < betan.size(); ++i ){
+  for( size_t i = 1; i < betan.size(); ++i ){
     bex[k-1] = betan[i];
     k = k + 1;
   }
 
   // Populate rdbex values
-  for ( auto i = 0; i < k-2; ++i ){
+  for ( size_t i = 0; i < k-2; ++i ){
     rdbex[i] = 1/(bex[i+1]-bex[i]);
   }
     

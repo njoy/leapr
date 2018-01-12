@@ -11,7 +11,8 @@ auto addDeltaFuncs( const double twt, const double dwf,
   
   if ( twt > 0.0  or dwf < 1.0e-10 ){ return; }
 
-  int j, jj, m = 0;
+  unsigned int j; 
+  int jj, m = 0;
   bool done = false;
   double add, db, be;
 

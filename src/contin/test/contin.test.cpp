@@ -24,7 +24,7 @@ void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a,
 
 
 TEST_CASE( "contin" ){
-  int ntempr = 1; int nphon = 3; int lat = 1; int itemp = 0;
+  int ntempr = 1; int nphon = 3; int itemp = 0;
   std::vector<double> alpha { 0.01, 0.02, 0.04, 0.08, 
                               0.16, 0.32, 0.64, 1.28};
   std::vector<double> beta  { 0.00, 0.15, 0.30, 0.60, 1.20 };
@@ -61,7 +61,7 @@ TEST_CASE( "contin" ){
       } // THEN
     } // WHEN
     WHEN( "6th order exp, alpha & beta vals scaled, and small grid space" ){
-      nphon = 6; lat = 3; delta = 0.04; sc = 1.0; scaling = 1.0;
+      nphon = 6; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),

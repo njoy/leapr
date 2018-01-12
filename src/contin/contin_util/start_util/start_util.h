@@ -36,7 +36,7 @@ double fsum( const int& n, const std::vector<double>& p, const double& tau,
                                     // help differentiate betwene sinh and 
                                     // cosh while evaluating the integrand
 
-  for( int i = 0; i < p.size(); ++i ){
+  for( size_t i = 0; i < p.size(); ++i ){
     
     func_val = even ? 2 * p[i] * cosh( beta * tau ) * std::pow( beta, n ) :
                       2 * p[i] * sinh( beta * tau ) * std::pow( beta, n );

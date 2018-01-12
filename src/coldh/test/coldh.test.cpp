@@ -52,7 +52,7 @@ TEST_CASE( "coldh" ){
     beta {0.10, 0.15, 0.30, 0.60, 1.2}, ska { 1.1, 2.2, 3.3, 5.5, 8.8, 13.13 },
     correctSymSab (25), correctSymSab2 (25);
 
-  double temp = 200.0, tev = 1.723477e-2, sc = 1.0, tbeta = 2.0, 
+  double temp = 200.0, tev = 1.723477e-2, tbeta = 2.0, 
     trans_weight = 0.3, scaling = 1.0, dka = 0.2;
 
   int itemp = 0, ncold = 1, nbeta = 5, lat = 3;
@@ -77,7 +77,7 @@ TEST_CASE( "coldh" ){
         11.526322, 6.8941688 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling, 
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling, 
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -101,7 +101,7 @@ TEST_CASE( "coldh" ){
         11.526322, 6.8941688 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -113,7 +113,7 @@ TEST_CASE( "coldh" ){
       ska = { 0.1, 0.2, 0.3, 0.5, 0.8, 1.13 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -136,7 +136,7 @@ TEST_CASE( "coldh" ){
         19.39806, 45.48792, 41.22266, 37.28116, 29.20083, 16.998312 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -163,7 +163,7 @@ TEST_CASE( "coldh" ){
         4.847128E-2, 4.104705E-2, 2.843402E-2 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -188,7 +188,7 @@ TEST_CASE( "coldh" ){
         1.866112E-2 };
     
       free = true;
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -212,7 +212,7 @@ TEST_CASE( "coldh" ){
         8.546640E-2, 5.922167E-2 };
       
     
-      coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+      coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );
@@ -236,7 +236,7 @@ TEST_CASE( "coldh" ){
         8.676988E-2, 6.013533E-2 };
       
     
-      coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, tempf, scaling,
+      coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
         equal_vec_mega_vec( sym_sab, correctSymSab );
         equal_vec_mega_vec( sym_sab_2, correctSymSab2 );

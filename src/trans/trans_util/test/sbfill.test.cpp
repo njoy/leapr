@@ -13,7 +13,7 @@ TEST_CASE( "sbfill" ){
     int ndmax = 5100;
     std::vector<double> sb (ndmax,0.0); 
     std::vector<double> ap (ndmax,0.0); 
-    for ( int i = 0; i < ap.size(); ++i ){
+    for ( size_t i = 0; i < ap.size(); ++i ){
       ap[i] = (i+1)*0.0001;
     }
     std::vector<double> betan {0.15, 0.18, 0.22};
@@ -82,11 +82,11 @@ TEST_CASE( "sbfill" ){
       equal3( sb[i], 0.0 );
     }
 
-    for ( int i = 0; i < ap.size(); ++i ){
+    for ( size_t i = 0; i < ap.size(); ++i ){
     ap[i] = (i+1)*0.0001;
     }
 
-    for ( int i = 0; i < sb.size(); ++i ){
+    for ( size_t i = 0; i < sb.size(); ++i ){
     sb[i] = 0.0; 
     }
     be = 0.015;
@@ -155,11 +155,11 @@ TEST_CASE( "sbfill" ){
     }
               
 
-    for ( int i = 0; i < ap.size(); ++i ){
+    for ( size_t i = 0; i < ap.size(); ++i ){
     ap[i] = (i+1)*0.0001;
     }
 
-    for ( int i = 0; i < sb.size(); ++i ){
+    for ( size_t i = 0; i < sb.size(); ++i ){
     sb[i] = 0.0; 
     }
     be = 0.015;
@@ -181,7 +181,7 @@ TEST_CASE( "sbfill" ){
       int ndmax = 100;
       std::vector<double> sb (ndmax,0.0); 
       std::vector<double> ap (ndmax,0.0); 
-      for ( int i = 0; i < ap.size(); ++i ){
+      for ( size_t i = 0; i < ap.size(); ++i ){
         ap[i] = (i+1)*0.0001;
       }
       std::vector<double> betan {0.15, 0.18, 0.22};
@@ -196,7 +196,7 @@ TEST_CASE( "sbfill" ){
       int ndmax = 5088;
       std::vector<double> sb (ndmax,0.0); 
       std::vector<double> ap (ndmax,0.0); 
-      for ( int i = 0; i < ap.size(); ++i ){
+      for ( size_t i = 0; i < ap.size(); ++i ){
         ap[i] = (i+1)*0.0001;
       }
       std::vector<double> betan {0.15, 0.18, 0.22};

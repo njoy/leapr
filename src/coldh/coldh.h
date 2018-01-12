@@ -4,7 +4,7 @@
 #include "coldh_util/betaLoop.h"
 
 
-auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
+auto coldh( int itemp, const double& temp, double tev, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
     double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
@@ -59,7 +59,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
 
 
 
-  for ( auto a = 0; a < alpha.size(); ++a ){
+  for ( size_t a = 0; a < alpha.size(); ++a ){
     double al = alpha[a]*scaling;
     double waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
     double y = bp * waven;
@@ -115,7 +115,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
     // prepare arrays for sint
     
    if (a == 0){ 
-      for ( auto b = 0; b < nbeta; ++b ){
+      for ( int b = 0; b < nbeta; ++b ){
           double be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
           exb[b] = exp(-be);
@@ -124,7 +124,7 @@ auto coldh( int itemp, const double& temp, double tev, double sc, int ncold,
       nbx = bfill(bex,rdbex,betan);
     }
     std::vector<double> input ( beta.size(), 0.0 ); 
-    for ( auto b = 0; b < beta.size(); ++b ){
+    for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[a][b][itemp];
     }
     auto sex = exts( input, exb, betan );

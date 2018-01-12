@@ -11,7 +11,7 @@ void equal2( double a, double b ){
 
 void equal2_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( int i = 0; i < a.size(); ++i ){
+  for ( size_t i = 0; i < a.size(); ++i ){
     equal2( a[i], b[i] );
   }
 }
@@ -39,19 +39,19 @@ TEST_CASE( "prepare parameters helper function" ){
       0.7408182, 0.5488116};
     equal2( ar[0], 8.213274e-2 );
     equal2( ar[1], 0.1368162   );
-    for( auto i = 2; i < ar.size(); ++i ){ equal2( ar[i], 0.0 ); }
+    for( size_t i = 2; i < ar.size(); ++i ){ equal2( ar[i], 0.0 ); }
 
     equal2( dist[0], 4.55739924e-3 );
     equal2( dist[1], 2.23263430e-2 );
-    for( auto i = 2; i < dist.size(); ++i ){ equal2( dist[i], 0.0 ); }
+    for( size_t i = 2; i < dist.size(); ++i ){ equal2( dist[i], 0.0 ); }
 
     equal2( dbw[0], 0.1282379 );
     equal2( dbw[1], 0.3078315 );
-    for( auto i = 2; i < dbw.size(); ++i ){ equal2( dbw[i], 0.0 ); }
+    for( size_t i = 2; i < dbw.size(); ++i ){ equal2( dbw[i], 0.0 ); }
 
     equal2( energyNorm[0], 2.030778 );
     equal2( energyNorm[1], 2.901112 );
-    for( auto i = 2; i < energyNorm.size(); ++i ){ equal2(energyNorm[i], 0.0); }
+    for( size_t i = 2; i < energyNorm.size(); ++i ){ equal2(energyNorm[i], 0.0); }
 
     equal2( weight, 1.0 );
     equal2( tsave, 311.9710021 );

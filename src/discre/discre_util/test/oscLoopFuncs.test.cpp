@@ -11,7 +11,7 @@ void equal3( double a, double b ){
 
 void equal3_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( auto i = 0; i < a.size(); ++i ){
+  for ( size_t i = 0; i < a.size(); ++i ){
     equal3( a[i], b[i] );
   }
 }
@@ -35,14 +35,14 @@ TEST_CASE( "negative n terms loop" ){
       equal3( n, 3 );
 
       std::vector<double> besVals {0.0, -2.030778, -4.061556, -6.092335};
-      for ( auto i = 0; i < bes.size(); ++i ){ 
+      for ( size_t i = 0; i < bes.size(); ++i ){ 
         if ( i < 4 ){ equal3( bes[i], besVals[i] ); }
         else { equal3( bes[i], 0.0 ); }
       }
 
       std::vector<double> wtsVals {0.9872747, 1.119176E-2, 6.343540E-5, 
         2.397033E-7};
-      for ( auto i = 0; i < wts.size(); ++i ){
+      for ( size_t i = 0; i < wts.size(); ++i ){
         if ( i < 4 ){ equal3( wts[i], wtsVals[i] ); }
         else { equal3( wts[i], 0.0 ); }
       }
@@ -56,7 +56,7 @@ TEST_CASE( "negative n terms loop" ){
     double normEnergy = 2.5;
     std::fill( bminus.begin(), bminus.end(), 0.0 );
     bminus[0] = 1.0; bminus[1] = 2.0;
-    for ( auto i = 2; i < 10; ++i ){ bminus[i] = bminus[i-1] + bminus[i-2];}
+    for ( size_t i = 2; i < 10; ++i ){ bminus[i] = bminus[i-1] + bminus[i-2];}
     
     posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     std::vector<double> besVals {0.0, -2.5, -5.0, -7.5, -10.0, -12.5, -15.0, 
@@ -65,11 +65,11 @@ TEST_CASE( "negative n terms loop" ){
       34.0, 55.0, 89.0};
     
     THEN( "values are correct" ){
-      for ( auto i = 0; i < bes.size(); ++i ){ 
+      for ( size_t i = 0; i < bes.size(); ++i ){ 
         if ( i < besVals.size() ){ equal3( bes[i], besVals[i] ); }
         else { equal3( bes[i], 0.0 ); }
       }
-      for ( auto i = 0; i < wts.size(); ++i ){
+      for ( size_t i = 0; i < wts.size(); ++i ){
         if ( i < wtsVals.size() ){ equal3( wts[i], wtsVals[i] ); }
         else { equal3( wts[i], 0.0 ); }
       }
@@ -104,12 +104,12 @@ TEST_CASE( "positive terms" ){
         34.0, 55.0, 89.0, 8.0E-2, 6.0E-2, 4.0E-2, 2.0E-2, 8.0E-3, 6.0E-3, 
         4.0E-3, 2.0E-3, 8.0E-4, 6.0E-4};
 
-      for ( auto i = 0; i < bes.size(); ++i ){ 
+      for ( size_t i = 0; i < bes.size(); ++i ){ 
         if ( i < besVals.size() ){ equal3( bes[i], besVals[i] ); }
         else { equal3( bes[i], 0.0 ); }
       }
       
-      for ( auto i = 0; i < wts.size(); ++i ){
+      for ( size_t i = 0; i < wts.size(); ++i ){
         if ( i < wtsVals.size() ){ equal3( wts[i], wtsVals[i] ); }
         else { equal3( wts[i], 0.0 ); }
       }
@@ -154,12 +154,12 @@ TEST_CASE( "oscillator loop" ){
         -10.73411, -11.60444, 2.901112, 0.8703336, -1.160444, 4.931890, 
         5.802224, 3.771445};
 
-      for ( auto i = 0; i < wts.size(); ++i ){ 
+      for ( size_t i = 0; i < wts.size(); ++i ){ 
         if ( i < wtsCorrect.size() ){ equal3( wts[i], wtsCorrect[i] ); } 
         else { equal3( wts[i], 0.0 ); }
       }
 
-      for ( auto i = 0; i < bes.size(); ++i ){ 
+      for ( size_t i = 0; i < bes.size(); ++i ){ 
         if ( i < besCorrect.size() ){ equal3( bes[i], besCorrect[i] ); } 
         else { equal3( bes[i], 0.0 ); }
       }

@@ -11,7 +11,7 @@ auto sumh(int j, int jp, double y){
   if      (j  == 0) { return std::pow( sjbes(jp, y) * cn(j, jp, jp), 2 ); } 
   else if (jp == 0) { return std::pow( sjbes(j , y) * cn(j, 0,  j ), 2 ); }
 
-  int end, n, start;
+  int end, start;
   double sum1 = 0;
 
   start = std::abs(j-jp) + 1;

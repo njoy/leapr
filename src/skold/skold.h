@@ -60,8 +60,8 @@ auto skold( double cfrac, int itemp, double tev,
 
   std::vector<double> scoh( alpha.size() );
   // apply the skold approximation
-  for ( auto b = 0; b < beta.size(); ++b ){
-    for ( auto a = 0; a < alpha.size(); ++a ){
+  for ( size_t b = 0; b < beta.size(); ++b ){
+    for ( size_t a = 0; a < alpha.size(); ++a ){
 
       // Getting a value in units of inverse angstroms so that we can happily
       // interpolate it in our skappa table
@@ -72,7 +72,7 @@ auto skold( double cfrac, int itemp, double tev,
       // Interpolate to find the waven value in the skappa input 
       sk = terpk(skappa,dka,waven);
       ap = alpha[a] / sk;
-      for ( auto a2 = 0; a2 < alpha.size(); ++a2 ){
+      for ( size_t a2 = 0; a2 < alpha.size(); ++a2 ){
         i = a2;
         if (ap < alpha[a2]){ break; }
       }
@@ -85,7 +85,7 @@ auto skold( double cfrac, int itemp, double tev,
     }
     // Amend the existing scattering law by combining a piece of it with a 
     // piece of the coherent scattering interactions. 
-    for ( auto a = 0; a < alpha.size(); ++a ){
+    for ( size_t a = 0; a < alpha.size(); ++a ){
       symSab[a][b][itemp] = (1-cfrac)*symSab[a][b][itemp]+cfrac*scoh[a];
     }
   }

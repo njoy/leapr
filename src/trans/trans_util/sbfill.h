@@ -80,8 +80,9 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
     throw std::exception();
   }
   
-  int i = 0, j = betan.size()-1;
-  double current, toLeft, arg, bet = bmin, slim = -225e0;
+  int i = 0;
+  unsigned int j = betan.size()-1;
+  double current, toLeft, bet = bmin, slim = -225e0;
   bool foundRange = false, indexInRange = false; 
   
   while (bet < bmax){

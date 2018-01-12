@@ -27,7 +27,7 @@ TEST_CASE( "jprime loop" ){
     WHEN( "molecular translations are assumed to not be free (free = false)" ){
     
       double total1 = 0.0;
-      for ( auto i = 0; i < sex.size(); ++i ){ sex[i] = i + 1; }
+      for ( size_t i = 0; i < sex.size(); ++i ){ sex[i] = i + 1; }
       auto out1 = jPrime( total1, j, be, x, swe, pj, jj, bex, rdbex, sex, betan,
                          al, wt, tbart, y, nbx, false, false );
 
@@ -94,7 +94,7 @@ TEST_CASE( "jprime loop" ){
       } // THEN
 
       double total2 = 0.0; x = 0.8; swo = 0.9; pj = 0.4; y = 0.3;
-      for ( auto i = 0; i < sex.size(); ++i ){ sex[i] = i + 1; }
+      for ( size_t i = 0; i < sex.size(); ++i ){ sex[i] = i + 1; }
       double out2= jPrime( total2, j, be, x, swo, pj, jj, bex, 
         rdbex, sex, betan, al, wt, tbart, y, nbx, true, false );
 
@@ -107,7 +107,7 @@ TEST_CASE( "jprime loop" ){
     } // WHEN
 
     WHEN( "molecular translations are assumed to not be free (free = false)" ){
-      for ( auto i = 0; i < sex.size(); ++i ){ sex[i] = 2 * (i + 1); }
+      for ( size_t i = 0; i < sex.size(); ++i ){ sex[i] = 2 * (i + 1); }
       double total = 0.02; wt = 2.05; y = 0.35; swo = 0.47; total = 5.0;
       double out = jPrime( total, j, be, x, swo, pj, jj, bex, 
           rdbex, sex, betan, al, wt, tbart, y, nbx, true, true );

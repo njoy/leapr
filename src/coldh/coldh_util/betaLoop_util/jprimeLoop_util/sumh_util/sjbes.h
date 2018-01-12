@@ -9,8 +9,8 @@ double sjbes( int n, double y ){
    * In the case of cold hydrogen and deuterium calculations, y is defined by
    */
 
-  int i, k, l, nm;
-  double w, bessel, z, sj, t1, t2, t3, sjbes;
+  int k, l, nm;
+  double w, sj, t1, t2, t3;
 
   // check for large or negative arguments
   if ( n >= 3.0e4 or y > 3.0e4 or y < 0.0 or n < 0.0 ){

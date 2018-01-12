@@ -16,7 +16,7 @@ inline auto sint(const double& x, const std::vector<double>& bex,
   
   // Note that tbart is likely \bar{T_s}/T, which can be found via Eq. 530
   
-  double sv, ex, sint, pi = 3.1415926;
+  double ex, pi = 3.1415926;
   
   // Short Collision Time approximation
   // PROBLEM -- This SCT does not match Eq. 528. Please check. 

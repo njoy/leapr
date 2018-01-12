@@ -81,7 +81,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
 
   double nsd, alpha_sc, ded;
   // loop over alpha values
-  for ( auto a = 0; a < alpha.size(); ++a ){
+  for ( size_t a = 0; a < alpha.size(); ++a ){
     alpha_sc = alpha[a] * scaling;
 
     ded = diffusion == 0 ? 
@@ -96,13 +96,13 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
                            diffusion_s_table( trans_weight, alpha_sc, ndmax, 
                                              delta, sabTrans, diffusion );
     if ( nsd > 1 ){
-      for ( int b = 0; b < beta.size(); ++b ){
+      for ( size_t b = 0; b < beta.size(); ++b ){
         betan[b] = beta[b] * sc;
         ap[b] = sym_sab[a][b][itemp];
       }
 
       // loop over beta values
-      for ( int b = 0; b < beta.size(); ++b ){
+      for ( size_t b = 0; b < beta.size(); ++b ){
         double be = betan[b];
 
         // prepare table of continuous ss on new interval

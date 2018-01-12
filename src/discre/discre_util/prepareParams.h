@@ -15,7 +15,7 @@ auto prepareParams( const std::vector<double>& energy,
   
   weight = 0.0;
   tsave = 0.0;
-  for ( auto i = 0; i < energy.size(); ++i ){
+  for ( size_t i = 0; i < energy.size(); ++i ){
     betaVals[i] = energy[i] / tev;
     weight += weights[i];
 
@@ -25,7 +25,7 @@ auto prepareParams( const std::vector<double>& energy,
     tsave  += dist[i] / bk;
   }
 
-  for ( auto b = 0; b < betan.size(); ++b ){
+  for ( size_t b = 0; b < betan.size(); ++b ){
     exb[b] = exp( -beta[b]*sc );
     betan[b] = beta[b]*sc;
   } 

@@ -4,11 +4,13 @@ auto convol( const std::vector<double>& t1, const std::vector<double>& t2,
 
   std::vector<double> t3(t2.size(),0.0);
 
-  int i1, i2, len_t1 = int(t1.size());
+  int i1, i2;
+  int len_t1 = int(t1.size());
+  int len_t2 = int(t2.size());
   double f1, f2;
 
-  for ( int i = 0; i < t2.size(); ++i ){    // i iterates through t3
-    for ( int j = 0; j < t1.size(); ++j ){  // j iterates through t1, t2
+  for ( int i = 0; i < len_t2; ++i ){    // i iterates through t3
+    for ( int j = 0; j < len_t1; ++j ){  // j iterates through t1, t2
       i1 = i + j;
       i2 = i - j;
       if ( t1[j] <= 0 ){ continue; }

@@ -11,8 +11,8 @@ auto jPrime( double& total, int j, const double& be, const double& x,
 
   //--sum over the odd or even values of j-prime
   
-  double betap, add, snl = 0, pi = 3.14159265358979, tmp, bn, ex;
-  int jPrime, start, end;
+  double add, snl = 0, pi = 3.14159265358979, tmp, bn, ex;
+  int start, end;
 
   // Select start and end values for loop. If we want odd values, 1-->9,
   // if even 2-->8.

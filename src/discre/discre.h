@@ -51,12 +51,12 @@ auto discre( int itemp, const double& sc, const double& scaling,
      
 
   // Main alpha loop
-  for ( auto a = 0; a < alpha.size(); ++a ){
+  for ( size_t a = 0; a < alpha.size(); ++a ){
 
     // Get all sym_sab entries for a given alpha and temperature (vary beta)
     // for use in exts
     std::vector<double> input ( beta.size(), 0.0 );
-    for ( auto b = 0; b < beta.size(); ++b ){
+    for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[a][b][itemp];
     }
 
@@ -75,7 +75,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // Initialize delta loop
     std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
     
-    int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
+    unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
       betaVals, a, maxdd, energy.size(), wt, tbart, weights, t_eff_consts, 
       temp_vec[itemp] );
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
@@ -87,9 +87,9 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // Sort the discrete lines, and throw out the smallest ones
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
-    int n = nn; 
-    for ( auto i = 1; i < n-1; ++i ){
-      for ( auto j = i+1; j < n; ++j ){
+    unsigned int n = nn; 
+    for ( size_t i = 1; i < n-1; ++i ){
+      for ( size_t j = i+1; j < n; ++j ){
         if ( wts[j] > wts[i] ){
           swap( wts[j], wts[i] );
           swap( bes[j], bes[i] );
@@ -105,8 +105,8 @@ auto discre( int itemp, const double& sc, const double& scaling,
 
     // Add the continuous part to the scattering law
     std::vector<double> sexpb(beta.size(),0.0);
-    for ( auto m = 0; m < n; ++m ){
-      for ( auto b = 0; b < beta.size(); ++b ){
+    for ( size_t m = 0; m < n; ++m ){
+      for ( size_t b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
         // This is explicitly evaluating Eq. 542, where wts is W_k(alpha), and
         // bes is a vector populated with beta_k values. sint is used to 
@@ -122,7 +122,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
 
     // Record the results
-    for ( auto b = 0; b < betan.size(); ++b ){
+    for ( size_t b = 0; b < betan.size(); ++b ){
       sym_sab[a][b][itemp] = sexpb[b];
     }
   }

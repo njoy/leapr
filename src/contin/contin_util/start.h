@@ -42,7 +42,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // the solid-type spectrum must vary as b^2 as b goes to zero.
   
   p[0] = p[1] / ( beta * beta );
-  for ( int i = 1; i < p.size(); ++i ){
+  for ( size_t i = 1; i < p.size(); ++i ){
     p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
     beta += delta; 
   }
@@ -58,7 +58,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  for ( int i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
+  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
   
   return std::make_tuple( lambda_s, t_eff );
 }

@@ -7,20 +7,22 @@
 auto betaLoop( const std::vector<double>& betan, 
   const std::vector<double>& rdbex, const std::vector<double>& bex,
   const std::vector<double>& sex, const double& alphaVal, const double& wt, 
-  const double& tbart, const double& x, const double& y, const double& evenSumConst, 
-  const double& oddSumConst, int itemp, int nbx, int a, int ncold, bool free, 
+  const double& tbart, const double& x, const double& y, 
+  const double& evenSumConst, const double& oddSumConst, int itemp, int nbx, 
+  int a, int ncold, bool free, 
   std::vector<std::vector<std::vector<double>>>& sym_sab, 
   std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
 
   //--loop over all beta values
   //    results for positive beta go into ssp
   //    results for negative beta go into sym_sab
-  int jjmax = 2 * betan.size() - 1, k, jp, j;
-  double pj, add, betap, be, snlg, snlk, sn, total;
+  unsigned int jjmax = 2 * betan.size() - 1; 
+  int k;
+  double pj, be, snlg, snlk, sn, total;
 
-  for ( auto jj = 0; jj < jjmax; ++jj ){
+  for ( size_t jj = 0; jj < jjmax; ++jj ){
 
-    k  = jj < betan.size() ?      betan.size() - jj : jj - betan.size() + 2;
+    k  = jj < betan.size()     ?  betan.size() - jj : jj - betan.size() + 2;
     be = jj < betan.size() - 1 ? -betan[k-1]        : betan[k-1];
 
     //--loop over all oscillators

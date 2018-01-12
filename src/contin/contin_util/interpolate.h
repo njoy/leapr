@@ -16,7 +16,8 @@ double interpolate( const std::vector<double>& y, const double& delta,
    * * interpolated value
    */
 
-  int i = x / delta; // This is the index just to the left of desired x point
+  // This is the index just to the left of desired x point
+  unsigned int i = x / delta; 
   double x_L = i * delta; 
                      
   // Return 0.0 if out of range (above), else return interpolated value

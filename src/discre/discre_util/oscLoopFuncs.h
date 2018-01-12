@@ -34,7 +34,7 @@ void posNegTerms( int& n, const double& beta_i,
     if ( b_minus_or_plus[k] <= 0 ){ return; } 
 
     for ( auto m = 0; m < nn; ++m ){
-      if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < bes.size() ){
+      if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < int(bes.size()) ){
         n += 1;
         bes[n] = ben[m] + pos_or_neg * (k+1) * beta_i;
         wts[n] = wtn[m] * b_minus_or_plus[k];

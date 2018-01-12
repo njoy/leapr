@@ -47,6 +47,33 @@ int main(){
     int nka = 4; double dka = 0.01;
     std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
 
+    std::cout << "Card1: " << nout << std::endl;
+    std::cout << "Card2: " << "Title"<< std::endl;
+    std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
+    std::cout << "Card4: " << mat    <<  "     " << za << std::endl;
+    std::cout << "Card5: " << awr    <<  "     " << spr    << "     " << npr << "      " << iel << "     " << ncold << std::endl;
+    std::cout << "Card6: " << nss    <<  "     " << aws << std::endl;
+    std::cout << "Card7: " << nalpha <<  "     " << nbeta  << "     " << lat<<   std::endl;
+    std::cout << "Card8: " << std::endl;
+    for( auto entry : alpha   ){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card9: " << std::endl;
+    for( auto entry : beta    ){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card10: " << std::endl;
+    for( auto entry : temp_vec){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card11: " << delta << "     " << ni <<  std::endl;
+    std::cout << "Card12: " << std::endl;
+    for( auto entry : rho     ){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card13: " << trans_weight << "     " << diffusion_const << "      " << tbeta << std::endl;
+    std::cout << "Card14: " << nd << std::endl;
+    std::cout << "Card15: " << std::endl;
+    for( auto entry : oscEnergies){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card16: " << std::endl;
+    for( auto entry : oscWeights){ std::cout << " -- " << entry << std::endl; }
+    std::cout << "Card17: " << nka << "     " << dka << std::endl;
+    std::cout << "Card18: " << std::endl;
+    for( auto entry : kappaVals){ std::cout << " -- " << entry << std::endl; }
+
+
 
     Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
     std::cout << matrix1 << std::endl;
@@ -78,7 +105,7 @@ int main(){
       arat = aws / awr; 
     }
       
-    for ( int itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
+    for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
       double temp = temp_vec[itemp];
       double tev = bk * temp;
       double sc = 1.0;
@@ -130,7 +157,7 @@ int main(){
 
       if ( ncold != 0 ){
 	bool free = false;
-        coldh( itemp, temp, tev, sc, ncold, trans_weight, tbeta, t_eff_vec, 
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
 	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
 	  sym_sab_2 );
       }

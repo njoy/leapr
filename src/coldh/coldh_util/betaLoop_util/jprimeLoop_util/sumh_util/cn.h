@@ -13,7 +13,7 @@ auto cn( int jj, int ll, int nn ){
   /* Calculates Clebsch-Gordon coefficients for cold hydrogen or 
    * deuterium calculation. 
    */
-  double s, fact, zi, a1, a2, a3, a4, b1, b2, b3, b4, rat, wign;
+  double a1, a2, a3, a4, b1, b2, b3, b4, rat, wign;
 
   // if sum of three inputs is even, continue. Else return 0.0
   if ( (jj + ll + nn )%2 == 0 ){

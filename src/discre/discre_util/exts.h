@@ -27,10 +27,10 @@ std::vector<double> exts( const std::vector<double>& sexpb,
   
   std::reverse_copy(std::begin(sexpb), std::end(sexpb), std::begin(sex) );
 
-  int k = beta[0] <= 1.0e-9 ? beta.size() + 1 : beta.size() + 2;
+  unsigned int k = beta[0] <= 1.0e-9 ? beta.size() + 1 : beta.size() + 2;
   sex[k-2] = sexpb[0];
 
-  for ( int b = 1; b < beta.size(); ++b ){
+  for ( size_t b = 1; b < beta.size(); ++b ){
     // sex --> ssm_i * exp( -beta ) 
     // S(a,b) = exp( -beta ) * S(a,-b)    Eq. 509
     // Notice that we only apply this to half of the sex vector, since only

@@ -54,7 +54,7 @@ auto contin( const int itemp, const int nphon, double delta,
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
 
-  int npn = t1.size();
+  size_t npn = t1.size();
   std::copy( t1.begin(), t1.begin() + npn, tlast.begin() );
   std::copy( t1.begin(), t1.begin() + npn, tnow.begin() );
 
@@ -76,14 +76,14 @@ auto contin( const int itemp, const int nphon, double delta,
     // Convolve T_n with T_n-1 (Eq. 526)
     if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
 
-    for( int a = 0; a < alpha.size(); ++a ){
+    for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
       exx = -lambda_s * alpha[a] * scaling + xa[a];
       if ( exx <= -250.0 ){ continue; }
       exx = exp(exx);
 
-      for( int b = 0; b < beta.size(); ++b ){
+      for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab[a][b][itemp] += add < 1e-30 ? 0 : add;
       } // for b in beta
@@ -94,7 +94,7 @@ auto contin( const int itemp, const int nphon, double delta,
       // so npn here is being pushed forward by t1 length so that we can get
       // to the next block of vector
       npn += t1.size() - 1;
-      for( int i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+      for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
   } // for n in nphon (maxn in leapr.f90) 
 
