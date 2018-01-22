@@ -1,10 +1,10 @@
 
 add_executable( coher.coher_util.test
-                end.test.cpp
                 bccLatticeFactors.test.cpp
-                hexLatticeFactors.test.cpp
+                end.test.cpp
                 fccLatticeFactors.test.cpp
-                formf.test.cpp )
+                formf.test.cpp
+                hexLatticeFactors.test.cpp )
 target_compile_options( coher.coher_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}
