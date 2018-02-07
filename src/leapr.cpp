@@ -1,4 +1,4 @@
-#include <Eigen/Dense>
+//#include <Eigen/Dense>
 #include <iostream> 
 #include <vector>
 #include <cmath>
@@ -75,8 +75,8 @@ int main(){
 
 
 
-    Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
-    std::cout << matrix1 << std::endl;
+    //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
+    //std::cout << matrix1 << std::endl;
   double bk = 8.617385e-5;
   double therm = 0.0253;
 

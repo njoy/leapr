@@ -98,7 +98,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
       oddSumConst  = 3  * scatLenI * scatLenI / 8;
     } 
     // Para Deuterium
-    else if ( ncold == 4){ 
+    else {// if ( ncold == 4){ 
       evenSumConst = 3  * scatLenI * scatLenI / 4;
       oddSumConst  = sk * scatLenC * scatLenC + scatLenI * scatLenI / 4;
     }
