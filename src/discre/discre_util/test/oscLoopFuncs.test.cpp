@@ -31,21 +31,20 @@ TEST_CASE( "negative n terms loop" ){
 
     posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     
-    /*
     THEN( "values are correct" ){
-      equal3( n, 3 );
+      REQUIRE( n == 3 );
 
       std::vector<double> besVals {0.0, -2.030778, -4.061556, -6.092335};
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < 4 ){ equal3( bes[i], besVals[i] ); }
-        else { equal3( bes[i], 0.0 ); }
+        if ( i < 4 ){ REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
 
       std::vector<double> wtsVals {0.9872747, 1.119176E-2, 6.343540E-5, 
         2.397033E-7};
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < 4 ){ equal3( wts[i], wtsVals[i] ); }
-        else { equal3( wts[i], 0.0 ); }
+        if ( i < 4 ){ REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
     } // THEN
   } // GIVEN
@@ -59,20 +58,21 @@ TEST_CASE( "negative n terms loop" ){
     bminus[0] = 1.0; bminus[1] = 2.0;
     for ( size_t i = 2; i < 10; ++i ){ bminus[i] = bminus[i-1] + bminus[i-2];}
     
-    posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     std::vector<double> besVals {0.0, -2.5, -5.0, -7.5, -10.0, -12.5, -15.0, 
       -17.5, -20.0, -22.5, -25.0};
     std::vector<double> wtsVals {0.8, 1.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 
       34.0, 55.0, 89.0};
     
+    posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
+
     THEN( "values are correct" ){
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besVals.size() ){ equal3( bes[i], besVals[i] ); }
-        else { equal3( bes[i], 0.0 ); }
+        if ( i < besVals.size() ){ REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < wtsVals.size() ){ equal3( wts[i], wtsVals[i] ); }
-        else { equal3( wts[i], 0.0 ); }
+        if ( i < wtsVals.size() ){ REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
 
     } // THEN
@@ -106,16 +106,16 @@ TEST_CASE( "positive terms" ){
         4.0E-3, 2.0E-3, 8.0E-4, 6.0E-4};
 
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besVals.size() ){ equal3( bes[i], besVals[i] ); }
-        else { equal3( bes[i], 0.0 ); }
+        if ( i < besVals.size() ){ REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
       
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < wtsVals.size() ){ equal3( wts[i], wtsVals[i] ); }
-        else { equal3( wts[i], 0.0 ); }
+        if ( i < wtsVals.size() ){ REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
       
-      equal3( n, 20 );
+      REQUIRE( 20 == n );
 
     } // THEN
   } // GIVEN
@@ -145,8 +145,8 @@ TEST_CASE( "oscillator loop" ){
     THEN( "ouput is correct" ){
       std::vector<double> wtsCorrect {0.9573911, 1.085300E-2, 6.151529E-5, 
         2.324478E-7, 1.424275E-3, 1.0594276E-6, 2.793543E-2, 3.166766E-4, 
-        1.794936E-6, 4.155853E-5, 3.091273E-8, 4.075663E-4, 4.620180E-6, 
-        2.618737E-8, 6.063216E-7, 3.964163E-6, 4.493784E-8, 2.891790E-8, 
+        1.794936E-6, 4.155853E-5, 3.091273E-8, 4.075663E-4, 4.620178E-6, 
+        2.618736E-8, 6.063216E-7, 3.96416E-6, 4.49378E-8, 2.891787E-8, 
         1.535389E-3, 1.740520E-5, 9.865342E-8, 2.284142E-6, 1.231187E-6, 
         1.395677E-8};
       std::vector<double> besCorrect {0.0, -2.030778, -4.061556, -6.092335, 
@@ -155,21 +155,20 @@ TEST_CASE( "oscillator loop" ){
         -10.73411, -11.60444, 2.901112, 0.8703336, -1.160444, 4.931890, 
         5.802224, 3.771445};
 
-      for ( size_t i = 0; i < wts.size(); ++i ){ 
-        if ( i < wtsCorrect.size() ){ equal3( wts[i], wtsCorrect[i] ); } 
-        else { equal3( wts[i], 0.0 ); }
-      }
-
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besCorrect.size() ){ equal3( bes[i], besCorrect[i] ); } 
-        else { equal3( bes[i], 0.0 ); }
+        if ( i < besCorrect.size() ){ REQUIRE( besCorrect[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
-
+      
+      for ( size_t i = 0; i < wts.size(); ++i ){
+        if ( i < wtsCorrect.size() ){ REQUIRE( wtsCorrect[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
+      }
+ 
       equal3( wt, 3.0 );
       equal3( tbart, 407.4545311 );
 
     } // THEN
-    */
   } // GIVEN
 } // TEST CASE
 
