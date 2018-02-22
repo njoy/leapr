@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
 #include "oscLoopFuncs_util/bfact.h"
 
 void posNegTerms( int& n, const double& beta_i, 

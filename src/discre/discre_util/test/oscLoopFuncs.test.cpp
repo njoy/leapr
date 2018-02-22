@@ -1,20 +1,6 @@
 #include "catch.hpp"
 #include "discre/discre_util/oscLoopFuncs.h"
 
-void equal3( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
-void equal3_vec( std::vector<double> a, std::vector<double> b ){
-//  REQUIRE( a.size() == b.size() );
-  for ( size_t i = 0; i < a.size(); ++i ){
-    equal3( a[i], b[i] );
-  }
-}
 
 TEST_CASE( "negative n terms loop" ){
   int maxdd = 500;
@@ -32,6 +18,7 @@ TEST_CASE( "negative n terms loop" ){
     posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     
     THEN( "values are correct" ){
+
       REQUIRE( n == 3 );
 
       std::vector<double> besVals {0.0, -2.030778, -4.061556, -6.092335};
@@ -48,6 +35,7 @@ TEST_CASE( "negative n terms loop" ){
       }
     } // THEN
   } // GIVEN
+
   GIVEN( "other inputs" ){
     std::fill( wts.begin(), wts.end(), 0.0 );
     std::fill( bes.begin(), bes.end(), 0.0 );
@@ -67,11 +55,15 @@ TEST_CASE( "negative n terms loop" ){
 
     THEN( "values are correct" ){
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besVals.size() ){ REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        if ( i < besVals.size() ){ 
+          REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < wtsVals.size() ){ REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        if ( i < wtsVals.size() ){ 
+          REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
 
@@ -106,12 +98,16 @@ TEST_CASE( "positive terms" ){
         4.0E-3, 2.0E-3, 8.0E-4, 6.0E-4};
 
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besVals.size() ){ REQUIRE( besVals[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        if ( i < besVals.size() ){ REQUIRE( 
+          besVals[i] == Approx(bes[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
       
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < wtsVals.size() ){ REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        if ( i < wtsVals.size() ){ 
+          REQUIRE( wtsVals[i] == Approx(wts[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
       
@@ -123,50 +119,54 @@ TEST_CASE( "positive terms" ){
 
 
 TEST_CASE( "oscillator loop" ){
+  std::vector<double> wtsCorrect(24), besCorrect(24), wts(24), bes(24),
+    alpha(5), weight(2);
+
   GIVEN( "inputs" ){
     int maxdd = 500, numOscillators = 2, a = 0;
-
     double scaling = 1.0, wt = 2.0, tbart = 405.894676, temp = 200.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
       dbw(50, 0.0), ar(50, 0.0), dist(50,0.0);
 
-    energyNorm[0] = 2.030778; energyNorm[1] = 2.901112;
-    dist[0] = 4.55739E-3; dist[1] = 2.232634E-2;
-    dbw[0] = 0.128237; dbw[1] = 0.307831;
-    ar[0] = 8.213274E-2; ar[1] =  0.1368162;
+    energyNorm[0] = 2.030778;    energyNorm[1] = 2.901112;
+    dist[0]       = 4.55739E-3;  dist[1]       = 2.232634E-2;
+    dbw[0]        = 0.128237;    dbw[1]        = 0.307831;
+    ar[0]         = 8.213274E-2; ar[1]         = 0.1368162;
 
-    std::vector<double> alpha {0.1, 0.2, 0.4, 0.8, 1.6};
-    std::vector<double> weight{0.2, 0.8};
+    alpha  = {0.1, 0.2, 0.4, 0.8, 1.6};
+    weight = {0.2, 0.8};
 
     oscillatorLoop( alpha, dbw, ar, scaling, wts, bes, energyNorm, 
       a, maxdd, numOscillators, wt, tbart, weight, dist, temp );
 
     THEN( "ouput is correct" ){
-      std::vector<double> wtsCorrect {0.9573911, 1.085300E-2, 6.151529E-5, 
-        2.324478E-7, 1.424275E-3, 1.0594276E-6, 2.793543E-2, 3.166766E-4, 
-        1.794936E-6, 4.155853E-5, 3.091273E-8, 4.075663E-4, 4.620178E-6, 
-        2.618736E-8, 6.063216E-7, 3.96416E-6, 4.49378E-8, 2.891787E-8, 
-        1.535389E-3, 1.740520E-5, 9.865342E-8, 2.284142E-6, 1.231187E-6, 
-        1.395677E-8};
-      std::vector<double> besCorrect {0.0, -2.030778, -4.061556, -6.092335, 
-        2.030778, 4.061556, -2.901112, -4.931890, -6.962669, -0.8703336, 
-        1.160444, -5.802224, -7.833002, -9.863781, -3.771445, -8.703336, 
-        -10.73411, -11.60444, 2.901112, 0.8703336, -1.160444, 4.931890, 
-        5.802224, 3.771445};
+      wtsCorrect = { 0.9573911, 1.085300E-2, 6.151529E-5, 2.324478E-7, 
+        1.424275E-3, 1.0594276E-6, 2.793543E-2, 3.166766E-4, 1.794936E-6, 
+        4.155853E-5, 3.091273E-8, 4.075663E-4, 4.620178E-6, 2.618736E-8, 
+        6.063216E-7, 3.96416E-6, 4.49378E-8, 2.891787E-8, 1.535389E-3, 
+        1.740520E-5, 9.865342E-8, 2.284142E-6, 1.231187E-6, 1.395677E-8 };
+      besCorrect = { 0.0, -2.030778, -4.061556, -6.092335, 2.030778, 4.061556, 
+        -2.901112, -4.931890, -6.962669, -0.8703336, 1.160444, -5.802224, 
+        -7.833002, -9.863781, -3.771445, -8.703336, -10.73411, -11.60444, 
+        2.901112, 0.8703336, -1.160444, 4.931890, 5.802224, 3.771445 };
 
       for ( size_t i = 0; i < bes.size(); ++i ){ 
-        if ( i < besCorrect.size() ){ REQUIRE( besCorrect[i] == Approx(bes[i]).epsilon(1e-6) ); }
+        if ( i < besCorrect.size() ){ 
+          REQUIRE( besCorrect[i] == Approx(bes[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(bes[i]).epsilon(1e-6) ); }
       }
       
       for ( size_t i = 0; i < wts.size(); ++i ){
-        if ( i < wtsCorrect.size() ){ REQUIRE( wtsCorrect[i] == Approx(wts[i]).epsilon(1e-6) ); }
+        if ( i < wtsCorrect.size() ){ 
+          REQUIRE( wtsCorrect[i] == Approx(wts[i]).epsilon(1e-6) ); 
+        }
         else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
  
-      equal3( wt, 3.0 );
-      equal3( tbart, 407.4545311 );
+      REQUIRE( 3.0 == Approx(wt).epsilon(1e-6) );
+      REQUIRE( 407.4545311 == Approx(tbart).epsilon(1e-6) );
 
     } // THEN
   } // GIVEN
