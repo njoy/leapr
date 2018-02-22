@@ -1,7 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
 
 std::vector<double> exts( const std::vector<double>& sexpb,
   const std::vector<double>& exb, const std::vector<double>& beta ){

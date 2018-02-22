@@ -1,7 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-
 
 auto prepareParams( const std::vector<double>& energy, 
   const std::vector<double>& weights, const double& tev, 
