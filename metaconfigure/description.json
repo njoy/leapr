@@ -372,6 +372,7 @@
     "src/contin/contin_util/start.h",
     "src/contin/contin_util/interpolate.h",
     "src/contin/contin_util/start_util/start_util.h",
+    "src/endout/endout.h",
     "src/discre/discre.h",
     "src/discre/discre_util/prepareParams.h",
     "src/discre/discre_util/addDeltaFuncs.h",
@@ -476,6 +477,9 @@
     ],
     "discre.discre_util.oscLoopFuncs_util": [
       "src/discre/discre_util/oscLoopFuncs_util/test/bfact.test.cpp"
+    ],
+    "endout": [
+      "src/endout/test/endout.test.cpp"
     ],
     "skold": [
       "src/skold/test/skold.test.cpp"
