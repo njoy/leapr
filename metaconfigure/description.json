@@ -488,6 +488,9 @@
       "src/endout/endout_util/test/tpidio.test.cpp",
       "src/endout/endout_util/test/repoz.test.cpp"
     ],
+    "leapr": [
+      "src/test/leapr.test.cpp"
+    ],
     "skold": [
       "src/skold/test/skold.test.cpp"
     ],

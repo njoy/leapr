@@ -3,12 +3,22 @@
 #include <vector>
 #include <cmath>
 #include <tuple>
+#include <string>
 #include "contin/contin.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
 #include "coldh/coldh.h"
 
-int main(){
+
+int leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
+  int mat, double za, double awr, double spr, int npr, int iel, int ncold,
+  int nss, double aws, int nalpha, int nbeta, int lat, 
+  std::vector<double> alpha, std::vector<double> beta, 
+  std::vector<double> temp_vec, double delta, int ni, std::vector<double> rho,
+  double trans_weight, double diffusion_const, double tbeta, int nd, 
+  std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
+  double dka, std::vector<double> kappaVals ){
+  /*
   // Card1
     int nout = 20; 
   // Card2
@@ -46,9 +56,10 @@ int main(){
   // Card17 
     int nka = 4; double dka = 0.01;
     std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
+    */
 
     std::cout << "Card1: " << nout << std::endl;
-    std::cout << "Card2: " << "Title"<< std::endl;
+    std::cout << "Card2: " <<  title<< std::endl;
     std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
     std::cout << "Card4: " << mat    <<  "     " << za << std::endl;
     std::cout << "Card5: " << awr    <<  "     " << spr    << "     " << npr << "      " << iel << "     " << ncold << std::endl;
@@ -73,6 +84,7 @@ int main(){
     std::cout << "Card18: " << std::endl;
     for( auto entry : kappaVals){ std::cout << " -- " << entry << std::endl; }
 
+    std::cout << "\n\n\n " << std::endl;
 
 
     //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
@@ -117,7 +129,7 @@ int main(){
         // the temperature dependent parameters for this specifically 
 
       // Continuous part of the distribution
-      std::cout << "  " << std::endl;
+      std::cout << "\n-------- contin" << std::endl;
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab );
       double lambda_s = std::get<0>(lambda_s_t_eff);
@@ -168,3 +180,9 @@ int main(){
 
     return 0;
 }
+/*
+int main(){
+  return 0;
+}
+*/
+
