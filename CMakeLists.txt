@@ -216,6 +216,8 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start_util/start_util.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/tpidio.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/contio.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/repoz.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/prepareParams.h"
