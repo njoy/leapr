@@ -58,7 +58,8 @@ TEST_CASE( "leapr" ){
                                                                      // Card 12
   trans_weight = 0.055556;     c      = 0.0;    tbeta = 0.444444;    // Card 13
   nd           = 2;                                                  // Card 14
-  oscEnergies  = { 205.0,    0.48};                                  // Card 15
+  //oscEnergies  = { 205.0,    0.48};                                  // Card 15
+  oscEnergies  = { 35.8,    0.48};                                  // Card 15
   oscWeights   = { 0.166667, 0.333333 };                             // Card 16
   nka          = 4;       dka    = 0.01;                             // Card 17
   kappaVals    = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18

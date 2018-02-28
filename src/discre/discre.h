@@ -84,6 +84,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
     unsigned int n = nn; 
+    nn = n - 1;
     for ( size_t i = 1; i < n-1; ++i ){
       for ( size_t j = i+1; j < n; ++j ){
         if ( wts[j] > wts[i] ){
@@ -93,14 +94,26 @@ auto discre( int itemp, const double& sc, const double& scaling,
       }
     }
 
+    /*
     n = 0;
     while ( n < nn ){
       n += 1;
       if ( wts[n-1] < 1e-6 and n > 5 ){ break; }
     }
+    */
+    int i=0;
+    int idone=0;
+    while (i << nn and idone == 0){
+       i=i+1;
+       n=i;
+       if (wts[i-1] < 1e-6 and i > 5) idone=1;
+    }
+
+
 
     // Add the continuous part to the scattering law
     std::vector<double> sexpb(beta.size(),0.0);
+    //std::cout << wts[0] << std::endl;
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];

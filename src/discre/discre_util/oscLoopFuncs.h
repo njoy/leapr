@@ -111,7 +111,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
         n += 1;
       }
     }
-    n -= 1;
+    //n -= 1;
 
     // Read the description for posNegTerms to get a better feel for this.
     // Basically we're going to be populating wts with A_i,n terms muliplied
@@ -128,12 +128,13 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       ben[m] = bes[m];
       wtn[m] = wts[m];
     }
+    n = 0;
     wt += weights[i];
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( bk * temp );
 
   }   
-  return n;
+  return nn;
 }
 
 

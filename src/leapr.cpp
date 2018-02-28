@@ -128,13 +128,14 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
       }
  
+      /*
       std::cout << sym_sab[0][0][0] << std::endl;
       std::cout << sym_sab[1][1][0] << std::endl;
       std::cout << sym_sab[2][2][0] << std::endl;
       std::cout << sym_sab[3][3][0] << std::endl;
       std::cout << sym_sab[4][4][0] << std::endl;
       std::cout << "    " << std::endl;
-
+      */
 
       if ( oscEnergies.size() > 0 ){
       std::cout << "\n-------- discre" << std::endl;
@@ -143,13 +144,11 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       }
  
       std::cout << "    " << std::endl;
-      /*
       std::cout << sym_sab[0][0][0] << std::endl;
       std::cout << sym_sab[1][1][0] << std::endl;
       std::cout << sym_sab[2][2][0] << std::endl;
       std::cout << sym_sab[3][3][0] << std::endl;
       std::cout << sym_sab[4][4][0] << std::endl;
-      */
 
 
 
