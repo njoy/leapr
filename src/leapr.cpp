@@ -8,6 +8,7 @@
 #include "trans/trans.h"
 #include "discre/discre.h"
 #include "coldh/coldh.h"
+#include <time.h>
 
 
 int leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
@@ -57,6 +58,8 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     int nka = 4; double dka = 0.01;
     std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
     */
+  clock_t t;
+  t = clock();
 
 
     //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
@@ -79,7 +82,6 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     std::vector<double> ( ntempr, 0.0 ) ) );
 
 
-  std::cout << "\n" << std::endl;
 
   std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
 
@@ -101,13 +103,6 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
-      // Continuous part of the distribution
-      std::cout << "\n-------- contin" << std::endl;
-
-      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab );
-      double lambda_s = std::get<0>(lambda_s_t_eff);
-
       /*
       std::cout << sym_sab[0][0][0] << std::endl;
       std::cout << sym_sab[1][1][0] << std::endl;
@@ -116,41 +111,46 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       std::cout << sym_sab[4][4][0] << std::endl;
       std::cout << "    " << std::endl;
       */
+
+
+      // Continuous part of the distribution
+      //std::cout << "\n-------- contin" << std::endl;
+
+      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
+        sc, rho, alpha, beta, sym_sab );
+      double lambda_s = std::get<0>(lambda_s_t_eff);
+
+      double t_contin = clock();
 
      // update the effective temperature list
       t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
 
  
       // Translational part of distribution, if any
-      std::cout << "\n-------- trans" << std::endl;
+      //std::cout << "\n-------- trans" << std::endl;
       if ( trans_weight > 0.0 ){
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
       }
- 
-      /*
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      std::cout << sym_sab[3][3][0] << std::endl;
-      std::cout << sym_sab[4][4][0] << std::endl;
-      std::cout << "    " << std::endl;
-      */
+      double t_trans = clock();
+
 
       if ( oscEnergies.size() > 0 ){
-      std::cout << "\n-------- discre" << std::endl;
+      //std::cout << "\n-------- discre" << std::endl;
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
       }
- 
-      std::cout << "    " << std::endl;
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      std::cout << sym_sab[3][3][0] << std::endl;
-      std::cout << sym_sab[4][4][0] << std::endl;
+      double t_discre = clock();
 
-
+      return 0;
+      std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
+        << " seconds" << std::endl;
+      std::cout << "trans:  " << ((float)(t_trans-t_contin))/CLOCKS_PER_SEC 
+        << " seconds" << std::endl;
+      std::cout << "discre: " << ((float)(t_discre-t_trans))/CLOCKS_PER_SEC 
+        << " seconds" << std::endl;
+      std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
+        << " seconds" << std::endl;
 
       if ( ncold != 0 ){
 	bool free = false;
@@ -194,9 +194,4 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
 
 }
-/*
-int main(){
-  return 0;
-}
-*/
 
