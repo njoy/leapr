@@ -58,6 +58,113 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
     */
 
+
+    //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
+    //std::cout << matrix1 << std::endl;
+  double bk = 8.617385e-5;
+  double therm = 0.0253;
+
+  // Loop over scatterers and temperatures
+  int isecs = 0;
+  double arat  = 1.0; // This is for scaling alpha and beta values later
+  bool done = false;
+
+  std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
+    std::vector<std::vector<double>> (beta.size(), 
+    std::vector<double> ( ntempr, 0.0 ) ) );
+
+  // This is only going to be used by coldh
+  std::vector<std::vector<std::vector<double>>> sym_sab_2( alpha.size(),
+    std::vector<std::vector<double>> (beta.size(), 
+    std::vector<double> ( ntempr, 0.0 ) ) );
+
+
+  std::cout << "\n" << std::endl;
+
+  std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
+
+  while ( not done ){
+    if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
+    if ( isecs >  0 ){ 
+      std::cout << "Secondary scatterer" << std::endl;
+      arat = aws / awr; 
+    }
+      
+    for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
+      double temp = temp_vec[itemp];
+      double tev = bk * temp;
+      double sc = 1.0;
+      if ( lat == 1 ){ sc = therm/tev; }
+      double scaling = sc/arat;
+      if ( itemp == 1 or temp >= 0 ){
+        std::cout << "we want to read in tempdependent parameters" << std::endl;
+      } // if 1st temp or some positive temp, we want to calculate
+        // the temperature dependent parameters for this specifically 
+
+      // Continuous part of the distribution
+      std::cout << "\n-------- contin" << std::endl;
+
+      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
+        sc, rho, alpha, beta, sym_sab );
+      double lambda_s = std::get<0>(lambda_s_t_eff);
+
+      /*
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
+      std::cout << sym_sab[3][3][0] << std::endl;
+      std::cout << sym_sab[4][4][0] << std::endl;
+      std::cout << "    " << std::endl;
+      */
+
+     // update the effective temperature list
+      t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
+
+ 
+      // Translational part of distribution, if any
+      std::cout << "\n-------- trans" << std::endl;
+      if ( trans_weight > 0.0 ){
+        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
+      }
+ 
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
+      std::cout << sym_sab[3][3][0] << std::endl;
+      std::cout << sym_sab[4][4][0] << std::endl;
+      std::cout << "    " << std::endl;
+
+
+      if ( oscEnergies.size() > 0 ){
+      std::cout << "\n-------- discre" << std::endl;
+        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
+          beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
+      }
+ 
+      std::cout << "    " << std::endl;
+      /*
+      std::cout << sym_sab[0][0][0] << std::endl;
+      std::cout << sym_sab[1][1][0] << std::endl;
+      std::cout << sym_sab[2][2][0] << std::endl;
+      std::cout << sym_sab[3][3][0] << std::endl;
+      std::cout << sym_sab[4][4][0] << std::endl;
+      */
+
+
+
+      if ( ncold != 0 ){
+	bool free = false;
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
+	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
+	  sym_sab_2 );
+      }
+
+    }
+    done = true;
+  }
+
+    return 0;
     std::cout << "Card1: " << nout << std::endl;
     std::cout << "Card2: " <<  title<< std::endl;
     std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
@@ -87,98 +194,6 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     std::cout << "\n\n\n " << std::endl;
 
 
-    //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
-    //std::cout << matrix1 << std::endl;
-  double bk = 8.617385e-5;
-  double therm = 0.0253;
-
-  // Loop over scatterers and temperatures
-  int isecs = 0;
-  double arat  = 1.0; // This is for scaling alpha and beta values later
-  bool done = false;
-
-  std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
-    std::vector<std::vector<double>> (beta.size(), 
-    std::vector<double> ( ntempr, 0.0 ) ) );
-
-  // This is only going to be used by coldh
-  std::vector<std::vector<std::vector<double>>> sym_sab_2( alpha.size(),
-    std::vector<std::vector<double>> (beta.size(), 
-    std::vector<double> ( ntempr, 0.0 ) ) );
-
-
-
-  std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
-
-  while ( not done ){
-    if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
-    if ( isecs >  0 ){ 
-      std::cout << "Secondary scatterer" << std::endl;
-      arat = aws / awr; 
-    }
-      
-    for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
-      double temp = temp_vec[itemp];
-      double tev = bk * temp;
-      double sc = 1.0;
-      if ( lat == 1 ){ sc = therm/tev; }
-      double scaling = sc/arat;
-      if ( itemp == 1 or temp >= 0 ){
-        std::cout << "we want to read in tempdependent parameters" << std::endl;
-      } // if 1st temp or some positive temp, we want to calculate
-        // the temperature dependent parameters for this specifically 
-
-      // Continuous part of the distribution
-      std::cout << "\n-------- contin" << std::endl;
-      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab );
-      double lambda_s = std::get<0>(lambda_s_t_eff);
-
-     // update the effective temperature list
-      t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
-
-      //std::cout << sym_sab[0][0][0] << std::endl;
- 
-      // Translational part of distribution, if any
-      if ( trans_weight > 0.0 ){
-        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
-      }
- 
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      std::cout << sym_sab[3][3][0] << std::endl;
-      std::cout << sym_sab[4][4][0] << std::endl;
-      std::cout << "    " << std::endl;
-
-
-      if ( oscEnergies.size() > 0 ){
-        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
-          beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
-      }
- 
-      std::cout << "    " << std::endl;
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      std::cout << sym_sab[3][3][0] << std::endl;
-      std::cout << sym_sab[4][4][0] << std::endl;
-
-
-
-      if ( ncold != 0 ){
-	bool free = false;
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
-	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
-	  sym_sab_2 );
-      }
-
-    }
-    done = true;
-  }
-
-    return 0;
 }
 /*
 int main(){

@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
 #include "discre_util/bfill.h"
 #include "discre_util/exts.h"
 #include "discre_util/prepareParams.h"
@@ -28,8 +25,8 @@ auto discre( int itemp, const double& sc, const double& scaling,
   // Prepare functions of beta
   double weight, tsave;
 
-  std::vector<double> ar(50,0.0), t_eff_consts(50,0.0), lambda_i(50,0.0), 
-    betaVals(50,0.0), exb(beta.size(),0.0), betan(beta.size(),0.0);
+  std::vector<double> ar(50), t_eff_consts(50), lambda_i(50), 
+    betaVals(50), exb(beta.size()), betan(beta.size());
 
   prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, t_eff_consts,
     lambda_i, bk, exb, betan, beta, sc );
@@ -45,17 +42,16 @@ auto discre( int itemp, const double& sc, const double& scaling,
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
-  std::vector<double> bex( maxbb, 0.0 ), rdbex( maxbb, 0.0 );
+  std::vector<double> bex( maxbb ), rdbex( maxbb );
   int nbx = bfill( bex, rdbex, betan );
   double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
-
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
 
     // Get all sym_sab entries for a given alpha and temperature (vary beta)
     // for use in exts
-    std::vector<double> input ( beta.size(), 0.0 );
+    std::vector<double> input ( beta.size() );
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[a][b][itemp];
     }

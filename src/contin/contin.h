@@ -3,7 +3,7 @@
 #include "contin_util/interpolate.h"
 
 
-auto contin( const int itemp, const int nphon, double delta, 
+auto contin( const int itemp, const int nphon, double& delta, 
   const double& tbeta, const double& scaling, const double& tev, 
   const double& sc, std::vector<double> t1, const std::vector<double>& alpha, 
   const std::vector<double>& beta, 

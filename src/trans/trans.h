@@ -72,7 +72,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
    * * The effective temperature is altered according to Eq. 536.
    */
 
-
+  double deltaInitial = delta;
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
 
@@ -89,7 +89,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
       0.4 * trans_weight * diffusion * alpha_sc / 
         sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
 
-    delta = std::min( ded, 10.0 * alpha_sc * delta );
+    delta = std::min( ded, 10.0 * alpha_sc * deltaInitial );
 
     nsd = diffusion == 0 ? free_gas_s_table ( trans_weight, alpha_sc, ndmax, 
                                              delta, sabTrans ) : 
