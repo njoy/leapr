@@ -76,8 +76,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
 
-  std::vector<double> sabTrans(ndmax), ap(ndmax), sab(ndmax),
-    betan(beta.size());
+  std::vector<double> sabTrans(ndmax), ap(ndmax), sab(ndmax), betan(beta.size());
 
   double nsd, alpha_sc, ded;
   // loop over alpha values

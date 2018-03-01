@@ -11,7 +11,7 @@
 #include <time.h>
 
 
-int leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
+auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
   int mat, double za, double awr, double spr, int npr, int iel, int ncold,
   int nss, double aws, int nalpha, int nbeta, int lat, 
   std::vector<double> alpha, std::vector<double> beta, 
@@ -19,51 +19,12 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   double trans_weight, double diffusion_const, double tbeta, int nd, 
   std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
   double dka, std::vector<double> kappaVals ){
-  /*
-  // Card1
-    int nout = 20; 
-  // Card2
-    // Title goes here
-  // Card3
-    int ntempr = 1, iprint = 1, nphon = 3;
-  // Card4
-    int mat = 26; double za = 126.0;
-  // Card5
-    double awr = 8.93478, spr = 6.15; int npr = 1, iel = 2; int ncold = 0;
-  // Card6
-    int nss = 0; double aws = 0.0;
-  // Card7
-    int nalpha = 5, nbeta = 5, lat = 3;
-  // Card8
-    std::vector<double> alpha { 0.10, 0.20, 0.40, 0.80, 1.60 };
-  // Card9
-    std::vector<double> beta  { 0.10, 0.15, 0.30, 0.60, 1.20 };
-  // Card10
-   // double temp = 200.0;
-    std::vector<double> temp_vec {200.0};
-  // Card11
-    double delta = 3.8; int ni = 6;
-  // Card12
-    std::vector<double> rho { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
-  // Card13
-//    double twt = 0.3, c = 0.1, tbeta = 2.0;
-    double trans_weight = 0.3, diffusion_const = 1.0, tbeta = 2.0;
-  // Card14
-    int nd = 2;
-  // Card15
-    std::vector<double> oscEnergies {1.0, 2.0};
-  // Card16
-    std::vector<double> oscWeights {0.3, 0.4};
-  // Card17 
-    int nka = 4; double dka = 0.01;
-    std::vector<double> kappaVals { 0.1, 0.2, 0.4, 0.7 };
-    */
+
   clock_t t;
   t = clock();
 
-
-    //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
-    //std::cout << matrix1 << std::endl;
+  //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
+  //std::cout << matrix1 << std::endl;
   double bk = 8.617385e-5;
   double therm = 0.0253;
 
@@ -142,7 +103,6 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       }
       double t_discre = clock();
 
-      return 0;
       std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
       std::cout << "trans:  " << ((float)(t_trans-t_contin))/CLOCKS_PER_SEC 
@@ -151,6 +111,7 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         << " seconds" << std::endl;
       std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
+      return sym_sab;
 
       if ( ncold != 0 ){
 	bool free = false;
@@ -163,7 +124,7 @@ int leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     done = true;
   }
 
-    return 0;
+    return sym_sab;
     std::cout << "Card1: " << nout << std::endl;
     std::cout << "Card2: " <<  title<< std::endl;
     std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
