@@ -28,16 +28,16 @@ TEST_CASE( "bfact" ){
       2.014904E-13, 5.995048E-17, 1.486447E-20, 3.159074E-24, 5.874598E-28};
 
     THEN( "the outputs bplus, bminus, and bzero are correct" ){
-      for ( auto i = 0; i < bminusStart.size(); ++i ){
+      for ( size_t i = 0; i < bminusStart.size(); ++i ){
         equal( bminus[i], bminusStart[i] );
       }
-      for ( auto i = bminusStart.size(); i < bminus.size(); ++i ){
+      for ( size_t i = bminusStart.size(); i < bminus.size(); ++i ){
         equal( bminus[i], 0.0 );
       }
-      for ( auto i = 0; i < bplusStart.size(); ++i ){
+      for ( size_t i = 0; i < bplusStart.size(); ++i ){
         equal( bplus[i], bplusStart[i] );
       }
-      for ( auto i = bplusStart.size(); i < bplus.size(); ++i ){
+      for ( size_t i = bplusStart.size(); i < bplus.size(); ++i ){
         equal( bplus[i], 0.0 );
       }
       equal( bzero, 0.98727473 );
@@ -54,16 +54,16 @@ TEST_CASE( "bfact" ){
       8.601593E-9, 3.854963E-11, 1.439728E-13, 4.608864E-16, 1.290968E-18, 
       3.214286E-21, 7.202715E-24};
     THEN( "the outputs bplus, bminus, and bzero are correct" ){
-      for ( auto i = 0; i < bminusStart.size(); ++i ){
+      for ( size_t i = 0; i < bminusStart.size(); ++i ){
         equal( bminus[i], bminusStart[i] );
       }
-      for ( auto i = bminusStart.size(); i < bminus.size(); ++i ){
+      for ( size_t i = bminusStart.size(); i < bminus.size(); ++i ){
         equal( bminus[i], 0.0 );
       }
-      for ( auto i = 0; i < bplusStart.size(); ++i ){
+      for ( size_t i = 0; i < bplusStart.size(); ++i ){
         equal( bplus[i], bplusStart[i] );
       }
-      for ( auto i = bplusStart.size(); i < bplus.size(); ++i ){
+      for ( size_t i = bplusStart.size(); i < bplus.size(); ++i ){
         equal( bplus[i], 0.0 );
       }
       equal( bzero, 0.818751219 );

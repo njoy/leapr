@@ -3,7 +3,7 @@
 #include "contin_util/interpolate.h"
 
 
-auto contin( const int itemp, const int nphon, double& delta, 
+auto contin( const int itemp, int nphon, double& delta, 
   const double& tbeta, const double& scaling, const double& tev, 
   const double& sc, std::vector<double> t1, const std::vector<double>& alpha, 
   const std::vector<double>& beta, 
@@ -50,7 +50,6 @@ auto contin( const int itemp, const int nphon, double& delta,
     
   auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
   double lambda_s = std::get<0>(lambda_s_t_eff);
-  std::cout << delta << std::endl;
 
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
@@ -72,6 +71,7 @@ auto contin( const int itemp, const int nphon, double& delta,
   // subsequent iterations, because all subsequent iterations require
   // convolution with the one before it. This is following Eq. 526
   
+  nphon = 2;
   for( int n = 0; n < nphon; ++n ){
 
     // Convolve T_n with T_n-1 (Eq. 526)
@@ -98,6 +98,10 @@ auto contin( const int itemp, const int nphon, double& delta,
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
   } // for n in nphon (maxn in leapr.f90) 
+  std::cout << symSab[0][0][0] << std::endl;
+  std::cout << symSab[1][1][0] << std::endl;
+  std::cout << symSab[2][2][0] << std::endl;
+  std::cout << symSab[3][3][0] << std::endl;
 
 
   return lambda_s_t_eff;
