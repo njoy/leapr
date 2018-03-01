@@ -60,7 +60,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       if ( lat == 1 ){ sc = therm/tev; }
       double scaling = sc/arat;
       if ( itemp == 1 or temp >= 0 ){
-        std::cout << "we want to read in tempdependent parameters" << std::endl;
+       // std::cout << "we want to read in tempdependent parameters" << std::endl;
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
@@ -81,6 +81,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         sc, rho, alpha, beta, sym_sab );
       double lambda_s = std::get<0>(lambda_s_t_eff);
 
+
       double t_contin = clock();
 
      // update the effective temperature list
@@ -95,13 +96,13 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       }
       double t_trans = clock();
 
-
       if ( oscEnergies.size() > 0 ){
       //std::cout << "\n-------- discre" << std::endl;
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
       }
       double t_discre = clock();
+
 
       std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
@@ -110,7 +111,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       std::cout << "discre: " << ((float)(t_discre-t_trans))/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
       std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
-        << " seconds" << std::endl;
+        << " seconds\n\n" << std::endl;
       return sym_sab;
 
       if ( ncold != 0 ){
@@ -119,6 +120,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
 	  sym_sab_2 );
       }
+
 
     }
     done = true;
