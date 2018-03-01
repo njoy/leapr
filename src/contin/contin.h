@@ -50,6 +50,7 @@ auto contin( const int itemp, const int nphon, double& delta,
     
   auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
   double lambda_s = std::get<0>(lambda_s_t_eff);
+  std::cout << delta << std::endl;
 
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);

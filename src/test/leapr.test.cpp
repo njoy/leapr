@@ -23,110 +23,83 @@ void checkSab( const std::vector<double>& correctSab,
 
 
 TEST_CASE( "leapr" ){
-  /*
-  GIVEN( "generic input" ) {
   int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
       lat, ni, nd, nka, mss;
-  double za, awr, spr, aws, sps, delta, trans_weight, c, tbeta, dka, b7;
-  std::vector<double> alpha, beta, temp_vec, rho, oscEnergies, oscWeights, 
-    kappaVals;
+  double za, awr, spr, aws, sps, delta, twt, c, tbeta, dka, b7;
+  std::vector<double> alpha, beta, temp, rho, oscE, oscW, 
+    kappa;
   std::string title;
 
-  nout         = 20;                                                 // Card 1
-  title        = "title";                                            // Card 2
-  ntempr       = 1;       iprint = 1;     nphon = 3;                 // Card 3
-  mat          = 26;      za     = 126.0;                            // Card 4
-  awr          = 8.93478; spr    = 6.15;  npr   = 1;   iel = 2;   ncold = 0;
-  nss          = 0;       aws    = 0.0;                              // Card 6
-  nalpha       = 5;       nbeta  = 5;     lat   = 3;                 // Card 7
-  alpha        = { 0.10, 0.20, 0.40, 0.80, 1.60 };                   // Card 8
-  beta         = { 0.10, 0.15, 0.30, 0.60, 1.20 };                   // Card 9
-  temp_vec     = { 200.0 };                                          // Card 10 
-  delta        = 3.8;     ni     = 6;                                // Card 11
-  rho          = { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };             // Card 12
-  trans_weight = 0.3;     c      = 1.0;   tbeta = 20;                // Card 13
-  nd           = 2;                                                  // Card 14
-  oscEnergies  = { 1.0, 2.0 };                                       // Card 15
-  oscWeights   = { 0.3, 0.4 };                                       // Card 16
-  nka          = 4;       dka    = 0.01;                             // Card 17
-  kappaVals    = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18
+  /*
 
 
+  GIVEN( "simple H in H20 input" ) {
 
-  nout         = 24;                                                 // Card 1
-  title        = "h in h20, shortened endf model";                   // Card 2
-  ntempr       = 1;       iprint = 1;      nphon = 100;              // Card 3
-  mat          = 101;     za     = 1001.0;                           // Card 4
-  awr          = 0.99917; spr    = 20.449; npr   = 2;   iel = 0;   ncold = 0;
-                                                                     // Card 5
-  nss          = 1;       b7     = 1.;     aws   = 1.1; sps = 3.8883; mss = 1; 
+
+    nout   = 24;                                                 // Card 1
+    title  = "h in h20, shortened endf model";                   // Card 2
+    ntempr = 1;       iprint = 1;      nphon = 100;              // Card 3
+    mat    = 101;     za     = 1001.0;                           // Card 4
+    awr    = 0.99917; spr    = 20.449; npr   = 2;   iel = 0;   ncold = 0; // Card 5
+    nss    = 1;       b7     = 1.;     aws   = 1.1; sps = 3.8883; mss = 1; 
                                                                      // Card 6
-  nalpha       = 5;       nbeta  = 7;      lat   = 1;                // Card 7
-  alpha        = { 0.01008, 0.015, 0.0252, 0.033, 0.050406 };        // Card 8
-  beta         = { 0.00000, 0.006375, 0.012750, 0.025500, 0.038250, 0.05100, 0.065750 }; // Card 9
-  temp_vec     = { 296.0 };                                          // Card 10 
-  delta        = 0.00255;     ni     = 67;                           // Card 11
-  rho          = { 0.00000, 0.00050, 0.00100, 0.00200, 0.00350, 0.00500, 
-                   0.00750, 0.01000, 0.01300, 0.01650, 0.02000, 0.02450, 
-                   0.02900, 0.03400, 0.03950, 0.04500, 0.05060, 0.05620, 
-                   0.06220, 0.06860, 0.07500, 0.08300, 0.09100, 0.09900, 
-                   0.10700, 0.11500, 0.11970, 0.12140, 0.12180, 0.11950, 
-                   0.11250, 0.10650, 0.10050, 0.09542, 0.09126, 0.08710, 
-                   0.08390, 0.08070, 0.07798, 0.07574, 0.07350, 0.07162, 
-                   0.06974, 0.06804, 0.06652, 0.06500, 0.06340, 0.06180, 
-                   0.06022, 0.05866, 0.05710, 0.05586, 0.05462, 0.05350, 
-                   0.05250, 0.05150, 0.05042, 0.04934, 0.04822, 0.04706, 
-                   0.04590, 0.04478, 0.04366, 0.04288, 0.04244, 0.04200, 0. };
+    nalpha = 5;       nbeta  = 7;      lat   = 1;                // Card 7
+    alpha  = { 0.01008, 0.015, 0.0252, 0.033, 0.050406 };        // Card 8
+    beta   = { 0.00000, 0.006375, 0.012750, 0.025500, 0.038250, 0.05100, 0.065750 }; // Card 9
+    temp   = { 296.0 };                                          // Card 10 
+    delta  = 0.00255;     ni     = 67;                           // Card 11
+    rho    = { 0.00000, 0.00050, 0.00100, 0.00200, 0.00350, 0.00500, 
+      0.00750, 0.01000, 0.01300, 0.01650, 0.02000, 0.02450, 0.02900, 
+      0.03400, 0.03950, 0.04500, 0.05060, 0.05620, 0.06220, 0.06860, 
+      0.07500, 0.08300, 0.09100, 0.09900, 0.10700, 0.11500, 0.11970, 
+      0.12140, 0.12180, 0.11950, 0.11250, 0.10650, 0.10050, 0.09542, 
+      0.09126, 0.08710, 0.08390, 0.08070, 0.07798, 0.07574, 0.07350, 
+      0.07162, 0.06974, 0.06804, 0.06652, 0.06500, 0.06340, 0.06180, 
+      0.06022, 0.05866, 0.05710, 0.05586, 0.05462, 0.05350, 0.05250, 
+      0.05150, 0.05042, 0.04934, 0.04822, 0.04706, 0.04590, 0.04478, 
+      0.04366, 0.04288, 0.04244, 0.04200, 0. };
                                                                      // Card 12
-  trans_weight = 0.055556;     c      = 0.0;    tbeta = 0.444444;    // Card 13
-  nd           = 2;                                                  // Card 14
-  //oscEnergies  = { 205.0,    0.48};                                  // Card 15
-  oscEnergies  = { 35.8,    0.48};                                  // Card 15
-  oscWeights   = { 0.166667, 0.333333 };                             // Card 16
-  nka          = 4;       dka    = 0.01;                             // Card 17
-  kappaVals    = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18
+    twt    = 0.055556;     c      = 0.0;    tbeta = 0.444444;    // Card 13
+    nd     = 2;                                                  // Card 14
+    //oscE  = { 205.0,    0.48};                                  // Card 15
+    oscE   = { 35.8,    0.48};                                  // Card 15
+    oscW   = { 0.166667, 0.333333 };                             // Card 16
+    nka    = 4;       dka    = 0.01;                             // Card 17
+    kappa  = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18
 
  
-  auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
-      spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
-      temp_vec, delta, ni, rho, trans_weight, c, tbeta, nd, oscEnergies, 
-      oscWeights, nka, dka, kappaVals );
-  std::vector<double> ssmCorrect { 11.9380466,  11.7358569,  11.1552444,  
-    9.04435365,  6.36253466,  3.86288069,  1.81640727,  9.77386851,  
-    9.67827226,  9.35649187,  8.13748192,  6.42985286,  4.61578595,  
-    2.78373847,  7.52086114,  7.48096532,  7.33830900,  6.77191769,  
-    5.91039840,  4.85809341,  3.60668537,  6.55904026,  6.53116851,  
-    6.44104253,  6.08124304,  5.47109680,  4.72905752,  3.76787280,
-    5.28338485,  5.26835188,  5.23245837,  5.03910024,  4.71891225,  
-    4.29716228,  3.7169103340 };
+    auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+        spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
+        temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+        oscW, nka, dka, kappa );
+    std::vector<double> ssmCorrect { 11.9380466,  11.7358569,  11.1552444,  
+      9.04435365,  6.36253466,  3.86288069,  1.81640727,  9.77386851,  
+      9.67827226,  9.35649187,  8.13748192,  6.42985286,  4.61578595,  
+      2.78373847,  7.52086114,  7.48096532,  7.33830900,  6.77191769,  
+      5.91039840,  4.85809341,  3.60668537,  6.55904026,  6.53116851,  
+      6.44104253,  6.08124304,  5.47109680,  4.72905752,  3.76787280,
+      5.28338485,  5.26835188,  5.23245837,  5.03910024,  4.71891225,  
+      4.29716228,  3.7169103340 };
 
 
 
-  checkSab( ssmCorrect, ssm );
+    checkSab( ssmCorrect, ssm );
 
-
-
-    THEN( "results" ){
-      REQUIRE( true );
-    } // THEN
   } // GIVEN 
-*/
-  GIVEN( "H in H2O input" ) {
-  int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
-      lat, ni, nd, nka, mss;
-  double za, awr, spr, aws, sps, delta, trans_weight, c, tbeta, dka, b7;
-  std::vector<double> alpha, beta, temp_vec, rho, oscEnergies, oscWeights, 
-    kappaVals;
-  std::string title;
 
-  nout         = 20;                                                 // Card 1
-  title        = "H IN H2O, ENDF MODEL";                             // Card 2
-  ntempr       = 1;       iprint = 1;     nphon = 100;                 // Card 3
-  mat          = 1;       za     = 1001.0;                            // Card 4
-  awr          = 0.99917; spr    = 20.478;  npr   = 2;  iel = 0;   ncold = 0;
-  nss          = 1;       b7    = 1.0;   aws = 15.85316;   sps = 3.8883; // Card 6
-  nalpha       = 97;      nbeta  = 95;    lat   = 1;                 // Card 7
-  alpha        = { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 
+
+
+
+  GIVEN( "H in H2O input" ) {
+
+  nout   = 20;                                                 // Card 1
+  title  = "H IN H2O, ENDF MODEL";                             // Card 2
+  ntempr = 1;       iprint = 1;     nphon = 100;                 // Card 3
+  mat    = 1;       za     = 1001.0;                            // Card 4
+  awr    = 0.99917; spr    = 20.478;  npr   = 2;  iel = 0;   ncold = 0;
+  nss    = 1;       b7    = 1.0;   aws = 15.85316;   sps = 3.8883; // Card 6
+  nalpha = 97;      nbeta  = 95;    lat   = 1;                 // Card 7
+  alpha  = { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 
                    0.100812, 0.151218, 0.201624, 0.252030, 0.302436, 
                    0.352842, 0.403248, 0.453654, 0.504060, 0.554466, 
                    0.609711, 0.670259, 0.736623, 0.809349, 0.889061, 
@@ -145,7 +118,7 @@ TEST_CASE( "leapr" ){
                    140.7840, 147.4, 154.3030, 161.7, 169.1220, 177.2, 
                    185.3530, 203.1560, 222.6530, 244.0360, 267.4640, 
                    293.1410, 321.2880 };                   // Card 8
-  beta         = { 0.000000, 0.006375, 0.012750, 0.025500, 0.038250, 
+  beta  = { 0.000000, 0.006375, 0.012750, 0.025500, 0.038250, 
                    0.051000, 0.065750, 0.0806495, 0.120974, 0.161299, 
                    0.241949, 0.322598, 0.403248, 0.483897, 0.564547, 
                    0.645197, 0.725846, 0.806496, 0.887145, 0.967795, 
@@ -164,7 +137,7 @@ TEST_CASE( "leapr" ){
                    45.85830, 50.27490, 55.13310, 60.47710, 66.35540, 
                    72.82150, 79.93380, 90.00000, 100.0000, 110.0000, 
                    120.0000, 130.0000, 140.0000, 150.0000, 160.0000 }; // Card 9
-  temp_vec     = { 296.0 };                                          // Card 10 
+  temp     = { 296.0 };                                          // Card 10 
   delta        = 0.00255;     ni     = 67;                            // Card 11
   rho          = { 0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 
                    0.013, 0.0165, 0.02, 0.0245, 0.029, 0.034, 0.0395, 0.045, 
@@ -176,17 +149,17 @@ TEST_CASE( "leapr" ){
                    0.0571, 0.05586, 0.05462, 0.0535, 0.0525, 0.0515, 0.05042, 
                    0.04934, 0.04822, 0.04706, 0.0459, 0.04478, 0.04366, 
                    0.04288, 0.04244, 0.042, 0.0 };             // Card 12
-  trans_weight = 0.055556;     c      = 0.0;   tbeta = 0.444444;     // Card 13
+  twt = 0.055556;     c      = 0.0;   tbeta = 0.444444;     // Card 13
   nd           = 2;                                                  // Card 14
-  oscEnergies  = { 0.205, 0.48 };                                    // Card 15
-  oscWeights   = { 0.166667, 0.333333 };                             // Card 16
+  oscE  = { 0.205, 0.48 };                                    // Card 15
+  oscW   = { 0.166667, 0.333333 };                             // Card 16
   nka          = 0;       dka    = 0.0;                             // Card 17
-  kappaVals    = { };                             // Card 18
+  kappa    = { };                             // Card 18
 
   auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
       spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
-      temp_vec, delta, ni, rho, trans_weight, c, tbeta, nd, oscEnergies, 
-      oscWeights, nka, dka, kappaVals );
+      temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+      oscW, nka, dka, kappa );
 
   std::vector<double> ssmCorrect { 0.119356142e2, 0.117334667e2, 
     0.111529773e2,  0.904255723e1,   0.636134291e1, 0.386225471e1, 
@@ -222,18 +195,9 @@ TEST_CASE( "leapr" ){
   } // GIVEN 
 
 
-/*
 
   GIVEN( "graphite input" ){
     WHEN( "1 temperature is requested" ){
-    int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
-        lat, ni, nd, nka, mss;
-    double za, awr, spr, aws, sps, delta, trans_weight, c, tbeta, dka, b7;
-    std::vector<double> alpha, beta, temp_vec, rho, oscEnergies, oscWeights, 
-      kappaVals;
-    std::string title;
-
-
 
 
     nout         = 20;                                               // Card 1
@@ -273,7 +237,7 @@ TEST_CASE( "leapr" ){
           16.6571, 17.9697, 19.4093, 20.9860, 22.7139, 24.6082, 26.6849, 
           28.9602, 31.4533, 34.1873, 37.1825, 40.4659, 45, 50, 55, 60, 65, 70, 
           75, 80  }; // Card 9
-    temp_vec     = { 296.0 }; // Card 10 
+    temp     = { 296.0 }; // Card 10 
     delta        = 0.005485;     ni     = 40;                         // Card 11
     rho          = { 0, 0.346613, 1.4135, 3.03321, 3.25901, 3.38468, 3.48269,
                      3.76397, 4.05025, 4.84696, 7.35744, 5.88224, 4.63255,
@@ -283,13 +247,13 @@ TEST_CASE( "leapr" ){
                      4.65109, 13.1324, 7.25016, 6.5662, 5.47181, 5.06137,
                      5.19813, 0.457086, 0 };
                                                                      // Card 12
-    trans_weight = 0.0;     c      = 0.0;    tbeta = 1.0;  // Card 13
+    twt = 0.0;     c      = 0.0;    tbeta = 1.0;  // Card 13
     nd           = 2;                                                // Card 14
-    //oscEnergies  = { 205.0,    0.48};                              // Card 15
-    oscEnergies  = { };                                 // Card 15
-    oscWeights   = {  };                           // Card 16
+    //oscE  = { 205.0,    0.48};                              // Card 15
+    oscE  = { };                                 // Card 15
+    oscW   = {  };                           // Card 16
     nka          = 0;       dka    = 0.01;                           // Card 17
-    kappaVals    = { 0 };                           // Card 18
+    kappa    = { 0 };                           // Card 18
 
 
     std::vector<double> ssmCorrect { 0.189753E-2, 0.199576E-2, 0.209399E-2, 
@@ -316,21 +280,13 @@ TEST_CASE( "leapr" ){
  
   auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
       spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
-      temp_vec, delta, ni, rho, trans_weight, c, tbeta, nd, oscEnergies, 
-      oscWeights, nka, dka, kappaVals );
+      temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+      oscW, nka, dka, kappa );
   checkSab( ssmCorrect, ssm );
 
     } // WHEN
 
     WHEN( "multiple temperatures are requested" ){
-    int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
-        lat, ni, nd, nka, mss;
-    double za, awr, spr, aws, sps, delta, trans_weight, c, tbeta, dka, b7;
-    std::vector<double> alpha, beta, temp_vec, rho, oscEnergies, oscWeights, 
-      kappaVals;
-    std::string title;
-
-
 
 
     nout         = 20;                                               // Card 1
@@ -370,7 +326,7 @@ TEST_CASE( "leapr" ){
           16.6571, 17.9697, 19.4093, 20.9860, 22.7139, 24.6082, 26.6849, 
           28.9602, 31.4533, 34.1873, 37.1825, 40.4659, 45, 50, 55, 60, 65, 70, 
           75, 80  }; // Card 9
-    temp_vec     = { 296.0, 400, 500, 600, 700, 800, 1200, 1600, 2000 }; // Card 10 
+    temp     = { 296.0, 400, 500, 600, 700, 800, 1200, 1600, 2000 }; // Card 10 
     delta        = 0.005485;     ni     = 40;                         // Card 11
     rho          = { 0, 0.346613, 1.4135, 3.03321, 3.25901, 3.38468, 3.48269,
                      3.76397, 4.05025, 4.84696, 7.35744, 5.88224, 4.63255,
@@ -380,13 +336,13 @@ TEST_CASE( "leapr" ){
                      4.65109, 13.1324, 7.25016, 6.5662, 5.47181, 5.06137,
                      5.19813, 0.457086, 0 };
                                                                      // Card 12
-    trans_weight = 0.0;     c      = 0.0;    tbeta = 1.0;  // Card 13
+    twt = 0.0;     c      = 0.0;    tbeta = 1.0;  // Card 13
     nd           = 2;                                                // Card 14
-    //oscEnergies  = { 205.0,    0.48};                              // Card 15
-    oscEnergies  = { };                                 // Card 15
-    oscWeights   = {  };                           // Card 16
+    //oscE  = { 205.0,    0.48};                              // Card 15
+    oscE  = { };                                 // Card 15
+    oscW   = {  };                           // Card 16
     nka          = 0;       dka    = 0.01;                           // Card 17
-    kappaVals    = { 0 };                           // Card 18
+    kappa    = { 0 };                           // Card 18
 
 
 
@@ -415,14 +371,105 @@ TEST_CASE( "leapr" ){
  
 //  auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
 //      spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
-//      temp_vec, delta, ni, rho, trans_weight, c, tbeta, nd, oscEnergies, 
-//      oscWeights, nka, dka, kappaVals );
+//      temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+//      oscW, nka, dka, kappa );
 //  std::cout << ssm[0][0][0] << std::endl;
 //  checkSab( ssmCorrect, ssm );
 
     } // WHEN
   } // GIVEN
+
   */
+
+  GIVEN( "H in ZrH" ) {
+
+
+    nout   = 20;                                                 // Card 1
+    title  = "H IN ZRH";                   // Card 2
+    ntempr = 1;     iprint = 1;      nphon = 100;              // Card 3
+    mat    = 7;     za     = 1007.0;                           // Card 4
+    awr    = 0.99917; spr    = 20.478; npr   = 1;   iel = -1;   ncold = 0; // Card 5
+    nss    = 0;       b7     = 0;     aws   = 0; sps = 0; mss = 0; 
+                                                                     // Card 6
+    nalpha = 48;       nbeta  = 200;      lat   = 1;                // Card 7
+    alpha  = { 5.04060e-1, 1.00812e+0, 1.51218e+0, 2.01624e+0, 2.52030e+0, 
+      3.02436e+0, 3.52842e+0, 4.03248e+0, 4.53654e+0, 5.04060e+0, 
+      5.60867e+0, 6.24893e+0, 6.97044e+0, 7.78359e+0, 8.69997e+0, 
+      9.73279e+0, 1.08968e+1, 1.22083e+1, 1.36872e+1, 1.53526e+1, 
+      1.72308e+1, 1.93468e+1, 2.17320e+1, 2.44197e+1, 2.74491e+1, 
+      3.08636e+1, 3.47106e+1, 3.90465e+1, 4.39338e+1, 4.94412e+1,
+      5.56482e+1, 6.26425e+1, 7.05260e+1, 7.94105e+1, 8.94242e+1, 
+      1.00708e+2, 1.13423e+2, 1.27759e+2, 1.43909e+2, 1.62116e+2, 
+      170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0, 240.0 };     // Card 8
+    beta   = { 0.00000e+0, 7.90678e-2, 1.58134e-1, 2.37200e-1, 3.16277e-1, 
+      3.95344e-1, 4.74411e-1, 5.13939e-1, 5.53478e-1, 5.93016e-1, 6.32545e-1, 
+      6.72083e-1, 7.11611e-1, 7.51150e-1, 7.90678e-1, 8.30217e-1, 8.69755e-1, 
+      9.48822e-1, 1.02788e+0, 1.10691e+0, 1.18605e+0, 1.26509e+0, 1.34412e+0, 
+      1.46278e+0, 1.58134e+0, 1.69999e+0, 1.81855e+0, 1.93720e+0, 2.05576e+0, 
+      2.17441e+0, 2.29297e+0, 2.41162e+0, 2.53018e+0, 2.88594e+0, 3.20229e+0, 
+      3.51854e+0, 3.87430e+0, 4.15103e+0, 4.46738e+0, 4.58594e+0, 4.66507e+0, 
+      4.74411e+0, 4.82314e+0, 4.90218e+0, 4.98132e+0, 5.06035e+0, 5.13939e+0, 
+      5.21853e+0, 5.29757e+0, 5.33708e+0, 5.37660e+0, 5.41612e+0, 5.45574e+0, 
+      5.53478e+0, 5.61381e+0, 5.69295e+0, 5.77199e+0, 5.81150e+0, 5.85102e+0, 
+      5.89054e+0, 5.93016e+0, 5.96968e+0, 6.00920e+0, 6.08823e+0, 6.16727e+0, 
+      6.24641e+0, 6.32545e+0, 6.91842e+0, 7.51150e+0, 8.10447e+0, 9.09283e+0, 
+      9.40908e+0, 9.72543e+0, 1.00417e+1, 1.03584e+1, 1.06740e+1, 1.07536e+1, 
+      1.08322e+1, 1.09119e+1, 1.10691e+1, 1.12274e+1, 1.13857e+1, 1.15440e+1, 
+      1.16226e+1, 1.17023e+1, 1.17809e+1, 1.18605e+1, 1.19392e+1, 1.20188e+1, 
+      1.23343e+1, 1.26509e+1, 1.30461e+1, 1.36388e+1, 1.42326e+1, 1.48254e+1, 
+      1.54182e+1, 1.57740e+1, 1.60110e+1, 1.62489e+1, 1.64858e+1, 1.67227e+1, 
+      1.69606e+1, 1.71975e+1, 1.74344e+1, 1.76713e+1, 1.79092e+1, 1.81855e+1, 
+      1.85020e+1, 1.89768e+1, 1.97672e+1, 2.05576e+1, 2.09527e+1, 2.13479e+1, 
+      2.17441e+1, 2.21393e+1, 2.25345e+1, 2.29297e+1, 2.33248e+1, 2.37200e+1, 
+      2.45114e+1, 2.53018e+1, 2.56970e+1, 2.60921e+1, 2.64883e+1, 2.68835e+1, 
+      2.72787e+1, 2.76739e+1, 2.80691e+1, 2.84642e+1, 2.88594e+1, 2.92556e+1, 
+      2.96508e+1, 3.02436e+1, 3.08363e+1, 3.12315e+1, 3.16277e+1, 3.20229e+1, 
+      3.24181e+1, 3.28133e+1, 3.32085e+1, 3.36036e+1, 3.39988e+1, 3.43950e+1, 
+      3.47902e+1, 3.55806e+1, 3.63709e+1, 3.71623e+1, 3.79527e+1, 3.87430e+1, 
+      3.95344e+1, 40.25, 41.0, 41.75, 42.5, 43.25,  44.0, 44.75, 45.5, 46.25, 
+      47.0, 47.75, 48.5, 49.25, 50.0, 51.75, 52.5, 53.25, 54.0, 54.75, 55.5, 
+      56.25, 57.0, 57.75, 58.5, 59.25, 60.0, 60.75, 61.5, 62.25, 63.0, 63.75, 
+      64.5, 65.25, 66.0, 66.75, 67.5, 68.25, 69.0, 69.75, 70.5, 71.25, 72.0, 
+      72.75, 73.5, 74.25, 75.0, 75.75, 76.5, 77.25, 78.0 }; // Card 9
+    temp   = { 296.0 };                                          // Card 10 
+    delta  = 0.001;     ni     = 161;                           // Card 11
+    rho    = { 0, 0.000875, 0.0035, 0.008, 0.015, 0.0235, 0.0340,
+               0.046, 0.061, 0.078, 0.094, 0.116, 0.144, 0.1606, 0.1969, 
+               0.2606, 0.3479, 0.3559, 0.3500, 0.3322, 0.3328, 0.2911, 
+               0.1617, 0.1431, 0.1248, 0.09738, 0.06067, 0.1221, 0.1495, 
+               0.07219, 0.01443, 0.0001, 0.82, 0.0499, 2.010, 3.560, 4.790, 
+               5.995, 7.250, 8.550, 9.640, 11.91, 13.52, 16.04, 19.79, 26.10, 
+               29.39, 30.82, 32.21, 31.75, 33.14, 35.65, 33.34, 36.27, 38.18, 
+               38.75, 39.48, 28.99, 23.29, 25.18, 26.59, 27.86, 27.89, 29.44, 
+               25.86, 23.33, 24.66, 27.51, 37.94, 60.77, 26.66, 18.54, 14.51, 
+               11.48, 9.53, 7.53, 5.449, 3.838, 8.497, 0 }; // Card 12
+    twt    = 0.0;     c      = 0.0;    tbeta = 1.0;    // Card 13
+    nd     = 0;                                                  // Card 14
+    //oscE  = { 205.0,    0.48};                                  // Card 15
+    oscE   = { };                                  // Card 15
+    oscW   = { };                             // Card 16
+    nka    = 0;       dka    = 0.0;                             // Card 17
+    kappa  = { };                             // Card 18
+
+ 
+    auto ssm = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+        spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
+        temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+        oscW, nka, dka, kappa );
+    std::vector<double> ssmCorrect { };
+
+
+    /*
+    std::cout << ssm[0][0][0] << std::endl;
+    std::cout << ssm[1][1][0] << std::endl;
+    std::cout << ssm[2][2][0] << std::endl;
+    std::cout << ssm[3][3][0] << std::endl;
+    */
+
+//    checkSab( ssmCorrect, ssm );
+
+  } // GIVEN 
+
 
 } // TEST CASE
 

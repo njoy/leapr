@@ -82,7 +82,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       double lambda_s = std::get<0>(lambda_s_t_eff);
 
 
-      double t_contin = clock();
+      //double t_contin = clock();
 
      // update the effective temperature list
       t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
@@ -94,16 +94,17 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
       }
-      double t_trans = clock();
+      //double t_trans = clock();
 
       if ( oscEnergies.size() > 0 ){
       //std::cout << "\n-------- discre" << std::endl;
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
       }
-      double t_discre = clock();
+      //double t_discre = clock();
 
 
+      /*
       std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
       std::cout << "trans:  " << ((float)(t_trans-t_contin))/CLOCKS_PER_SEC 
@@ -112,6 +113,8 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         << " seconds" << std::endl;
       std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
         << " seconds\n\n" << std::endl;
+        */
+      std::cout << "\n" << std::endl;
       return sym_sab;
 
       if ( ncold != 0 ){
