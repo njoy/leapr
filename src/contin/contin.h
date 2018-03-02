@@ -1,6 +1,7 @@
 #include "contin_util/start.h"
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
+#include "contin_util/checkMoments.h"
 
 
 auto contin( const int itemp, int nphon, double& delta, 
@@ -50,6 +51,7 @@ auto contin( const int itemp, int nphon, double& delta,
     
   auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
   double lambda_s = std::get<0>(lambda_s_t_eff);
+  double t_eff    = std::get<1>(lambda_s_t_eff);
 
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
@@ -65,6 +67,12 @@ auto contin( const int itemp, int nphon, double& delta,
 
   
   double add, exx;
+
+  // To be used when checking moments of S(a,b)
+  std::vector<int> maxt (1000, 0);
+  for ( size_t b = 0; b < beta.size(); ++b ){
+    maxt[b] = alpha.size() + 1;
+  }
 
   // Do the phonon expansion sum 
   // For this, we treat the first iteration slightly different than the all
@@ -87,6 +95,11 @@ auto contin( const int itemp, int nphon, double& delta,
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab[a][b][itemp] += add < 1e-30 ? 0 : add;
+
+        if ( symSab[a][b][itemp] != 0 and n >= nphon-1 ) {
+          if ( add > symSab[a][b][itemp]/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; } 
+        } 
+
       } // for b in beta
     } // for a in alpha
 
@@ -98,11 +111,11 @@ auto contin( const int itemp, int nphon, double& delta,
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
   } // for n in nphon (maxn in leapr.f90) 
-  std::cout << symSab[0][0][0] << std::endl;
-  std::cout << symSab[1][1][0] << std::endl;
-  std::cout << symSab[2][2][0] << std::endl;
-  std::cout << symSab[3][3][0] << std::endl;
 
+  double arat = sc/scaling;
+  add = arat + t_eff;
+
+  //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   return lambda_s_t_eff;
 
