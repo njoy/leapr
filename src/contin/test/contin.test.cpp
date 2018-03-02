@@ -4,9 +4,9 @@
 
 
 void checkSabLambdaTeff( const std::vector<double>& correctSab, 
-  const std::tuple<double,double>& output, 
-  const std::vector<std::vector<std::vector<double>>>& sab,
-  const double& lambda, const double& teff ){
+    const std::tuple<double,double>& output, 
+    const std::vector<std::vector<std::vector<double>>>& sab,
+    const double& lambda, const double& teff ){
 
   REQUIRE( sab.size()*sab[0].size()*sab[0][0].size() == correctSab.size() );
 
@@ -45,11 +45,11 @@ TEST_CASE( "contin" ){
     WHEN( "3rd order expansion, with alpha & beta vals scaled by 0.0253/tev" ){
 
       std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
-        std::vector<std::vector<double>> ( beta.size(),
-          std::vector<double> ( ntempr, 0.0 ) ) );
+          std::vector<std::vector<double>> ( beta.size(),
+            std::vector<double> ( ntempr, 0.0 ) ) );
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
-        alpha, beta, symSab );
+          alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
         lambda_s = 4.38473153E-2, t_eff = 12.279863466;
@@ -64,7 +64,7 @@ TEST_CASE( "contin" ){
           4.707463949E-5, 5.435449694E-5, 6.891421183E-5, 9.803364162E-5, 
           7.638863877E-5, 9.036457859E-5, 1.043405184E-4, 1.322923980E-4, 
           1.881961573E-4};
-	checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
       } // THEN
     } // WHEN
 
@@ -73,12 +73,12 @@ TEST_CASE( "contin" ){
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
-        std::vector<std::vector<double>> ( beta.size(),
-          std::vector<double> ( ntempr, 0.0 ) ) );
- 
+          std::vector<std::vector<double>> ( beta.size(),
+            std::vector<double> ( ntempr, 0.0 ) ) );
+
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
-        alpha, beta, symSab );
-      
+          alpha, beta, symSab );
+
       THEN( "contin output matches expected value" ){
         lambda_s = 0.11157823, t_eff = 4.91699518;
         expected = {6.82096404E-5, 7.51470660E-5, 8.20844916E-5, 9.59593429E-5,
@@ -91,6 +91,7 @@ TEST_CASE( "contin" ){
 	checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
       } // THEN
     } // WHEN
+
     WHEN( "6th order exp, user-defined normalizationand large grid space" ){
       delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };

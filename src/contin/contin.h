@@ -79,7 +79,6 @@ auto contin( const int itemp, int nphon, double& delta,
   // subsequent iterations, because all subsequent iterations require
   // convolution with the one before it. This is following Eq. 526
   
-  nphon = 2;
   for( int n = 0; n < nphon; ++n ){
 
     // Convolve T_n with T_n-1 (Eq. 526)
@@ -113,9 +112,7 @@ auto contin( const int itemp, int nphon, double& delta,
   } // for n in nphon (maxn in leapr.f90) 
 
   double arat = sc/scaling;
-  add = arat + t_eff;
-
-  //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
+  checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   return lambda_s_t_eff;
 
