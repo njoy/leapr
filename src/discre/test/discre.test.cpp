@@ -3,14 +3,6 @@
 #include "discre/discre.h"
 
 
-void equal( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
 void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a, 
   std::vector<double> b ){
   REQUIRE( a.size()*a[0].size()*a[0][0].size() == b.size() );
@@ -18,7 +10,7 @@ void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a,
   for ( auto a1 : a ){
     for ( auto a2 : a1 ){
       for ( auto a3 : a2 ){
-        equal( a3, b[i] );
+        REQUIRE( a3 == Approx(b[i]).epsilon(1e-5) );
         i += 1;
       }
     }

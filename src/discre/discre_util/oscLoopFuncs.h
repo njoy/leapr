@@ -111,7 +111,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
         n += 1;
       }
     }
-    //n -= 1;    // Uncomment this to pass discre and oscloopFuncs test cases
+    n -= 1;    // Uncomment this to pass discre and oscloopFuncs test cases
 
     // Read the description for posNegTerms to get a better feel for this.
     // Basically we're going to be populating wts with A_i,n terms muliplied
@@ -128,14 +128,14 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       ben[m] = bes[m];
       wtn[m] = wts[m];
     }
-    n = 0;  // Comment this to pass discre and oscloopFuncs test cases
+    //n = 0;  // Comment this to pass discre and oscloopFuncs test cases
 
     wt += weights[i];
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( bk * temp );
 
   }   
-  return nn; // Change nn --> n to pass discre and oscLoopFuncs test cases 
+  return n; // Change nn --> n to pass discre and oscLoopFuncs test cases 
 }
 
 

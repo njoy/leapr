@@ -459,14 +459,14 @@ TEST_CASE( "leapr" ){
     std::vector<double> ssmCorrect { };
 
 
-    /*
     std::cout << ssm[0][0][0] << std::endl;
     std::cout << ssm[1][1][0] << std::endl;
     std::cout << ssm[2][2][0] << std::endl;
     std::cout << ssm[3][3][0] << std::endl;
+    /*
     */
 
-//    checkSab( ssmCorrect, ssm );
+    //checkSab( ssmCorrect, ssm );
 
   } // GIVEN 
 
