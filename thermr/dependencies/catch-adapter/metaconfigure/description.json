@@ -1,0 +1,32 @@
+{
+  "file extension": {
+    "header files": [
+      "h++",
+      "hxx",
+      "hpp",
+      "hh"
+    ],
+    "implementation files": [
+      "c++",
+      "cxx",
+      "cpp",
+      "cc"
+    ]
+  },
+  "header files": [],
+  "ignore pattern": "",
+  "implementation files": [],
+  "initialized": true,
+  "is external project": true,
+  "language": "c++",
+  "name": "catch-adapter",
+  "standards": [
+    "c++98",
+    "c++11",
+    "c++14"
+  ],
+  "strict": true,
+  "test pattern": "test$",
+  "tests": {},
+  "update": false
+}

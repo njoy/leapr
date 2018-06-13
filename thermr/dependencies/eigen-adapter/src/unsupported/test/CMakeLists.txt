@@ -1,0 +1,119 @@
+
+add_executable( unsupported.test
+                special_functions.cpp
+                cxx11_tensor_image_patch.cpp
+                cxx11_tensor_padding_sycl.cpp
+                NonLinearOptimization.cpp
+                FFT.cpp
+                cxx11_tensor_shuffling.cpp
+                cxx11_tensor_volume_patch.cpp
+                NumericalDiff.cpp
+                cxx11_tensor_concatenation.cpp
+                cxx11_tensor_convolution_sycl.cpp
+                cxx11_tensor_chipping.cpp
+                cxx11_tensor_fixed_size.cpp
+                polynomialsolver.cpp
+                cxx11_tensor_comparisons.cpp
+                FFTW.cpp
+                matrix_function.cpp
+                cxx11_non_blocking_thread_pool.cpp
+                cxx11_tensor_lvalue.cpp
+                cxx11_meta.cpp
+                cxx11_tensor_padding.cpp
+                cxx11_tensor_dimension.cpp
+                cxx11_tensor_morphing_sycl.cpp
+                cxx11_tensor_reduction_sycl.cpp
+                dgmres.cpp
+                cxx11_tensor_map.cpp
+                cxx11_tensor_assign.cpp
+                cxx11_tensor_fft.cpp
+                cxx11_tensor_io.cpp
+                levenberg_marquardt.cpp
+                cxx11_tensor_empty.cpp
+                cxx11_tensor_forced_eval.cpp
+                cxx11_tensor_uint128.cpp
+                cxx11_tensor_device_sycl.cpp
+                alignedvector3.cpp
+                cxx11_tensor_ifft.cpp
+                cxx11_tensor_striding_sycl.cpp
+                cxx11_tensor_image_patch_sycl.cpp
+                cxx11_tensor_striding.cpp
+                cxx11_tensor_trace.cpp
+                cxx11_tensor_reverse.cpp
+                gmres.cpp
+                polynomialutils.cpp
+                cxx11_tensor_casts.cpp
+                minres.cpp
+                cxx11_tensor_notification.cpp
+                cxx11_tensor_sugar.cpp
+                matrix_power.cpp
+                EulerAngles.cpp
+                cxx11_tensor_of_const_values.cpp
+                cxx11_tensor_symmetry.cpp
+                cxx11_tensor_contraction.cpp
+                cxx11_tensor_index_list.cpp
+                cxx11_tensor_convolution.cpp
+                cxx11_runqueue.cpp
+                forward_adolc.cpp
+                cxx11_tensor_simple.cpp
+                cxx11_tensor_reverse_sycl.cpp
+                cxx11_tensor_custom_index.cpp
+                matrix_square_root.cpp
+                cxx11_tensor_reduction.cpp
+                matrix_exponential.cpp
+                BVH.cpp
+                kronecker_product.cpp
+                autodiff.cpp
+                cxx11_tensor_concatenation_sycl.cpp
+                cxx11_tensor_thread_pool.cpp
+                cxx11_tensor_of_strings.cpp
+                cxx11_tensor_inflation.cpp
+                cxx11_tensor_scan.cpp
+                cxx11_tensor_const.cpp
+                cxx11_tensor_patch.cpp
+                cxx11_tensor_custom_op_sycl.cpp
+                cxx11_tensor_broadcast_sycl.cpp
+                cxx11_tensor_contract_sycl.cpp
+                cxx11_tensor_volume_patch_sycl.cpp
+                cxx11_tensor_generator_sycl.cpp
+                cxx11_tensor_generator.cpp
+                cxx11_tensor_custom_op.cpp
+                cxx11_tensor_shuffling_sycl.cpp
+                splines.cpp
+                cxx11_tensor_argmax_sycl.cpp
+                cxx11_tensor_builtins_sycl.cpp
+                cxx11_tensor_layout_swap.cpp
+                cxx11_tensor_layout_swap_sycl.cpp
+                cxx11_tensor_intdiv.cpp
+                cxx11_tensor_patch_sycl.cpp
+                cxx11_tensor_random.cpp
+                cxx11_tensor_morphing.cpp
+                cxx11_tensor_of_complex.cpp
+                cxx11_tensor_chipping_sycl.cpp
+                cxx11_tensor_expr.cpp
+                mpreal_support.cpp
+                cxx11_tensor_forced_eval_sycl.cpp
+                cxx11_tensor_broadcasting.cpp
+                cxx11_eventcount.cpp
+                autodiff_scalar.cpp
+                cxx11_tensor_roundings.cpp
+                sparse_extra.cpp
+                cxx11_tensor_ref.cpp
+                openglsupport.cpp
+                cxx11_tensor_math.cpp
+                cxx11_tensor_inflation_sycl.cpp
+                cxx11_tensor_sycl.cpp
+                cxx11_tensor_argmax.cpp
+                cxx11_tensor_mixed_indices.cpp )
+target_compile_options( unsupported.test PRIVATE ${${PREFIX}_common_flags}
+$<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
+${${PREFIX}_DEBUG_flags}
+$<$<BOOL:${coverage}>:${${PREFIX}_coverage_flags}>>
+$<$<CONFIG:RELEASE>:
+${${PREFIX}_RELEASE_flags}
+$<$<BOOL:${link_time_optimization}>:${${PREFIX}_link_time_optimization_flags}>
+$<$<BOOL:${nonportable_optimization}>:${${PREFIX}_nonportable_optimization_flags}>>
+
+${CXX_appended_flags} ${eigen-adapter_appended_flags} )
+target_link_libraries( unsupported.test PUBLIC eigen-adapter ) 
+add_test( NAME unsupported COMMAND unsupported.test )
