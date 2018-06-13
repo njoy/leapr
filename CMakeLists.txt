@@ -81,30 +81,6 @@ set( leapr_AppleClang_Darwin_link_time_optimization_flags "-flto" )
 set( leapr_AppleClang_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_AppleClang_Darwin_nonportable_optimization_flags "-march=native" )
 set( leapr_AppleClang_Darwin_static_flags "-static" )
-set( leapr_GNU_Windows_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_GNU_Windows_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
-set( leapr_GNU_Windows_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_GNU_Windows_strict_flags "-Werror" )
-set( leapr_GNU_Windows_coverage_flags "--coverage" )
-set( leapr_GNU_Windows_subproject_flags  )
-set( leapr_GNU_Windows_base_project_flags  )
-set( leapr_GNU_Windows_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Windows_link_time_optimization_flags "-flto" )
-set( leapr_GNU_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Windows_nonportable_optimization_flags "-march=native" )
-set( leapr_GNU_Windows_static_flags "-static" )
-set( leapr_GNU_Darwin_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_GNU_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
-set( leapr_GNU_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_GNU_Darwin_strict_flags "-Werror" )
-set( leapr_GNU_Darwin_coverage_flags "--coverage" )
-set( leapr_GNU_Darwin_subproject_flags  )
-set( leapr_GNU_Darwin_base_project_flags  )
-set( leapr_GNU_Darwin_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Darwin_link_time_optimization_flags "-flto" )
-set( leapr_GNU_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Darwin_nonportable_optimization_flags "-march=native" )
-set( leapr_GNU_Darwin_static_flags "-static" )
 set( leapr_GNU_Linux_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
 set( leapr_GNU_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
 set( leapr_GNU_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
@@ -117,30 +93,30 @@ set( leapr_GNU_Linux_link_time_optimization_flags "-flto" )
 set( leapr_GNU_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_GNU_Linux_nonportable_optimization_flags "-march=native" )
 set( leapr_GNU_Linux_static_flags "-static" )
-set( leapr_Clang_Windows_common_flags "-stdlib=libc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_Clang_Windows_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
-set( leapr_Clang_Windows_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_Clang_Windows_strict_flags "-Werror" )
-set( leapr_Clang_Windows_coverage_flags "--coverage" )
-set( leapr_Clang_Windows_subproject_flags  )
-set( leapr_Clang_Windows_base_project_flags  )
-set( leapr_Clang_Windows_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Windows_link_time_optimization_flags "-flto" )
-set( leapr_Clang_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Windows_nonportable_optimization_flags "-march=native" )
-set( leapr_Clang_Windows_static_flags "-static" )
-set( leapr_Clang_Darwin_common_flags "-stdlib=libc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_Clang_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
-set( leapr_Clang_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_Clang_Darwin_strict_flags "-Werror" )
-set( leapr_Clang_Darwin_coverage_flags "--coverage" )
-set( leapr_Clang_Darwin_subproject_flags  )
-set( leapr_Clang_Darwin_base_project_flags  )
-set( leapr_Clang_Darwin_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Darwin_link_time_optimization_flags "-flto" )
-set( leapr_Clang_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Darwin_nonportable_optimization_flags "-march=native" )
-set( leapr_Clang_Darwin_static_flags "-static" )
+set( leapr_GNU_Darwin_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_GNU_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
+set( leapr_GNU_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_GNU_Darwin_strict_flags "-Werror" )
+set( leapr_GNU_Darwin_coverage_flags "--coverage" )
+set( leapr_GNU_Darwin_subproject_flags  )
+set( leapr_GNU_Darwin_base_project_flags  )
+set( leapr_GNU_Darwin_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Darwin_link_time_optimization_flags "-flto" )
+set( leapr_GNU_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Darwin_nonportable_optimization_flags "-march=native" )
+set( leapr_GNU_Darwin_static_flags "-static" )
+set( leapr_GNU_Windows_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_GNU_Windows_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
+set( leapr_GNU_Windows_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_GNU_Windows_strict_flags "-Werror" )
+set( leapr_GNU_Windows_coverage_flags "--coverage" )
+set( leapr_GNU_Windows_subproject_flags  )
+set( leapr_GNU_Windows_base_project_flags  )
+set( leapr_GNU_Windows_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Windows_link_time_optimization_flags "-flto" )
+set( leapr_GNU_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Windows_nonportable_optimization_flags "-march=native" )
+set( leapr_GNU_Windows_static_flags "-static" )
 set( leapr_Clang_Linux_common_flags "-stdlib=libstdc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
 set( leapr_Clang_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
 set( leapr_Clang_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
@@ -153,6 +129,30 @@ set( leapr_Clang_Linux_link_time_optimization_flags "-flto" )
 set( leapr_Clang_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_Clang_Linux_nonportable_optimization_flags "-march=native" )
 set( leapr_Clang_Linux_static_flags "-static" )
+set( leapr_Clang_Darwin_common_flags "-stdlib=libc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_Clang_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
+set( leapr_Clang_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_Clang_Darwin_strict_flags "-Werror" )
+set( leapr_Clang_Darwin_coverage_flags "--coverage" )
+set( leapr_Clang_Darwin_subproject_flags  )
+set( leapr_Clang_Darwin_base_project_flags  )
+set( leapr_Clang_Darwin_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Darwin_link_time_optimization_flags "-flto" )
+set( leapr_Clang_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Darwin_nonportable_optimization_flags "-march=native" )
+set( leapr_Clang_Darwin_static_flags "-static" )
+set( leapr_Clang_Windows_common_flags "-stdlib=libc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_Clang_Windows_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
+set( leapr_Clang_Windows_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_Clang_Windows_strict_flags "-Werror" )
+set( leapr_Clang_Windows_coverage_flags "--coverage" )
+set( leapr_Clang_Windows_subproject_flags  )
+set( leapr_Clang_Windows_base_project_flags  )
+set( leapr_Clang_Windows_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Windows_link_time_optimization_flags "-flto" )
+set( leapr_Clang_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Windows_nonportable_optimization_flags "-march=native" )
+set( leapr_Clang_Windows_static_flags "-static" )
 
 if ( static_leapr )
     set( leapr_library_linkage STATIC )
@@ -210,48 +210,16 @@ message( STATUS "" )
 message( STATUS "-----------------------------------------------------------" )
 
 add_library( leapr ${leapr_library_linkage} 
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/copys.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/convol.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/checkMoments.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start_util/start_util.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/tpidio.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/contio.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/repoz.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/prepareParams.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/addDeltaFuncs.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/exts.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/bfill.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/sint.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/oscLoopFuncs.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/discre/discre_util/oscLoopFuncs_util/bfact.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/fccLatticeFactors.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/end.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/bccLatticeFactors.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/hexLatticeFactors.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/formf.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/skold/skold.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/skold/skold_util/terp1.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/terpk.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/bt.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/sjbes.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/terps.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/sbfill.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/s_table_generation.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/bessel_K1.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/leapr.cpp" )
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/temp_eff/temp_eff.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/temp_eff/temp_eff_util/gatef2.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/temp_eff/temp_eff_util/gateff.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/thermr.cpp" )
 
 target_include_directories( leapr PUBLIC src )
 
@@ -281,27 +249,11 @@ target_link_libraries( leapr PUBLIC catch-adapter PUBLIC eigen-adapter )
 if( NOT is_subproject )
     enable_testing() 
     if ( unit_tests )
-        add_subdirectory( src/coher/test )
-        add_subdirectory( src/coher/coher_util/test )
-        add_subdirectory( src/coher/coher_util/hexLatticeFactors_util/test )
-        add_subdirectory( src/coldh/test )
-        add_subdirectory( src/coldh/coldh_util/test )
-        add_subdirectory( src/coldh/coldh_util/betaLoop_util/test )
-        add_subdirectory( src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/test )
-        add_subdirectory( src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test )
         add_subdirectory( src/contin/test )
         add_subdirectory( src/contin/contin_util/test )
         add_subdirectory( src/contin/contin_util/start_util/test )
-        add_subdirectory( src/discre/test )
-        add_subdirectory( src/discre/discre_util/test )
-        add_subdirectory( src/discre/discre_util/oscLoopFuncs_util/test )
-        add_subdirectory( src/endout/test )
-        add_subdirectory( src/endout/endout_util/test )
-        add_subdirectory( src/test )
-        add_subdirectory( src/skold/test )
-        add_subdirectory( src/skold/skold_util/test )
-        add_subdirectory( src/trans/test )
-        add_subdirectory( src/trans/trans_util/test )
+        add_subdirectory( src/temp_eff/test )
+        add_subdirectory( src/temp_eff/temp_eff_util/test )
     endif() 
 endif()
 
