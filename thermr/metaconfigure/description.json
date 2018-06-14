@@ -373,6 +373,15 @@
     "src/contin/contin_util/start.h",
     "src/contin/contin_util/interpolate.h",
     "src/contin/contin_util/start_util/start_util.h",
+    "src/coh/coh.h",
+    "src/coh/coh_util/upstk.h",
+    "src/coh/coh_util/sigcoh.h",
+    "src/coh/coh_util/sigcoh_util/form.h",
+    "src/coh/coh_util/sigcoh_util/terp.h",
+    "src/coh/coh_util/sigcoh_util/legndr.h",
+    "src/coh/coh_util/readWrite_util/repoz.h",
+    "src/coh/coh_util/readWrite_util/loada.h",
+    "src/coh/coh_util/readWrite_util/finda.h",
     "src/temp_eff/temp_eff.h",
     "src/temp_eff/temp_eff_util/gatef2.h",
     "src/temp_eff/temp_eff_util/gateff.h"
@@ -395,6 +404,23 @@
   "strict": true,
   "test pattern": "test$",
   "tests": {
+    "coh": [
+      "src/coh/test/coh.test.cpp"
+    ],
+    "coh.coh_util": [
+      "src/coh/coh_util/test/upstk.test.cpp",
+      "src/coh/coh_util/test/sigcoh.test.cpp"
+    ],
+    "coh.coh_util.readWrite_util": [
+      "src/coh/coh_util/readWrite_util/test/loada.test.cpp",
+      "src/coh/coh_util/readWrite_util/test/finda.test.cpp",
+      "src/coh/coh_util/readWrite_util/test/repoz.test.cpp"
+    ],
+    "coh.coh_util.sigcoh_util": [
+      "src/coh/coh_util/sigcoh_util/test/legndr.test.cpp",
+      "src/coh/coh_util/sigcoh_util/test/terp.test.cpp",
+      "src/coh/coh_util/sigcoh_util/test/form.test.cpp"
+    ],
     "contin": [
       "src/contin/test/contin.test.cpp"
     ],
