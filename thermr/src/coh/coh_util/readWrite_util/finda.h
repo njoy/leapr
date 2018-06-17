@@ -1,5 +1,9 @@
 
+
 #include "repoz.h"
+
+#ifndef THERMR_FINDA_HH
+#define THERMR_FINDA_HH
 
 void finda( int i, int na, std::fstream& ntape, std::vector<double>& a, 
     std::vector<double>& buf, int nbuf ){
@@ -30,10 +34,10 @@ void finda( int i, int na, std::fstream& ntape, std::vector<double>& a,
    }
 
    k=na*(inow-1);
-   for ( size_t j = 0; j < na; ++j ){
+   for ( int j = 0; j < na; ++j ){
       k=k+1;
       a[j]=buf[k-1];
     }
 }
 
-
+#endif

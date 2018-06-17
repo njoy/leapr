@@ -1,4 +1,6 @@
 
+#ifndef THERMR_LEGNDR_HH
+#define THERMR_LEGNDR_HH
 auto legndr( double x, std::vector<double>& p, int np ){
  /*--------------------------------------------------------------------
   * Generate Legendre polynomials at x by recursion.
@@ -11,10 +13,10 @@ auto legndr( double x, std::vector<double>& p, int np ){
 
   if (np > 1){
     // If you need the 2nd or higher order, must actually calculate things
-    for ( int i = 0; i < np - 1 and i < p.size()-2; ++i ){
+    for ( size_t i = 0; int(i) < np - 1 and i < p.size()-2; ++i ){
       p[i+2] = 2*x*p[i+1] - p[i] - (x*p[i+1]-p[i]) / (i+2);
     }
   }
 }
 
-
+#endif

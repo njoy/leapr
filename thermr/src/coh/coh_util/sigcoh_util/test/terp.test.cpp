@@ -1,4 +1,4 @@
-#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 #include "coh/coh_util/sigcoh_util/terp.h"
 
 

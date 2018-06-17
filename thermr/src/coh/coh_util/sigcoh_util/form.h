@@ -1,5 +1,7 @@
 #ifndef COH_SIGCOH_FORM
 #define COH_SIGCOH_FORM
+#include <cmath>
+#include <vector>
 
 double form( int lat, int l1, int l2, int l3 ){
   /*-------------------------------------------------------------------

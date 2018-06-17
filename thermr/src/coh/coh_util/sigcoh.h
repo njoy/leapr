@@ -1,6 +1,7 @@
 #include "coh/coh_util/sigcoh_util/form.h"
 #include "coh/coh_util/sigcoh_util/terp.h"
 #include "coh/coh_util/sigcoh_util/legndr.h"
+#include <iostream>
 
 bool finish( int& k, std::vector<double>& wrk, const double& f, int nw,
   const double& tau_sq ){
@@ -86,11 +87,9 @@ auto sigcoh( double e, double& enext, std::vector<double> s, int nl, int lat,
   * nl returns no. of Bragg edges on initialization call.
   *-------------------------------------------------------------------
   */
-  int nw, i1m, i1, l1, i2m, i2, l2, i3m, i3, l3, l, i, j,
-    il, lmax, last;
+  int nw, i1m, l1, i2m, i3m;
   double amne, econ, tsqx, a, c, amsc, scoh, wal2, wint, w1, w2, w3, tau_sq, 
-    tau, w, f, st, sf, blast, re, t2, ulim, phi, elim, u, c1, c2;
-  int nd = 10;
+    tau, w, f, t2, ulim, phi, c1, c2;
   
   // These are lattice factors. Apparently they were borrowed directly from
   // HEXSCAT code. 
@@ -123,6 +122,18 @@ auto sigcoh( double e, double& enext, std::vector<double> s, int nl, int lat,
 
   // save k,recon,scon
 
+
+ /* If this is the first entry (E=0) for an ENDF-III type material, the 
+  * appropriate lattice constants are selected and the Debye-Waller coefficient 
+  * is obtained for the desired temperature by interpolation. Then the 
+  * reciprocal lattice wave vectors and structure factors are computed, 
+  * sorted into shells, and stored for later use.
+  */
+  amne = amassn * amu;     // mass of neutron in grams
+  econ = ev * 8 * ( amne / hbar ) / hbar;
+  tsqx = econ / 20;
+
+
  /* If energy is greater than zero, the stored list is used to compute the 
   * cross section. For ENDF-6 format materials, the initialization step is 
   * used to organize the data already read from MF=7/MT=2 by rdelas, and 
@@ -134,15 +145,6 @@ auto sigcoh( double e, double& enext, std::vector<double> s, int nl, int lat,
     return std::vector<double> {};
   }
  
- /* If this is the first entry (E=0) for an ENDF-III type material, the 
-  * appropriate lattice constants are selected and the Debye-Waller coefficient 
-  * is obtained for the desired temperature by interpolation. Then the 
-  * reciprocal lattice wave vectors and structure factors are computed, 
-  * sorted into shells, and stored for later use.
-  */
-  amne = amassn * amu;     // mass of neutron in grams
-  econ = ev * 8 * ( amne / hbar ) / hbar;
-  tsqx = econ / 20;
 
   // Temperatures interpolated over when trying to get correct Debye-Waller
   // Coefficient.
@@ -171,6 +173,7 @@ auto sigcoh( double e, double& enext, std::vector<double> s, int nl, int lat,
   } 
   else {
     std::cout << "OH NO! Error over here. Illegal lat value" << std::endl;
+    throw std::exception();
   }
 
 

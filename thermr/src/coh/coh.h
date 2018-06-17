@@ -113,7 +113,7 @@ auto coh( int lat, std::fstream& inew, int ne, int nex, double temp,
   // 120 continue
    e = enext;
    wrk = sigcoh( e, enext, s, nl, lat, temp, emax, natom, fl, p, k, scon );
-   upstk(e, s, stk, nl, nx, i );
+   upstk(e, s, stk, nl, i );
    // make sure input grid points are included
    
   // 125 continue
@@ -124,7 +124,7 @@ auto coh( int lat, std::fstream& inew, int ne, int nex, double temp,
       if (x[ix] >= stk[0][i-1]*(1-small)){ // go to 140
         e = x[ix];
         wrk = sigcoh( e, enext, s, nl, lat, temp, emax, natom, fl, p, k, scon );
-        upstk(e, s, stk, nl, nx, i );
+        upstk(e, s, stk, nl, i );
       }
     }
   }

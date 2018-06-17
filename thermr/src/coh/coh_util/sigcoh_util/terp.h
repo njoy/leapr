@@ -5,11 +5,11 @@ auto do260( std::vector<double> x, std::vector<double> y, double arg, int l,
 
   // interpolation section
   double sum = 0, p, pk, in, inp;
-  for ( size_t i = 0; i < il; ++i ){
+  for ( int i = 0; i < il; ++i ){
     p = 1;
     pk = 1;
     in = l + i - 1;
-    for ( size_t ip = 0; ip < il; ++ip ){
+    for ( int ip = 0; ip < il; ++ip ){
       if ( ip == i ){ continue; }
       inp = l + ip - 1;
       p  *= arg   - x[inp];
@@ -39,9 +39,7 @@ auto terp( std::vector<double> x, std::vector<double> y, double arg,
    *-------------------------------------------------------------------
    */
 
-  int il, l, iadd, il2, ilow, ihi, iusel, iuseh, ibeg, iend, last, n, m, i, in,
-      ip, inp;
-  double sum, p, pk;
+  int il, l, iadd, il2, ilow, ihi, iusel, iuseh, ibeg, iend, last, m;
 
   il = il1;
   int nl = x.size();

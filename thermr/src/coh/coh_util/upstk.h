@@ -1,6 +1,6 @@
-
+#include <vector>
 auto upstk( const double& e, const std::vector<double>& s, 
-    std::vector<std::vector<double>>& stk, int nl, int nx, int& i ){
+    std::vector<std::vector<double>>& stk, int nl, int& i ){
  /*-------------------------------------------------------------------
   * Update the linearization stack with energy e and cross
   * sections s.  Here, i is the current index to the stack in stk,

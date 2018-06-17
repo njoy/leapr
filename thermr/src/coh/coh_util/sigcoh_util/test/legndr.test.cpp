@@ -1,5 +1,6 @@
-#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 #include "coh/coh_util/sigcoh_util/legndr.h"
+
 
 TEST_CASE( "legndr" ){
   std::vector<double> p(5), p2(5);

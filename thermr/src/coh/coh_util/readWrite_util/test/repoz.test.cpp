@@ -1,9 +1,11 @@
-#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 #include "coh/coh_util/readWrite_util/repoz.h"
+#include <fstream>
 
+/*
 
 TEST_CASE( "repoz" ){
-  GIVEN( "" ){
+  GIVEN( "repoz inputs" ){
     std::fstream infile;
     infile.open( "temp_int" );
     std::vector<int> a(9);
@@ -33,3 +35,4 @@ TEST_CASE( "repoz" ){
     infile.close();
   } // GIVEN
 } // TEST CASE
+*/

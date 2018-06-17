@@ -384,7 +384,26 @@
     "src/coh/coh_util/readWrite_util/finda.h",
     "src/temp_eff/temp_eff.h",
     "src/temp_eff/temp_eff_util/gatef2.h",
-    "src/temp_eff/temp_eff_util/gateff.h"
+    "src/temp_eff/temp_eff_util/gateff.h",
+    "src/general_util/sigfig.h",
+    "src/calcem/calcem.h",
+    "src/calcem/calcem_util/e_ep_mu.h",
+    "src/calcem/calcem_util/sigl.h",
+    "src/calcem/calcem_util/sigu.h",
+    "src/calcem/calcem_util/sig.h",
+    "src/calcem/calcem_util/sig_util/terpq.h",
+    "src/calcem/calcem_util/sigu_util/do150.h",
+    "src/calcem/calcem_util/sigu_util/begin_sigu.h",
+    "src/calcem/calcem_util/sigl_util/beginningLoop.h",
+    "src/calcem/calcem_util/e_ep_mu_util/380.h",
+    "src/calcem/calcem_util/e_ep_mu_util/360.h",
+    "src/calcem/calcem_util/e_ep_mu_util/310.h",
+    "src/calcem/calcem_util/e_ep_mu_util/410.h",
+    "src/calcem/calcem_util/e_ep_mu_util/313.h",
+    "src/iel/iel.h",
+    "src/iel/iel_util/terpa.h",
+    "src/iel/iel_util/terp1.h",
+    "src/iel/iel_util/terp.h"
   ],
   "ignore pattern": "$^",
   "implementation files": [
@@ -404,6 +423,32 @@
   "strict": true,
   "test pattern": "test$",
   "tests": {
+    "calcem": [
+      "src/calcem/test/calcem.test.cpp"
+    ],
+    "calcem.calcem_util": [
+      "src/calcem/calcem_util/test/sigu.test.cpp",
+      "src/calcem/calcem_util/test/sigl.test.cpp",
+      "src/calcem/calcem_util/test/e_ep_mu.test.cpp",
+      "src/calcem/calcem_util/test/sig.test.cpp"
+    ],
+    "calcem.calcem_util.e_ep_mu_util": [
+      "src/calcem/calcem_util/e_ep_mu_util/test/380.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/313.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/410.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/360.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/310.test.cpp"
+    ],
+    "calcem.calcem_util.sig_util": [
+      "src/calcem/calcem_util/sig_util/test/terpq.test.cpp"
+    ],
+    "calcem.calcem_util.sigl_util": [
+      "src/calcem/calcem_util/sigl_util/test/beginningLoop.test.cpp"
+    ],
+    "calcem.calcem_util.sigu_util": [
+      "src/calcem/calcem_util/sigu_util/test/do150.test.cpp",
+      "src/calcem/calcem_util/sigu_util/test/begin_sigu.test.cpp"
+    ],
     "coh": [
       "src/coh/test/coh.test.cpp"
     ],
@@ -432,6 +477,17 @@
     ],
     "contin.contin_util.start_util": [
       "src/contin/contin_util/start_util/test/start_util.test.cpp"
+    ],
+    "general_util": [
+      "src/general_util/test/sigfig.test.cpp"
+    ],
+    "iel": [
+      "src/iel/test/iel.test.cpp"
+    ],
+    "iel.iel_util": [
+      "src/iel/iel_util/test/terpa.test.cpp",
+      "src/iel/iel_util/test/terp.test.cpp",
+      "src/iel/iel_util/test/terp1.test.cpp"
     ],
     "temp_eff": [
       "src/temp_eff/test/temp_eff.test.cpp"

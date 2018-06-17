@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "coh/coh_util/upstk.h"
 
@@ -48,7 +47,7 @@ TEST_CASE( "uptsk" ){
         std::vector<std::vector<double>> stk (nx,std::vector<double> (20,0.0));
         stk[0][0] = 4.5e-4;
 
-        upstk( e, s, stk, nl, nx, i );
+        upstk( e, s, stk, nl, i );
 
         THEN( "output is correct" ){
           stkVals = { 4.0e-4, 0, 4.5e-4, 0 };
@@ -61,7 +60,7 @@ TEST_CASE( "uptsk" ){
 
         auto stk = initializeStk( nx, 5 );
 
-        upstk( e, s, stk, nl, nx, i );
+        upstk( e, s, stk, nl, i );
 
         stkVals = {4e-4, 0, 0.1, 0.2, 0.5, 0.6, 0.7, 0.8, 0.9, 1};
 
@@ -80,7 +79,7 @@ TEST_CASE( "uptsk" ){
 
       auto stk = initializeStk( nx, 3 );
 
-      upstk( e, s, stk, nl, nx, i );
+      upstk( e, s, stk, nl, i );
 
       stkVals = { 1.8e-3, 1500, 0.3, 0.4, 0.1, 0.2, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2 };
 
@@ -102,7 +101,7 @@ TEST_CASE( "uptsk" ){
 
       auto stk = initializeStk( nx, 3 );
 
-      upstk( e, s, stk, nl, nx, i );
+      upstk( e, s, stk, nl, i );
 
       stkVals = { 1.8e-3, 1500, 2500, 3500, 0.5, 0.6, 0.1, 0.2, 0.3, 0.4, 1.1, 
         1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8 };
@@ -118,7 +117,7 @@ TEST_CASE( "uptsk" ){
 
       auto stk = initializeStk( nx, 3 );
 
-      upstk( e, s, stk, nl, nx, i );
+      upstk( e, s, stk, nl, i );
 
       stkVals = { 1.8e-3, 1500, 2500, 3500, 0.1, 0.2, 0.3, 0.4, 0.9, 1.0, 1.1, 1.2 };
 
