@@ -24,8 +24,7 @@ auto do260( std::vector<double> x, std::vector<double> y, double arg, int l,
 
 
 
-auto terp( std::vector<double> x, std::vector<double> y, double arg, 
-  int il1 ){
+auto terp( std::vector<double> x, std::vector<double> y, double arg, int il1 ){
 
   /*-------------------------------------------------------------------
    * This function does Lagrangian interpolation or

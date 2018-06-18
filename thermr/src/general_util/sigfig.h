@@ -1,8 +1,9 @@
 
 #ifndef THERMR_SIGFIG_HH
 #define THERMR_SIGFIG_HH
+#include <cmath>
 
-   auto sigfig(double x, int ndig, int idig){
+inline auto sigfig(double x, int ndig, int idig){
   /*--------------------------------------------------------------------
    * Adjust x to have ndig signficant figures.  If idig is not zero,
    * shade x up or down by idig in the last significant figure.
@@ -13,7 +14,7 @@
    double bias=1.0000000000001e0;
    xx=0;
    if (x != 0) {
-      aa=log10(abs(x));
+      aa=log10(std::abs(x));
       ipwr=int(aa);
       if (aa < 0) ipwr=ipwr-1;
       ipwr=ndig-1-ipwr;

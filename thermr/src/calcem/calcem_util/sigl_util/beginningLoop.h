@@ -1,11 +1,12 @@
 #include "calcem/calcem_util/sig.h"
 #include "general_util/sigfig.h"
+#include <cmath>
 
-double maxOf3Vals( const double& a, const double& b, const double& c ){
+inline double maxOf3Vals( const double& a, const double& b, const double& c ){
   return (a < b) ? (b < c ? c : b) : (a < c ? c : a);
 }
 
-auto adaptiveLinearization( std::vector<double>& x, std::vector<double>& y, 
+inline auto adaptiveLinearization( std::vector<double>& x, std::vector<double>& y, 
   const double& e, const double& ep, const double& tev, const double& tevz, 
   const std::vector<double>& alpha, const std::vector<double>& beta,
   const std::vector<std::vector<double>>& sab, 
@@ -34,7 +35,7 @@ auto adaptiveLinearization( std::vector<double>& x, std::vector<double>& y,
   // Consider a cosine mu that corresponds to an alpha value of sqrt(1+beta^2).
   // What's the cross section?
   x[1] = 0.5 * seep * ( e + ep - (s1bb-1) * az * tev );
-  if (abs(x[1]) > 1-eps) x[1] = 0.99;
+  if (std::abs(x[1]) > 1-eps) x[1] = 0.99;
   x[1] = sigfig(x[1],8,0);
   y[1] = sig(e,ep,x[1],tev,alpha,beta,sab,az,tevz,lasym,
     az2,teff2,lat,cliq,sb,sb2,teff,iinc);
@@ -51,8 +52,8 @@ auto adaptiveLinearization( std::vector<double>& x, std::vector<double>& y,
 
 
 
-void shiftOver( int& i, std::vector<double>& x, std::vector<double>& y, 
-  double& xm, double& yt ){
+inline void shiftOver( int& i, std::vector<double>& x, std::vector<double>& y, 
+  double& xm, const double& yt ){
   // x = [   mu1      mu2          mu3            0    0   0 ... ]
   // y = [ s(mu1)   s(mu2)       s(mu3)           0    0   0 ... ]
   //   |
@@ -68,14 +69,14 @@ void shiftOver( int& i, std::vector<double>& x, std::vector<double>& y,
   y[i-2] = yt;
 }
 
-auto do_110(int& i, std::vector<double>& x, std::vector<double>& y, 
+inline auto do_110(int& i, std::vector<double>& x, std::vector<double>& y, 
   const double& e, const double& ep, const double& tev, 
   const std::vector<double>& alpha, const std::vector<double>& beta, 
   const std::vector<std::vector<double>>& sab, const 
   double& az, const double tevz, const int& lasym, const double& az2, const 
   double& teff2, const int& lat, const double& cliq, const double& sb, const 
   double& sb2, const double& teff, const int& iinc, const double& xtol, 
-  const double& tol, double& ymax){
+  const double& tol, const double& ymax){
   /* So note that here, x[i-2] = mu_a, x[i-1] = mu_c. Similarly, y[i-2] is 
    * the incoh. cross section [Eq. 225] corresponding to mu_a, and y[i-1] is
    * the incoh. cross section [Eq. 225] corresponding to mu_c.
@@ -105,8 +106,8 @@ auto do_110(int& i, std::vector<double>& x, std::vector<double>& y,
     yt = sig(e, ep, xm, tev, alpha, beta, sab, az, tevz, lasym, az2, teff2,
       lat, cliq, sb, sb2, teff, iinc);
     
-    if ( ( abs(yt-ym) <= tol*abs(yt)+tol*ymax/50.0 and 
-           abs(y[i-2]-y[i-1]) <= ym+ymax/100.0 and 
+    if ( ( std::abs(yt-ym) <= tol*std::abs(yt)+tol*ymax/50.0 and 
+           std::abs(y[i-2]-y[i-1]) <= ym+ymax/100.0 and 
            (x[i-2]-x[i-1]) < 0.5 ) or
          ( x[i-2]-x[i-1] < xtol ) ) { 
       return; 
@@ -132,7 +133,7 @@ auto do_110(int& i, std::vector<double>& x, std::vector<double>& y,
 
 
 
-auto do_110_120_130( int& i, std::vector<double>& x, std::vector<double>& y, 
+inline auto do_110_120_130_for_sigl( int& i, std::vector<double>& x, std::vector<double>& y, 
   const double& e, const double& ep, const double& tev, const double& tevz, 
   const std::vector<double>& alpha, const std::vector<double>& beta,
   const std::vector<std::vector<double>>& sab, 

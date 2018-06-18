@@ -1,7 +1,6 @@
 
 add_executable( iel.iel_util.test
                 terpa.test.cpp
-                terp.test.cpp
                 terp1.test.cpp )
 target_compile_options( iel.iel_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:

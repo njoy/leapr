@@ -1,4 +1,7 @@
 
+#include "general_util/sigfig.h"
+#include "calcem/calcem_util/sig.h"
+#include <cmath>
 
 auto do150( int& i, std::vector<double>& x, std::vector<double>& y, 
   double& xm, double& ym, double& yt, double& test, const double& tolmin, 
@@ -8,7 +11,7 @@ auto do150( int& i, std::vector<double>& x, std::vector<double>& y,
   const double& az, const double& az2, const double& teff2, const int lat, const double& cliq,
   const double& sb, const double& sb2, const double& teff, const double& tol, int iinc){
   bool continue_to_150 = false;
-  std::cout << std::setprecision(20) << 150 << "     " << y[0] << std::endl;
+  //std::cout << std::setprecision(20) << 150 << "     " << y[0] << std::endl;
   if (i <= 3 or 0.5*(y[i-2]+y[i-1])*(x[i-2]-x[i-1]) >= tolmin) {
     xm = 0.5*(x[i-2]+x[i-1]);
     xm = sigfig(xm,8,0);
@@ -16,9 +19,9 @@ auto do150( int& i, std::vector<double>& x, std::vector<double>& y,
       ym=0.5*(y[i-2]+y[i-1]);
       yt = sig( e, xm, u, tev, alpha, beta, sab, az, tevz, lasym, 
                 az2, teff2, lat, cliq, sb, sb2, teff, iinc );
-      test = tol*abs(yt);
+      test = tol*std::abs(yt);
       
-      if (abs(yt-ym) > test) {
+      if (std::abs(yt-ym) > test) {
         // point fails
         i=i+1;
         x[i-1]=x[i-2];

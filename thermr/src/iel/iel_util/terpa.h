@@ -3,8 +3,7 @@
 #include "iel/iel_util/terp1.h"
 #include <iostream>
 
-auto terpa(double y, double x,
-    std::vector<double> a, int ip, int ir){
+auto terpa(double y, double x, std::vector<double> a, int ip, int ir){
  /*--------------------------------------------------------------------
   * Interpolate for y(x) in the TAB1 record packed in a.  Return  0 
   * if x is outside the range of the table.   Here xnext is the next

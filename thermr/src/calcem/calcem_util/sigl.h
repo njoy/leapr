@@ -1,16 +1,17 @@
 #include "calcem/calcem_util/sig.h"
 #include "coh/coh_util/sigcoh_util/legndr.h"
 #include "calcem/calcem_util/sigl_util/beginningLoop.h"
+#include <cmath>
 
 
-auto do170(int& j, double& fract, double& sum, std::vector<double>& y,
+inline auto do170(int& j, double& fract, double& sum, std::vector<double>& y,
   std::vector<double>& x, double& yl, double& xn, double& xl, double& f, double& disc,
   double& ytol, double& rf, int& i, double& xil, const double& sigmin){
  //std::cout << 170 << std::endl;
   j=j+1;
 
   double test=(fract-sum)*(y[i-1]-yl)/((x[i-1]-xl)*yl*yl);
-  if (abs(test) > ytol or yl < sigmin ){
+  if (std::abs(test) > ytol or yl < sigmin ){
     //std::cout << 175 << std::endl;
     f=(y[i-1]-yl)*xil;
     rf=1/f;
@@ -18,7 +19,7 @@ auto do170(int& j, double& fract, double& sum, std::vector<double>& y,
     if (disc < 0.0) {
        // write(strng,'(''disc='',1p,e12.4)') disc
        // call mess('sigl',strng,'set to abs value and continue')
-       disc=abs(disc);
+       disc=std::abs(disc);
     } // end if
     if (f > 0.0) xn=xl-(yl*rf)+sqrt(disc);
     if (f < 0.0) xn=xl-(yl*rf)-sqrt(disc);
@@ -57,7 +58,7 @@ auto do170(int& j, double& fract, double& sum, std::vector<double>& y,
 
 
 
-int do250( std::vector<double>& x, std::vector<double>& y, double& xl, double& yl,
+inline int do250( std::vector<double>& x, std::vector<double>& y, double& xl, double& yl,
   int& i ){
    //std::cout << "250" << std::endl;
   xl=x[i-1];
@@ -75,7 +76,7 @@ int do250( std::vector<double>& x, std::vector<double>& y, double& xl, double& y
 }
 
 
-int do160(double add, std::vector<double>& x, std::vector<double>& y, double& xl,
+inline int do160(double add, std::vector<double>& x, std::vector<double>& y, double& xl,
   double& yl, int& i, double& xil, int& j, double& fract, int& nbin, double& sum,
   double& gral, double& xn, double& shade ){
 
@@ -120,7 +121,7 @@ int do160(double add, std::vector<double>& x, std::vector<double>& y, double& xl
 }
 
 
-auto sigl( int nlin, int nlmax, double e, double ep,
+inline auto sigl( int nlin, int nlmax, double e, double ep,
   double tev, std::vector<double> alpha, std::vector<double> beta,
   std::vector<std::vector<double>> sab, std::vector<double>& s, double tolin,
   double az, double tevz, int iinc, int lat, 
@@ -165,7 +166,7 @@ auto sigl( int nlin, int nlmax, double e, double ep,
   b = (lat == 1 and iinc == 2) ? (ep-e)/tevz : (ep-e)/tev; // Eq. 226
 
   tol  = 0.5*tolin;
-  nl   = abs(nlin);
+  nl   = std::abs(nlin);
   s1bb = sqrt(1+b*b);
   sum  = 0;
   i    = 3;
@@ -187,7 +188,7 @@ auto sigl( int nlin, int nlmax, double e, double ep,
   //if ( e >= 1.05 and e < 1.050001 and ep > 2.621273e-2 and ep < 2.621274e-2 )return;
 
 
-  auto out = do_110_120_130( i, x, y, e, ep, tev, tevz, alpha, beta, sab,  
+  auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, beta, sab,  
       az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
       nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
 

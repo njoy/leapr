@@ -8,7 +8,7 @@ auto do360(int& j, const int& jmax, std::vector<double>& xsi,
   std::vector<double>& p2, std::vector<double>& p3, int& nll, const int& nl, 
   std::vector<double>& p, std::vector<double>& ubar, const int ie, const int i ){
 
-  std::cout << 360 << std::endl;
+  //std::cout << 360 << std::endl;
   double uu = 0, u2 = 0, u3 = 0;
   j=j+1;
   if (j >= jmax) {

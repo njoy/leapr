@@ -7,7 +7,7 @@ auto do380( int& i, int& j, const int& nl, int& nll,
   std::vector<std::vector<double>>& y, const double& em9, double& xlast, 
   double& ylast, int& jnz, double& ulast, double& u2last, double& u3last, 
   std::vector<double>& p ){
-  std::cout << 380 << std::endl;
+  //std::cout << 380 << std::endl;
   int jscr = 7 + (j-1)*(nl+1);
   scr[jscr-1] = x[i-1];
   scr[jscr]   = (y[0][i-1]<em9) ? sigfig(y[0][i-1],8,0) : 
@@ -17,7 +17,7 @@ auto do380( int& i, int& j, const int& nl, int& nll,
     scr[il+jscr] = sigfig(y[il][i-1],9,0);
     if (std::abs(scr[il+jscr]) > 1){
       if (std::abs(scr[il+jscr]) > 1.0005 ){ 
-        std::cout << "call mess('calcem',strng,'')" << std::endl;
+        //std::cout << "call mess('calcem',strng,'')" << std::endl;
       }
       // scr[il+jscr] /= std::abs(scr[il+jscr]); // Set to either -1 or 1
       scr[il+jscr] = scr[il+jscr] > 0 ? 1 : -1;

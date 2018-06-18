@@ -2,7 +2,7 @@
 #ifndef THERMR_TERP1_HH
 #define THERMR_TERP1_HH
 
-auto terp1( const double& x1, const double& y1, const double& x2, 
+inline auto terp1( const double& x1, const double& y1, const double& x2, 
   const double& y2, const double& x, int i ){
   /* Interpolate one point, where  (x1,y1) and (x2,y2) are the end points of 
    * the line,  (x,y) is the interpolated point, i is the interpolation code,

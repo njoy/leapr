@@ -4,7 +4,7 @@
 //auto terpq( double x1, double y1, double x2, double y2, double x3, double y3,
 //  double x, double y ){
 
-auto terpq( double x1, double x2, double x3, double x, double y1, double y2, double y3 ){
+inline auto terpq( double x1, double x2, double x3, double x, double y1, double y2, double y3 ){
   /*-------------------------------------------------------------------
    * Compute y(x) by quadratic interpolation,
    * except use log-lin if x < x1 and lin-lin if x > x3.

@@ -1,5 +1,6 @@
-#include "iel/iel_util/terp.h"
+#include "coh/coh_util/sigcoh_util/terp.h"
 #include "iel/iel_util/terpa.h"
+#include <cmath>
 
 auto iel( int mat, int itemp, int iold, int inew, int ne, int nex, 
     std::vector<double>& tempr, std::vector<double>& fl, int za, 
@@ -38,11 +39,11 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
       dwa=c11c+(temp-c11b)*(c11e-c11c)/(c11d-c11b); // Debye-Waller Coefficient
    }
    else if (mat == 12) {     // D in para D2O
-      dwa=terp(tmp,dwh,8,temp,3);                   // Deybe-Waller Coefficient
+      dwa=terp(tmp,dwh,temp,3);                   // Deybe-Waller Coefficient
       sb=c12a;  // Characteristic bound cross section
    }
    else if (mat == 13) {     // D in ortho D2O
-      dwa=terp(tmp,dwz,8,temp,3);                   // Debye-Waller Coefficient
+      dwa=terp(tmp,dwz,temp,3);                   // Debye-Waller Coefficient
       sb=c13a;  // Characteristic bound cross section
    }
    else if (mat == 20) {
@@ -51,7 +52,7 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
       np=round(fl[5]);
       if (np == 1) {
          tt1=fl[7+2*nr-1];
-         if (abs(temp-tt1) > temp/10){
+         if (std::abs(temp-tt1) > temp/10){
            std::cout << "call error('iel',&'bad temperature for debye-waller factor',' ') " << std::endl;
          }
          dwa=fl[8+2*nr];                            // Debye-Waller Coefficient
@@ -168,7 +169,7 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
       for ( int ix = 0; ix < nex; ++ix ){
          ej[ix]=ex[ix];
       }
-      ej[nj] = (iex == ne) ? 0 : terp(esi,xie,nne,ex[0],3);
+      ej[nj] = (iex == ne) ? 0 : terp(esi,xie,ex[0],3);
       iet    = (iex == ne) ? -iex : iex;;
       //call loada(iet,ej,nj,inew,bufn,nbuf)
    }

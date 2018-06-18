@@ -367,43 +367,36 @@
     ]
   },
   "header files": [
-    "src/contin/contin.h",
-    "src/contin/contin_util/convol.h",
-    "src/contin/contin_util/checkMoments.h",
-    "src/contin/contin_util/start.h",
-    "src/contin/contin_util/interpolate.h",
-    "src/contin/contin_util/start_util/start_util.h",
+    "src/general_util/sigfig.h",
     "src/coh/coh.h",
-    "src/coh/coh_util/upstk.h",
     "src/coh/coh_util/sigcoh.h",
-    "src/coh/coh_util/sigcoh_util/form.h",
-    "src/coh/coh_util/sigcoh_util/terp.h",
-    "src/coh/coh_util/sigcoh_util/legndr.h",
+    "src/coh/coh_util/upstk.h",
     "src/coh/coh_util/readWrite_util/repoz.h",
     "src/coh/coh_util/readWrite_util/loada.h",
     "src/coh/coh_util/readWrite_util/finda.h",
-    "src/temp_eff/temp_eff.h",
-    "src/temp_eff/temp_eff_util/gatef2.h",
-    "src/temp_eff/temp_eff_util/gateff.h",
-    "src/general_util/sigfig.h",
-    "src/calcem/calcem.h",
-    "src/calcem/calcem_util/e_ep_mu.h",
-    "src/calcem/calcem_util/sigl.h",
-    "src/calcem/calcem_util/sigu.h",
-    "src/calcem/calcem_util/sig.h",
-    "src/calcem/calcem_util/sig_util/terpq.h",
-    "src/calcem/calcem_util/sigu_util/do150.h",
-    "src/calcem/calcem_util/sigu_util/begin_sigu.h",
-    "src/calcem/calcem_util/sigl_util/beginningLoop.h",
-    "src/calcem/calcem_util/e_ep_mu_util/380.h",
-    "src/calcem/calcem_util/e_ep_mu_util/360.h",
-    "src/calcem/calcem_util/e_ep_mu_util/310.h",
-    "src/calcem/calcem_util/e_ep_mu_util/410.h",
-    "src/calcem/calcem_util/e_ep_mu_util/313.h",
+    "src/coh/coh_util/sigcoh_util/legndr.h",
+    "src/coh/coh_util/sigcoh_util/terp.h",
+    "src/coh/coh_util/sigcoh_util/form.h",
     "src/iel/iel.h",
     "src/iel/iel_util/terpa.h",
     "src/iel/iel_util/terp1.h",
-    "src/iel/iel_util/terp.h"
+    "src/calcem/calcem.h",
+    "src/calcem/calcem_util/sigl.h",
+    "src/calcem/calcem_util/sig.h",
+    "src/calcem/calcem_util/sigu.h",
+    "src/calcem/calcem_util/e_ep_mu.h",
+    "src/calcem/calcem_util/e_ep_mu_util/380.h",
+    "src/calcem/calcem_util/e_ep_mu_util/310.h",
+    "src/calcem/calcem_util/e_ep_mu_util/410.h",
+    "src/calcem/calcem_util/e_ep_mu_util/313.h",
+    "src/calcem/calcem_util/e_ep_mu_util/360.h",
+    "src/calcem/calcem_util/sigu_util/begin_sigu.h",
+    "src/calcem/calcem_util/sigu_util/do150.h",
+    "src/calcem/calcem_util/sigl_util/beginningLoop.h",
+    "src/calcem/calcem_util/sig_util/terpq.h",
+    "src/temp_eff/temp_eff.h",
+    "src/temp_eff/temp_eff_util/gatef2.h",
+    "src/temp_eff/temp_eff_util/gateff.h"
   ],
   "ignore pattern": "$^",
   "implementation files": [
@@ -427,17 +420,17 @@
       "src/calcem/test/calcem.test.cpp"
     ],
     "calcem.calcem_util": [
-      "src/calcem/calcem_util/test/sigu.test.cpp",
-      "src/calcem/calcem_util/test/sigl.test.cpp",
       "src/calcem/calcem_util/test/e_ep_mu.test.cpp",
-      "src/calcem/calcem_util/test/sig.test.cpp"
+      "src/calcem/calcem_util/test/sig.test.cpp",
+      "src/calcem/calcem_util/test/sigu.test.cpp",
+      "src/calcem/calcem_util/test/sigl.test.cpp"
     ],
     "calcem.calcem_util.e_ep_mu_util": [
-      "src/calcem/calcem_util/e_ep_mu_util/test/380.test.cpp",
-      "src/calcem/calcem_util/e_ep_mu_util/test/313.test.cpp",
-      "src/calcem/calcem_util/e_ep_mu_util/test/410.test.cpp",
       "src/calcem/calcem_util/e_ep_mu_util/test/360.test.cpp",
-      "src/calcem/calcem_util/e_ep_mu_util/test/310.test.cpp"
+      "src/calcem/calcem_util/e_ep_mu_util/test/410.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/310.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/380.test.cpp",
+      "src/calcem/calcem_util/e_ep_mu_util/test/313.test.cpp"
     ],
     "calcem.calcem_util.sig_util": [
       "src/calcem/calcem_util/sig_util/test/terpq.test.cpp"
@@ -453,30 +446,18 @@
       "src/coh/test/coh.test.cpp"
     ],
     "coh.coh_util": [
-      "src/coh/coh_util/test/upstk.test.cpp",
-      "src/coh/coh_util/test/sigcoh.test.cpp"
+      "src/coh/coh_util/test/sigcoh.test.cpp",
+      "src/coh/coh_util/test/upstk.test.cpp"
     ],
     "coh.coh_util.readWrite_util": [
       "src/coh/coh_util/readWrite_util/test/loada.test.cpp",
-      "src/coh/coh_util/readWrite_util/test/finda.test.cpp",
-      "src/coh/coh_util/readWrite_util/test/repoz.test.cpp"
+      "src/coh/coh_util/readWrite_util/test/repoz.test.cpp",
+      "src/coh/coh_util/readWrite_util/test/finda.test.cpp"
     ],
     "coh.coh_util.sigcoh_util": [
-      "src/coh/coh_util/sigcoh_util/test/legndr.test.cpp",
       "src/coh/coh_util/sigcoh_util/test/terp.test.cpp",
-      "src/coh/coh_util/sigcoh_util/test/form.test.cpp"
-    ],
-    "contin": [
-      "src/contin/test/contin.test.cpp"
-    ],
-    "contin.contin_util": [
-      "src/contin/contin_util/test/convol.test.cpp",
-      "src/contin/contin_util/test/start.test.cpp",
-      "src/contin/contin_util/test/interpolate.test.cpp",
-      "src/contin/contin_util/test/checkMoments.test.cpp"
-    ],
-    "contin.contin_util.start_util": [
-      "src/contin/contin_util/start_util/test/start_util.test.cpp"
+      "src/coh/coh_util/sigcoh_util/test/form.test.cpp",
+      "src/coh/coh_util/sigcoh_util/test/legndr.test.cpp"
     ],
     "general_util": [
       "src/general_util/test/sigfig.test.cpp"
@@ -486,7 +467,6 @@
     ],
     "iel.iel_util": [
       "src/iel/iel_util/test/terpa.test.cpp",
-      "src/iel/iel_util/test/terp.test.cpp",
       "src/iel/iel_util/test/terp1.test.cpp"
     ],
     "temp_eff": [

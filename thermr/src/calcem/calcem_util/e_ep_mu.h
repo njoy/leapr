@@ -7,6 +7,7 @@
 #include "calcem/calcem_util/e_ep_mu_util/360.h"
 #include "calcem/calcem_util/e_ep_mu_util/380.h"
 #include "calcem/calcem_util/e_ep_mu_util/410.h"
+#include <cmath>
 
 
 auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za, 
@@ -175,9 +176,9 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
                     uu  += yt[k-1];
                     uum += ym;
                   }
-                  test2 = (k > 1) ? tol : tol*abs(yt[k-1]);
+                  test2 = (k > 1) ? tol : tol*std::abs(yt[k-1]);
 
-                  if (abs(yt[k-1]-ym) > test2){
+                  if (std::abs(yt[k-1]-ym) > test2){
                     do410( i, x, xm, nl, y, yt, j );
                     goto330 = true;
                     break;
@@ -186,7 +187,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
                 if (goto330){ continue; }
                 if (not goto330){
                   std::cout << 350 << std::endl;  // 350 continue
-                  if (abs(uu-uum) > 2*tol*abs(uu)+uumin){
+                  if (std::abs(uu-uum) > 2*tol*std::abs(uu)+uumin){
                     // point passes.  save top point in stack and continue.
                     do410( i, x, xm, nl, y, yt, j );
                     continue;

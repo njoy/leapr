@@ -1,9 +1,9 @@
 
 add_executable( calcem.calcem_util.test
-                sigu.test.cpp
-                sigl.test.cpp
                 e_ep_mu.test.cpp
-                sig.test.cpp )
+                sig.test.cpp
+                sigu.test.cpp
+                sigl.test.cpp )
 target_compile_options( calcem.calcem_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

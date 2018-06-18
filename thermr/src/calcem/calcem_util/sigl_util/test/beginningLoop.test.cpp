@@ -3,12 +3,14 @@
 #include "calcem/calcem_util/sigl_util/beginningLoop.h"
 
 TEST_CASE( "110 120 130" ){
-  std::vector<double> x(20,0.0),y(20,0.0),s(65,0.0);
+  std::vector<double> x(20,0.0);
+  std::vector<double> y(20,0.0);
+  std::vector<double> s(65,0.0);
   x[0] = 1.0; x[1] = 0.99; x[2] = -1.0;
   y[0] = 1.35700e5; y[1] = 1.35701e5; y[2] = 1.35809e5;
 
-  std::vector<double> alpha { 1.1, 2.2, 3.3, 4.5, 5.8 },
-    beta { 0.1, 0.2, 1.3, 1.4, 2.5, 2.6, 3.7 };
+  std::vector<double> alpha { 1.1, 2.2, 3.3, 4.5, 5.8 };
+  std::vector<double> beta { 0.1, 0.2, 1.3, 1.4, 2.5, 2.6, 3.7 };
     
 
   // Initialize S(a,b)
@@ -36,13 +38,17 @@ TEST_CASE( "110 120 130" ){
     THEN( "110-->110, 110-->120, 120-->110, 120-->130, not many iterations" ){
 
 
-      auto out = do_110_120_130(i, x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, 
-      az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
-        nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol);
+      auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
+        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
 
-      ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
 
-      double gral = std::get<0>(out), sum = std::get<1>(out);
+
+      //ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, 
+      //  bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+
+      double gral = std::get<0>(out);
+      double sum = std::get<1>(out);
       REQUIRE( 0 == Approx(gral).epsilon(1e-6) ); 
       REQUIRE( 0 == Approx(sum).epsilon(1e-6) ); 
 
@@ -52,7 +58,7 @@ TEST_CASE( "110 120 130" ){
       REQUIRE(-1 == Approx(xl).epsilon(1e-6) );
       REQUIRE( 30174.6306224 == Approx(fract).epsilon(1e-6) );
       REQUIRE( 135700.0 == Approx(yl).epsilon(1e-6) );
-      REQUIRE( 135829.6496457 == Approx(ymax).epsilon(1e-6) );
+      //REQUIRE( 135829.6496457 == Approx(ymax).epsilon(1e-6) );
 
       std::vector<double> correctX = { 1.0, 0.99, -1.0, -0.005, -1.0 },
         correctY = { 135757.913, 135758.3455, 135829.6496, 135797.21918, 135809.0 };
@@ -90,13 +96,17 @@ TEST_CASE( "110 120 130" ){
     THEN( "110-->110, 110-->120, 120-->110, 120-->120, 120-->130, many iterations" ){
 
 
-      auto out = do_110_120_130(i, x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, 
-      az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
-        nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol);
+      auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
+        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
 
-      ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
 
-      double gral = std::get<0>(out), sum = std::get<1>(out);
+
+      //ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, 
+      //  bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+
+      double gral = std::get<0>(out);
+      double sum = std::get<1>(out);
       REQUIRE( 0 == Approx(gral).epsilon(1e-6) ); 
       REQUIRE( 0 == Approx(sum).epsilon(1e-6) ); 
 
@@ -106,7 +116,7 @@ TEST_CASE( "110 120 130" ){
       REQUIRE(-1 == Approx(xl).epsilon(1e-6) );
       REQUIRE( 120.57844468516407 == Approx(fract).epsilon(1e-6) );
       REQUIRE( 100000.0 == Approx(yl).epsilon(1e-6) );
-      REQUIRE( 538.71588696219601 == Approx(ymax).epsilon(1e-6) );
+      //REQUIRE( 538.71588696219601 == Approx(ymax).epsilon(1e-6) );
 
       std::vector<double> correctX = { 1.0, 0.99, -1.0, 0.99125, 0.990625, 
         0.9903125, 0.99015625, 0.99007813, 0.99003907, 0.99001954, 0.99000977, 
@@ -151,12 +161,18 @@ TEST_CASE( "110 120 130" ){
     THEN( "110-->110, 110-->120, 120-->110, 120-->120, 120-->130, many iterations" ){
 
 
-      auto out = do_110_120_130(i, x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, 
-      az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
-        nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol);
+      //auto out = do_110_120_130_for_sigl(i, x, y, e, ep, tev, tevz, alpha, beta, sab, bbm, az, 
+      //az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
+      //  nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol);
+
+      auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
+        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
 
 
-      double gral = std::get<0>(out), sum = std::get<1>(out);
+
+      double gral = std::get<0>(out);
+      double sum = std::get<1>(out);
       REQUIRE( 0 == Approx(gral).epsilon(1e-6) ); 
       REQUIRE( 0 == Approx(sum).epsilon(1e-6) ); 
 

@@ -2,10 +2,12 @@
 #ifndef THERMR_SIG
 #define THERMR_SIG
 
+
 #include "calcem/calcem_util/sig_util/terpq.h"
 #include "general_util/sigfig.h"
+#include <cmath>
 
-double do160(double sigc, double sb, double s, double bb, double sabflg,
+inline double do160(double sigc, double sb, double s, double bb, double sabflg,
   double sigmin ){
   // Based off of Eq. 225, it appears that s = S(a,b). 
   // sigc = sqrt(E'/E)/(2 kb T), sb = sigma_b, and bb = beta. 
@@ -18,7 +20,7 @@ double do160(double sigc, double sb, double s, double bb, double sabflg,
   return (sigVal < sigmin) ? 0 : sigVal;
 }
 
-auto do155( int ia, int ib, const std::vector<double>& alpha,
+inline auto do155( int ia, int ib, const std::vector<double>& alpha,
     const std::vector<double>& beta, const std::vector<std::vector<double>>& sab,
     double a, double bbb, double sigc, double sb, double bb, double sabflg,
     double sigmin ){
@@ -37,7 +39,7 @@ auto do155( int ia, int ib, const std::vector<double>& alpha,
 }
 
 
-auto doSCTApproximation( int lat, double a, double tevz, double teff, 
+inline auto doSCTApproximation( int lat, double a, double tevz, double teff, 
   double teff2, double az, double az2, double sigc, double s2, double u, 
   double sb2, double e, double tev, double sigmin, double sabflg, double bb, 
   double s, double sb ){
@@ -54,7 +56,7 @@ auto doSCTApproximation( int lat, double a, double tevz, double teff,
   double arg, sigVal = 0;
   for ( const double& sb_val : {sb, sb2} ){
     // Eq. 230 in the NJOY manual
-    arg = (a-abs(bb))*(a-abs(bb))*tev/(4.0*a*teff) + (abs(bb)+bb)/2.0;
+    arg = (a-std::abs(bb))*(a-std::abs(bb))*tev/(4.0*a*teff) + (std::abs(bb)+bb)/2.0;
     s = (-arg > sabflg) ? exp(-arg)/(sqrt(4.0*M_PI*a*teff/tev)) : 0;
     sigVal += sigc * sb_val * s;
   }
@@ -66,7 +68,7 @@ auto doSCTApproximation( int lat, double a, double tevz, double teff,
 }
 
 
-auto sig( const double& e, const double& ep, const double& u, 
+inline auto sig( const double& e, const double& ep, const double& u, 
   const double& tev,  
   const std::vector<double>& alpha, const std::vector<double>& beta,
   const std::vector<std::vector<double>>& sab, const double az, 
@@ -119,10 +121,10 @@ auto sig( const double& e, const double& ep, const double& u,
   // Now we change the definitions of a and b so that they're defined using
   // tevz instead of tev
   if ( lat == 1 ){ 
-    b = abs(bb_tevz); a = a_tevz;
+    b = std::abs(bb_tevz); a = a_tevz;
   }
   else {
-    b = abs(bb_tev); a = a_tev;
+    b = std::abs(bb_tev); a = a_tev;
   }
   //std::cout << a << std::endl;
   b = sigfig(b,8,0);

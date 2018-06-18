@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "calcem/calem_util/sig_util/terpq.h"
+#include "calcem/calcem_util/sig_util/terpq.h"
 
 
 TEST_CASE( "terpq" ){

@@ -1,8 +1,8 @@
 
 add_executable( coh.coh_util.readWrite_util.test
                 loada.test.cpp
-                finda.test.cpp
-                repoz.test.cpp )
+                repoz.test.cpp
+                finda.test.cpp )
 target_compile_options( coh.coh_util.readWrite_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

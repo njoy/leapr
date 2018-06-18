@@ -1,7 +1,7 @@
 
 #ifndef THERMR_LEGNDR_HH
 #define THERMR_LEGNDR_HH
-auto legndr( double x, std::vector<double>& p, int np ){
+inline auto legndr( double x, std::vector<double>& p, int np ){
  /*--------------------------------------------------------------------
   * Generate Legendre polynomials at x by recursion.
   * Place p(subl) in p(l+1).
