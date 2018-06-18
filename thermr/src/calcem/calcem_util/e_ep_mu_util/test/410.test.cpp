@@ -3,7 +3,7 @@
 
 TEST_CASE( "410" ){
   GIVEN( " " ){
-    int i = 2, nl = 4, j = 0;
+    int i = 2, nl = 4;
     double xm = 5.0e-5;
     std::vector<double> x (20,0.0), yt (65,0.0);
     std::vector<std::vector<double>> y (65,std::vector<double>(20)); 
@@ -17,7 +17,7 @@ TEST_CASE( "410" ){
 
     x[0] = 1e-5;
     WHEN( "lat = 1" ){
-      do410(i,x,xm,nl,y,yt,j);
+      do410(i,x,xm,nl,y,yt);
       std::vector<std::tuple<double,double,double,double,double>> output { 
         { 0.00, 0.30, 0.01, 0.03, 0.04 }, { 0.01,-0.90, 0.02, 0.04, 0.05 },
         { 0.02,-0.70, 0.03, 0.05, 0.06 }, { 0.03,-0.50, 0.04, 0.06, 0.07 },

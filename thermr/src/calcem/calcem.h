@@ -1,5 +1,6 @@
 
-auto calcem( double temp, int itemp, std::fstream& iold, std::fstream& inew,
+auto calcem( double temp, int itemp, 
+	//	std::fstream& iold, std::fstream& inew,
     int ne, int next, int nbin, double emax, int nwscr, int natom,
     std::vector<double>& scr, int matde, double c1h, double c2h, int l1h, int l2h,
     int n2h, int n1h, int iverf ){
@@ -41,6 +42,14 @@ auto calcem( double temp, int itemp, std::fstream& iold, std::fstream& inew,
    std::vector<double> uj(mumax),sj(mumax),p2(ngrid),p3(ngrid),p(4);
    std::vector<double> esi, xsi;
 
+   /* --------------------------------------------------------------------
+    * OKAY so I'm having a bit of trouble regarding the fact that nw and nb 
+    * are sometimes now initialized. I don't really have time to look into 
+    * that now, so just check it out later. For now giving it dummy values 
+    * so that we can compile
+    * --------------------------------------------------------------------
+    */
+   nw = 100; nb = 0;
 
 
    std::vector<double> egrid { 1.e-5, 1.78e-5, 2.5e-5, 3.5e-5, 5.0e-5, 7.0e-5,
@@ -233,4 +242,6 @@ auto calcem( double temp, int itemp, std::fstream& iold, std::fstream& inew,
    go to 120
    ... continues for awhile
   */
+   nwtab = nwtab + nlp1 + nnl + jmax + nl1 + ilog + matd + itprnt + lt + it + ne + next;
+   t1 = t1 + b + sabmin + temp;
   }

@@ -7,7 +7,7 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
   const std::vector<double>& alpha, const std::vector<double>& beta, 
   const std::vector<std::vector<double>>&sab, std::vector<double>&s, 
   const double& tolin, const double& az, const double& tevz, const int& iinc, 
-  const int& lat, const int& lasym, const double& az2, const double& teff2, 
+  const int& lat, const int& lasym, /*const double& az2, const double& teff2, */
   const double& cliq, const double& sb, const double& sb2, const double& teff ){
 
   /*-------------------------------------------------------------------
@@ -33,7 +33,7 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
    sum=0;
    x[1-1]=0;
    y[1-1] = sig( e, x[1-1], xl, tev, alpha, beta, sab, az, tevz, lasym, 
-       az2, teff2, lat, cliq, sb, sb2, teff, iinc );
+      /*az2, teff2,*/ lat, cliq, sb, sb2, teff, iinc );
    jbeta = -beta.size();
    if (lasym > 0) jbeta=1;
    j = 0;
@@ -49,7 +49,7 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
 
 
      do_113_116( jbeta, lat, x, y, e, tev, tevz, root1, u, alpha, beta, 
-         sab, az, lasym, az2, teff, teff2, cliq, sb, sb2, iinc );
+         sab, az, lasym, /*az2,*/ teff, /*teff2,*/ cliq, sb, sb2, iinc );
 
      //return;
      i = 2;
@@ -64,7 +64,9 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
        if ( i != imax and goTo150 ){
 
 
-       if ( do150( i, x, y, xm, ym, yt, test, tolmin, e, u, tev, alpha, beta, sab, tevz, lasym, az, az2, teff2, lat, cliq, sb, sb2, teff, tol, iinc) ){continue;}
+       if ( do150( i, x, y, xm, ym, yt, test, tolmin, e, u, tev, alpha, beta, 
+         sab, tevz, lasym, az, /*az2, teff2,*/ lat, cliq, sb, sb2, teff, tol, 
+	 iinc) ){continue;}
 
        //if (do150( i, x, y, xm, ym, yt, test )){ continue; }
 
@@ -126,7 +128,7 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
       //std::cout << "no longer doing 150" << std::endl;
       //
       //
-      if ( jbeta > beta.size() and i == 1 ){
+      if ( (unsigned) jbeta > beta.size() and i == 1 ){
         jbeta = jbeta + 1;
         goTo150 = false;
         continue;
@@ -138,7 +140,7 @@ auto sigu( int nemax, const double& e, const double& u, const double& tev,
     jbeta=jbeta+1;
 
     // if (jbeta <= nbeta) go to 111
-    if (jbeta <= beta.size()) continue;
+    if ( (unsigned) jbeta <= beta.size()) continue;
  
 
     // 170 continue

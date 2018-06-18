@@ -18,8 +18,8 @@ TEST_CASE( "begin sigu (113,116)" ){
 
   std::vector<std::vector<double>> sab(alpha.size(), 
       std::vector<double>(beta.size(),0));
-  for ( int i = 0; i < alpha.size(); ++i ){
-    for ( int j = 0; j < beta.size(); ++j ){
+  for ( size_t i = 0; i < alpha.size(); ++i ){
+    for ( size_t j = 0; j < beta.size(); ++j ){
       sab[i][j] = 0.01*((j+1) + 0.1*(i+1));
     } 
   } 
@@ -27,7 +27,7 @@ TEST_CASE( "begin sigu (113,116)" ){
 
 
     do_113_116( jbeta, lat, x, y, e, tev, tevz, root1, u, alpha, beta, 
-        sab, az, lasym, az2, teff, teff2, cliq, sb, sb2, iinc);
+        sab, az, lasym, /*az2,*/ teff, /*teff2,*/ cliq, sb, sb2, iinc);
 
     REQUIRE( 2.3e-2 == Approx(x[0]).epsilon(1e-6) );
     REQUIRE( 0.0    == Approx(y[0]).epsilon(1e-6) ); 
@@ -58,15 +58,15 @@ TEST_CASE( "begin sigu (113,116)" ){
 
     std::vector<std::vector<double>> sab(alpha.size(), 
         std::vector<double>(beta.size(),0));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 5.0 + i*0.03 - j*0.004;
       } 
     } 
 
 
     do_113_116( jbeta, lat, x, y, e, tev, tevz, root1, u, alpha, beta, 
-        sab, az, lasym, az2, teff, teff2, cliq, sb, sb2, iinc);
+        sab, az, lasym, /*az2,*/ teff, /*teff2,*/ cliq, sb, sb2, iinc);
 
     REQUIRE( 0.111 == Approx(x[0]).epsilon(1e-6) );
     REQUIRE( 0.0   == Approx(y[0]).epsilon(1e-6) ); 
@@ -96,14 +96,14 @@ TEST_CASE( "begin sigu (113,116)" ){
     for ( int i = 0; i < 80;     ++i ){ beta[i]  = 0.2*i + i%4 + 0.025; }
 
     std::vector<std::vector<double>> sab(alpha.size(), std::vector<double>(beta.size(),0));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.2*i + 0.4*j + (i+j)%5;
       } 
     }
 
     do_113_116( jbeta, lat, x, y, e, tev, tevz, root1, u, alpha, beta, 
-        sab, az, lasym, az2, teff, teff2, cliq, sb, sb2, iinc);
+        sab, az, lasym, /*az2,*/ teff, /*teff2,*/ cliq, sb, sb2, iinc);
 
     REQUIRE( 6.5e-6 == Approx(x[0]).epsilon(1e-6) );
     REQUIRE( 46226.360425 == Approx(y[0]).epsilon(1e-6) ); 

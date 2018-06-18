@@ -16,15 +16,15 @@ TEST_CASE( "sigl" ){
       s(65,0.0);
 
     std::vector<std::vector<double>> sab(alpha.size(), std::vector<double>(beta.size(),0));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.01*((j+1) + 0.1*(i+1));
       } 
     } 
 
 
     sigl( nlin, nlmax, e, ep, tev, alpha, beta, sab, s, tolin, az, tevz, iinc, 
-        lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+        lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
     std::vector<double> correctS { 271591.653204, -8.776270547E-5 , 
       -6.162495039E-3, 7.1582888474E-5, -2.018780205E-2,  1.0016609703E-4, 
@@ -64,7 +64,7 @@ TEST_CASE( "sigl" ){
 
 
     sigl( nlin, nlmax, e, ep, tev, alpha, beta, sab, s, tolin, az, tevz, iinc, 
-        lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+        lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
     std::vector<double> correctS { 271591.653204, -8.776270547E-5 , 
       -6.162495039E-3, 7.1582888474E-5, -2.018780205E-2,  1.0016609703E-4, 
@@ -109,15 +109,15 @@ TEST_CASE( "sigl" ){
       19.4093, 20.9860, 22.7139, 24.6082, 26.6849, 28.9602, 31.4533, 
       34.1873, 37.1825, 40.4659 };
     std::vector<std::vector<double>> sab ( alpha.size(), std::vector<double> (beta.size()));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.5*i + 0.1*j;
       }
     }
 
 
     sigl( nlin, nlmax, e, ep, tev, alpha, beta, sab, s, tolin, az, tevz, iinc, 
-        lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+        lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
     std::vector<double> correctS { 0.542594022, -0.926263996, -0.772825878, -0.609059013, -0.432353908, -0.237782881, -1.77980549E-2, 0.245718583, 0.622222118 };
    for ( int i = 0; i < 9; ++i ){ 
@@ -136,7 +136,12 @@ TEST_CASE( "sigl" ){
       tevz = 0.0253, az2 = 0.0, teff2 = 0.0, cliq = 0.0, sb = 5.534857, sb2 = 0.0,
       teff = 0.0614755628515, tolin = 5e-2;
 
-    std::vector<double> s { 6237.43946467896, -0.878795776573481, -0.63505950465143, -0.389299012306842, -0.141485461528385, 0.108422084252568, 0.360454386247895, 0.614654199796055, 0.871054282710064, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    std::vector<double> s { 6237.43946467896, -0.878795776573481, 
+      -0.63505950465143, -0.389299012306842, -0.141485461528385, 
+      0.108422084252568, 0.360454386247895, 0.614654199796055, 
+      0.871054282710064, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     std::vector<double> alpha { 0.25203, 0.50406, 0.75609, 1.00812, 1.26015, 
       1.51218, 1.76421, 2.01624, 2.27331, 2.53552, 2.80297, 3.07577, 3.35401, 
       3.63790, 3.92733, 4.22271, 4.52383, 4.83111, 5.14443, 5.46411, 5.79013, 
@@ -156,21 +161,21 @@ TEST_CASE( "sigl" ){
       19.4093, 20.9860, 22.7139, 24.6082, 26.6849, 28.9602, 31.4533, 
       34.1873, 37.1825, 40.4659 };
     std::vector<std::vector<double>> sab ( alpha.size(), std::vector<double> (beta.size()));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.5*i + 0.1*j;
       }
     }
 
 
     sigl( nlin, nlmax, e, ep, tev, alpha, beta, sab, s, tolin, az, tevz, iinc, 
-        lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+        lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
     std::vector<double> correctS { 2266.6425042928081, -0.87894190352096380, -0.63544888029843560, -0.38985559946004150, -0.14213098167270630, 0.10776914451658787, 0.35987801686056159, 0.61424184944744609, 0.87089612181931464 };
-   for ( int i = 0; i < correctS.size(); ++i ){ 
+   for ( size_t i = 0; i < correctS.size(); ++i ){ 
      REQUIRE( correctS[i] == Approx(s[i]).epsilon(1e-6) ); 
    }
-   for ( int i = correctS.size(); i < s.size(); ++i ){
+   for ( size_t i = correctS.size(); i < s.size(); ++i ){
      REQUIRE( 0.0 == Approx(s[i]).epsilon(1e-6) ); 
    }
 

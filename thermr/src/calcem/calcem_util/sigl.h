@@ -125,7 +125,7 @@ inline auto sigl( int nlin, int nlmax, double e, double ep,
   double tev, std::vector<double> alpha, std::vector<double> beta,
   std::vector<std::vector<double>> sab, std::vector<double>& s, double tolin,
   double az, double tevz, int iinc, int lat, 
-  int lasym, double az2, double teff2, double cliq, double sb,
+  int lasym, /*double az2, double teff2,*/ double cliq, double sb,
   double sb2, double teff ){
 
  /*-------------------------------------------------------------------
@@ -171,7 +171,7 @@ inline auto sigl( int nlin, int nlmax, double e, double ep,
   sum  = 0;
   i    = 3;
   xl   = -1;
-  yl = sig(e,ep,xl,tev,alpha,beta,sab,az,tevz,lasym,az2,teff2,lat,cliq,sb,sb2,teff,iinc);
+  yl = sig(e,ep,xl,tev,alpha,beta,sab,az,tevz,lasym,/*az2,teff2,*/lat,cliq,sb,sb2,teff,iinc);
 
   seep = (ep == 0) ? 0.0 : 1.0/sqrt(e*ep);
 
@@ -183,30 +183,30 @@ inline auto sigl( int nlin, int nlmax, double e, double ep,
   // mu1 = -1, 
   // mu2 = mu such that alpha equals sqrt(1+beta^2)
   // mu3 = 1
-  ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, az, az2, 
-      lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+  ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, az, /*az2,*/
+      lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, eps, seep, s1bb );
   //if ( e >= 1.05 and e < 1.050001 and ep > 2.621273e-2 and ep < 2.621274e-2 )return;
 
 
   auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, beta, sab,  
-      az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
-      nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
+      az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, nl, sigmin, s, 
+      nbin, fract, xl, j, ymax, yl, tol, xtol );
 
   if (std::get<2>(out)) { return; }
 
   gral = std::get<0>(out);
   sum  = std::get<1>(out);
 
-  ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, az, az2, 
-      lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+  ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, az, /*az2,*/
+      lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, eps, seep, s1bb );
 
 
   bool go_straight_to_150_from_190 = true;
   while ( true ){ 
     if (go_straight_to_150_from_190){
       //std::cout << "150" << std::endl;
-      do_110(i, x, y, e, ep, tev, alpha, beta, sab, az, tevz, lasym, az2, 
-          teff2, lat, cliq, sb, sb2, teff, iinc, xtol, tol, ymax);
+      do_110(i, x, y, e, ep, tev, alpha, beta, sab, az, tevz, lasym, /*az2, 
+          teff2,*/ lat, cliq, sb, sb2, teff, iinc, xtol, tol, ymax);
 
     }
     go_straight_to_150_from_190 = true; 

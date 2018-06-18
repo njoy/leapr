@@ -24,8 +24,8 @@ inline auto do155( int ia, int ib, const std::vector<double>& alpha,
     const std::vector<double>& beta, const std::vector<std::vector<double>>& sab,
     double a, double bbb, double sigc, double sb, double bb, double sabflg,
     double sigmin ){
-   if (ia+1 == alpha.size()) ia -= 1;
-   if (ib+1 == beta.size())  ib -= 1;
+   if ( (unsigned) ia+1 == alpha.size()) ia -= 1;
+   if ( (unsigned) ib+1 == beta.size())  ib -= 1;
    ia -= 1;
    ib -= 1;
    double s1 = terpq( alpha[ia],     alpha[ia+1],     alpha[ia+2], a, 
@@ -39,9 +39,9 @@ inline auto do155( int ia, int ib, const std::vector<double>& alpha,
 }
 
 
-inline auto doSCTApproximation( int lat, double a, double tevz, double teff, 
-  double teff2, double az, double az2, double sigc, double s2, double u, 
-  double sb2, double e, double tev, double sigmin, double sabflg, double bb, 
+inline auto doSCTApproximation( double a, double teff, 
+  double sigc, 
+  double sb2, double tev, double sigmin, double sabflg, double bb, 
   double s, double sb ){
  /* The SCT approximation is calculated, according to Eq. 230. Note that since
   * some evaluations give S(a,b) for a molecule or compund (e.g. C6H6 or BeO), 
@@ -72,7 +72,7 @@ inline auto sig( const double& e, const double& ep, const double& u,
   const double& tev,  
   const std::vector<double>& alpha, const std::vector<double>& beta,
   const std::vector<std::vector<double>>& sab, const double az, 
-  const double tevz, const int lasym, const double az2, const double teff2, 
+  const double tevz, const int lasym,// const double az2, const double teff2, 
   const int lat, const double cliq, const double sb, const double sb2, 
   const double teff, const int iinc ){
 
@@ -132,26 +132,26 @@ inline auto sig( const double& e, const double& ep, const double& u,
 
   if (a > alpha[alpha.size()-1]) {
     // go to 170
-    return doSCTApproximation( lat, a_tev, tevz, teff, 
-        teff2, az, az2, sigc, s2, u, sb2, e, tev, sigmin, 
+    return doSCTApproximation( a_tev, teff, 
+        sigc, sb2, tev, sigmin, 
         sabflg, bb_tev, s, sb );
   }
 
   if (lasym == 1) {
      // S(a,b) is not symmetric, probably because we have orthohydrogen or 
      // parahydrogen.
-     bbm = (lat == 1) ? bb*tev/tevz : bb_tev;
+     bbm = (lat == 1) ? bb_tevz : bb_tev;
      if ( bbm > beta[beta.size()-1] or bbm < beta[0] ){
        // go to 170
-       return doSCTApproximation( lat, a_tev, tevz, teff, 
-           teff2, az, az2, sigc, s2, u, sb2, e, tev, 
+       return doSCTApproximation( a_tev, teff, 
+           sigc, sb2, tev, 
            sigmin, sabflg, bb_tev, s, sb );
      } 
   } // end if 
   else {
     if ( b > beta[beta.size()-1] ){
-       return doSCTApproximation( lat, a_tev, tevz, teff, 
-           teff2, az, az2, sigc, s2, u, sb2, e, tev, 
+       return doSCTApproximation( a_tev, teff, 
+           sigc, sb2, tev, 
            sigmin, sabflg, bb_tev, s, sb );
      }
   } // end if
@@ -176,8 +176,8 @@ inline auto sig( const double& e, const double& ep, const double& u,
     if ( a*az >= test2 or b >= test2 ){
       if ( sab[ia-1][ib-1]   <= sabflg or sab[ia+1-1][ib-1]   <= sabflg or 
            sab[ia-1][ib+1-1] <= sabflg or sab[ia+1-1][ib+1-1] <= sabflg ) {
-        return doSCTApproximation( lat, a_tev, tevz, teff, 
-         teff2, az, az2, sigc, s2, u, sb2, e, tev, 
+        return doSCTApproximation( a_tev, teff, 
+         sigc, sb2, tev, 
           sigmin, sabflg, bb_tev, s, sb );
       } 
       else { 

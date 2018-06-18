@@ -39,13 +39,13 @@ TEST_CASE( "110 120 130" ){
 
 
       auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
-        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
-        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
+        beta, sab, az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, yl, tol, xtol );
 
 
 
       //ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, 
-      //  bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+      //  bbm, az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, eps, seep, s1bb );
 
       double gral = std::get<0>(out);
       double sum = std::get<1>(out);
@@ -97,13 +97,13 @@ TEST_CASE( "110 120 130" ){
 
 
       auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
-        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
-        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
+        beta, sab, az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, yl, tol, xtol );
 
 
 
       //ymax = adaptiveLinearization( x, y, e, ep, tev, tevz, alpha, beta, sab, 
-      //  bbm, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, xl, eps, seep, s1bb );
+      //  bbm, az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, eps, seep, s1bb );
 
       double gral = std::get<0>(out);
       double sum = std::get<1>(out);
@@ -166,8 +166,8 @@ TEST_CASE( "110 120 130" ){
       //  nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol);
 
       auto out = do_110_120_130_for_sigl( i, x, y, e, ep, tev, tevz, alpha, 
-        beta, sab, az, az2, lasym, teff, teff2, lat, cliq, sb, sb2, iinc, nl, 
-        sigmin, s, nbin, fract, xl, j, ymax, eps, seep, yl, s1bb, tol, xtol );
+        beta, sab, az, /*az2,*/ lasym, teff, /*teff2,*/ lat, cliq, sb, sb2, iinc, nl, 
+        sigmin, s, nbin, fract, xl, j, ymax, yl, tol, xtol );
 
 
 

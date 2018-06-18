@@ -117,7 +117,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
     do310( ie, enow, egrid, temp, bk, break_val, therm, esi, xsi, ubar, p2, p3, 
         ep, jbeta, iskip, j, beta.size(), lasym, x );
      sigl( nnl, yt.size(), enow, ep, tev, alpha, beta, sab, yt, tol, az, tevz, iinc, 
-         lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+         lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
      for ( int il = 0; il < nl; ++il ){ y[il][0] = yt[il]; } // enddo
 
@@ -142,7 +142,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
       x[1-1]=ep;
 
       sigl( nnl, nlmax, enow, ep, tev, alpha, beta, sab, yt, tol, az, 
-        tevz, iinc, lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+        tevz, iinc, lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
       for (int il = 0; il < nl; ++il ){
         y[il][1-1]=yt[il];
@@ -166,7 +166,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
 
               if (xm > x[i-1] and xm < x[i-2]) {
                 sigl( nnl, nlmax, enow, xm, tev, alpha, beta, sab, yt, tol, az, 
-                    tevz, iinc, lat, lasym, az2, teff2, cliq, sb, sb2, teff );
+                    tevz, iinc, lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
                 uu = 0; uum = 0;
                 bool goto330 = false;
                 for ( int k = 1; k <= nl; ++k ){
@@ -179,7 +179,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
                   test2 = (k > 1) ? tol : tol*std::abs(yt[k-1]);
 
                   if (std::abs(yt[k-1]-ym) > test2){
-                    do410( i, x, xm, nl, y, yt, j );
+                    do410( i, x, xm, nl, y, yt );
                     goto330 = true;
                     break;
                   } 
@@ -189,7 +189,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
                   std::cout << 350 << std::endl;  // 350 continue
                   if (std::abs(uu-uum) > 2*tol*std::abs(uu)+uumin){
                     // point passes.  save top point in stack and continue.
-                    do410( i, x, xm, nl, y, yt, j );
+                    do410( i, x, xm, nl, y, yt );
                     continue;
                   }
                 }

@@ -25,7 +25,8 @@ TEST_CASE( "do 150" ){
   } 
 
 
-  //do150( i, x, y, xm, ym, yt, test, tolmin, e, u, tev, alpha, beta, sab, tevz, lasym, az, az2, teff2, lat, cliq, sb, sb2, teff, tol, iinc);
+  //do150( i, x, y, xm, ym, yt, test, tolmin, e, u, tev, alpha, beta, sab, 
+  //tevz, lasym, az, /*az2, teff2,*/ lat, cliq, sb, sb2, teff, tol, iinc);
 
  
 

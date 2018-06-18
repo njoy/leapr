@@ -8,7 +8,7 @@ auto do150( int& i, std::vector<double>& x, std::vector<double>& y,
   const double& e, const double& u, const double& tev, 
   const std::vector<double>& alpha, const std::vector<double>& beta, 
   const std::vector<std::vector<double>>& sab, const double& tevz, const int& lasym,
-  const double& az, const double& az2, const double& teff2, const int lat, const double& cliq,
+  const double& az, /*const double& az2, const double& teff2,*/ const int lat, const double& cliq,
   const double& sb, const double& sb2, const double& teff, const double& tol, int iinc){
   bool continue_to_150 = false;
   //std::cout << std::setprecision(20) << 150 << "     " << y[0] << std::endl;
@@ -18,7 +18,7 @@ auto do150( int& i, std::vector<double>& x, std::vector<double>& y,
     if (xm > x[i-1] and xm < x[i-2]){
       ym=0.5*(y[i-2]+y[i-1]);
       yt = sig( e, xm, u, tev, alpha, beta, sab, az, tevz, lasym, 
-                az2, teff2, lat, cliq, sb, sb2, teff, iinc );
+                /*az2, teff2,*/ lat, cliq, sb, sb2, teff, iinc );
       test = tol*std::abs(yt);
       
       if (std::abs(yt-ym) > test) {
