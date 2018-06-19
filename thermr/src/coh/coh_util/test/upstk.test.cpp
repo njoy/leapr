@@ -6,8 +6,8 @@ void checkStk( const std::vector<std::vector<double>>& stk,
   // stkVals are only the nonzero values in the desired output. In the 
   // for loop down there, we want all values beyond stkVals's range to be 0
 
-  for ( int i = 0; i < stk[0].size(); ++i ){
-    for ( int j = 0; j < stk.size(); ++j ){
+  for ( size_t i = 0; i < stk[0].size(); ++i ){
+    for ( size_t j = 0; j < stk.size(); ++j ){
       if ( stk.size()*i < stkVals.size() ){
         REQUIRE( stk[j][i] == Approx(stkVals[stk.size()*i+j]).epsilon(1e-6) );
       } 

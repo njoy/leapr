@@ -121,7 +121,7 @@ inline int do160(double add, std::vector<double>& x, std::vector<double>& y, dou
 }
 
 
-inline auto sigl( int nlin, int nlmax, double e, double ep,
+inline auto sigl( int nlin, double e, double ep,
   double tev, std::vector<double> alpha, std::vector<double> beta,
   std::vector<std::vector<double>> sab, std::vector<double>& s, double tolin,
   double az, double tevz, int iinc, int lat, 

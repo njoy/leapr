@@ -9,7 +9,7 @@ TEST_CASE( "legndr" ){
     x = 1.5; np = 0;
     p = { 0.1, 0.2, 0.3, 0.4, 0.5 }; p2 = { 1.0, 1.5, 0.3, 0.4, 0.5 };
     legndr( x, p, np );
-    for ( int i = 0; i < p.size(); ++i ){
+    for ( size_t i = 0; i < p.size(); ++i ){
       REQUIRE( p2[i] == Approx( p[i] ).epsilon(1e-6) );
     }
   } // GIVEN
@@ -18,7 +18,7 @@ TEST_CASE( "legndr" ){
       x = 1.5; np = 2;
       p = { 0.1, 0.2, 0.3, 0.4, 0.5 }; p2 = { 1.0, 1.5, 2.875, 0.4, 0.5 };
       legndr( x, p, np );
-      for ( int i = 0; i < p.size(); ++i ){
+      for ( size_t i = 0; i < p.size(); ++i ){
         REQUIRE( p2[i] == Approx( p[i] ).epsilon(1e-6) );
       }
     } // WHEN
@@ -26,7 +26,7 @@ TEST_CASE( "legndr" ){
       x = 1.5; np = 3;
       p = { 0.1, 0.2, 0.3, 0.4, 0.5 }; p2 = { 1.0, 1.5, 2.875, 6.1875, 0.5 };
       legndr( x, p, np );
-      for ( int i = 0; i < p.size(); ++i ){
+      for ( size_t i = 0; i < p.size(); ++i ){
         REQUIRE( p2[i] == Approx( p[i] ).epsilon(1e-6) );
       }
     } // WHEN
@@ -34,7 +34,7 @@ TEST_CASE( "legndr" ){
       x = 1.5; np = 3;
       p = { 0.1, 0.2, 0.3, 0.4, 0.5 }; p2 = { 1.0, 1.5, 2.875, 6.1875, 0.5 };
       legndr( x, p, np );
-      for ( int i = 0; i < p.size(); ++i ){
+      for ( size_t i = 0; i < p.size(); ++i ){
         REQUIRE( p2[i] == Approx( p[i] ).epsilon(1e-6) );
       }
     } // WHEN

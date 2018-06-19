@@ -59,11 +59,11 @@ TEST_CASE( "sigcoh" ){
           1.0870497e-8, 9.2526888e17, 1.0870497e-8, 9.2681242e17, 1.3567171e-9, 
           9.2681242e17, 1.3567171e-9, 9.2681242e17, 1.3567171e-9, 9.6519234e17, 
           1.3567171e-9, 0.00000000000 }; 
-        for ( size_t i = 0; i < 65; ++i ){ 
+        for ( int i = 0; i < 65; ++i ){ 
           REQUIRE( wrk_200_265[i] == Approx( wrk[199+i] ).epsilon(1e-6) );
         }
  
-        for ( int i = 264; i < wrk.size(); ++i ){ 
+        for ( size_t  i = 264; i < wrk.size(); ++i ){ 
           REQUIRE( 0.0 == Approx( wrk[i] ).epsilon(1e-6) );
         }
   
@@ -102,10 +102,10 @@ TEST_CASE( "sigcoh" ){
           0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 
           0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 
           0.0000000000, 0.0000000000 };
-        for ( size_t i = 0; i < 100; ++i ){ 
+        for ( int i = 0; i < 100; ++i ){ 
           REQUIRE( wrk_500_600[i] == Approx( wrk[499+i] ).epsilon(1e-6) );
         }
-        for ( int i = 599; i < wrk.size(); ++i ){ 
+        for ( size_t  i = 599; i < wrk.size(); ++i ){ 
           REQUIRE( 0.0 == Approx( wrk[i] ).epsilon(1e-6) );
         }
   
@@ -165,11 +165,11 @@ TEST_CASE( "sigcoh" ){
           1.0182629e20, 2.058866e-28, 1.0185788e20, 3.267650e-28, 1.0195299e20, 
           6.164371e-28, 1.0208276e20, 1.541683e-27, 1.0257880e20, 5.068201e-27, 
           1.0617115e20, 5.068201e-27 };
-        for ( size_t i = 0; i < 70; ++i ){ 
+        for ( int i = 0; i < 70; ++i ){ 
           REQUIRE( wrk_800_870[i] == Approx( wrk[799+i] ).epsilon(1e-6) );
         }
 
-        for ( int i = 869; i < wrk.size(); ++i ){ 
+        for ( size_t  i = 869; i < wrk.size(); ++i ){ 
           REQUIRE( 0.0 == Approx( wrk[i] ).epsilon(1e-6) );
         }
   

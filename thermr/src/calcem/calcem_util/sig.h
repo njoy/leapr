@@ -42,7 +42,7 @@ inline auto do155( int ia, int ib, const std::vector<double>& alpha,
 inline auto doSCTApproximation( double a, double teff, 
   double sigc, 
   double sb2, double tev, double sigmin, double sabflg, double bb, 
-  double s, double sb ){
+  double sb ){
  /* The SCT approximation is calculated, according to Eq. 230. Note that since
   * some evaluations give S(a,b) for a molecule or compund (e.g. C6H6 or BeO), 
   * the correspondint SCT approximation must contin terms for both atoms.
@@ -54,6 +54,7 @@ inline auto doSCTApproximation( double a, double teff,
 
   // Eq. 230 in the NJOY manual
   double arg, sigVal = 0;
+  double s;
   for ( const double& sb_val : {sb, sb2} ){
     // Eq. 230 in the NJOY manual
     arg = (a-std::abs(bb))*(a-std::abs(bb))*tev/(4.0*a*teff) + (std::abs(bb)+bb)/2.0;
@@ -128,13 +129,14 @@ inline auto sig( const double& e, const double& ep, const double& u,
   }
   //std::cout << a << std::endl;
   b = sigfig(b,8,0);
-  //if ( e >= 1.05 and e < 1.050001 and ep > 2.621273e-2 and ep < 2.621274e-2 )std::cout << "in sig     " << b <<  std::endl;
+  //if ( e >= 1.05 and e < 1.050001 and ep > 2.621273e-2 and ep < 2.621274e-2 ){
+  //std::cout << "in sig     " << b <<  std::endl;}
 
   if (a > alpha[alpha.size()-1]) {
     // go to 170
     return doSCTApproximation( a_tev, teff, 
         sigc, sb2, tev, sigmin, 
-        sabflg, bb_tev, s, sb );
+        sabflg, bb_tev, sb );
   }
 
   if (lasym == 1) {
@@ -145,14 +147,14 @@ inline auto sig( const double& e, const double& ep, const double& u,
        // go to 170
        return doSCTApproximation( a_tev, teff, 
            sigc, sb2, tev, 
-           sigmin, sabflg, bb_tev, s, sb );
+           sigmin, sabflg, bb_tev, sb );
      } 
   } // end if 
   else {
     if ( b > beta[beta.size()-1] ){
        return doSCTApproximation( a_tev, teff, 
            sigc, sb2, tev, 
-           sigmin, sabflg, bb_tev, s, sb );
+           sigmin, sabflg, bb_tev, sb );
      }
   } // end if
 
@@ -178,7 +180,7 @@ inline auto sig( const double& e, const double& ep, const double& u,
            sab[ia-1][ib+1-1] <= sabflg or sab[ia+1-1][ib+1-1] <= sabflg ) {
         return doSCTApproximation( a_tev, teff, 
          sigc, sb2, tev, 
-          sigmin, sabflg, bb_tev, s, sb );
+          sigmin, sabflg, bb_tev, sb );
       } 
       else { 
         return do155( ia, ib, alpha, beta, sab, a, b, sigc, sb,

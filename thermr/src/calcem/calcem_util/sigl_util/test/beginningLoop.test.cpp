@@ -16,8 +16,8 @@ TEST_CASE( "110 120 130" ){
   // Initialize S(a,b)
   std::vector<std::vector<double>> sab(alpha.size(), 
       std::vector<double>(beta.size(),0));
-  for ( int i = 0; i < alpha.size(); ++i ){
-    for ( int j = 0; j < beta.size(); ++j ){
+  for ( size_t i = 0; i < alpha.size(); ++i ){
+    for ( size_t j = 0; j < beta.size(); ++j ){
       sab[i][j] = 0.01*((j+1) + 0.1*(i+1));
     } 
   } 
@@ -63,19 +63,19 @@ TEST_CASE( "110 120 130" ){
       std::vector<double> correctX = { 1.0, 0.99, -1.0, -0.005, -1.0 },
         correctY = { 135757.913, 135758.3455, 135829.6496, 135797.21918, 135809.0 };
 
-      for ( int i = 0; i < x.size(); ++i ){ 
+      for ( size_t i = 0; i < x.size(); ++i ){ 
         if ( i < 5 ){ REQUIRE( correctX[i] == Approx(x[i]).epsilon(1e-6) ); }
         else        { REQUIRE( 0.0         == Approx(x[i]).epsilon(1e-6) ); }
       }
 
 
-      for ( int i = 0; i < y.size(); ++i ){ 
+      for ( size_t i = 0; i < y.size(); ++i ){ 
         if ( i < 5 ){ REQUIRE( correctY[i] == Approx(y[i]).epsilon(1e-6) ); }
         else        { REQUIRE( 0.0         == Approx(y[i]).epsilon(1e-6) ); }
       }
 
       REQUIRE( 271571.6756021== Approx(s[0]).epsilon(1e-6) );
-      for ( int i = 1; i < s.size(); ++i ){ 
+      for ( size_t i = 1; i < s.size(); ++i ){ 
         REQUIRE( 0.0 == Approx(s[i]).epsilon(1e-6) ); 
       }
 
@@ -127,17 +127,17 @@ TEST_CASE( "110 120 130" ){
         464.2416537, 100001.0, 538.74710638, 538.7314976, 538.72369255, 
         538.7197898, 538.71783, 538.7168628, 538.71637506, 100009.0 };
 
-      for ( int i = 0; i < x.size(); ++i ){ 
+      for ( size_t i = 0; i < x.size(); ++i ){ 
         REQUIRE( correctX[i] == Approx(x[i]).epsilon(1e-6) );
       }
 
 
-      for ( int i = 0; i < y.size(); ++i ){ 
+      for ( size_t i = 0; i < y.size(); ++i ){ 
         REQUIRE( correctY[i] == Approx(y[i]).epsilon(1e-6) );
       }
 
       REQUIRE( 1085.2060021664768 == Approx(s[0]).epsilon(1e-6) );
-      for ( int i = 1; i < s.size(); ++i ){ 
+      for ( size_t i = 1; i < s.size(); ++i ){ 
         REQUIRE( 0.0 == Approx(s[i]).epsilon(1e-6) ); 
       }
 
@@ -187,7 +187,7 @@ TEST_CASE( "110 120 130" ){
 
       std::vector<double> correctX = { 1.0, 0.99, 0.4925, -5.0E-3, -1.0 };
 
-      for ( int i = 0; i < x.size(); ++i ){ 
+      for ( size_t i = 0; i < x.size(); ++i ){ 
         if ( i < correctX.size() ){
           REQUIRE( correctX[i] == Approx(x[i]).epsilon(1e-6) );
         }
@@ -197,11 +197,11 @@ TEST_CASE( "110 120 130" ){
       }
 
 
-      for ( int i = 0; i < y.size(); ++i ){ 
+      for ( size_t i = 0; i < y.size(); ++i ){ 
         REQUIRE( 0.0 == Approx(y[i]).epsilon(1e-6) );
       }
 
-      for ( int i = 0; i < s.size(); ++i ){ 
+      for ( size_t i = 0; i < s.size(); ++i ){ 
         REQUIRE( 0.0 == Approx(s[i]).epsilon(1e-6) ); 
       }
 

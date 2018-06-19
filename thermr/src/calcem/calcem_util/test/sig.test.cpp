@@ -14,8 +14,8 @@ TEST_CASE( "sig" ){
   std::vector<double> alpha { 1.1, 2.2, 3.3, 4.5, 5.8 },
     beta { 0.1, 0.2, 1.3, 1.4, 2.5, 2.6, 3.7 };
   std::vector<std::vector<double>> sab(alpha.size(), std::vector<double>(beta.size(),0));
-  for ( int i = 0; i < alpha.size(); ++i ){
-    for ( int j = 0; j < beta.size(); ++j ){
+  for ( size_t i = 0; i < alpha.size(); ++i ){
+    for ( size_t j = 0; j < beta.size(); ++j ){
       sab[i][j] = 0.01*((j+1) + 0.1*(i+1));
 
     } 
@@ -223,8 +223,8 @@ TEST_CASE( "sig" ){
       19.4093, 20.9860, 22.7139, 24.6082, 26.6849, 28.9602, 31.4533, 
       34.1873, 37.1825, 40.4659 };
     std::vector<std::vector<double>> sab ( alpha.size(), std::vector<double> (beta.size()));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.5*i + 0.1*j;
       }
     }
@@ -252,8 +252,8 @@ TEST_CASE( "sig" ){
     for ( int i = 0; i < 80; ++i ){ beta[i]  = 0.2*i + 0.025; }
 
     std::vector<std::vector<double>> sab(alpha.size(), std::vector<double>(beta.size(),0));
-    for ( int i = 0; i < alpha.size(); ++i ){
-      for ( int j = 0; j < beta.size(); ++j ){
+    for ( size_t i = 0; i < alpha.size(); ++i ){
+      for ( size_t j = 0; j < beta.size(); ++j ){
         sab[i][j] = 0.2*i + 0.4*j + (i+j)%5;
       } 
     } 
@@ -292,7 +292,6 @@ TEST_CASE( "sig" ){
       THEN( "" ){
         sigVal1 = sig( e, ep, u, tev, alpha, beta, sab, 
           az, tevz, lasym, /*az2, teff2,*/lat, cliq, sb, sb2, teff, iinc );
-        std::cout << std::setprecision(20) << sigVal1 << std::endl;
         //REQUIRE( 665890150.16903055 == Approx( sigVal1 ).epsilon(1e-6) );
       } // THEN
     } // WHEN

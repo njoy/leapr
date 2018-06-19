@@ -3,12 +3,12 @@
 #include "calcem/calcem_util/e_ep_mu_util/310.h"
 
 void checkVecHasZeros(std::vector<double>& v, int index_0, int index_1 ){
-  for ( size_t i = index_0; i < index_1; ++i ){
+  for ( int i = index_0; i < index_1; ++i ){
     REQUIRE( 0.0 == Approx(v[i]).epsilon(1e-6) );
   }
 }
 void checkVecHasLin(std::vector<double>& v, int index_0, int index_1 ){
-  for ( size_t i = index_0; i < index_1; ++i ){
+  for ( int i = index_0; i < index_1; ++i ){
     REQUIRE( (i+1) == Approx(v[i]).epsilon(1e-6) );
   }
 }
@@ -29,7 +29,7 @@ TEST_CASE( "310" ){
     1.417e-2, 1.5e-2, 1.6192e-2, 1.82e-2, 1.99e-2, 2.0493e-2, 2.15e-2, 2.28e-2,
     2.53e-2, 2.8e-2, 3.0613e-2, 3.38e-2, 3.65e-2, 3.95e-2, 4.2757e-2, 4.65e-2,
     5e-2, 5.6925e-2, 6.25e-2, 6.9e-2, 7.5e-2, 8.1972e-2, 9e-2, 9.6e-2, 0.1035,
-    0.111573, 0.12, 0.128, 0.1355, 0.145728, 0.16, 0.172, 0.184437, 0.2, 0.2277, 
+    0.111573, 0.12, 0.128, 0.1355, 0.145728, 0.16, 0.172, 0.184437, 0.2, 0.2277,
     0.2510392, 0.2705304, 0.2907501, 0.3011332, 0.3206421, 0.3576813, 0.39, 
     0.4170351, 0.45, 0.5032575, 0.56, 0.625, 0.7, 0.78, 0.86, 0.95, 1.05, 
     1.16, 1.28, 1.42, 1.55, 1.70, 1.855, 2.02, 2.18, 2.36, 2.59, 2.855, 3.12, 
@@ -37,9 +37,9 @@ TEST_CASE( "310" ){
     9.85, 10.0 };
     int ie = 0, jbeta = 0, iskip = 0, j = 0, lasym = 0, nbeta = 80;
     double enow = 0.0, temp = 296.0, bk = 8.617385e-5, break_val = 3000.0,
-           therm = 2.53e-2, ep = 0.0, tev = 2.55074596e-2, tol = 5.0e-2,
-           az = 11.9, tevz = 2.53e-2, iinc = 2, lat = 1, az2 = 0.0, teff2 = 0.0, 
-           cliq = 0.0, sb = 5.5348570016241778, sb2 = 0.0, teff = 6.1475562851499993E-2;
+      therm = 2.53e-2, ep = 0.0, tev = 2.55074596e-2, az = 11.9, tevz = 2.53e-2,
+      iinc = 2, lat = 1, az2 = 0.0, teff2 = 0.0, cliq = 0.0, 
+      sb = 5.5348570016241778, sb2 = 0.0, teff = 6.1475562851499993E-2;
 
     std::vector<double> esi(95,0.0), xsi(95,0.0), ubar(118,0.0), x(20,0.0), 
       p2(118,0.0), p3(118,0.0);
@@ -53,7 +53,7 @@ TEST_CASE( "310" ){
       do310( ie, enow, egrid, temp, bk, break_val, therm, esi, xsi, ubar, p2, 
         p3, ep, jbeta, iskip, j, nbeta, lasym, x );
 
-      THEN( "ie is incremented, jbeta = -#beta, vectors set to 0 (except esi)" ){
+      THEN( "ie's incremented, jbeta = -#beta, vectors set to 0 (except esi)" ){
         REQUIRE( 1 == ie ); REQUIRE(   0 == iskip); 
         REQUIRE( 0 == j  ); REQUIRE( -80 == jbeta);
 
@@ -79,7 +79,7 @@ TEST_CASE( "310" ){
     } // WHEN
 
     WHEN( "vectors contain nonzero entries, ie is nonzero index" ){
-      ie = 3, jbeta = 10, iskip = 2, j = 8; enow = 0.5, ep = 1.0, tol = 5.0e-2;
+      ie = 3, jbeta = 10, iskip = 2, j = 8; enow = 0.5, ep = 1.0;
 
       initializeLin(esi); initializeLin(xsi); initializeLin(ubar); 
       initializeLin(x);   initializeLin(p2);  initializeLin(p3);
@@ -148,7 +148,7 @@ TEST_CASE( "310" ){
     } // WHEN
 
     WHEN( "vectors contain nonzero entries, ie is nonzero index" ){
-      ie = 3, jbeta = 10, iskip = 2, j = 8; enow = 0.5, ep = 1.0, tol = 5.0e-2;
+      ie = 3, jbeta = 10, iskip = 2, j = 8; enow = 0.5, ep = 1.0;
 
       initializeLin(esi); initializeLin(xsi); initializeLin(ubar); 
       initializeLin(x);   initializeLin(p2);  initializeLin(p3);

@@ -18,8 +18,8 @@ TEST_CASE( "do 150" ){
 
   std::vector<std::vector<double>> sab(alpha.size(), 
       std::vector<double>(beta.size(),0));
-  for ( int i = 0; i < alpha.size(); ++i ){
-    for ( int j = 0; j < beta.size(); ++j ){
+  for ( size_t i = 0; i < alpha.size(); ++i ){
+    for ( size_t j = 0; j < beta.size(); ++j ){
       sab[i][j] = 0.01*((j+1) + 0.1*(i+1));
     } 
   } 

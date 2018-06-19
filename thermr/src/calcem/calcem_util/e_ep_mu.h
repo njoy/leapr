@@ -116,7 +116,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
     // 310 continue
     do310( ie, enow, egrid, temp, bk, break_val, therm, esi, xsi, ubar, p2, p3, 
         ep, jbeta, iskip, j, beta.size(), lasym, x );
-     sigl( nnl, yt.size(), enow, ep, tev, alpha, beta, sab, yt, tol, az, tevz, iinc, 
+     sigl( nnl, enow, ep, tev, alpha, beta, sab, yt, tol, az, tevz, iinc, 
          lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
      for ( int il = 0; il < nl; ++il ){ y[il][0] = yt[il]; } // enddo
@@ -141,7 +141,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
       ep = sigfig(ep,8,0);
       x[1-1]=ep;
 
-      sigl( nnl, nlmax, enow, ep, tev, alpha, beta, sab, yt, tol, az, 
+      sigl( nnl, enow, ep, tev, alpha, beta, sab, yt, tol, az, 
         tevz, iinc, lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
 
       for (int il = 0; il < nl; ++il ){
@@ -165,7 +165,7 @@ auto e_ep_mu( double& teff, double& teff2, std::vector<double>& scr, double& za,
               double xm = sigfig(0.5*(x[i-2]+x[i-1]),8,0);
 
               if (xm > x[i-1] and xm < x[i-2]) {
-                sigl( nnl, nlmax, enow, xm, tev, alpha, beta, sab, yt, tol, az, 
+                sigl( nnl, enow, xm, tev, alpha, beta, sab, yt, tol, az, 
                     tevz, iinc, lat, lasym, /*az2,*/ /*teff2,*/ cliq, sb, sb2, teff );
                 uu = 0; uum = 0;
                 bool goto330 = false;

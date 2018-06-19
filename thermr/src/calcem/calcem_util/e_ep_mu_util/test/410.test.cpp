@@ -7,7 +7,7 @@ TEST_CASE( "410" ){
     double xm = 5.0e-5;
     std::vector<double> x (20,0.0), yt (65,0.0);
     std::vector<std::vector<double>> y (65,std::vector<double>(20)); 
-    for ( int i = 0; i < y.size(); ++i ){
+    for ( size_t i = 0; i < y.size(); ++i ){
       for ( size_t j = 0; j < y[0].size(); ++j ){
         y[i][j] = 0.01*(i+j);
       }
