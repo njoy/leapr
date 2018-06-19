@@ -7,12 +7,12 @@ TEST_CASE( "380" ){
     double em9 = 1.0e-9, xlast, ylast, ulast, u2last, u3last;
     std::vector<double> p (4,0.0), x(20,0.0), scr(500000);
     std::vector<std::vector<double>> y (65,std::vector<double>(20)); 
-    for ( int i = 0; i < y.size(); ++i ){
+    for ( size_t i = 0; i < y.size(); ++i ){
       for ( size_t j = 0; j < y[0].size(); ++j ){
         y[i][j] = 0.01*(i+j);
       }
     }
-    for ( int i = 0; i < scr.size(); ++i ){
+    for ( size_t i = 0; i < scr.size(); ++i ){
       scr[i] = 1.2*(i%3)+0.01*i;
     }
     x[0] = 1.0e-5; x[1] = 5.0e-6; x[2] = 2.5e-6;
@@ -33,10 +33,10 @@ TEST_CASE( "380" ){
         for ( int i = 0; i < 645; ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
-        for ( int i = 0; i < scr_645_to_670.size(); ++i ){
+        for ( size_t i = 0; i < scr_645_to_670.size(); ++i ){
           REQUIRE( scr_645_to_670[i] == Approx(scr[i+645]).epsilon(1e-6) );
         }
-        for ( int i = 670; i < scr.size(); ++i ){
+        for ( size_t i = 670; i < scr.size(); ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
 
@@ -49,12 +49,12 @@ TEST_CASE( "380" ){
     double em9 = 1.0e-9, xlast, ylast, ulast, u2last, u3last;
     std::vector<double> p (4,0.0), x(20,0.0), scr(500000);
     std::vector<std::vector<double>> y (65,std::vector<double>(20)); 
-    for ( int i = 0; i < y.size(); ++i ){
+    for ( size_t i = 0; i < y.size(); ++i ){
       for ( size_t j = 0; j < y[0].size(); ++j ){
         y[i][j] = 0.2*(i+j);
       }
     }
-    for ( int i = 0; i < scr.size(); ++i ){
+    for ( size_t i = 0; i < scr.size(); ++i ){
       scr[i] = 1.2*(i%3)+0.01*i;
     }
     x[0] = 1.0e-5; x[1] = 5.0e-6; x[2] = 2.5e-6;
@@ -75,10 +75,10 @@ TEST_CASE( "380" ){
         for ( int i = 0; i < 295; ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
-        for ( int i = 0; i < scr_295_to_306.size(); ++i ){
+        for ( size_t i = 0; i < scr_295_to_306.size(); ++i ){
           REQUIRE( scr_295_to_306[i] == Approx(scr[i+295]).epsilon(1e-6) );
         }
-        for ( int i = 306; i < scr.size(); ++i ){
+        for ( size_t i = 306; i < scr.size(); ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
 
@@ -87,7 +87,7 @@ TEST_CASE( "380" ){
     } // WHEN
 
     WHEN( "scr value is lesser than 1" ){
-    for ( int i = 0; i < y.size(); ++i ){
+    for ( size_t i = 0; i < y.size(); ++i ){
       for ( size_t j = 0; j < y[0].size(); ++j ){
         y[i][j] = -0.2*(i+j);
       }
@@ -108,10 +108,10 @@ TEST_CASE( "380" ){
         for ( int i = 0; i < 25; ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
-        for ( int i = 0; i < scr_25_to_39.size(); ++i ){
+        for ( size_t i = 0; i < scr_25_to_39.size(); ++i ){
           REQUIRE( scr_25_to_39[i] == Approx(scr[i+25]).epsilon(1e-6) );
         }
-        for ( int i = 39; i < scr.size(); ++i ){
+        for ( size_t i = 39; i < scr.size(); ++i ){
           REQUIRE( 1.2*(i%3)+0.01*i == Approx(scr[i]).epsilon(1e-6) );
         }
 

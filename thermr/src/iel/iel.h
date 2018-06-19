@@ -20,7 +20,7 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
    int idis,iex,iet,ix,nj,nr,np,ip,ir,ltt,nb,nw,matdp;
    int n,nup,nup1,isave,nne;
    double dwa,c1,e,c2,uLeft,rc2,temp,tt1,ttn,tnxt,math,mth,mfh,mtref,sb;
-   double x1,r1x1,xsec,x2,uRight;
+   double /*x1,r1x1,*/xsec,/*x2,*/uRight;
    std::vector<double> ex(20), ej(20);
    int nupmax = 10;
    std::vector<double> tmp { 296,400,500,600,700,800,1000,1200 },
@@ -28,6 +28,11 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
      dwz { 1.9957, 2.6546, 3.2946, 4.5835, 5.2302, 6.5260, 7.8236 };
    
    double c11a=162.88, c11b=296, c11c=34.957, c11d=350, c11e=40.282, c12a=81.44, c13a=6.3366, up=1.1, dn=.9;
+
+   dwa = 0; // This is just to fix uninitialized warning. NJOY doesn't 
+            // initialize dwa. No real reason why...?
+   mtref = 0; // mtref is not initialized either
+   matdp = 0; // matdp is not initialized either
 
    // initialize
    temp=tempr[itemp];
@@ -135,8 +140,8 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
       e = esi[iex];
       c2 = 2*e*dwa;
       uLeft=-1;
-      rc2=1/c2;
-      x1=exp(-4*e*dwa);
+      //rc2=1/c2;
+      //x1=exp(-4*e*dwa);
 
       // This is the incoh. elastic xs sigma from Eq. 232. This is assuming
       // equiprobable angles.
@@ -147,7 +152,7 @@ auto iel( int mat, int itemp, int iold, int inew, int ne, int nex,
 
       for ( int iu = 0; iu < n; ++iu ){
 
-         x2 = exp(-(2*e*dwa)*(1-uLeft));
+         //x2 = exp(-(2*e*dwa)*(1-uLeft));
          // This is mu_i of Eq. 234
          uRight = 1 + 1/(2*e*dwa) * log( ( 1 - exp(-4*e*dwa) ) / n + 
                                          exp( -2*e*dwa*(1-uLeft) ) );
