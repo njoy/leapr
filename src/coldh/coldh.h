@@ -81,6 +81,15 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     // is used to account for intermolecular coherence (if there is a 
     // correlation between positions of nearby molecules). S(kappa) is also 
     // called the static structure factor
+    //
+    // It seems that this is implicitly applying the Vineyard approximation,
+    // which is detailed in Eq. 571 on pg. 663 of the NJOY manual. This 
+    // seems to make sense, since if we wanted to account for intermolecular
+    // coherence, we would either use Vineyard or Skold. Skold only gets 
+    // invoked if we ask for it, AND if we don't use coldh. So the fact that
+    // we're using this (and applying Vineyard) means that we are not able to
+    // use Skold later. Which is good, because we wouldn't want to do it twice.
+
     
     // Ortho Hydrogen
     if (ncold == 1){ 
