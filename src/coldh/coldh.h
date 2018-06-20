@@ -2,6 +2,7 @@
 #include <vector>
 #include "coldh_util/terpk.h"
 #include "coldh_util/betaLoop.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 
 auto coldh( int itemp, const double& temp, double tev, int ncold,
@@ -9,8 +10,8 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
     double& dka, std::vector<double>& ska, int nbeta, int lat, bool free, 
-    std::vector<std::vector<std::vector<double>>>& sym_sab,
-    std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
+    Eigen::Tensor<double,3>& sym_sab,
+    Eigen::Tensor<double,3>& sym_sab_2 ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -134,7 +135,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     }
     std::vector<double> input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab[a][b][itemp];
+      input[b] = sym_sab(a,b,itemp);
     }
     auto sex = exts( input, exb, betan );
 

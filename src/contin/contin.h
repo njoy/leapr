@@ -2,13 +2,14 @@
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 
 auto contin( const int itemp, int nphon, double& delta, 
   const double& tbeta, const double& scaling, const double& tev, 
   const double& sc, std::vector<double> t1, const std::vector<double>& alpha, 
   const std::vector<double>& beta, 
-  std::vector<std::vector<std::vector<double>>>& symSab ){
+  Eigen::Tensor<double,3>& symSab ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -93,10 +94,10 @@ auto contin( const int itemp, int nphon, double& delta,
 
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
-        symSab[a][b][itemp] += add < 1e-30 ? 0 : add;
+        symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
-        if ( symSab[a][b][itemp] != 0 and n >= nphon-1 ) {
-          if ( add > symSab[a][b][itemp]/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; } 
+        if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
+          if ( add > symSab(a,b,itemp)/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; } 
         } 
 
       } // for b in beta

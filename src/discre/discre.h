@@ -4,6 +4,7 @@
 #include "discre_util/oscLoopFuncs.h"
 #include "discre_util/sint.h"
 #include "discre_util/addDeltaFuncs.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 void swap( double& a, double& b ){
   double c = a; a = b; b = c;
@@ -15,8 +16,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
   const std::vector<double>& beta, const std::vector<double>& temp_vec, 
   std::vector<double>& energy, std::vector<double>& weights,
   std::vector<double>& t_eff_vec, 
-  std::vector<std::vector<std::vector<double>>>& sym_sab
-  ){
+  Eigen::Tensor<double,3>& sym_sab ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
   double bk = 8.617385E-5;
@@ -53,7 +53,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // for use in exts
     std::vector<double> input ( beta.size() );
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab[a][b][itemp];
+      input[b] = sym_sab(a,b,itemp);
     }
 
     // input = sym_sab values for constant temp and alpha. 
@@ -132,7 +132,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
 
     // Record the results
     for ( size_t b = 0; b < betan.size(); ++b ){
-      sym_sab[a][b][itemp] = sexpb[b];
+      sym_sab(a,b,itemp) = sexpb[b];
     }
   }
 }

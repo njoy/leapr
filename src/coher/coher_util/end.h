@@ -5,7 +5,7 @@ void swap( double& a, double& b ){
 }
 
 auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k, 
-  int nw, double ulim, int imax ){
+  int& nw, double ulim, int imax ){
 
   // Sort lattice factors
   for ( auto i = 1; i <= imax; ++i ){
@@ -23,8 +23,8 @@ auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k,
 }
 
 
-auto end( int ifl, std::vector<double>& b, int k, double recon, int maxb, 
-  double toler, double scon, int nw, double ulim, int imax ){
+auto end( int ifl, std::vector<double>& b, int k, double recon, int& maxb, 
+  double toler, double scon, int& nw, double ulim, int imax ){
 
   sortLatticeFactors( ifl, b, k, nw, ulim, imax );
 

@@ -1,24 +1,25 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include <vector>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "trans/trans.h"
 #include "catch.hpp"
 
-void equal( double a, double b ){
-  if( b == 0 ){ REQUIRE( (a-b) < 1e-4 ); }
-  if( b != 0 ){ REQUIRE ( std::abs( (a-b)/(b) ) < 1e-4 ); }
-}
 
-
-void equalSAB( const std::vector<std::vector<std::vector<double>>>& sym_sab,
+void equalSAB( const Eigen::Tensor<double,3>& sab,
   const std::vector<double>& correct ){
-  int i = 0;
-  for ( auto beta_temp : sym_sab ){
-    for ( auto temps : beta_temp ){
-      equal( temps[0], correct[i] );
-      i += 1;
-    } // temp
-  } // beta and temp
+
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correct.size() );
+
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correct[l]).epsilon(1e-4) );
+	l += 1;
+      }
+    }
+  }
 }
 
 
@@ -31,14 +32,12 @@ TEST_CASE( "trans" ){
   double trans_weight = 0.03, delta = 220.0, diffusion_const = 1.5, 
     sc = 1.0, scaling = 1.0, lambda_s = 0.002, tbeta = 2.1, correct_t_eff_val;
 
-  std::vector<std::vector<std::vector<double>>> sym_sab ( alpha.size(),
-    std::vector<std::vector<double>> ( beta.size(),
-      std::vector<double> ( temps.size(), 0.0 ) ) );
+  Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
+  sym_sab.setValues ( { { { 0.1 }, { 0.2 }, { 0.3 } },
+  		        { { 0.4 }, { 0.5 }, { 0.6 } },
+                        { { 0.7 }, { 0.8 }, { 0.9 } },
+                        { { 1.0 }, { 1.1 }, { 1.2 } } } );
 
-  sym_sab = { { { 0.1 }, { 0.2 }, { 0.3 } },
-              { { 0.4 }, { 0.5 }, { 0.6 } },
-              { { 0.7 }, { 0.8 }, { 0.9 } },
-              { { 1.0 }, { 1.1 }, { 1.2 } } };
   int itemp = 0;
 
 
@@ -54,7 +53,7 @@ TEST_CASE( "trans" ){
 
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         equalSAB( sym_sab, correct );
-        equal( t_eff_vec[0], correct_t_eff_val );
+	REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
     } // WHEN
 
@@ -62,12 +61,13 @@ TEST_CASE( "trans" ){
 
       alpha = {0.8, 1.0, 1.4, 1.5};
       beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
+      Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
       temps = {800.0};
       t_eff_vec = {117.2};
-      sym_sab = { { { 0.001 }, { 0.002 }, { 0.003 }, { 0.004 }, { 0.006 } },
-                  { { 0.01  }, { 0.02  }, { 0.03  }, { 0.04  }, { 0.06  } },
-                  { { 0.1   }, { 0.2   }, { 0.3   }, { 0.4   }, { 0.6   } },
-                  { { 1.1   }, { 1.2   }, { 1.3   }, { 1.4   }, { 1.6 } } };
+      sym_sab.setValues( { { {0.001}, {0.002}, {0.003}, {0.004}, {0.006} },
+                           { {0.01 }, {0.02 }, {0.03 }, {0.04 }, {0.06 } },
+                           { {0.1  }, {0.2  }, {0.3  }, {0.4  }, {0.6  } },
+                           { {1.1  }, {1.2  }, {1.3  }, {1.4  }, {1.6  } } } );
       lambda_s = 2.5236078E-3;
       tbeta = 5.1;
 
@@ -82,7 +82,7 @@ TEST_CASE( "trans" ){
 
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         equalSAB( sym_sab, correct );
-        equal( t_eff_vec[0], correct_t_eff_val );
+	REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -101,7 +101,7 @@ TEST_CASE( "trans" ){
 
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         equalSAB( sym_sab, correct );
-        equal( t_eff_vec[0], correct_t_eff_val );
+	REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
     } // WHEN
 
@@ -111,10 +111,11 @@ TEST_CASE( "trans" ){
       beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
       temps = {800.0};
       t_eff_vec = {117.2};
-      sym_sab = { { { 0.001 }, { 0.002 }, { 0.003 }, { 0.004 }, { 0.006 } },
-                  { { 0.01  }, { 0.02  }, { 0.03  }, { 0.04  }, { 0.06  } },
-                  { { 0.1   }, { 0.2   }, { 0.3   }, { 0.4   }, { 0.6   } },
-                  { { 1.1   }, { 1.2   }, { 1.3   }, { 1.4   }, { 1.6 } } };
+      Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
+      sym_sab.setValues( { { {0.001}, {0.002}, {0.003}, {0.004}, {0.006} },
+                           { {0.01 }, {0.02 }, {0.03 }, {0.04 }, {0.06 } },
+                           { {0.1  }, {0.2  }, {0.3  }, {0.4  }, {0.6  } },
+                           { {1.1  }, {1.2  }, {1.3  }, {1.4  }, {1.6  } } } );
       lambda_s = 2.5236078E-3;
       tbeta = 5.1;
 
@@ -128,10 +129,9 @@ TEST_CASE( "trans" ){
 
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         equalSAB( sym_sab, correct );
-        equal( t_eff_vec[0], correct_t_eff_val );
+	REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
     } // WHEN
   } // GIVEN
-
 } // TEST CASE
  

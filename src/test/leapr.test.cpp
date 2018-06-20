@@ -1,18 +1,21 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "leapr.cpp"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 
-void checkSab( const std::vector<double>& correctSab, 
-  const std::vector<std::vector<std::vector<double>>>& sab ){
 
-  int i = 0;
-  for ( auto a1 : sab ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        if ( i == int(correctSab.size()) ){ return; }
-        REQUIRE( a3 == Approx(correctSab[i]).epsilon(1e-6) );
-        i += 1;
+void checkSab( const std::vector<double>& correctSab,
+  const Eigen::Tensor<double,3>& sab ){
+
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
+	l += 1;
       }
     }
   }
@@ -24,8 +27,10 @@ void checkSab( const std::vector<double>& correctSab,
 
 TEST_CASE( "leapr" ){
   int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
-      lat, ni, nd, nka, mss;
-  double za, awr, spr, aws, sps, delta, twt, c, tbeta, dka, b7;
+      lat, ni, nd, nka;
+  //int mss;
+  //double sps, b7;
+  double za, awr, spr, aws, delta, twt, c, tbeta, dka;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, 
     kappa;
   std::string title;
@@ -389,7 +394,7 @@ TEST_CASE( "leapr" ){
     ntempr = 1;     iprint = 1;      nphon = 100;              // Card 3
     mat    = 7;     za     = 1007.0;                           // Card 4
     awr    = 0.99917; spr    = 20.478; npr   = 1;   iel = -1;   ncold = 0; // Card 5
-    nss    = 0;       b7     = 0;     aws   = 0; sps = 0; mss = 0; 
+    nss    = 0;       /*b7     = 0;*/     aws   = 0; /*sps = 0; mss = 0;*/ 
                                                                      // Card 6
     nalpha = 48;       nbeta  = 200;      lat   = 1;                // Card 7
     alpha  = { 5.04060e-1, 1.00812e+0, 1.51218e+0, 2.01624e+0, 2.52030e+0, 
@@ -459,11 +464,11 @@ TEST_CASE( "leapr" ){
     std::vector<double> ssmCorrect { };
 
 
+    /*
     std::cout << ssm[0][0][0] << std::endl;
     std::cout << ssm[1][1][0] << std::endl;
     std::cout << ssm[2][2][0] << std::endl;
     std::cout << ssm[3][3][0] << std::endl;
-    /*
     */
 
     //checkSab( ssmCorrect, ssm );

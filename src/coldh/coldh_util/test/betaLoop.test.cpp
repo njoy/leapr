@@ -2,36 +2,50 @@
 #include "catch.hpp"
 #include "discre/discre_util/sint.h"
 #include "coldh/coldh_util/betaLoop.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
-void checkSab( const std::vector<std::vector<std::vector<double>>>& sab,
+void checkSab( const Eigen::Tensor<double,3>& sab,
   const std::vector<double>& correctSab ){
 
-  REQUIRE( sab.size()*sab[0].size()*sab[0][0].size() == correctSab.size() );
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
 
-  int i = 0;
-  for ( auto a1 : sab ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        REQUIRE( a3 == Approx(correctSab[i]).epsilon(1e-6) );
-        i += 1;
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-6) );
+	l += 1;
       }
     }
   }
 }
 
 
-auto populateSymSab( int a_size, int b_size, bool is_normal ){
-  std::vector<std::vector<std::vector<double>>> sym_sab(a_size,
-    std::vector<std::vector<double>>(b_size,std::vector<double>(1,0.0)));
-  int i = 1;
-  for ( auto a = 0; a < a_size; ++a ){
-    for ( auto b = 0; b < b_size; ++b ){
-      if ( is_normal ){ sym_sab[a][b][0] = i; }
-      else {sym_sab[a][b][0] = 0; }
-      i += 1;
+auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>& beta ){
+  Eigen::Tensor<double,3> sab(alpha.size(),beta.size(),1);
+  int k = 1;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      sab(i,j,0) = k;
+      k += 1;
     }
   }
-  return sym_sab;
+  return sab;
+}
+
+
+
+auto populateSymSab( int a_size, int b_size, bool is_normal ){
+  Eigen::Tensor<double,3> sab(a_size,b_size,1);
+  int k = 1;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      if ( is_normal ){ sab(i,j,0) = i; }
+      else {sab(i,j,0) = 0; }
+      k += 1;
+    }
+  }
+  return sab;
 }
 
 
