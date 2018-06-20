@@ -13,7 +13,7 @@ void equal( double a, double b ){
 
 void equal_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( int i = 0; i < a.size(); ++i ){
+  for ( size_t i = 0; i < a.size(); ++i ){
     equal( a[i], b[i] );
   }
 }
@@ -83,7 +83,7 @@ TEST_CASE( "coher" ){
           5.387925E-2, 4.364670E-3, 5.513226E-2, 4.314787E-3, 6.014428E-2, 
           1.377031E-3, 6.390330E-2, 8.015499E-3, 6.515631E-2, 3.969026E-3, 
           7.016833E-2, 7.649299E-3 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
     WHEN( "3 principal scattering atoms in compound" ){
@@ -99,7 +99,7 @@ TEST_CASE( "coher" ){
           5.387925E-2, 1.454890E-3, 5.513226E-2, 1.438262E-3, 6.014428E-2, 
           4.590104E-4, 6.390330E-2, 2.671833E-3, 6.515631E-2, 1.323008E-3, 
           7.016833E-2, 2.549766E-3 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
   } // GIVEN
@@ -120,7 +120,7 @@ TEST_CASE( "coher" ){
           3.603549E-2, 1.952626E-3, 3.687352E-2, 1.930309E-3, 4.022566E-2, 
           6.160436E-4, 4.273976E-2, 3.585900E-3, 4.357780E-2, 1.775626E-3, 
           4.692994E-2, 3.422073E-3 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
     WHEN( "5 principal scattering atoms in compound" ){
@@ -136,7 +136,7 @@ TEST_CASE( "coher" ){
           3.603549E-2, 3.905252E-4, 3.687352E-2, 3.860619E-4, 4.022566E-2, 
           1.232087E-4, 4.273976E-2, 7.171801E-4, 4.357780E-2, 3.551253E-4, 
           4.692994E-2, 6.844146E-4 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
   } // GIVEN
@@ -155,7 +155,7 @@ TEST_CASE( "coher" ){
           8.000806E-2, 2.177859E-2, 8.500857E-2, 8.451337E-2, 9.000907E-2, 
           5.133264E-2, 9.500958E-2, 0.119912469, 0.100010086, 3.895873E-2, 
           0.105010591, 7.603967E-2 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
     WHEN( "5 principal scattering atoms in compound" ){
@@ -171,7 +171,7 @@ TEST_CASE( "coher" ){
           8.000806E-2, 4.355719E-3, 8.500857E-2, 1.690267E-2, 9.000907E-2, 
           1.026652E-2, 9.500958E-2, 2.398249E-2, 0.100010086, 7.791747E-3, 
           0.105010591, 1.520793E-2 };
-        for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
       } // THEN
     } // WHEN
   } // GIVEN

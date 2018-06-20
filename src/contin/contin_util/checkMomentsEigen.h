@@ -1,9 +1,10 @@
 #include <iostream>
+#include <unsupported/Eigen/CXX11/Tensor>
 
-auto checkMoments( const double& sc, const std::vector<double>& alpha,
+auto checkMomentsEigen( const double& sc, const std::vector<double>& alpha,
   const std::vector<double>& beta, const std::vector<int>& maxt,
   int itemp, double f0, double tbeta, double arat, double tbar, 
-  std::vector<std::vector<std::vector<double>>>& ssm ){
+  Eigen::Tensor<double,3>& ssm ){
 
   double bel, /*ff0,*/ ff1, ff1l, ff2, ff2l, sum0, sum1, be, alp, ssct, ex, al, alw;
 
@@ -27,10 +28,10 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
         ex = -(alw-be)*(alw-be)/(4*alp);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alp) : 0;
         if (int(a)+1 >= maxt[b]) {
-          ssm[a][b][itemp] = ssct;
+          ssm(a,b,itemp) = ssct;
         }
-        ff2 = ssm[a][b][itemp];
-        ff1 = ssm[a][b][itemp]*exp(-be);
+        ff2 = ssm(a,b,itemp);
+        ff1 = ssm(a,b,itemp)*exp(-be);
         //ff0 = ssm[a][b][itemp]*exp(-be/2);   // This isn't used either
         if (b > 1) {
           sum0 = sum0+(be-bel)*(ff1l+ff2l+ff1+ff2)/2;

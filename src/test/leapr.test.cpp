@@ -24,8 +24,10 @@ void checkSab( const std::vector<double>& correctSab,
 
 TEST_CASE( "leapr" ){
   int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
-      lat, ni, nd, nka, mss;
-  double za, awr, spr, aws, sps, delta, twt, c, tbeta, dka, b7;
+      lat, ni, nd, nka;
+  //int mss;
+  //double sps, b7;
+  double za, awr, spr, aws, delta, twt, c, tbeta, dka;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, 
     kappa;
   std::string title;
@@ -389,7 +391,7 @@ TEST_CASE( "leapr" ){
     ntempr = 1;     iprint = 1;      nphon = 100;              // Card 3
     mat    = 7;     za     = 1007.0;                           // Card 4
     awr    = 0.99917; spr    = 20.478; npr   = 1;   iel = -1;   ncold = 0; // Card 5
-    nss    = 0;       b7     = 0;     aws   = 0; sps = 0; mss = 0; 
+    nss    = 0;       /*b7     = 0;*/     aws   = 0; /*sps = 0; mss = 0;*/ 
                                                                      // Card 6
     nalpha = 48;       nbeta  = 200;      lat   = 1;                // Card 7
     alpha  = { 5.04060e-1, 1.00812e+0, 1.51218e+0, 2.01624e+0, 2.52030e+0, 

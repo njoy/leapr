@@ -1,4 +1,4 @@
-//#include <Eigen/Dense>
+#include <Eigen/Dense>
 #include <iostream> 
 #include <vector>
 #include <cmath>
@@ -20,11 +20,15 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
   double dka, std::vector<double> kappaVals ){
 
-  clock_t t;
-  t = clock();
+  //clock_t t;
+  //t = clock();
 
   //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
-  //std::cout << matrix1 << std::endl;
+  //Eigen::MatrixXd matrix1 = Eigen::MatrixXd(2,3);
+  Eigen::MatrixXd matrix1(2,3);
+  matrix1(0,0) = 100;
+  std::cout << matrix1 << std::endl;
+
   double bk = 8.617385e-5;
   double therm = 0.0253;
 
@@ -115,6 +119,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         << " seconds\n\n" << std::endl;
         */
       std::cout << "\n" << std::endl;
+      //return;
       return sym_sab;
 
       if ( ncold != 0 ){
@@ -129,6 +134,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     done = true;
   }
 
+  //return;
     return sym_sab;
     std::cout << "Card1: " << nout << std::endl;
     std::cout << "Card2: " <<  title<< std::endl;
@@ -158,6 +164,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
     std::cout << "\n\n\n " << std::endl;
 
-
+  return sym_sab;
 }
 
