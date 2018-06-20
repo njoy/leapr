@@ -1,4 +1,5 @@
 #include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include <iostream> 
 #include <vector>
 #include <cmath>
@@ -25,9 +26,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
   //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
   //Eigen::MatrixXd matrix1 = Eigen::MatrixXd(2,3);
-  Eigen::MatrixXd matrix1(2,3);
-  matrix1(0,0) = 100;
-  std::cout << matrix1 << std::endl;
+  //Eigen::MatrixXd matrix1(2,3);
+  //matrix1(0,0) = 100;
+  //std::cout << matrix1 << std::endl;
 
   double bk = 8.617385e-5;
   double therm = 0.0253;
@@ -81,15 +82,18 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       // Continuous part of the distribution
       //std::cout << "\n-------- contin" << std::endl;
 
+
+      Eigen::Tensor<double,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
+      //sym_sab_eigen.setZero();
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab );
+        sc, rho, alpha, beta, sym_sab_eigen);
       double lambda_s = std::get<0>(lambda_s_t_eff);
 
 
       //double t_contin = clock();
 
      // update the effective temperature list
-      t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
+      //t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
 
  
       // Translational part of distribution, if any

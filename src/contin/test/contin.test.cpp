@@ -5,17 +5,17 @@
 
 void checkSabLambdaTeff( const std::vector<double>& correctSab, 
     const std::tuple<double,double>& output, 
-    const std::vector<std::vector<std::vector<double>>>& sab,
+    const Eigen::Tensor<double,3>& sab,  
     const double& lambda, const double& teff ){
 
-  REQUIRE( sab.size()*sab[0].size()*sab[0][0].size() == correctSab.size() );
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
 
-  int i = 0;
-  for ( auto a1 : sab ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        REQUIRE( a3 == Approx(correctSab[i]).epsilon(1e-6) );
-        i += 1;
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-6) );
+	l += 1;
       }
     }
   }
@@ -25,8 +25,9 @@ void checkSabLambdaTeff( const std::vector<double>& correctSab,
 }
 
 
-TEST_CASE( "contin" ){
+TEST_CASE( "contin eigen" ){
 
+  REQUIRE(true);
   int ntempr, nphon, itemp;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
@@ -44,9 +45,7 @@ TEST_CASE( "contin" ){
 
     WHEN( "3rd order expansion, with alpha & beta vals scaled by 0.0253/tev" ){
 
-      std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
-          std::vector<std::vector<double>> ( beta.size(),
-            std::vector<double> ( ntempr, 0.0 ) ) );
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
@@ -72,9 +71,7 @@ TEST_CASE( "contin" ){
       nphon = 6; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
-          std::vector<std::vector<double>> ( beta.size(),
-            std::vector<double> ( ntempr, 0.0 ) ) );
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
@@ -96,9 +93,8 @@ TEST_CASE( "contin" ){
       delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<std::vector<std::vector<double>>> symSab( alpha.size(),
-        std::vector<std::vector<double>> ( beta.size(),
-          std::vector<double> ( ntempr, 0.0 ) ) );
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
         alpha, beta, symSab );
@@ -118,4 +114,3 @@ TEST_CASE( "contin" ){
     } // WHEN
   } // GIVEN 
 } // TEST CASE
-

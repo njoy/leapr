@@ -381,12 +381,10 @@
     "src/trans/trans_util/bessel_K1.h",
     "src/trans/trans_util/s_table_generation.h",
     "src/contin/contin.h",
-    "src/contin/continEigen.h",
     "src/contin/contin_util/convol.h",
     "src/contin/contin_util/interpolate.h",
     "src/contin/contin_util/checkMoments.h",
     "src/contin/contin_util/start.h",
-    "src/contin/contin_util/checkMomentsEigen.h",
     "src/contin/contin_util/start_util/start_util.h",
     "src/discre/discre.h",
     "src/discre/discre_util/bfill.h",
@@ -461,15 +459,13 @@
       "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/cn.test.cpp"
     ],
     "contin": [
-      "src/contin/test/continEigen.test.cpp",
       "src/contin/test/contin.test.cpp"
     ],
     "contin.contin_util": [
       "src/contin/contin_util/test/checkMoments.test.cpp",
       "src/contin/contin_util/test/convol.test.cpp",
       "src/contin/contin_util/test/interpolate.test.cpp",
-      "src/contin/contin_util/test/start.test.cpp",
-      "src/contin/contin_util/test/checkMomentsEigen.test.cpp"
+      "src/contin/contin_util/test/start.test.cpp"
     ],
     "contin.contin_util.start_util": [
       "src/contin/contin_util/start_util/test/start_util.test.cpp"

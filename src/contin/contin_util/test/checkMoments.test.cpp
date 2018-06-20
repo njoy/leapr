@@ -8,16 +8,16 @@
 
 
 void checkSab( const std::vector<double>& correctSab, 
-  const std::vector<std::vector<std::vector<double>>>& sab ){
+  const Eigen::Tensor<double,3>& sab ){
+	
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
 
-  REQUIRE( sab.size()*sab[0].size()*sab[0][0].size() == correctSab.size() );
-
-  int i = 0;
-  for ( auto a1 : sab ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        REQUIRE( a3 == Approx(correctSab[i]).epsilon(1e-6) );
-        i += 1;
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-6) );
+	l += 1;
       }
     }
   }
@@ -27,7 +27,7 @@ void checkSab( const std::vector<double>& correctSab,
 
 
 
-TEST_CASE( "check moments" ){
+TEST_CASE( "check moments eigen" ){
 
   GIVEN( "inputs" ){
 
@@ -42,10 +42,9 @@ TEST_CASE( "check moments" ){
     double f0 = 0.23520650571218535;
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
-      std::vector<std::vector<std::vector<double>>> ssm( alpha.size(),
-        std::vector<std::vector<double>> ( beta.size(),
-          std::vector<double> ( ntempr, 0.0 ) ) );
 
+    Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
+    ssm.setZero();
 
     checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
 
@@ -61,7 +60,6 @@ TEST_CASE( "check moments" ){
     checkSab( correctSab, ssm );
 
 
-   REQUIRE( true );
     
   } // GIVEN
 
@@ -79,10 +77,9 @@ TEST_CASE( "check moments" ){
     double f0 = 0.23520650571218535;
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
-      std::vector<std::vector<std::vector<double>>> ssm( alpha.size(),
-        std::vector<std::vector<double>> ( beta.size(),
-          std::vector<double> ( ntempr, 0.0 ) ) );
 
+    Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
+    ssm.setZero();
 
     checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
 
@@ -97,8 +94,6 @@ TEST_CASE( "check moments" ){
 
     checkSab( correctSab, ssm );
 
-
-   REQUIRE( true );
     
   } // GIVEN
 
