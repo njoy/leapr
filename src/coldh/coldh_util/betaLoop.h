@@ -3,6 +3,7 @@
 #include <cmath>
 #include "betaLoop_util/jprimeLoop.h"
 #include "betaLoop_util/bt.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 auto betaLoop( const std::vector<double>& betan, 
   const std::vector<double>& rdbex, const std::vector<double>& bex,
@@ -10,8 +11,8 @@ auto betaLoop( const std::vector<double>& betan,
   const double& tbart, const double& x, const double& y, 
   const double& evenSumConst, const double& oddSumConst, int itemp, int nbx, 
   int a, int ncold, bool free, 
-  std::vector<std::vector<std::vector<double>>>& sym_sab, 
-  std::vector<std::vector<std::vector<double>>>& sym_sab_2 ){
+  Eigen::Tensor<double,3>& sym_sab, 
+  Eigen::Tensor<double,3>& sym_sab_2 ){
 
   //--loop over all beta values
   //    results for positive beta go into ssp
@@ -73,8 +74,8 @@ auto betaLoop( const std::vector<double>& betan,
     }
 
     //--continue the beta loop
-      if (jj < betan.size())    sym_sab[a][k-1][itemp]   = sn;
-      if (jj >= betan.size()-1) sym_sab_2[a][k-1][itemp] = sn;
+      if (jj < betan.size())    sym_sab(a,k-1,itemp) = sn;
+      if (jj >= betan.size()-1) sym_sab_2(a,k-1,itemp) = sn;
   }
 
 }

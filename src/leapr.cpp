@@ -99,18 +99,19 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       // Translational part of distribution, if any
       //std::cout << "\n-------- trans" << std::endl;
       if ( trans_weight > 0.0 ){
-        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
+        //trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+        //  itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab );
       }
       //double t_trans = clock();
 
       if ( oscEnergies.size() > 0 ){
       //std::cout << "\n-------- discre" << std::endl;
-        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
-          beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
+       // discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
+       //   beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab );
       }
       //double t_discre = clock();
 
+      std::cout << lambda_s << std::endl;
 
       /*
       std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
@@ -127,10 +128,10 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       return sym_sab;
 
       if ( ncold != 0 ){
-	bool free = false;
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
-	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
-	  sym_sab_2 );
+	//bool free = false;
+        //coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
+	//  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab, 
+	//  sym_sab_2 );
       }
 
 

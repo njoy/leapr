@@ -1,33 +1,35 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp" 
 #include "discre/discre.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 
-void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a, 
-  std::vector<double> b ){
-  REQUIRE( a.size()*a[0].size()*a[0][0].size() == b.size() );
-  int i = 0;
-  for ( auto a1 : a ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        REQUIRE( a3 == Approx(b[i]).epsilon(1e-5) );
-        i += 1;
+void equal_vec_mega_vec( Eigen::Tensor<double,3>& sab, 
+  std::vector<double> correctSab ){
+
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
+	l += 1;
       }
     }
   }
 }
 
 auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>& beta ){
-  std::vector<std::vector<std::vector<double>>> sym_sab(alpha.size(),
-    std::vector<std::vector<double>>(beta.size(),std::vector<double>(1,0.0)));
-  int i = 1;
-  for ( size_t a = 0; a < alpha.size(); ++a ){
-    for ( size_t b = 0; b < beta.size(); ++b ){
-      sym_sab[a][b][0] = i;
-      i += 1;
+  Eigen::Tensor<double,3> sab(alpha.size(),beta.size(),1);
+  int k = 1;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      sab(i,j,0) = k;
+      k += 1;
     }
   }
-  return sym_sab;
+  return sab;
 }
 
 

@@ -1,6 +1,7 @@
 #include <iostream> 
 #include <cmath>
 #include <vector>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
 #include "trans_util/terps.h"
@@ -11,7 +12,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   const double& sc, const double& scaling, const int& itemp, 
   const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
   const std::vector<double>& temp_vec, 
-  std::vector<std::vector<std::vector<double>>>& sym_sab ){
+  Eigen::Tensor<double,3>& sym_sab ){
 
   /* Overview
    * ------------------------------------------------------------------------
@@ -97,7 +98,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
     if ( nsd > 1 ){
       for ( size_t b = 0; b < beta.size(); ++b ){
         betan[b] = beta[b] * sc;
-        ap[b] = sym_sab[a][b][itemp];
+        ap[b] = sym_sab(a,b,itemp);
       }
 
       // loop over beta values
@@ -130,7 +131,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
 	// function contribution corresponding to the zeroth term in Eq. 523
         if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
 
-        sym_sab[a][b][itemp] = s;
+        sym_sab(a,b,itemp) = s;
 
       } // for beta
     } // if nsd > 0
