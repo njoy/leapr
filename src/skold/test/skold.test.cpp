@@ -10,31 +10,35 @@ void equal( double a, double b ){
   REQUIRE ( std::abs( (a-b)/(b) ) < 1e-5 );
 }
 
-void equal_vec_mega_vec( std::vector<std::vector<std::vector<double>>> a, 
-  std::vector<double> b ){
-  REQUIRE( a.size()*a[0].size()*a[0][0].size() == b.size() );
-  int i = 0;
-  for ( auto a1 : a ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        equal( a3, b[i] );
-        i += 1;
+
+void checkSab( const Eigen::Tensor<double,3>& sab,
+  const std::vector<double>& correctSab ){
+
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
+	l += 1;
       }
     }
   }
 }
 
+
+
 auto populateSymSab( int a1, int b1 ){
-  std::vector<std::vector<std::vector<double>>> sym_sab(a1,
-    std::vector<std::vector<double>>(b1,std::vector<double>(1,0.0)));
-  int i = 1;
-  for ( auto a = 0; a < a1; ++a ){
-    for ( auto b = 0; b < b1; ++b ){
-      sym_sab[a][b][0] = i;
-      i += 1;
+  Eigen::Tensor<double,3> sab(a1,b1,1);
+  int k = 1;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      sab(i,j,0) = k; 
+      k += 1;
     }
   }
-  return sym_sab;
+  return sab;
 }
 
 
@@ -54,7 +58,7 @@ TEST_CASE( "skold" ){
       THEN( "the scattering law is correctly changed" ){
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
       } // THEN
     } // WHEN
     WHEN( "dka is really big" ){
@@ -66,7 +70,7 @@ TEST_CASE( "skold" ){
           29.73225, 31.50051, 33.26723, 35.03263, 36.79689 };
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -75,15 +79,15 @@ TEST_CASE( "skold" ){
     skappa = { 0.001, 0.0012, 0.0013 };
     WHEN( "value of dka is small" ){
       THEN( "no change to scattering law" ){
-        for ( int i = 0; i < rightSymSab.size(); ++i ){ rightSymSab[i] = i+1; }
+        for ( size_t i = 0; i < rightSymSab.size(); ++i ){ rightSymSab[i] = i+1; }
         dka = 0.03;
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
         dka = 1.03;
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
       } // THEN
     } // WHEN
 
@@ -96,7 +100,7 @@ TEST_CASE( "skold" ){
           16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
         
         symsab = populateSymSab( 5, 5 );
         cfrac = 1.3;
@@ -105,7 +109,7 @@ TEST_CASE( "skold" ){
           12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
 
       } // THEN
     } // WHEN
@@ -119,7 +123,7 @@ TEST_CASE( "skold" ){
           -4.767483, -5.088515, -5.405735, -5.719990, 21, 22, 23, 24, 25 };
         skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
           dka, scaling, symsab );
-        equal_vec_mega_vec( symsab, rightSymSab );
+        checkSab( symsab, rightSymSab );
 
       } // THEN
     } // WHEN

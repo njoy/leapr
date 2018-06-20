@@ -2,12 +2,13 @@
 #include <vector>
 #include "../coldh/coldh_util/terpk.h"
 #include "skold_util/terp1.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 auto skold( double cfrac, int itemp, double tev,
   const std::vector<double>& alpha, const std::vector<double>& beta, 
   const std::vector<double>& skappa, double awr, 
-  double dka, double scaling,
-  std::vector<std::vector<std::vector<double>>>& symSab ){
+  double dka, double scaling, 
+  Eigen::Tensor<double,3>& symSab ){
   /* Overview 
    * ------------------------------------------------------------------------
    * The purpose of this is to apply the Skold approximation to add in the 
@@ -79,14 +80,14 @@ auto skold( double cfrac, int itemp, double tev,
       if (i == 0) i = 1;
 
       // Interpolate to calculate S(a',b) where a' = a/S(k)
-      terp1( alpha[i-1], symSab[i-1][b][itemp], alpha[i], 
-             symSab[i][b][itemp], ap, scoh[a], 5 );
+      terp1( alpha[i-1], symSab(i-1,b,itemp), alpha[i], 
+             symSab(i,b,itemp), ap, scoh[a], 5 );
       scoh[a] *= sk;
     }
     // Amend the existing scattering law by combining a piece of it with a 
     // piece of the coherent scattering interactions. 
     for ( size_t a = 0; a < alpha.size(); ++a ){
-      symSab[a][b][itemp] = (1-cfrac)*symSab[a][b][itemp]+cfrac*scoh[a];
+      symSab(a,b,itemp) = (1-cfrac)*symSab(a,b,itemp)+cfrac*scoh[a];
     }
   }
 }

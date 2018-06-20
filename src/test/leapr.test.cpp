@@ -1,18 +1,21 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "leapr.cpp"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 
-void checkSab( const std::vector<double>& correctSab, 
-  const std::vector<std::vector<std::vector<double>>>& sab ){
 
-  int i = 0;
-  for ( auto a1 : sab ){
-    for ( auto a2 : a1 ){
-      for ( auto a3 : a2 ){
-        if ( i == int(correctSab.size()) ){ return; }
-        REQUIRE( a3 == Approx(correctSab[i]).epsilon(1e-6) );
-        i += 1;
+void checkSab( const std::vector<double>& correctSab,
+  const Eigen::Tensor<double,3>& sab ){
+
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+
+  int l = 0;
+  for ( int i = 0; i < sab.dimension(0); ++i ){
+    for ( int j = 0; j < sab.dimension(1); ++j ){
+      for ( int k = 0; k < sab.dimension(2); ++k ){
+        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
+	l += 1;
       }
     }
   }
@@ -461,11 +464,11 @@ TEST_CASE( "leapr" ){
     std::vector<double> ssmCorrect { };
 
 
+    /*
     std::cout << ssm[0][0][0] << std::endl;
     std::cout << ssm[1][1][0] << std::endl;
     std::cout << ssm[2][2][0] << std::endl;
     std::cout << ssm[3][3][0] << std::endl;
-    /*
     */
 
     //checkSab( ssmCorrect, ssm );
