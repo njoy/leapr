@@ -27,7 +27,21 @@ void checkSab( const std::vector<double>& correctSab,
 
 
 
-TEST_CASE( "check moments eigen" ){
+TEST_CASE( "check moments" ){
+
+
+  int ntempr = 1;
+  std::vector<double> alpha { 1.008e-2, 1.5e-2, 2.52e-2, 3.3e-2, 5.0406e-2 },
+  beta { 0.0, 6.375e-3, 1.275e-2, 2.55e-2, 3.825e-2, 5.1e-2, 6.575e-2 };
+
+  Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
+  for ( int i = 0; i < ssm.dimension(0); ++i ){
+    for ( int j = 0; j < ssm.dimension(1); ++j ){
+      for ( int k = 0; k < ssm.dimension(2); ++k ){
+        ssm(i,j,k) = 0;
+      }
+    }
+  }
 
   GIVEN( "inputs" ){
 
@@ -35,16 +49,10 @@ TEST_CASE( "check moments eigen" ){
     std::vector<int> maxt ( 1000, 0.0 );
     maxt[0] = 6;
 
-    std::vector<double> alpha { 1.008e-2, 1.5e-2, 2.52e-2, 3.3e-2, 5.0406e-2 },
-      beta { 0.0, 6.375e-3, 1.275e-2, 2.55e-2, 3.825e-2, 5.1e-2, 6.575e-2 };
-    
-    int itemp = 0, ntempr = 1;
+    int itemp = 0;
     double f0 = 0.23520650571218535;
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
-
-    Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
-    ssm.setZero();
 
     checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
 
@@ -58,8 +66,6 @@ TEST_CASE( "check moments eigen" ){
 
 
     checkSab( correctSab, ssm );
-
-
     
   } // GIVEN
 
@@ -70,16 +76,10 @@ TEST_CASE( "check moments eigen" ){
     maxt[0] = 6; maxt[1] = 1; maxt[2] = 2; maxt[3] = 1; maxt[4] = 2;
     maxt[5] = 1; maxt[6] = 2;
 
-    std::vector<double> alpha { 1.008e-2, 1.5e-2, 2.52e-2, 3.3e-2, 5.0406e-2 },
-      beta { 0.0, 6.375e-3, 1.275e-2, 2.55e-2, 3.825e-2, 5.1e-2, 6.575e-2 };
-    
-    int itemp = 0, ntempr = 1;
+    int itemp = 0;
     double f0 = 0.23520650571218535;
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
-
-    Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
-    ssm.setZero();
 
     checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
 

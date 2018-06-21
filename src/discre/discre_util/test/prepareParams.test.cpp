@@ -18,7 +18,12 @@ TEST_CASE( "prepare parameters helper function" ){
 
     tev = 1.723477E-2; bk = 8.617385e-5; sc = 1.0;
 
-    prepareParams( energy, weights, tev, energyNorm, weight, tsave, ar, dist,
+    std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
+    for ( size_t i = 0; i < energy.size(); ++i ){
+      oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
+    }
+
+    prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
       dbw, bk, exb, betan, beta, sc );
 
     correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };

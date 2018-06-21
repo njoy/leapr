@@ -6,15 +6,13 @@
 #include "discre_util/addDeltaFuncs.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
-void swap( double& a, double& b ){
-  double c = a; a = b; b = c;
-}
+void swap( double& a, double& b ){ double c = a; a = b; b = c; }
 
 auto discre( int itemp, const double& sc, const double& scaling, 
   const double& tev, const double& lambda_s, const double& twt, 
   const double& tbeta, const std::vector<double>& alpha, 
   const std::vector<double>& beta, const std::vector<double>& temp_vec, 
-  std::vector<double>& energy, std::vector<double>& weights,
+  std::vector<std::tuple<double,double>>& oscEnergiesWeights, 
   std::vector<double>& t_eff_vec, 
   Eigen::Tensor<double,3>& sym_sab ){
 
@@ -28,7 +26,16 @@ auto discre( int itemp, const double& sc, const double& scaling,
   std::vector<double> ar(50), t_eff_consts(50), lambda_i(50), 
     betaVals(50), exb(beta.size()), betan(beta.size());
 
-  prepareParams(energy, weights, tev, betaVals, weight, tsave, ar, t_eff_consts,
+  /*
+    std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
+    for ( size_t i = 0; i < energy.size(); ++i ){
+      oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
+    }
+    */
+
+
+
+  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
     lambda_i, bk, exb, betan, beta, sc );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
@@ -72,7 +79,8 @@ auto discre( int itemp, const double& sc, const double& scaling,
     std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
-      betaVals, a, maxdd, energy.size(), wt, tbart, weights, t_eff_consts, 
+      betaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, oscEnergiesWeights, 
+      t_eff_consts, 
       temp_vec[itemp] );
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to

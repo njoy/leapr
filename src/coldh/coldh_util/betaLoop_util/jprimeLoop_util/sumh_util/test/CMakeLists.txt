@@ -1,7 +1,7 @@
 
 add_executable( coldh.coldh_util.betaLoop_util.jprimeLoop_util.sumh_util.test
-                sjbes.test.cpp
-                cn.test.cpp )
+                cn.test.cpp
+                sjbes.test.cpp )
 target_compile_options( coldh.coldh_util.betaLoop_util.jprimeLoop_util.sumh_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

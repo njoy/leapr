@@ -1,7 +1,7 @@
 
 add_executable( endout.endout_util.test
-                tpidio.test.cpp
-                repoz.test.cpp )
+                repoz.test.cpp
+                tpidio.test.cpp )
 target_compile_options( endout.endout_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

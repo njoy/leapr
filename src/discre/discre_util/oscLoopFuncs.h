@@ -45,7 +45,8 @@ auto oscillatorLoop( const std::vector<double>& alpha,
   std::vector<double>& lambda_i, std::vector<double>& ar, const double& scaling,
   std::vector<double>& wts, std::vector<double>& bes,
   std::vector<double>& betaVals, int a, int maxdd,
-  int numOscillators, double& wt, double& tbart, std::vector<double>& weights,
+  int numOscillators, double& wt, double& tbart, 
+  const std::vector<std::tuple<double,double>>& oscEnergiesWeights,
   std::vector<double>& t_eff_consts, const double& temp ){
   /* alpha          --> yup
    * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
@@ -62,7 +63,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
    * numOscillators --> yes
    * wt             --> tbeta
    * tbart          --> T_eff / temp  ( t_eff_vec[itemp] / temp_vec[itemp] )
-   * weights        --> vector of delta function weights
+   * oscEnergiesWeights --> vector of delta function energies/weights in tuples
    * t_eff_consts   --> 0.5 * weight * energy / tanh( 0.5 * energy / tev )
    *                    --defined in Eq. 544, evaluated in prepareParams.h
    *                    --in leapr.f90, this is called dist
@@ -130,7 +131,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     }
     //n = 0;  // Comment this to pass discre and oscloopFuncs test cases
 
-    wt += weights[i];
+    wt += std::get<1>(oscEnergiesWeights[i]);
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( bk * temp );
 

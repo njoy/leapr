@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "coher_util/formf.h"
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 #include "coher_util/fccLatticeFactors.h"
@@ -68,6 +67,11 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     amu = 1.6605402e-27,
     ev = 1.60217733e-19,
     hbar = 1.05457266e-34;  // [J*s]
+
+  // to get rid of uninitialized warnings. don't worry i'll change it soon
+  phi = 0; tsq = 0; i = 0; imax = 100;
+
+
 
   // initialize.
   amne = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
