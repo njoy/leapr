@@ -1,5 +1,7 @@
 
-add_executable( contin.contin_util.start_util.test start_util.test.cpp )
+add_executable( contin.contin_util.start_util.test
+                fsum.test.cpp
+                normalize.test.cpp )
 target_compile_options( contin.contin_util.start_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

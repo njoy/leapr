@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "coher_util/formf.h"
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 #include "coher_util/fccLatticeFactors.h"
@@ -19,6 +18,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   int i,j,k,imax,ifl,nw,nbe;
   double amne,econ,tsqx,a,c,mass,xsCoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
+
 
     // Lattice Constants (a) in angstroms
     // To get these values, honestly the wikipedia page isn't a bad palce to
@@ -68,6 +68,16 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     amu = 1.6605402e-27,
     ev = 1.60217733e-19,
     hbar = 1.05457266e-34;  // [J*s]
+
+
+
+
+    // to get rid of uninitialized warnings
+    phi = 0, tsq = 0, i = 0, imax = 100;
+
+
+
+
 
   // initialize.
   amne = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )

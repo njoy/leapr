@@ -120,7 +120,7 @@ TEST_CASE( "positive terms" ){
 
 TEST_CASE( "oscillator loop" ){
   std::vector<double> wtsCorrect(24), besCorrect(24), wts(24), bes(24),
-    alpha(5), weight(2);
+    alpha(5);
 
   GIVEN( "inputs" ){
     int maxdd = 500, numOscillators = 2, a = 0;
@@ -135,10 +135,10 @@ TEST_CASE( "oscillator loop" ){
     ar[0]         = 8.213274E-2; ar[1]         = 0.1368162;
 
     alpha  = {0.1, 0.2, 0.4, 0.8, 1.6};
-    weight = {0.2, 0.8};
+    std::vector<std::tuple<double,double>> energiesWgts {{0.1,0.2},{0.3,0.8}};
 
     oscillatorLoop( alpha, dbw, ar, scaling, wts, bes, energyNorm, 
-      a, maxdd, numOscillators, wt, tbart, weight, dist, temp );
+      a, maxdd, numOscillators, wt, tbart, energiesWgts, dist, temp );
 
     THEN( "ouput is correct" ){
       wtsCorrect = { 0.9573911, 1.085300E-2, 6.151529E-5, 2.324478E-7, 

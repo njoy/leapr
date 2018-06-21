@@ -1,4 +1,5 @@
-#include "start_util/start_util.h"
+#include "start_util/fsum.h"
+#include "start_util/normalize.h"
 
 auto start( std::vector<double>& p, double& delta, const double& tev, 
   const double& tbeta ){

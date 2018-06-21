@@ -108,8 +108,12 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
       if ( oscEnergies.size() > 0 ){
       //std::cout << "\n-------- discre" << std::endl;
+        std::vector<std::tuple<double,double>> oscEnergiesWeights(oscEnergies.size());
+        for ( size_t i = 0; i < oscEnergies.size(); ++i ){
+          oscEnergiesWeights[i] = std::make_tuple(oscEnergies[i],oscWeights[i]);
+        }
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
-          beta, temp_vec, oscEnergies, oscWeights, t_eff_vec, sym_sab_eigen );
+          beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
       //double t_discre = clock();
 

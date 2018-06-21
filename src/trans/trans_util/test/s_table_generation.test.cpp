@@ -8,7 +8,7 @@ void equal1( double a, double b ){
 
 void equal1_vec( std::vector<double> a, std::vector<double> b ){
     REQUIRE( a.size() == b.size() );
-    for ( int i = 0; i < a.size(); ++i ){
+    for ( size_t i = 0; i < a.size(); ++i ){
         equal1( a[i], b[i] );
     }
 }

@@ -385,7 +385,8 @@
     "src/contin/contin_util/interpolate.h",
     "src/contin/contin_util/checkMoments.h",
     "src/contin/contin_util/start.h",
-    "src/contin/contin_util/start_util/start_util.h",
+    "src/contin/contin_util/start_util/fsum.h",
+    "src/contin/contin_util/start_util/normalize.h",
     "src/discre/discre.h",
     "src/discre/discre_util/bfill.h",
     "src/discre/discre_util/prepareParams.h",
@@ -468,7 +469,8 @@
       "src/contin/contin_util/test/start.test.cpp"
     ],
     "contin.contin_util.start_util": [
-      "src/contin/contin_util/start_util/test/start_util.test.cpp"
+      "src/contin/contin_util/start_util/test/fsum.test.cpp",
+      "src/contin/contin_util/start_util/test/normalize.test.cpp"
     ],
     "discre": [
       "src/discre/test/discre.test.cpp"
