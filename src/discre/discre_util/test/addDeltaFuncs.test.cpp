@@ -13,7 +13,7 @@ void equal( double a, double b ){
 
 void equal_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( auto i = 0; i < a.size(); ++i ){
+  for ( size_t i = 0; i < a.size(); ++i ){
     equal( a[i], b[i] );
   }
 }

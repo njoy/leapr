@@ -8,10 +8,10 @@ auto repoz(int ntape){
    * Positive units are coded, negative ones are blocked binary.
    *--------------------------------------------------------------------
    */
-   int i;
+   //int i;
 
    if (ntape == 0) return;
-    i = std::abs(ntape);
+   // i = std::abs(ntape);
    // rewind(i);
    return;
 }

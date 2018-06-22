@@ -69,6 +69,10 @@ auto tpidio( int nin, int nout, int nscr, int nb, int nw, int nsc, int nsh,
    }
    noutFile.close();
    return;
+
+   std::cout << inin << inout << inscr << nb << nw << std::endl;
+
+
 }
 
 

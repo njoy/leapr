@@ -2,26 +2,17 @@
 #include "catch.hpp"
 #include "coher/coher_util/hexLatticeFactors.h"
 
-void equal4( double a, double b ){
-//	std::cout << a << "   " << b << std::endl;
-  if (b == 0.0){ 
-    REQUIRE( std::abs(b-a) < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
 void equal4_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( int i = 0; i < a.size(); ++i ){
-    equal4( a[i], b[i] );
+  for ( size_t i = 0; i < a.size(); ++i ){
+    REQUIRE( a[i] == Approx(b[i]).epsilon(1e-6) );
   }
 }
 
 
 void equal4Hex( std::tuple<int,int,int,double,double>& a, double& b ){
-  equal4( tausq(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a),
-               std::get<4>(a) ), b );
+  REQUIRE( b == Approx( tausq(std::get<0>(a),std::get<1>(a),std::get<2>(a),
+                              std::get<3>(a),std::get<4>(a) ) ).epsilon(1e-6) );
 }
 
 TEST_CASE( "tausq" ){
@@ -34,7 +25,7 @@ TEST_CASE( "tausq" ){
 	236.870505, 236.870505, 236.870505, 394.78417604, 2881.924485, 
 	14843.885019, 1306.735642 };
     
-    for ( auto i = 0; i < output.size(); ++i ){
+    for ( size_t i = 0; i < output.size(); ++i ){
       equal4Hex( inputs[i], output[i] );
     }
   } // GIVEN
@@ -144,7 +135,9 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
       */
       REQUIRE( imax == 51 );
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
-      for ( auto i = 0; i < bVals.size(); ++i ){ equal4( b[i], bVals[i] ); }
+      for ( size_t i = 0; i < bVals.size(); ++i ){ 
+        REQUIRE( bVals[i] == Approx(b[i]).epsilon(1e-6) ); 
+      }
 
     } // THEN
   } // GIVEN
@@ -178,7 +171,9 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
       REQUIRE( imax == 51 );
 
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
-      for ( auto i = 0; i < bVals.size(); ++i ){ equal4( b[i], bVals[i] ); }
+      for ( size_t i = 0; i < bVals.size(); ++i ){ 
+        REQUIRE( bVals[i] == Approx(b[i]).epsilon(1e-6) ); 
+      }
 
     } // THEN
   } // GIVEN

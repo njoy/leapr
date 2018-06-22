@@ -1,18 +1,10 @@
 
-#include <iostream>
 #include "catch.hpp"
 #include "coher/coher_util/fccLatticeFactors.h"
 
-void equal2( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( std::abs(b-a) < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
 void equal2Fcc( std::tuple<int,int,int,double>& a, double& b ){
-  equal2( taufcc(std::get<0>(a),std::get<1>(a),std::get<2>(a),std::get<3>(a) ), b );
+  REQUIRE( b == Approx(taufcc(std::get<0>(a),std::get<1>(a),
+                              std::get<2>(a),std::get<3>(a) ) ).epsilon(1e-6) );
 }
 
 TEST_CASE( "taufcc" ){
@@ -25,7 +17,8 @@ TEST_CASE( "taufcc" ){
 	210.551561, 210.551561, 105.275780, 289.50839, 2105.51561, 
 	13896.403, 936.9544  };
     
-    for ( auto i = 0; i < output.size(); ++i ){
+    
+    for ( size_t i = 0; i < output.size(); ++i ){
       equal2Fcc( inputs[i], output[i] );
     }
     
@@ -56,7 +49,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
         3.647805E19, 2.649135E-9 }; 
 
       for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[i], b_0_39[i] ); 
+        REQUIRE( b_0_39[i] == Approx(b[i]).epsilon(1e-6) );
       }
 
       std::vector<double> b_1000_1039 { 2.690454E19, 3.084659E-9, 2.502931E19, 
@@ -70,7 +63,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
         1.152769E19, 4.712470E-9 };
     
       for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[1000+i], b_1000_1039[i] ); 
+        REQUIRE( b_1000_1039[i] == Approx(b[1000+i]).epsilon(1e-6) );
       }
 
       std::vector<double> b_51000_51039 { 1.018543E19, 5.013375E-9, 
@@ -84,7 +77,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
         5.092958E-9, 9.218210E18, 5.269830E-9 };
 
       for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[51000+i], b_51000_51039[i] ); 
+        REQUIRE( b_51000_51039[i] == Approx(b[51000+i]).epsilon(1e-6) );
       }
 
     } // THEN
@@ -110,7 +103,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
         8.395743E19, 1.746185E-9 };
 
       for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[i], b_0_39[i] ); 
+        REQUIRE( b_0_39[i] == Approx(b[i]).epsilon(1e-6) );
       }
       /*
 

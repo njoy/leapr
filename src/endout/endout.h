@@ -1,4 +1,5 @@
 #include "endout/endout_util/tpidio.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 
 auto endout( std::vector<double> bragg, int nedge, 
     std::vector<double> scr, int isym, int ilog, 
@@ -6,8 +7,8 @@ auto endout( std::vector<double> bragg, int nedge,
     const double& b7, const int& nss, const double& aws,
     const double& awr, const double& spr, const std::vector<double>& tempr,
     std::vector<double>& dwpix, std::vector<double>& dwp1, int iel,
-    const double& twt, int nsp, int nsc, const int& za, const int& mat,
-    const int nout ){
+    const double& twt, /*int nsp,*/ int nsc, const int& za, const int& mat,
+    const int nout, Eigen::Tensor<double,3>& ssm ){
   /*--------------------------------------------------------------------
    * ENDF output routine
    *--------------------------------------------------------------------
@@ -29,6 +30,9 @@ auto endout( std::vector<double> bragg, int nedge,
                // to do, I think it just track line numbers? 
  
 
+  // because this would otherwise be uninitialized - check this out later
+  sbs = 0; nb = 0; nw = 0;
+
   // write header (not going to do because effectively useless)
 
    // compute bound scattering cross sections
@@ -40,11 +44,11 @@ auto endout( std::vector<double> bragg, int nedge,
       srat=sbs/sb;
       nscr=-10;
       //call repoz(nscr)
-      for ( size_t k = 0; k < tempr.size(); ++k ){
-        for ( size_t j = 0; j < alpha.size(); ++j ){
+      for ( int k = 0; k < int(tempr.size()); ++k ){
+        for ( int j = 0; j < int(alpha.size()); ++j ){
             //read(-nscr) (scr(i),i=1,nbeta);
-            for ( size_t i = 0; i < beta.size(); ++i ){
-             //  ssm(i,j,k)=srat*ssm(i,j,k)+scr(i)
+            for ( int i = 0; i < int(beta.size()); ++i ){
+               ssm(i,j,k)=srat*ssm(i,j,k)+scr[i];
             }
          }
       }
@@ -67,7 +71,7 @@ auto endout( std::vector<double> bragg, int nedge,
    if (iel == 0 and twt == 0) { iel=-1; }
    // write(nsyso,'(//)') This is just putting a blank line in the output file
    nprnt=0;
-   nsp=0;
+   //nsp=0;
    nsc=0;
    int math=1;
    int mfh=0;
@@ -639,5 +643,6 @@ auto endout( std::vector<double> bragg, int nedge,
    end subroutine endout
 
    */
+   std::cout << nscr << nedge << isym << ilog << std::endl;
   }
 

@@ -2,18 +2,10 @@
 #include "discre/discre_util/bfill.h"
 
 
-void equal5( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
 void equal5_vec( std::vector<double> a, std::vector<double> b ){
   REQUIRE( a.size() == b.size() );
-  for ( auto i = 0; i < a.size(); ++i ){
-    equal5( a[i], b[i] );
+  for ( size_t i = 0; i < a.size(); ++i ){
+    REQUIRE( a[i] == Approx(b[i]).epsilon(1e-6) );
   }
 }
 
