@@ -2,10 +2,10 @@
 add_executable( discre.discre_util.test
                 addDeltaFuncs.test.cpp
                 exts.test.cpp
-                sint.test.cpp
                 bfill.test.cpp
-                prepareParams.test.cpp
-                oscLoopFuncs.test.cpp )
+                sint.test.cpp
+                oscLoopFuncs.test.cpp
+                prepareParams.test.cpp )
 target_compile_options( discre.discre_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

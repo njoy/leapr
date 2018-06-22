@@ -10,6 +10,7 @@
 #include "discre/discre.h"
 #include "coldh/coldh.h"
 #include <time.h>
+#include <range/v3/all.hpp>
 
 
 auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
@@ -23,6 +24,18 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
   //clock_t t;
   //t = clock();
+  int b_size = 3, a_size = 5;
+  auto sab1 = ranges::view::generate_n([](){ return 0.0; },
+                a_size*b_size) 
+	    | ranges::view::chunk(b_size);
+
+
+  //          | ranges::view::chunk(10)
+  //          | ranges::view::transform([](auto range){ 
+  //              return ranges::accumulate(range,0);
+  //            });
+  std::cout << sab1 << std::endl;
+
 
   //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
   //Eigen::MatrixXd matrix1 = Eigen::MatrixXd(2,3);

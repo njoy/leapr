@@ -3,6 +3,7 @@
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <range/v3/all.hpp>
 
 
 auto contin( const int itemp, int nphon, double& delta, 
@@ -91,6 +92,16 @@ auto contin( const int itemp, int nphon, double& delta,
       exx = -lambda_s * alpha[a] * scaling + xa[a];
       if ( exx <= -250.0 ){ continue; }
       exx = exp(exx);
+
+      auto addRanges = beta | ranges::view::transform([exx,tnow,delta,sc](auto betaVal){
+                                return exx*interpolate(tnow,delta,betaVal*sc);
+				} ) 
+                            | ranges::view::transform([](auto entry){
+                                return entry < 1e-30 ? 0 : entry;
+				} );
+
+//      std::cout << addRanges << std::endl;
+
 
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
