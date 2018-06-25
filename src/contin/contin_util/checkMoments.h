@@ -10,14 +10,12 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   double /*ff0,*/ ff1, ff2, be, ssct, ex, al, alw;
 
 
-  auto alphaBeta = ranges::view::zip( ranges::view::for_each(
-                     ranges::view::ints(0,int(alpha.size())),[beta](int i){
-                       return ranges::yield_from(
-                                ranges::view::repeat_n(i,beta.size()));}),
-                   ranges::view::iota(0,int(beta.size())) | ranges::view::cycle 
-                     | ranges::view::take_exactly(alpha.size()*beta.size()));
+  auto alphaBeta = ranges::view::cartesian_product( 
+                     ranges::view::iota(0,int(alpha.size())), 
+                     ranges::view::iota(0,int(beta.size())));
 
-
+  auto sab1 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()));
+	  
   auto sab2 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()))
 //            | ranges::view::chunk(1)        Making it so that I only
 //                                            have S(a,b) not S(a,b,T).
@@ -33,20 +31,9 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
 	 // | ranges::view::chunk(beta.size());
   
 
-  auto al2 =  alpha | ranges::view::transform( [sc, arat](auto entry){ 
-                        return entry * sc / arat; });
-
-  auto be2 =  beta | ranges::view::transform( [sc](auto entry){ 
-                        return entry * sc; });
-
-  auto alw2 = al2 | ranges::view::transform( [tbeta](auto entry){ 
-                      return entry * tbeta; });
-  /*
-  RANGES_FOR(auto entry , alphaBeta){
-    std::cout <<  std::get<0>(entry) << "      " << 
-	          std::get<1>(entry) << std::endl;
-  }   
-  */ 
+  auto al2 = alpha|ranges::view::transform([sc,arat](auto x){return x*sc/arat;});
+  auto be2  = beta|ranges::view::transform([sc]     (auto x){return x*sc;   });
+  auto alw2 = al2 |ranges::view::transform([tbeta]  (auto x){return x*tbeta;});
 
 
   auto ssct2 = ranges::view::zip(
@@ -77,12 +64,8 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
 	   std::cout << sab << "     " << a << "    " << b << std::endl;
 	  });
 
-  RANGES_FOR(auto entry , sab3){
-    std::cout << std::get<0>(entry) << "    " << 
-                 std::get<0>(std::get<1>(entry)) << "  " << 
-                 std::get<1>(std::get<1>(entry)) << std::endl;
-  }   
-
+  std::cout << sab1 << std::endl;  
+  std::cout << ssct2 << std::endl;  
 
 
   // this definition is dumb
@@ -136,6 +119,19 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   //std::cout << ( alpha | ranges::view::all )<< std::endl;
   //std::cout << std::endl;
   std::cout << ssct2 << std::endl;
+
+
+  RANGES_FOR(auto entry , alphaBeta){
+    std::cout <<  std::get<0>(entry) << "      " << 
+	          std::get<1>(entry) << std::endl;
+  }   
+
+  RANGES_FOR(auto entry , sab3){
+    std::cout << std::get<0>(entry) << "    " << 
+                 std::get<0>(std::get<1>(entry)) << "  " << 
+                 std::get<1>(std::get<1>(entry)) << std::endl;
+  }   
+
 
 
 

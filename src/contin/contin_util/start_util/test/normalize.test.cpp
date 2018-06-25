@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "contin/contin_util/start_util/normalize.h"
 
+/*
 TEST_CASE( "normalize" ){
   std::vector<double> p;
   double tbeta, delta;
@@ -59,4 +60,4 @@ TEST_CASE( "normalize" ){
   } // GIVEN
 } // TEST CASE
 
-
+*/
