@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <range/v3/all.hpp>
 
 auto checkMoments( const double& sc, const std::vector<double>& alpha,
   const std::vector<double>& beta, const std::vector<int>& maxt,
@@ -7,6 +8,82 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   double tbar, Eigen::Tensor<double,3>& ssm ){
 
   double /*ff0,*/ ff1, ff2, be, ssct, ex, al, alw;
+
+
+  auto alphaBeta = ranges::view::zip( ranges::view::for_each(
+                     ranges::view::ints(0,int(alpha.size())),[beta](int i){
+                       return ranges::yield_from(
+                                ranges::view::repeat_n(i,beta.size()));}),
+                   ranges::view::iota(0,int(beta.size())) | ranges::view::cycle 
+                     | ranges::view::take_exactly(alpha.size()*beta.size()));
+
+
+  auto sab2 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()))
+//            | ranges::view::chunk(1)        Making it so that I only
+//                                            have S(a,b) not S(a,b,T).
+//                                            This will probs make ranges
+//                                            easier. I'll just make a new
+//                                            one of these for each iteration
+//                                            through my happy temp loop
+             | ranges::view::chunk(beta.size());
+
+  auto sab3 = ranges::view::zip(
+                ranges::view::repeat_n(0,int(alpha.size()*beta.size())),
+                alphaBeta) ;
+	 // | ranges::view::chunk(beta.size());
+  
+
+  auto al2 =  alpha | ranges::view::transform( [sc, arat](auto entry){ 
+                        return entry * sc / arat; });
+
+  auto be2 =  beta | ranges::view::transform( [sc](auto entry){ 
+                        return entry * sc; });
+
+  auto alw2 = al2 | ranges::view::transform( [tbeta](auto entry){ 
+                      return entry * tbeta; });
+  /*
+  RANGES_FOR(auto entry , alphaBeta){
+    std::cout <<  std::get<0>(entry) << "      " << 
+	          std::get<1>(entry) << std::endl;
+  }   
+  */ 
+
+
+  auto ssct2 = ranges::view::zip(
+                 ranges::view::for_each(alw2,[beta](double d){  
+                   return ranges::yield_from(
+                     ranges::view::repeat_n(d,beta.size())); }),
+                 be2 | ranges::view::cycle 
+                     | ranges::view::take_exactly(alpha.size()*beta.size()))
+             | ranges::view::transform( [tbar](auto x){ 
+                 double alw = std::get<0>(x), be = std::get<1>(x);
+                 double ex = -std::pow(alw-be,2) / (4*alw*tbar );
+                 return ex>-250 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; });
+
+  // ex2 = zip [ a1, a1, a1, ... a1, a2, a2, ... , ... , aN ]
+  //                               with
+  //           [ b1, b2, b3, ... bN, b1, b2, ... , ... , bN ]
+  //  to get [ (a1,b1), (a1,b2), (a1,b3), ... (a1,bN), (a2,b1), ... , (aN,bN) ]
+  //  and then plus that into ex = -(alw-be)^2 / (4*alw*tbar)
+  //  where ai represents alw = a*sc*tbeta/arat and bi = b*sc
+  //  and then int ssct form where 
+  //      ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
+
+  sab3 | ranges::view::transform( [](auto x){
+           double sab = std::get<0>(x);
+	   int a = std::get<0>(std::get<1>(x));
+	   int b = std::get<1>(std::get<1>(x));
+	   return std::make_tuple(100,std::make_tuple(a,b)) ;
+	   std::cout << sab << "     " << a << "    " << b << std::endl;
+	  });
+
+  RANGES_FOR(auto entry , sab3){
+    std::cout << std::get<0>(entry) << "    " << 
+                 std::get<0>(std::get<1>(entry)) << "  " << 
+                 std::get<1>(std::get<1>(entry)) << std::endl;
+  }   
+
+
 
   // this definition is dumb
   int naint = 1;
@@ -25,13 +102,14 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
         be = beta[b]*sc;
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
+	//std::cout << ssct << std::endl;
         if (int(a)+1 >= maxt[b]) {
           ssm(a,b,itemp) = ssct;
         }
         ff2 = ssm(a,b,itemp);
         ff1 = ssm(a,b,itemp)*exp(-be);
         //ff0 = ssm[a][b][itemp]*exp(-be/2);   // This isn't used either
-        if (b > 1) {
+        if (b > 0) {
           sum0 = sum0+(be-bel)*(ff1l+ff2l+ff1+ff2)/2;
           sum1 = sum1+(be-bel)*(ff2l*bel+ff2*be-ff1l*bel-ff1*be)/2;
         }
@@ -47,5 +125,19 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
       sum1 = sum1/al/tbeta;
     }
   }
+  return;
+  std::cout << sab2 << std::endl;
+  std::cout << al2 << std::endl;
+  std::cout << std::endl;
+  std::cout << be2 << std::endl;
+  std::cout << std::endl;
+  std::cout << alw2 << std::endl;
+  std::cout << std::endl;
+  //std::cout << ( alpha | ranges::view::all )<< std::endl;
+  //std::cout << std::endl;
+  std::cout << ssct2 << std::endl;
+
+
+
 }
 

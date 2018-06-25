@@ -99,8 +99,7 @@ auto contin( const int itemp, int nphon, double& delta,
                             | ranges::view::transform([](auto entry){
                                 return entry < 1e-30 ? 0 : entry;
 				} );
-
-//      std::cout << addRanges << std::endl;
+      
 
 
       for( size_t b = 0; b < beta.size(); ++b ){
