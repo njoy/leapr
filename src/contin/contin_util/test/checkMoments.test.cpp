@@ -26,6 +26,7 @@ void checkSab( const std::vector<double>& correctSab,
 
 
 
+/*
 
 TEST_CASE( "check moments" ){
 
@@ -69,6 +70,7 @@ TEST_CASE( "check moments" ){
     
   } // GIVEN
 
+  */
   /*
   GIVEN( "other inputs" ){
 
@@ -97,6 +99,6 @@ TEST_CASE( "check moments" ){
 
     
   } // GIVEN
-  */
 
 } // TEST_CASE
+  */

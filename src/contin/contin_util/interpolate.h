@@ -1,7 +1,6 @@
 
-template<typename T>
-T interpolate( const std::vector<T>& y, const T& delta, 
-  const T& x ){
+template<typename T, typename V>
+T interpolate( const V& y, const T& delta, const T& x ){
   /* Inputs
    * ------------------------------------------------------------------------
    * y     : evenly spaced vector to be interpolated

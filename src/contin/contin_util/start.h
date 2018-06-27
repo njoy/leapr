@@ -1,8 +1,9 @@
 #include "contin/contin_util/start_util/normalize.h"
 #include "contin/contin_util/start_util/fsum.h"
+#include <range/v3/all.hpp>
 
-auto start( std::vector<double>& p, double& delta, const double& tev, 
-  const double& tbeta ){
+template <typename T, typename V>
+auto start( V& p, T& delta, const T& tev, const T& tbeta ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -42,6 +43,9 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // This is is following what the manual instructs on pg. 651 near bottom, that
   // the solid-type spectrum must vary as b^2 as b goes to zero.
   
+  std::cout << (p|ranges::view::all) << std::endl;
+  //auto p2 = ranges::view::transform()
+
   p[0] = p[1] / ( beta * beta );
   for ( size_t i = 1; i < p.size(); ++i ){
     p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
@@ -49,7 +53,7 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   }
 
   // normalize p so now it integrates to tbeta
-  normalize( p, delta, tbeta );
+  p = normalize( p, delta, tbeta );
 
   // calculate debye-waller coefficient and effective temperature
   double lambda_s = fsum( 0, p, 0.5, delta );
@@ -61,6 +65,8 @@ auto start( std::vector<double>& p, double& delta, const double& tev,
   // is defined by Eq. 525.
   for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
   
+  std::cout << "HERE" << std::endl;
+  std::cout << "THERE" << std::endl;
   return std::make_tuple( lambda_s, t_eff );
 }
 

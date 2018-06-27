@@ -45,12 +45,6 @@ T fsum( const int n, const V& p, const T& tau, const T& delta_b ){
            | ranges::view::transform([delta_b](auto x){return delta_b*x;}),
 	   p );
 
-  /*
-  RANGES_FOR( auto entry, b ){ 
-    std::cout <<  std::get<0>(entry) << ' ' << std::get<1>(entry) << std::endl;
-  }
-  */
-
   auto funcVal = 
     b | ranges::view::transform([tau,n,even,p,delta_b](auto x){ 
           T p_i = std::get<1>(x), beta = std::get<0>(x);
@@ -58,11 +52,6 @@ T fsum( const int n, const V& p, const T& tau, const T& delta_b ){
                          2.0 * p_i * sinh(beta*tau) * std::pow(beta,n) ;
           // If at boundary, cut in half b/c rectangles only half normal size
           return (beta == 0 or beta == (p.size()-1)*delta_b) ? 0.5*val : val;});
-
-
-
-  //std::cout << "Func Val :) " << (funcVal|ranges::view::all) << std::endl;
-  //std::cout << "            " << delta_b * ranges::accumulate(funcVal,0.0) << std::endl;
 
   return delta_b * ranges::accumulate(funcVal,0.0);
   // return the sum at all requested points, 

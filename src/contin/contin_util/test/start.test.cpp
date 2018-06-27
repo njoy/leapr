@@ -39,6 +39,7 @@ TEST_CASE( "start function" ){
     } // THEN
 
   } // GIVEN
+  /*
 
   GIVEN( "more frequency distribution values" ){
 
@@ -86,4 +87,5 @@ TEST_CASE( "start function" ){
       } // THEN
     } // WHEN
   } // GIVEN
+  */
 } // TEST_CASE
