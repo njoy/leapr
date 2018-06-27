@@ -51,9 +51,10 @@ auto contin( const int itemp, int nphon, double& delta,
   // also change delta --> delta / tev where tev is temperature in eV. 
   // leapr.f90 calls this deltab
     
-  auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
-  double lambda_s = std::get<0>(lambda_s_t_eff);
-  double t_eff    = std::get<1>(lambda_s_t_eff);
+  auto startTuple = start( t1, delta, tev, tbeta );
+  double lambda_s = std::get<0>(startTuple);
+  double t_eff    = std::get<1>(startTuple);
+  auto   T1_Range = std::get<2>(startTuple);
 
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
@@ -67,6 +68,7 @@ auto contin( const int itemp, int nphon, double& delta,
   // track which block we're at. So we start out with the size of t1, then it
   // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
+  std::cout << T1_Range << std::endl;
   
   double add, exx;
 
@@ -125,7 +127,7 @@ auto contin( const int itemp, int nphon, double& delta,
   double arat = sc/scaling;
   checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
-  return lambda_s_t_eff;
+  return startTuple;
 
 }
 
