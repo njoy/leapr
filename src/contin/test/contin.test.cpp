@@ -3,10 +3,11 @@
 #include "contin/contin.h"
 
 
-void checkSabLambdaTeff( const std::vector<double>& correctSab, 
-    const std::tuple<double,double>& output, 
-    const Eigen::Tensor<double,3>& sab,  
-    const double& lambda, const double& teff ){
+template <typename A, typename B, typename C, typename D>
+void checkSabLambdaTeff( const A& correctSab, 
+    const B& output, 
+    const C& sab,  
+    const D& lambda, const D& teff ){
 
   REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
 
@@ -31,7 +32,6 @@ TEST_CASE( "contin eigen" ){
   int ntempr, nphon, itemp;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
-  std::tuple<double,double> output;
 
   GIVEN( "input values from input card and leapr subroutine" ){
 
@@ -47,7 +47,7 @@ TEST_CASE( "contin eigen" ){
 
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+      auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
@@ -73,7 +73,7 @@ TEST_CASE( "contin eigen" ){
 
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+      auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
@@ -96,7 +96,7 @@ TEST_CASE( "contin eigen" ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+      auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
         alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){

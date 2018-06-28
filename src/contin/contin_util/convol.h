@@ -4,14 +4,21 @@
 template <typename A, typename B>
 auto convol( const A& t1, const A& t2, const B& delta ){
 
+  auto iRange = ranges::view::iota(0,18);
+  auto jRange = ranges::view::iota(0,6);
+  auto ijRange2 = ranges::view::cartesian_product(iRange,jRange);
+  auto ijRange = ijRange2;
+  std::cout << std::get<0>(ijRange[5]) << "    " << std::get<1>(ijRange[5]) << std::endl;
+  std::cout << std::get<0>(ijRange[6]) << "    " << std::get<1>(ijRange[6]) << std::endl;
+  std::cout << std::get<0>(ijRange[7]) << "    " << std::get<1>(ijRange[7]) << std::endl;
   std::vector<double> t3(t2.size(),0.0);
+  return t3;
 
   int i1, i2, len_t1 = int(t1.size()), len_t2 = int(t2.size());
   double f1, f2;
 
-  auto iRange = ranges::view::iota(0,int(t2.size()));
-  auto jRange = ranges::view::iota(0,int(t1.size()));
-  auto ijRange = ranges::view::cartesian_product(iRange,jRange);
+
+
   auto i1Range = ijRange 
                | ranges::view::transform([](auto t){
                    return std::get<0>(t) + std::get<1>(t);
@@ -22,7 +29,6 @@ auto convol( const A& t1, const A& t2, const B& delta ){
                  });
 
   auto i12 = ranges::view::zip(i1Range,i2Range);
-
 
   
   /*
@@ -50,37 +56,20 @@ auto convol( const A& t1, const A& t2, const B& delta ){
 		   auto j  = std::get<1>(std::get<1>(t));
 		   auto f1 = ( i1 - 1 > int(t1.size())) ? 0 : t2[i1]*exp(-j*delta);
                    double f2;
-		   if ( t1[j] > 0 ){
                    if      ( i2 >= 0 and  i2-1 < int(t1.size()) ){ f2 = t2[ i2];                  }
                    else if ( i2 <  0 and -i2-3 < int(t1.size()) ){ f2 = t2[-i2] * exp( i2*delta );}
                    else                                  { f2 = 0.0;                        }
 		   return ( j == 0 or j == int(t1.size())-1 ) ?
                      t1[j] * ( f1+f2 ) * 0.5 :
                      t1[j] * ( f1+f2 );
-		   } else { return 0.0; }
 		 } );
- auto x = ranges::view::iota(1,25) | ranges::view::chunk(6);
 
- std::cout << t3Range << std::endl;
- //auto y = t3Range | ranges::view::all | ranges::view::chunk(6);
-
- auto z = ranges::view::iota(0,int(t3Range.size())) 
-        | ranges::view::transform( [t3Range](auto entry){ 
-            return t3Range[entry]; } )
-	| ranges::view::chunk(6) 
-        | ranges::view::transform([](auto range){ 
-            return ranges::accumulate(range,0.0);}); 
-  std::cout << std::endl;
-  std::cout << t3Range.size() << std::endl;
-  std::cout << std::endl;
-  std::cout << x << std::endl;
-  std::cout << std::endl;
-  std::cout << z << std::endl;
-  //std::cout << y << std::endl;
-  std::cout << std::endl;
-
-
+		   
                 
+  RANGES_FOR( auto entry, ijRange){
+    std::cout << std::get<0>(entry) << "  " << 
+		 std::get<1>(entry) << std::endl;
+  }
 	       /*
   RANGES_FOR( auto entry, f1Range){
     std::cout << std::get<0>(entry) << "  " << 
@@ -89,6 +78,10 @@ auto convol( const A& t1, const A& t2, const B& delta ){
   }
   */
 
+
+
+
+  
   int counter = 0;
   for ( int i = 0; i < len_t2; ++i ){    // i iterates through t3
     for ( int j = 0; j < len_t1; ++j ){  // j iterates through t1, t2
@@ -104,18 +97,26 @@ auto convol( const A& t1, const A& t2, const B& delta ){
         else                                  { f2 = 0;                        }
 
         // If at one of the endpoints, only give half contribution
+	auto value = ( j == 0 or j == len_t1 - 1 ) ? t1[j] * ( f1 + f2 ) * 0.5 :
+                                                 t1[j] * ( f1 + f2 );
+
+
         t3[i] += ( j == 0 or j == len_t1 - 1 ) ? t1[j] * ( f1 + f2 ) * 0.5 :
                                                  t1[j] * ( f1 + f2 );
+	std::cout << "----- " << value << "     " << t3Range[counter] << "      " << i << " " << j << "       " << std::get<0>(ijRange[counter]) << " " << std::get<1>(ijRange[counter])<<  std::endl;
+
+	//std::cout << "----- " << i << " " << j << "       " << std::get<0>(ijRange[counter]) << " " << std::get<1>(ijRange[counter])<<  std::endl;
+	++counter;
       } // if
 
     } // for
-    //std::cout << "----- " << t3[i] <<  std::endl;
-    std::cout << "----- " << t3[i] << "     " << z[counter] <<  std::endl;
-	++counter;
 
     t3[i] = ( t3[i] * delta < 1e-30 ) ? 0 : t3[i] * delta;
 
   } // for
+  std::cout << std::get<0>(ijRange[5]) << "    " << std::get<1>(ijRange[5]) << std::endl;
+  std::cout << std::get<0>(ijRange[6]) << "    " << std::get<1>(ijRange[6]) << std::endl;
+  std::cout << std::get<0>(ijRange[7]) << "    " << std::get<1>(ijRange[7]) << std::endl;
   return t3;
 }
 

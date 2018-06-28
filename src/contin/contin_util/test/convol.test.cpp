@@ -2,6 +2,18 @@
 #include "catch.hpp"
 #include "contin/contin_util/convol.h"
 
+template <typename A, typename C> 
+void check2( const A& outputRange, const C& correctRange ){
+  REQUIRE( (outputRange.size() == correctRange.size()) );
+  RANGES_FOR( auto t, ranges::view::zip(outputRange,correctRange) ){
+    std::cout << std::get<1>(t) << "          " << std::get<0>(t) << std::endl;
+    REQUIRE( (std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6)) );
+  }
+
+}
+
+
+
 TEST_CASE( "convol" ){
   GIVEN( "two vectors" ){
     std::vector<double> 
@@ -14,9 +26,11 @@ TEST_CASE( "convol" ){
 
     THEN( "the vectors are correctly convolved and result is returned" ){
 
-      output = convol( t1, t2, delta ),
+      auto output = convol( t1, t2, delta );
+      std::vector<double> 
       correct = {3.8459762, 2.6993367, 1.0195307, 0.53364442, 0.37281623, 
         0.384, 0.624, 1.008, 1.8, 2.16, 0.96, 0, 0, 0, 0, 0, 0, 0};
+      //check2(output,correct);
 
       /*
       REQUIRE( output.size() == correct.size() );
