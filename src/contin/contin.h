@@ -56,6 +56,7 @@ auto contin( const int itemp, int nphon, double& delta,
   double t_eff    = std::get<1>(startTuple);
   auto   T1_Range = std::get<2>(startTuple);
 
+  t1 = T1_Range | ranges::to_vector;
   std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
 

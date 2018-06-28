@@ -27,12 +27,12 @@ TEST_CASE( "convol" ){
     THEN( "the vectors are correctly convolved and result is returned" ){
 
       auto output = convol( t1, t2, delta );
+      /*
       std::vector<double> 
       correct = {3.8459762, 2.6993367, 1.0195307, 0.53364442, 0.37281623, 
         0.384, 0.624, 1.008, 1.8, 2.16, 0.96, 0, 0, 0, 0, 0, 0, 0};
       //check2(output,correct);
 
-      /*
       REQUIRE( output.size() == correct.size() );
       for ( size_t i = 0; i < output.size(); ++i ){
         REQUIRE( output[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
