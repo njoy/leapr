@@ -16,9 +16,10 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
 
   auto sab1 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()));
 	  
+  //int numTemps = 3;
   auto sab2 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()))
-            | ranges::view::chunk(1)   
 
+//	    | ranges::view::chunk(numTemps)
 //          | ranges::view::chunk(1)          Making it so that I only
 //                                            have S(a,b) not S(a,b,T).
 //                                            This will probs make ranges
@@ -36,18 +37,55 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   auto al2 =alpha|ranges::view::transform([sc,iarat=1.0/arat](auto x){return x*scr*iarat;});
   auto be2 = beta|ranges::view::transform([sc]     (auto x){return x*sc;     });
   auto alw2= al2 |ranges::view::transform([tbeta]  (auto x){return x*tbeta;  });
+  
 
 
-  auto ssct2 = ranges::view::zip(
-                 ranges::view::for_each(alw2,[beta](double d){  
-                   return ranges::yield_from(
-                     ranges::view::repeat_n(d,beta.size())); }),
-                 be2 | ranges::view::cycle 
-                     | ranges::view::take_exactly(alpha.size()*beta.size()))
+  auto ex2 = ranges::view::cartesian_product(alw2,be2)
              | ranges::view::transform( [tbar](auto x){ 
-                 double alw = std::get<0>(x), be = std::get<1>(x);
-                 double ex = -std::pow(alw-be,2) / (4*alw*tbar );
-                 return ex>-250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; });
+                 double alw = std::get<0>(x), 
+                         be = std::get<1>(x);
+                 return -std::pow(alw-be,2) / (4*alw*tbar ); });
+
+  auto ssct2 = ranges::view::zip_with(
+                 [](auto ex,auto alw){
+                   return ex>-250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; }
+		  ,ex2, alw2);
+
+  auto ff1_2 = ranges::view::zip_with( [](auto ssct,auto be){
+                 return ssct*exp(-be); }, ssct2, be2 );
+
+  auto be_bel = ranges::view::concat(ranges::view::single(0),be2 )
+              | ranges::view::sliding(2);
+              //| ranges::view::transform([](auto t){
+              //    return t[1] - t[0]; });
+
+  auto ff1l_2 = ranges::view::concat(ranges::view::single(0),ff1_2 )|ranges::view::sliding(2);
+  auto ff2l_2 = ranges::view::concat(ranges::view::single(0),ssct2 )|ranges::view::sliding(2);
+
+  auto sum0_2 = ranges::view::zip_with(                  
+		  [](auto be, auto ff1l, auto ff2l){ 
+                    return (be[1]-be[0])*(ff1l[0]+ff1l[1]+ff2l[0]+ff2l[1]);},
+                  be_bel,ff1l_2,ff2l_2);
+
+  auto sum1_2 = ranges::view::zip_with(                  
+		  [](auto be, auto ff1l, auto ff2l){ 
+                    return (be[1]-be[0])*(-ff1l[0]*be[0]-ff1l[1]*be[1]+
+                                           ff2l[0]*be[0]+ff2l[1]*be[1]);},
+                  be_bel,ff1l_2,ff2l_2);
+
+
+  auto sumRange = ranges::accumulate(ranges::view::zip(sum0_2,sum1_2),
+                                     std::make_pair(0.0,0.0));
+               
+             
+
+  /*
+                | ranges::view::sliding(2)
+                | ranges::view::transform([](auto t){
+                    return t[1] + t[0]; });
+		    */
+
+
 
 
   // ex2 = zip [ a1, a1, a1, ... a1, a2, a2, ... , ... , aN ]
