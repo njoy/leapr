@@ -17,7 +17,9 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   auto sab1 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()));
 	  
   auto sab2 = ranges::view::repeat_n(0,int(alpha.size()*beta.size()))
-//            | ranges::view::chunk(1)        Making it so that I only
+            | ranges::view::chunk(1)   
+
+//          | ranges::view::chunk(1)          Making it so that I only
 //                                            have S(a,b) not S(a,b,T).
 //                                            This will probs make ranges
 //                                            easier. I'll just make a new
@@ -30,10 +32,10 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
                 alphaBeta) ;
 	 // | ranges::view::chunk(beta.size());
   
-
-  auto al2 = alpha|ranges::view::transform([sc,arat](auto x){return x*sc/arat;});
-  auto be2  = beta|ranges::view::transform([sc]     (auto x){return x*sc;   });
-  auto alw2 = al2 |ranges::view::transform([tbeta]  (auto x){return x*tbeta;});
+  
+  auto al2 =alpha|ranges::view::transform([sc,iarat=1.0/arat](auto x){return x*scr*iarat;});
+  auto be2 = beta|ranges::view::transform([sc]     (auto x){return x*sc;     });
+  auto alw2= al2 |ranges::view::transform([tbeta]  (auto x){return x*tbeta;  });
 
 
   auto ssct2 = ranges::view::zip(
@@ -45,7 +47,8 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
              | ranges::view::transform( [tbar](auto x){ 
                  double alw = std::get<0>(x), be = std::get<1>(x);
                  double ex = -std::pow(alw-be,2) / (4*alw*tbar );
-                 return ex>-250 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; });
+                 return ex>-250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; });
+
 
   // ex2 = zip [ a1, a1, a1, ... a1, a2, a2, ... , ... , aN ]
   //                               with
@@ -56,16 +59,15 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   //  and then int ssct form where 
   //      ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
 
-  sab3 | ranges::view::transform( [](auto x){
-           double sab = std::get<0>(x);
-	   int a = std::get<0>(std::get<1>(x));
-	   int b = std::get<1>(std::get<1>(x));
-	   return std::make_tuple(100,std::make_tuple(a,b)) ;
-	   std::cout << sab << "     " << a << "    " << b << std::endl;
-	  });
 
   std::cout << sab1 << std::endl;  
+  std::cout << sab2 << std::endl;  
+//  std::cout << sab3 << std::endl;  
+  //std::cout << ssct2[1] << std::endl;  
   std::cout << ssct2 << std::endl;  
+
+
+
 
 
   // this definition is dumb
@@ -73,6 +75,7 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
 
   // int nbint = 1;
   // check the moments of s(alpha,beta)
+  //int counter = 0; 
   for ( size_t a = 0; a < alpha.size(); ++a ){
     if ( ( a % naint == 0 ) or ( a == alpha.size() - 1) ){
       al = alpha[a]*sc/arat;
@@ -85,7 +88,7 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
         be = beta[b]*sc;
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
-	//std::cout << ssct << std::endl;
+	std::cout << ssct << "     " <<  std::endl;
         if (int(a)+1 >= maxt[b]) {
           ssm(a,b,itemp) = ssct;
         }
@@ -109,6 +112,9 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
     }
   }
   return;
+
+
+
   std::cout << sab2 << std::endl;
   std::cout << al2 << std::endl;
   std::cout << std::endl;

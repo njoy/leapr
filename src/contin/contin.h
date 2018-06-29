@@ -6,11 +6,11 @@
 #include <range/v3/all.hpp>
 
 
-auto contin( const int itemp, int nphon, double& delta, 
-  const double& tbeta, const double& scaling, const double& tev, 
-  const double& sc, std::vector<double> t1, const std::vector<double>& alpha, 
-  const std::vector<double>& beta, 
-  Eigen::Tensor<double,3>& symSab ){
+template <typename floatT, typename arrayT>
+auto contin( const int itemp, const int nphon, floatT& delta, 
+  const floatT& tbeta, const floatT& scaling, const floatT& tev, 
+  const floatT& sc, arrayT t1, const arrayT& alpha, const arrayT& beta, 
+  Eigen::Tensor<floatT,3>& symSab ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -52,8 +52,8 @@ auto contin( const int itemp, int nphon, double& delta,
   // leapr.f90 calls this deltab
     
   auto startTuple = start( t1, delta, tev, tbeta );
-  double lambda_s = std::get<0>(startTuple);
-  double t_eff    = std::get<1>(startTuple);
+  floatT lambda_s = std::get<0>(startTuple),
+         t_eff    = std::get<1>(startTuple);
   auto   T1_Range = std::get<2>(startTuple);
 
   t1 = T1_Range | ranges::to_vector;
@@ -71,7 +71,7 @@ auto contin( const int itemp, int nphon, double& delta,
 
   std::cout << T1_Range << std::endl;
   
-  double add, exx;
+  floatT add, exx;
 
   // To be used when checking moments of S(a,b)
   std::vector<int> maxt (1000, 0);
@@ -96,15 +96,12 @@ auto contin( const int itemp, int nphon, double& delta,
       if ( exx <= -250.0 ){ continue; }
       exx = exp(exx);
 
-      auto addRanges = beta | ranges::view::transform([exx,tnow,delta,sc](auto betaVal){
-                                return exx*interpolate(tnow,delta,betaVal*sc);
-				} ) 
-                            | ranges::view::transform([](auto entry){
-                                return entry < 1e-30 ? 0 : entry;
-				} );
+      auto addRanges = beta 
+                     | ranges::view::transform([exx,tnow,delta,sc](auto beta){
+                         return exx*interpolate(tnow,delta,beta*sc); }) 
+                     | ranges::view::transform([](auto entry){ 
+                         return entry < 1e-30 ? 0.0 : entry; });
       
-
-
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
