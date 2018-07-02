@@ -1,14 +1,14 @@
-#include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <Eigen/Dense>
+//#include <unsupported/Eigen/CXX11/Tensor>
 #include <iostream> 
 #include <vector>
 #include <cmath>
 #include <tuple>
 #include <string>
 #include "contin/contin.h"
-#include "trans/trans.h"
-#include "discre/discre.h"
-#include "coldh/coldh.h"
+//#include "trans/trans.h"
+//#include "discre/discre.h"
+//#include "coldh/coldh.h"
 #include <time.h>
 #include <range/v3/all.hpp>
 
@@ -22,6 +22,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
   double dka, std::vector<double> kappaVals ){
 
+  /*
   //clock_t t;
   //t = clock();
   int b_size = 3, a_size = 5;
@@ -61,8 +62,8 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   //  std::vector<std::vector<double>> (beta.size(), 
   //  std::vector<double> ( ntempr, 0.0 ) ) );
 
-  Eigen::Tensor<double,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
-  Eigen::Tensor<double,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
+  //Eigen::Tensor<double,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
+  //Eigen::Tensor<double,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
 
 
   std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
@@ -85,6 +86,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
+      */
       /*
       std::cout << sym_sab[0][0][0] << std::endl;
       std::cout << sym_sab[1][1][0] << std::endl;
@@ -93,6 +95,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       std::cout << sym_sab[4][4][0] << std::endl;
       std::cout << "    " << std::endl;
       */
+      /*
 
 
       // Continuous part of the distribution
@@ -100,8 +103,8 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
 
       //sym_sab_eigen.setZero();
-      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab_eigen);
+      //auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
+        //sc, rho, alpha, beta, sym_sab_eigen);
       double lambda_s = std::get<0>(lambda_s_t_eff);
 
 
@@ -114,8 +117,8 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       // Translational part of distribution, if any
       //std::cout << "\n-------- trans" << std::endl;
       if ( trans_weight > 0.0 ){
-        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
+        //trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+          //itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
       //double t_trans = clock();
 
@@ -125,13 +128,14 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         for ( size_t i = 0; i < oscEnergies.size(); ++i ){
           oscEnergiesWeights[i] = std::make_tuple(oscEnergies[i],oscWeights[i]);
         }
-        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
-          beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
+        //discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
+          //beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
       //double t_discre = clock();
 
       std::cout << lambda_s << std::endl;
 
+      */
       /*
       std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
         << " seconds" << std::endl;
@@ -142,15 +146,16 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
         << " seconds\n\n" << std::endl;
         */
+      /*
       std::cout << "\n" << std::endl;
       //return;
-      return sym_sab_eigen;
+      //return sym_sab_eigen;
 
       if ( ncold != 0 ){
 	bool free = false;
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
-	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab_eigen, 
-	  sym_sab_2_eigen );
+       // coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
+//	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab_eigen, 
+//	  sym_sab_2_eigen );
       }
 
 
@@ -158,8 +163,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
     done = true;
   }
 
+        */
   //return;
-    return sym_sab_eigen;
+    //return sym_sab_eigen;
     std::cout << "Card1: " << nout << std::endl;
     std::cout << "Card2: " <<  title<< std::endl;
     std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
@@ -188,6 +194,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
     std::cout << "\n\n\n " << std::endl;
 
-  return sym_sab_eigen;
+  //return sym_sab_eigen;
 }
 

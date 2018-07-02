@@ -2,15 +2,16 @@
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
 
-template <typename floatT, typename arrayT>
+template <typename floatT, typename arrayT, typename rangeT>
 auto contin( const int itemp, const int nphon, floatT& delta, 
   const floatT& tbeta, const floatT& scaling, const floatT& tev, 
   const floatT& sc, arrayT t1, const arrayT& alpha, const arrayT& beta, 
-  Eigen::Tensor<floatT,3>& symSab ){
+  rangeT symSab
+  /*Eigen::Tensor<floatT,3>& symSab*/ ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -104,11 +105,13 @@ auto contin( const int itemp, const int nphon, floatT& delta,
       
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
+        /*
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
         if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
-          if ( add > symSab(a,b,itemp)/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; } 
+          if ( add > symSab(a,b,itemp)/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; }
         } 
+        */
 
       } // for b in beta
     } // for a in alpha

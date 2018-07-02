@@ -1,10 +1,11 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include <vector>
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <unsupported/Eigen/CXX11/Tensor>
 #include "trans/trans.h"
 #include "catch.hpp"
 
+/*
 
 void equalSAB( const Eigen::Tensor<double,3>& sab,
   const std::vector<double>& correct ){
@@ -134,4 +135,4 @@ TEST_CASE( "trans" ){
     } // WHEN
   } // GIVEN
 } // TEST CASE
- 
+*/ 

@@ -1,19 +1,21 @@
 #include <iostream>
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
+template <typename rangeT>
 auto checkMoments( const double& sc, const std::vector<double>& alpha,
   const std::vector<double>& beta, const std::vector<int>& maxt,
-  int itemp, const double& f0, const double& tbeta, const double& arat, 
-  double tbar, Eigen::Tensor<double,3>& ssm ){
+  /*int itemp,*/ const double& f0, const double& tbeta, const double& arat, 
+  double tbar, rangeT ssm ){
+  
 
   double /*ff0,*/ ff1, ff2, be, ssct, ex, al, alw;
 
 
-  /*
   auto alphaBeta = ranges::view::cartesian_product( 
                      ranges::view::iota(0,int(alpha.size())), 
                      ranges::view::iota(0,int(beta.size())));
+  /*
 		     */
 
 	  
@@ -43,19 +45,40 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
                        return x*sc*iarat; });
   auto be2 = beta  | ranges::view::transform([sc]   (auto x){return x*sc;    });
   auto alw2= al2   | ranges::view::transform([tbeta](auto x){return x*tbeta; });
+                   //| ranges::view::transform([beta](auto x){ return ranges::view::iota(0,int(beta.size())) 
+                   //| ranges::view::transform([x](auto ){return x;}); }) 
+                   //| ranges::view::join;
 
+  //auto alw3 = ranges::view::iota(0,int(beta.size()*alpha.size())) | ranges::view::transform([alw2](auto x){ return 1.0*x; } );
 
-  auto ex2 = ranges::view::cartesian_product(alw2,be2)
+  auto ex2a = ranges::view::cartesian_product(alw2,be2);
+  auto ex2 = ex2a
              | ranges::view::transform( [tbar](auto x){ 
                  double alw = std::get<0>(x), 
                          be = std::get<1>(x);
                  return -std::pow(alw-be,2) / (4*alw*tbar ); });
 
+  //int counter = 0;
   auto ssct2 = ranges::view::zip_with(
-                 [tbar](auto ex,auto alw){
+                 [tbar](auto ex,auto alw_be_tuple){
+                   auto alw = std::get<0>(alw_be_tuple);
                    return ex>-250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0.0; }
-		  ,ex2, alw2);
-  std::cout << ssct2 << std::endl;
+		  ,ex2, ex2a);
+  //std::cout << ssct2 << std::endl;
+
+  auto ff2_2 = ranges::view::zip(ssct2,alphaBeta,ranges::view::join(ssm)) 
+             | ranges::view::transform( [maxt](auto t){
+                 auto ssct = std::get<0>(t);
+                 auto a = std::get<0>(std::get<1>(t));
+                 auto b = std::get<1>(std::get<1>(t));
+                 auto sab_val = std::get<2>(t);
+                 if (int(a)+1 >= maxt[b]) { 
+                   return ssct;
+                 }
+                 return sab_val;
+                 } );
+  std::cout << ff2_2 << std::endl;
+
 
   auto ff1_2 = ranges::view::zip_with( [](auto ssct,auto be){
                  return ssct*exp(-be); }, ssct2, be2 );
@@ -78,10 +101,9 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
                                            ff2l[0]*be[0]+ff2l[1]*be[1]);},
                   be_bel,ff1l_2,ff2l_2);
 
-  
-  std::cout << sum0_2 << std::endl;
-  std::cout << sum1_2 << std::endl;
   /*
+                  */
+   /*
   RANGES_FOR( auto x, alphaBeta){
     std::cout << std::get<0>(x) << " " << std::get<1>(x) << std::endl;
   }
@@ -131,12 +153,13 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
         be = beta[b]*sc;
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
-	std::cout << ssct << "     " <<  std::endl;
+//	std::cout << ssct << "     " << ssct2[counter++] <<  std::endl;
         if (int(a)+1 >= maxt[b]) {
-          ssm(a,b,itemp) = ssct;
+          ssm[a][b] = ssct;
         }
-        ff2 = ssm(a,b,itemp);
-        ff1 = ssm(a,b,itemp)*exp(-be);
+        ff2 = ssm[a][b];
+        ff1 = ssm[a][b]*exp(-be);
+        std::cout << ff2 << "     " <<std::endl;// ff2_2[counter++] << std::endl;
         //ff0 = ssm[a][b][itemp]*exp(-be/2);   // This isn't used either
         if (b > 0) {
           sum0 = sum0+(be-bel)*(ff1l+ff2l+ff1+ff2)/2;
@@ -159,6 +182,9 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
     }
   }
   return;
+ 
+  std::cout << sum0_2 << std::endl;
+  std::cout << sum1_2 << std::endl;
 
 
 
@@ -171,7 +197,7 @@ auto checkMoments( const double& sc, const std::vector<double>& alpha,
   std::cout << std::endl;
   //std::cout << ( alpha | ranges::view::all )<< std::endl;
   //std::cout << std::endl;
-  std::cout << ssct2 << std::endl;
+  //std::cout << ssct2 << std::endl;
 
 
   /*
