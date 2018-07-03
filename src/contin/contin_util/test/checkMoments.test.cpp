@@ -35,9 +35,12 @@ TEST_CASE( "check moments" ){
   std::vector<double> alpha { 1.008e-2, 1.5e-2, 2.52e-2, 3.3e-2, 5.0406e-2 },
   beta { 0.0, 6.375e-3, 1.275e-2, 2.55e-2, 3.825e-2, 5.1e-2, 6.575e-2 };
 
-  auto ssm2 = ranges::view::generate_n([alpha,beta](){return 
-               ranges::view::generate_n([beta](){return 0.0;},
-               int(beta.size()));},int(alpha.size()));
+  auto ssm2 = //ranges::view::generate_n([alpha,beta](){return 
+              // ranges::view::generate_n([beta](){return 0.0;},
+              // int(beta.size()));},int(alpha.size()));
+    //ranges::view::generate_n([alpha,beta](){ return 0.0;},int(alpha.size()*beta.size()));
+    ranges::view::iota(0,int(alpha.size()*beta.size())) | ranges::view::transform([](auto ){ return 0.0; } );
+
   std::vector<std::vector<double>> ssm (alpha.size(),std::vector<double>(beta.size(),0.0));
 
 
@@ -52,7 +55,7 @@ TEST_CASE( "check moments" ){
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
 
-    checkMoments( sc, alpha, beta, maxt, /*itemp,*/ f0, tbeta, arat, tbar, ssm );
+    checkMoments( sc, alpha, beta, maxt, /*itemp,*/ f0, tbeta, arat, tbar, ssm2 );
 
 /*
     std::vector<double> correctSab {0.00000000, 3.04230221, 3.03666664, 
