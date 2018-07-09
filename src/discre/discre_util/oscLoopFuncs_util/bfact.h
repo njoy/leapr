@@ -14,85 +14,94 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
 
   if ( y <= 1.0 ){
 
-    f I1C[6] = { 0.0360768, 0.2659732, 1.2067492, 3.0899424, 3.5156229, 1.0 };
-    f I2C[6] = { 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 0.87890594, 0.5};
-
-    auto I0Vector = ranges::view::concat(ranges::view::single(0.0045813),I1C);
-    auto I1Vector = ranges::view::concat(ranges::view::single(0.00032411),I2C);
+    f I1C[7] = { 4.5813e-3, 0.0360768, 0.2659732, 1.2067492, 3.0899424, 
+                 3.5156229, 1.0 };
+    f I2C[7] = { 3.2411e-4, 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 
+                 0.87890594, 0.5};
 
     auto yVec = ranges::view::iota(0,7) 
-              | ranges::view::transform([size=(sizeof(I1C)/sizeof(*I1C))]
-                  (auto i){ return 2*(size - i); })
+              | ranges::view::reverse
               | ranges::view::transform([y](auto num){
-                  return std::pow(y,num); } );
-    auto both = ranges::view::zip(I0Vector, I1Vector, yVec) 
+                  return std::pow(y,2*num); } );
+    auto both = ranges::view::zip(I1C, I2C, yVec) 
               | ranges::view::transform( [](auto t){ 
                   return std::make_pair(std::get<0>(t)*std::get<2>(t),
                          std::get<1>(t)*std::get<2>(t)); } );
-    auto I02_1 = ranges::accumulate( both|ranges::view::keys, 0.0 );
-    auto I12_1 = ranges::accumulate( both|ranges::view::values, 0.0 );
+    I0 = ranges::accumulate( both|ranges::view::keys,   0.0 );
+    I1 = ranges::accumulate( both|ranges::view::values, 0.0 ) * x;
 
-    std::cout << I02_1 << std::endl;
-    std::cout << I12_1 << std::endl;
-    std::cout << std::endl;
-    
-
-
-
-    std::vector<double> I1Consts = { 0.0360768, 0.2659732, 1.2067492, 
-      3.0899424, 3.5156229, 1.0 };
-    std::vector<double> I2Consts = {0.0030153, 0.02658733, 0.15084934, 
-      0.51498869, 0.87890594, 0.5};
-    I0 = 0.0045813;
-    I1 = 0.00032411;
-    for ( auto entry : I1Consts ){ 
-      I0 = I0 * y * y + entry; 
-    }
-    for ( auto entry : I2Consts ){ I1 = I1 * y * y + entry; }
-    std::cout << I0 << std::endl;
-    std::cout << I1 << std::endl;
-
-    I1 = I1 * x; 
 
     expVal = -dwc;
   } 
   if ( y > 1.0 ) {
 
-    std::vector<double> I1Consts { -0.01647633, 0.02635537, -0.02057706, 
+    f I1C[9] = { 0.00392377, -0.01647633, 0.02635537, -0.02057706, 
       0.00916281, -0.00157565, 0.00225319, 0.01328592, 0.39894228 };
-    std::vector<double> I2Consts { 0.01787654, -0.02895312, 0.02282967, 
+
+    f I2C[9] = { -0.00420059, 0.01787654, -0.02895312, 0.02282967, 
       -0.01031555, 0.00163801, -0.00362018, -0.03988024, 0.39894228 };
-    I0 = 0.00392377;
-    I1 = -0.00420059;
 
-    for ( auto entry : I1Consts){ I0 = I0 / y + entry; }
-    for ( auto entry : I2Consts){ I1 = I1 / y + entry; }
-
-    I0 /= sqrt(x);
-    I1 /= sqrt(x);
+    auto yVec = ranges::view::iota(0,9) 
+              | ranges::view::reverse
+              | ranges::view::transform([inv_y=1.0/y](auto num){
+                  return std::pow(inv_y,num); } );
+    auto both = ranges::view::zip(I1C, I2C, yVec) 
+              | ranges::view::transform( [](auto t){ 
+                  return std::make_pair(std::get<0>(t)*std::get<2>(t),
+                         std::get<1>(t)*std::get<2>(t)); } );
+    I0 = ranges::accumulate( both|ranges::view::keys,   0.0 )/sqrt(x);
+    I1 = ranges::accumulate( both|ranges::view::values, 0.0 )/sqrt(x);
 
     expVal = -dwc + x;
   }
 
+  auto iVec = ranges::view::iota(0,48) | ranges::view::reverse;
+  /*
+  auto InRange = ranges::view::concat(
+                   ranges::view::single(0.0),
+                   ranges::view::single(1.0),
+                   ranges::view::iota(0,48) | 
+                   ranges::view::transform([](){return 0.0;} ));
+                   */
+  auto InRange_2 = ranges::view::iota(0,50)
+                 | ranges::view::transform([](int x){ return x == 1 ? 1.0 : 0.0; });
+  
+                     /*
+  auto InRange2 = ranges::view::zip(
+                    iVec,InRange,InRange|ranges::view::slice(1,ranges::end))
+                | ranges::view::transform([two_inv_x=2.0/x](auto t){
+                    return (std::get<0>(t)+2)*two_inv_x;} );
+                    */
+
+  auto vec1 = ranges::view::zip(iVec,InRange_2,InRange_2|ranges::view::slice(1,ranges::end))
+            | ranges::view::transform([](auto i){return std::get<0>(i);}) ;
+            //| ranges::to_<std::vector<double>>();
+
+    std::cout << vec1[0] << "    " << vec1[1] << std::endl << std::endl;
+
   std::vector<double> In ( 50, 0.0 );
-  int nmax=50, i = 49;
-  In[nmax-1] = 0; In[nmax-2] = 1;
+  int i = 49;
+  In[49] = 0; In[48] = 1;
+  
   while (i > 1){
-    In[i-2] = In[i] + 2 * i * In[i-1] / x;
     i = i - 1;
+    //std::cout << (i-1) << std::endl;
+    In[i-1] = In[i+1] + 2 * (i+1) * In[i] / x;
+    //std::cout << 2*(i+1)/x << std::endl;
+    //std::cout << In[i+1] << std::endl;
     if (In[i-1] >= 1.0e10){ 
-      for ( auto j = i; j < nmax; ++j ){
+      for ( size_t j = i; j < In.size(); ++j ){
         In[j-1]=In[j-1]/1.0e10;
       } 
     }  
   } 
 
-  for ( auto i = 1; i < nmax; ++i ){ 
+  for ( size_t i = 1; i < In.size(); ++i ){ 
     In[i] = cutoff( In[i] * I1 / In[0] );
   }
   In[0] = cutoff( I1 );
 
-  for ( auto n = 0; n < nmax; ++n ){
+  for ( size_t n = 0; n < In.size(); ++n ){
     bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i / 2 ) * In[n] );
     bminus[n] = cutoff( exp( expVal + (n+1) * beta_i / 2 ) * In[n] );
   }

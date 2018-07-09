@@ -91,7 +91,7 @@ TEST_CASE( "bfact" ){
       for ( auto entry : bplus ){ equal( entry, 0.0 ); }
       for ( auto entry : bminus ){ equal( entry, 0.0 ); }
       equal( bzero, 0.0 );
-} // THEN
+    } // THEN
  } // GIVEN
  */
 } // TEST CASE
