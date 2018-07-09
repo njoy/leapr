@@ -66,6 +66,7 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
             //| ranges::to_<std::vector<double>>();
 
     //std::cout << vec1[0] << "    " << vec1[1] << std::endl << std::endl;
+    //
 
   std::vector<double> In ( 50, 0.0 );
   int i = 49;
@@ -80,28 +81,42 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
     }  
   } 
 
-  auto InCutoff = In | ranges::view::transform( [I1,In_0=In[0]](auto x){ 
-    return cutoff( x * I1 / In_0 ); } );
+  auto InCutoff = In | ranges::view::transform( [rat=I1/In[0]](auto x){ 
+    return cutoff(x * rat); } );
 
   auto bCutoff = ranges::view::zip( ranges::view::iota(1,51), InCutoff )
                | ranges::view::transform( [expVal, beta_i](auto t){ 
                    int n = std::get<0>(t);
+                   if ( std::get<1>(t) == 0.0 ){ return std::make_pair(0.0,0.0); }
                    return std::make_pair( 
                      cutoff( exp(expVal - n*beta_i*0.5) * std::get<1>(t)),
                      cutoff( exp(expVal + n*beta_i*0.5) * std::get<1>(t)) );} );
+ //std::cout << std::setprecision(15) << bCutoff <<std::endl;
 
-  auto bplusCutoff = bCutoff | ranges::view::keys;
+  auto bplusCutoff  = bCutoff | ranges::view::keys;
   auto bminusCutoff = bCutoff | ranges::view::values;
+  /*
+  */
 
+  //std::cout << (bminusCutoff|ranges::view::all) << std::endl;
   for ( size_t i = 1; i < In.size(); ++i ){ 
     In[i] = cutoff( In[i] * I1 / In[0] );
   }
   In[0] = cutoff( I1 );
 
+  //std::cout << std::setprecision(15) << (In|ranges::view::all) <<std::endl;
   for ( size_t n = 0; n < In.size(); ++n ){
-    bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i * 0.5 ) * In[n] );
-    bminus[n] = cutoff( exp( expVal + (n+1) * beta_i * 0.5 ) * In[n] );
+    if ( In[n] != 0.0 ){
+      bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i * 0.5 ) * In[n] );
+      bminus[n] = cutoff( exp( expVal + (n+1) * beta_i * 0.5 ) * In[n] );
+    }
   }
+  //std::cout << std::endl;
+  //std::cout << (bplus|ranges::view::all) << std::endl;
+  //std::cout << (bminus|ranges::view::all) << std::endl;
 
-  return I0 * exp( expVal );
+  //std::cout << (bminus|ranges::view::all) << std::endl;
+  //std::cout << std::endl;
+  return std::make_tuple(I0*exp(expVal),bminus|ranges::view::all,bplus|ranges::view::all);
+  //return std::make_tuple(I0*exp(expVal),bminusCutoff,bplusCutoff);
 }
