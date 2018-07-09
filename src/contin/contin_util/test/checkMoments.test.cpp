@@ -55,9 +55,8 @@ TEST_CASE( "check moments" ){
     double tbeta = 0.444444;
     double arat = 1, tbar = 1.9344846581861184, explim = -250;
 
-    checkMoments( sc, alpha, beta, maxt, /*itemp,*/ f0, tbeta, arat, tbar, ssm2 );
+    auto ssmNew = checkMoments( sc, alpha, beta, maxt, /*itemp,*/ f0, tbeta, arat, tbar, ssm2 );
 
-/*
     std::vector<double> correctSab {0.00000000, 3.04230221, 3.03666664, 
       3.00439217, 2.94493755, 2.85993079, 2.73274581, 0.00000000, 2.49419786, 
       2.49242782, 2.47724974, 2.44682038, 2.40170401, 2.33228656, 0.00000000, 
@@ -66,7 +65,9 @@ TEST_CASE( "check moments" ){
       1.64367368, 0.00000000, 1.35861931, 1.35989255, 1.36054304, 1.35866398, 
       1.35426586, 1.34606790 };
 
-
+    int i = 0;
+    RANGES_FOR( auto entry, ssmNew ){ REQUIRE( correctSab[i++] == Approx(entry).epsilon(1e-6) ); }
+/*
     checkSab( correctSab, ssm );
     
   } // GIVEN

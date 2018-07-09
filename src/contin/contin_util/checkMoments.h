@@ -96,7 +96,7 @@ std::cout << std::endl;
                     auto be  = beta[std::get<1>(ab)]*sc;
                     auto al  = alpha[std::get<0>(ab)]*sc/arat;
                     if (std::get<1>(ab) == 0){ return 0.0; }
-                    return (be-bel)*(ff1l[0]+ff1l[1]+ff2l[0]+ff2l[1])*0.5;},///(1.0-exp(-al*f0));},
+                    return (be-bel)*(ff1l[0]+ff1l[1]+ff2l[0]+ff2l[1])*0.5/(1.0-exp(-al*f0));},
                     //return (1.0-exp(-al*f0));
       //sum0 = sum0/(1-exp(-al*f0));
                   alphaBeta,ff1l_2,ff2l_2);
@@ -135,6 +135,8 @@ RANGES_FOR( auto x, ranges::view::zip( ff1l_2,ff2l_2 )){
 
 
   std::cout << std::endl;
+  std::cout << ff2_2 << std::endl;
+  std::cout << std::endl;
 
   // this definition is dumb
   int naint = 1;
@@ -172,19 +174,23 @@ RANGES_FOR( auto x, ranges::view::zip( ff1l_2,ff2l_2 )){
           sum0 += 0;
           sum1 += 0;
         }
-        std::cout << sum0<< "       " << sum0_2[counter++] << std::endl;
+        std::cout << sum0 << std::endl;
+      sum0 = sum0/(1.0-exp(-al*f0));
+        std::cout << sum0 << "     " << ((be-bel)*(ff1l+ff2l+ff1+ff2)/2.0)/(1.0-exp(-al*f0))<< "       " << sum0_2[counter++] << std::endl;
+        //std::cout << ((be-bel)*(ff1l+ff2l+ff1+ff2)/2.0)/(1-exp(-al*f0))<< "       " << sum0_2[counter++] << std::endl;
         ff1l = ff1;
         ff2l = ff2;
         bel = be;
       }
       //std::cout << "sum1:  " << sum1 << std::endl;
       
-      //sum0 = sum0/(1-exp(-al*f0));
+      //sum0 = sum0/(1.0-exp(-al*f0));
       //std::cout << "sum0:  " << (1-exp(-al*f0)) << "     alpha:  " << a << std::endl;
       //sum1 = sum1/al/tbeta;
       //sum0 = 0; sum1= 0;
     }
   }
+  std::cout << sum0 << std::endl;
   ++counter;
   }
  
@@ -193,7 +199,7 @@ RANGES_FOR( auto x, ranges::view::zip( ff1l_2,ff2l_2 )){
   std::cout << std::endl;
 auto sum = ranges::accumulate(sum0_2, 0.0);
   std::cout << sum << std::endl;
-  return;
+  return ff2_2;
   RANGES_FOR( auto x, ranges::view::zip(alpha,sum0_2)){ std::cout << std::get<1>(x) << "      " << std::get<0>(x) << std::endl;
       }
 
@@ -218,6 +224,7 @@ auto sum = ranges::accumulate(sum0_2, 0.0);
     std::cout <<  std::get<0>(entry) << "      " << 
 	          std::get<1>(entry) << std::endl;
   }   
+return ff2_2;
   /*
   */
 

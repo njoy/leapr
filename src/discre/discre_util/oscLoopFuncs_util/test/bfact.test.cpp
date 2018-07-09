@@ -43,6 +43,7 @@ TEST_CASE( "bfact" ){
       equal( bzero, 0.98727473 );
     } // THEN
   } // GIVEN
+  /*
   GIVEN( "inputs that are of medium range size" ){
     double x = 0.01, dwc = 0.2, beta_i = 3.0;
     std::vector<double> bplus (50, 0.0), bminus (50, 0.0);
@@ -92,4 +93,5 @@ TEST_CASE( "bfact" ){
       equal( bzero, 0.0 );
 } // THEN
  } // GIVEN
+ */
 } // TEST CASE
