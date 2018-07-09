@@ -56,45 +56,42 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   }
 
   auto iVec = ranges::view::iota(0,48) | ranges::view::reverse;
-  /*
-  auto InRange = ranges::view::concat(
-                   ranges::view::single(0.0),
-                   ranges::view::single(1.0),
-                   ranges::view::iota(0,48) | 
-                   ranges::view::transform([](){return 0.0;} ));
-                   */
-  auto InRange_2 = ranges::view::iota(0,50)
+
+  auto InRange = ranges::view::iota(0,50)
                  | ranges::view::transform([](int x){ return x == 1 ? 1.0 : 0.0; });
   
-                     /*
-  auto InRange2 = ranges::view::zip(
-                    iVec,InRange,InRange|ranges::view::slice(1,ranges::end))
-                | ranges::view::transform([two_inv_x=2.0/x](auto t){
-                    return (std::get<0>(t)+2)*two_inv_x;} );
-                    */
 
-  auto vec1 = ranges::view::zip(iVec,InRange_2,InRange_2|ranges::view::slice(1,ranges::end))
+  auto vec1 = ranges::view::zip(iVec,InRange,InRange|ranges::view::slice(1,ranges::end))
             | ranges::view::transform([](auto i){return std::get<0>(i);}) ;
             //| ranges::to_<std::vector<double>>();
 
-    std::cout << vec1[0] << "    " << vec1[1] << std::endl << std::endl;
+    //std::cout << vec1[0] << "    " << vec1[1] << std::endl << std::endl;
 
   std::vector<double> In ( 50, 0.0 );
   int i = 49;
   In[49] = 0; In[48] = 1;
   
-  while (i > 1){
-    i = i - 1;
-    //std::cout << (i-1) << std::endl;
+  for ( size_t i = 48; i > 0; --i ){
     In[i-1] = In[i+1] + 2 * (i+1) * In[i] / x;
-    //std::cout << 2*(i+1)/x << std::endl;
-    //std::cout << In[i+1] << std::endl;
     if (In[i-1] >= 1.0e10){ 
       for ( size_t j = i; j < In.size(); ++j ){
-        In[j-1]=In[j-1]/1.0e10;
+        In[j-1]=In[j-1]*1.0e-10;
       } 
     }  
   } 
+
+  auto InCutoff = In | ranges::view::transform( [I1,In_0=In[0]](auto x){ 
+    return cutoff( x * I1 / In_0 ); } );
+
+  auto bCutoff = ranges::view::zip( ranges::view::iota(1,51), InCutoff )
+               | ranges::view::transform( [expVal, beta_i](auto t){ 
+                   int n = std::get<0>(t);
+                   return std::make_pair( 
+                     cutoff( exp(expVal - n*beta_i*0.5) * std::get<1>(t)),
+                     cutoff( exp(expVal + n*beta_i*0.5) * std::get<1>(t)) );} );
+
+  auto bplusCutoff = bCutoff | ranges::view::keys;
+  auto bminusCutoff = bCutoff | ranges::view::values;
 
   for ( size_t i = 1; i < In.size(); ++i ){ 
     In[i] = cutoff( In[i] * I1 / In[0] );
@@ -102,8 +99,8 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   In[0] = cutoff( I1 );
 
   for ( size_t n = 0; n < In.size(); ++n ){
-    bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i / 2 ) * In[n] );
-    bminus[n] = cutoff( exp( expVal + (n+1) * beta_i / 2 ) * In[n] );
+    bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i * 0.5 ) * In[n] );
+    bminus[n] = cutoff( exp( expVal + (n+1) * beta_i * 0.5 ) * In[n] );
   }
 
   return I0 * exp( expVal );
