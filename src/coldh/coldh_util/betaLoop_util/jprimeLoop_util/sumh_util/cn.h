@@ -1,11 +1,12 @@
 #include <vector>
+#include <range/v3/all.hpp>
 
-auto helper(int k, bool isEven ){
-  double s = 0, fact = 1;
-  for ( auto i = 0; i < k; ++i ){
-    s += log(i+1);
-  }
-  if ( s > 0.0 ){ fact = exp(s); }
+double helper(int k, bool isEven ){
+  if ( k <= 0 ){ return 1.0; }
+  double s = ranges::accumulate(ranges::view::iota(1,k+1) 
+           | ranges::view::transform([](auto x){ return log(x); }),0.0);
+  std::cout << exp(s) << std::endl;
+  double fact = (s > 0.0) ? exp(s) : 1.0;
   return isEven ? sqrt(fact) : fact;
 }
 
@@ -13,25 +14,19 @@ auto cn( int jj, int ll, int nn ){
   /* Calculates Clebsch-Gordon coefficients for cold hydrogen or 
    * deuterium calculation. 
    */
-  double a1, a2, a3, a4, b1, b2, b3, b4, rat, wign;
+  double c1, c2, c3, c4;
 
+  std::cout << jj+ll+nn << "     " << helper( jj + ll + nn, true) << std::endl;
   // if sum of three inputs is even, continue. Else return 0.0
   if ( (jj + ll + nn )%2 == 0 ){
 
-    a1 = helper(  jj + ll + nn, true );
-    a2 = helper(  jj + ll - nn, true );
-    a3 = helper(  jj - ll + nn, true );
-    a4 = helper( -jj + ll + nn, true );
+    c1 = helper(( jj + ll + nn ) * 0.5, false) / helper( jj + ll + nn, true);
+    c2 = helper( jj + ll - nn, true) / helper(( jj + ll - nn ) * 0.5, false);
+    c3 = helper( jj - ll + nn, true) / helper(( jj - ll + nn ) * 0.5, false);
+    c4 = helper(-jj + ll + nn, true) / helper((-jj + ll + nn ) * 0.5, false);
 
-    b1 = helper( ( jj + ll + nn ) * 0.5, false );
-    b2 = helper( ( jj + ll - nn ) * 0.5, false );
-    b3 = helper( ( jj - ll + nn ) * 0.5, false );
-    b4 = helper( (-jj + ll + nn ) * 0.5, false );
-
-    rat = 2 * nn + 1;
-    rat = rat / (jj + ll + nn + 1);
-    wign = std::pow(-1,(jj + ll - nn)/2);
-    return wign * sqrt(rat) * b1/a1 * a2/b2 * a3/b3 * a4/b4;
+    return std::pow(-1.0,(jj+ll-nn)/2) * sqrt((2.0*nn+1.0)/(jj+ll+nn+1)) * 
+           c1 * c2 * c3 * c4;
   }
   else { return 0.0; }
 }
