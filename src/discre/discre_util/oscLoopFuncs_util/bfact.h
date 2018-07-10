@@ -5,6 +5,23 @@
 template <typename floatT>
 floatT cutoff( floatT a ){ return a < 1.0e-30 ? 0.0 : a; }
 
+auto generateTuples(int i){
+  bool even = i%2 == 0;
+  std::vector<std::tuple<int>> tuples(15);
+  if (even){
+    int maxDigits = i+1;
+    auto smallerEvens = ranges::view::iota(0,i/2+1) 
+                      | ranges::view::transform([](auto i){return 2*i;});
+    int counter = 0;
+    RANGES_FOR( int i, smallerEvens ){ tuples[counter++] = {i}; }
+    auto smallerNums = ranges::view::iota(0,i+1);
+    std::tuple<int> smallerNumTuple;
+    //RANGES_FOR( int i, smallerNums  ){ std::tuple_cat(
+    //tuples[counter++] = std::make_tuple(smallerNums);
+    
+  }
+}
+
 template <typename f, typename arrayT>
 auto bfact( const f& x, const f& dwc, const f& beta_i, 
   arrayT& bplus, arrayT& bminus ){
@@ -55,18 +72,42 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
     expVal = -dwc + x;
   }
 
-  auto iVec = ranges::view::iota(0,48) | ranges::view::reverse;
+  auto iVec = ranges::view::iota(2,50) | ranges::view::reverse;
 
-  auto InRange = ranges::view::iota(0,50)
+  auto IR = ranges::view::iota(0,50)
                  | ranges::view::transform([](int x){ return x == 1 ? 1.0 : 0.0; });
   
 
-  auto vec1 = ranges::view::zip(iVec,InRange,InRange|ranges::view::slice(1,ranges::end))
+  auto vec1 = ranges::view::zip(iVec,IR,IR|ranges::view::slice(1,ranges::end))
             | ranges::view::transform([](auto i){return std::get<0>(i);}) ;
             //| ranges::to_<std::vector<double>>();
 
     //std::cout << vec1[0] << "    " << vec1[1] << std::endl << std::endl;
-    //
+    
+  auto c = iVec | ranges::view::transform([inv_x=1.0/x](auto entry){ 
+                                return 2.0 * (entry) * inv_x; } );
+  std::cout << c << std::endl;
+  std::cout << std::endl;
+
+  std::cout << "47  " << IR[0] + c[0]*IR[1] << std::endl;
+  std::cout << "46  " << IR[1] + c[1]*IR[0] + c[1]*c[0]*IR[1] << std::endl;
+  std::cout << "45  " << IR[0] + c[0]*IR[1] + c[2]*IR[1] + c[2]*c[1]*IR[0] + c[2]*c[1]*c[0]*IR[1]<< std::endl;
+  std::cout << "44  " << IR[1] + c[1]*IR[0] + c[1]*c[0]*IR[1] + c[3]*IR[0] + c[0]*c[3]*IR[1] + c[2]*c[3]*IR[1] + c[2]*c[1]*c[3]*IR[0] + c[3]*c[2]*c[1]*c[0]*IR[1]<< std::endl;
+  std::cout << std::endl;
+
+  std::cout << "47  " << c[0] << std::endl;
+  std::cout << "46  " << 1.0 + c[0]*c[1] << std::endl;
+  std::cout << "45  " << c[0] + c[2] + c[2]*c[1]*c[0] << std::endl;
+  std::cout << "44  " << 1.0 + c[1]*c[0] + c[0]*c[3] + c[2]*c[3] + c[3]*c[2]*c[1]*c[0]<< std::endl;
+  std::cout << "43  " << c[0] + c[2] + c[2]*c[1]*c[0] + c[4] + c[4]*c[1]*c[0] + c[4]*c[3]*c[0] + c[4]*c[2]*c[3] + c[4]*c[3]*c[2]*c[1]*c[0]<< std::endl;
+  std::cout << "42  " << 1.0 + c[1]*c[0] + c[0]*c[3] + c[2]*c[3] + c[3]*c[2]*c[1]*c[0] + c[0]*c[5] + c[2]*c[5] + c[5]*c[2]*c[1]*c[0] + c[5]*c[4] + c[5]*c[4]*c[1]*c[0] + c[5]*c[4]*c[3]*c[0] + c[5]*c[4]*c[2]*c[3] + c[5]*c[4]*c[3]*c[2]*c[1]*c[0]<< std::endl;
+  std::cout << std::endl;
+
+  generateTuples(2);
+
+  std::cout << std::endl;
+  generateTuples(4);
+
 
   std::vector<double> In ( 50, 0.0 );
   int i = 49;
@@ -74,14 +115,22 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   
   for ( size_t i = 48; i > 0; --i ){
     In[i-1] = In[i+1] + 2 * (i+1) * In[i] / x;
+    //std::cout << 2 * (i+1) / x  << "   " << i << std::endl;
     if (In[i-1] >= 1.0e10){ 
-      for ( size_t j = i; j < In.size(); ++j ){
-        In[j-1]=In[j-1]*1.0e-10;
-      } 
+      //for ( size_t j = i; j < In.size(); ++j ){
+      //  In[j-1]=In[j-1]*1.0e-10;
+      //} 
     }  
   } 
+  std::cout << std::endl;
+  std::cout << (In|ranges::view::all) << std::endl;
+  std::cout << std::endl;
+  std::cout << (IR|ranges::view::all) << std::endl;
+  std::cout << std::endl;
 
-  auto InCutoff = In | ranges::view::transform( [rat=I1/In[0]](auto x){ 
+
+
+  auto InCutoff = IR | ranges::view::transform( [rat=I1/In[0]](auto x){ 
     return cutoff(x * rat); } );
 
   auto bCutoff = ranges::view::zip( ranges::view::iota(1,51), InCutoff )
@@ -98,7 +147,10 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   /*
   */
 
+  //std::cout << (bplusCutoff|ranges::view::all) << std::endl;
   //std::cout << (bminusCutoff|ranges::view::all) << std::endl;
+  //return std::make_tuple(I0*exp(expVal),bminusCutoff,bplusCutoff);
+  //return std::make_tuple(I0*exp(expVal),In,iVec);
   for ( size_t i = 1; i < In.size(); ++i ){ 
     In[i] = cutoff( In[i] * I1 / In[0] );
   }
@@ -112,11 +164,12 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
     }
   }
   //std::cout << std::endl;
-  //std::cout << (bplus|ranges::view::all) << std::endl;
-  //std::cout << (bminus|ranges::view::all) << std::endl;
+  std::cout << (bplus|ranges::view::all) << std::endl;
+  std::cout << (bminus|ranges::view::all) << std::endl;
 
   //std::cout << (bminus|ranges::view::all) << std::endl;
   //std::cout << std::endl;
   return std::make_tuple(I0*exp(expVal),bminus|ranges::view::all,bplus|ranges::view::all);
-  //return std::make_tuple(I0*exp(expVal),bminusCutoff,bplusCutoff);
+  /*
+  */
 }
