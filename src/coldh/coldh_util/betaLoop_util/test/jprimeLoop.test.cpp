@@ -9,23 +9,17 @@ TEST_CASE( "jprime loop" ){
   int j, jj, nbx;
   double wt, be, al, x, swe, pj, y, tbart, total, out, swo;
 
-
   bex   = {-1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 0.6, 1.2, 0.0};
   rdbex = {1.666667, 3.3333, 6.6667, 20, 5, 20, 6.6667, 3.33333, 1.66667, 0, 0};
   betan = {0.1, 0.15, 0.3, 0.6, 1.2};
 
   GIVEN( "jprime loop is over even values" ){
-
     WHEN( "molecular translations are assumed to not be free (free = false)" ){
-
       wt = 2.3; be = -1.2; al = 0.1; tbart = 950;
-
       AND_WHEN( "starting total is 0" ){
         j = 1; jj = 0; nbx = 10;
         x = 0.8; swe = 0.9; pj = 0.4; y = 0.3; 
-
 	total = 0;
-    
         for ( size_t i = 0; i < sex.size(); ++i ){ sex[i] = i + 1; }
 
         out = jPrime( total, j, be, x, swe, pj, jj, bex, rdbex, sex, betan, al,
@@ -133,7 +127,5 @@ TEST_CASE( "jprime loop" ){
         REQUIRE( total == Approx(5.86644429347).epsilon(1e-6) );
       } // THEN
     } // WHEN
-
   } // GIVEN
-
 } // TEST CASE

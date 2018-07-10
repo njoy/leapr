@@ -2,8 +2,9 @@
 #include "catch.hpp"
 #include "discre/discre_util/sint.h"
 #include "coldh/coldh_util/betaLoop.h"
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <unsupported/Eigen/CXX11/Tensor>
 
+/*
 void checkSab( const Eigen::Tensor<double,3>& sab,
   const std::vector<double>& correctSab ){
 
@@ -159,3 +160,4 @@ TEST_CASE( "beta loop helper function" ){
 
   } // GIVEN
 } // TEST CASE
+*/
