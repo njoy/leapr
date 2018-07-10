@@ -17,47 +17,36 @@ auto prepareParams( const A_of_T& oscEnergiesWeights, const F& tev, A& betaVals,
   auto E_range = ranges::view::zip(eVector,wVector) | ranges::view::keys;
   auto W_range = ranges::view::zip(eVector,wVector) | ranges::view::values;
 
-  auto betaVals_range = 
-    ranges::view::concat(
-      E_range | ranges::view::transform([i_tev=1.0/tev](auto E){ 
-        return E*i_tev; }),
-      ranges::view::iota(int(E_range.size()),50) 
-    | ranges::view::transform( [](auto){ return 0.0; } )
-    );
-
-  auto sinh_cosh_beta = betaVals_range | ranges::view::transform([](auto b){ 
+  auto sinh_cosh_beta = E_range 
+                      | ranges::view::transform([i_tev=1.0/tev](auto E){ 
+                           auto b = E * i_tev;
                           return std::make_tuple(b,sinh(0.5*b), cosh(0.5*b));});
 
   auto cumulativeWeights = ranges::view::iota(1,int(W_range.size())+1)
             | ranges::view::transform([W_range](auto i){ 
                 return ranges::accumulate(W_range|ranges::view::slice(0,i),0.0);});
 
-  auto ar_range = ranges::view::concat( ranges::view::zip( W_range, E_range, sinh_cosh_beta ) 
-                | ranges::view::transform([](auto t){ 
-                    auto w = std::get<0>(t); 
-                    auto b = std::get<0>(std::get<2>(t)); 
-                    auto sinh_b = std::get<1>(std::get<2>(t));
-                    return w / ( sinh_b * b ); } ), 
-                          ranges::view::iota(int(E_range.size()),50)
-                        | ranges::view::transform( [](auto){ return 0.0; } ));
-  auto dist_range = ranges::view::concat( ranges::view::zip( W_range, E_range, sinh_cosh_beta ) 
-                | ranges::view::transform([](auto t){ 
-                    auto w = std::get<0>(t); 
-                    auto E = std::get<1>(t); 
-                    auto sinh_b = std::get<1>(std::get<2>(t));
-                    auto cosh_b = std::get<2>(std::get<2>(t));
-                    return 0.5 * w * E * cosh_b / sinh_b; } ), 
-                          ranges::view::iota(int(E_range.size()),50)
-                        | ranges::view::transform( [](auto){ return 0.0; } ));
-  auto dbw_range = ranges::view::concat( ranges::view::zip( W_range, E_range, sinh_cosh_beta ) 
-                | ranges::view::transform([](auto t){ 
-                    auto w = std::get<0>(t); 
-                    auto b = std::get<0>(std::get<2>(t)); 
-                    auto sinh_b = std::get<1>(std::get<2>(t));
-                    auto cosh_b = std::get<2>(std::get<2>(t));
-                    return w * cosh_b / ( sinh_b * b ); } ), 
-                          ranges::view::iota(int(E_range.size()),50)
-                        | ranges::view::transform( [](auto){ return 0.0; } ));
+  auto ar_dist_dbw_ranges = 
+    ranges::view::concat( 
+      ranges::view::zip( W_range, E_range, sinh_cosh_beta ) 
+    | ranges::view::transform([](auto t){ 
+        auto trig = std::get<2>(t);
+        F b = std::get<0>(trig); 
+        F      w = std::get<0>(t),         E = std::get<1>(t), 
+          sinh_b = std::get<1>(trig), cosh_b = std::get<2>(trig);
+        F coth_b = cosh_b/sinh_b;
+        F ar = w/(sinh_b*b), dist = 0.5*w*E*coth_b, dbw = w*coth_b/b;
+        return std::make_tuple(b, ar,dist,dbw); }),
+      ranges::view::iota(int(E_range.size()),50)
+    | ranges::view::transform( [](auto){ return std::make_tuple(0.,0.,0.,0.); }));
+
+
+  /*
+  RANGES_FOR( auto t, ar_dist_dbw_ranges ){ 
+    std::cout << std::get<0>(t) << "   " << std::get<1>(t) << "   " << std::get<2>(t) << "    " << std::get<3>(t)<< std::endl;
+  }
+
+  */
 
   auto betan_range = beta | ranges::view:: transform( [sc](auto b){ return b*sc; } );
   auto exb_range = betan_range | ranges::view::transform( [](auto bn){ 
@@ -86,7 +75,10 @@ auto prepareParams( const A_of_T& oscEnergiesWeights, const F& tev, A& betaVals,
     exb[b] = exp( -beta[b]*sc );
     betan[b] = beta[b]*sc;
   } 
+  //std::cout << (betaVals|ranges::view::all) << std::endl;
   //std::cout << (ar|ranges::view::all) << std::endl;
   //std::cout << (dist|ranges::view::all) << std::endl;
   //std::cout << (dbw|ranges::view::all) << std::endl;
+    std::cout << std::get<1>(ar_dist_dbw_ranges[0]) << std::endl;
+  return ar_dist_dbw_ranges;
 }

@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "discre/discre_util/prepareParams.h"
+#include <range/v3/all.hpp>
 
 
 TEST_CASE( "prepare parameters helper function" ){
@@ -20,9 +21,17 @@ TEST_CASE( "prepare parameters helper function" ){
       oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
     }
 
-    prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
+    auto out = prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
       dbw, bk, exb, betan, beta, sc );
+    double betaVal1 = std::get<0>(out[0]), betaVal2 = std::get<0>(out[1]),
+           ar1 = std::get<1>(out[0]), ar2 = std::get<1>(out[1]);
+    std::cout << std::get<1>(out[0]) << std::endl;
+    REQUIRE( 2.030778 == Approx(betaVal1).epsilon(1e-6) );
+    REQUIRE( 2.901112 == Approx(betaVal2).epsilon(1e-6) );
+    //REQUIRE( 8.213274e-2 == Approx(ar1).epsilon(1e-6) );
+    //REQUIRE( 0.1368162   == Approx(ar2).epsilon(1e-6) );
 
+    /*
     correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };
 
     REQUIRE( 8.213274e-2 == Approx(ar[0]).epsilon(1e-6) );
@@ -65,6 +74,7 @@ TEST_CASE( "prepare parameters helper function" ){
       REQUIRE( beta[i] == Approx(betan[i]).epsilon(1e-6) ); 
     }  // because sc = 1.0 betan doesn't get scaled
 
+    */
   } // GIVEN
 } // TEST CASE
 
