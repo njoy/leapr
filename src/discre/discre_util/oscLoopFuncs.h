@@ -95,7 +95,10 @@ auto oscillatorLoop( const std::vector<double>& alpha,
      * depending on the size of x.
      */
     std::vector<double> bminus (50,0.0), bplus(50,0.0);
-    bzero = bfact( x, alpha_lambda_i, betaVals[i], bplus, bminus );
+    auto out = bfact( x, alpha_lambda_i, betaVals[i], bplus, bminus );
+    double bzero = std::get<0>(out);
+    auto b_minus = std::get<1>(out);
+    auto b_plus = std::get<2>(out);
     
     // do convolution for delta function
     n = 0;
@@ -105,7 +108,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
         wts[n] = wtn[m]*bzero;
         // Why are we multiplying by bzero? Because that's the A_(i,n) term for
         // n = 0, which we need to sum over. But notice that in bfact we 
-        // populate a bplus and a bminus, and are kind of implicitly leaving
+        // populate a b_plus and a b_minus, and are kind of implicitly leaving
         // n=0 out. So we're accounting for this here. In the manual (pg. 713)
         // it states that we want to worry about the n=0 term first, so that's
         // what we're kind of doing. 
@@ -118,10 +121,10 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     // Basically we're going to be populating wts with A_i,n terms muliplied
     // by each other, for many different i and n. 
     // negative n terms
-    posNegTerms( n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1 );
+    posNegTerms( n, betaVals[i], b_minus, wts, wtn, bes, ben, nn, -1 );
 
     // positive n terms
-    posNegTerms( n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1  );
+    posNegTerms( n, betaVals[i], b_plus,  wts, wtn, bes, ben, nn, 1  );
 
     // continue loop
     // Copy first n entries of permanent array into our temporary arrays

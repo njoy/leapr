@@ -5,6 +5,7 @@
 template <typename floatT>
 floatT cutoff( floatT a ){ return a < 1.0e-30 ? 0.0 : a; }
 
+/*
 auto generateTuples(int i){
   bool even = i%2 == 0;
   std::vector<std::tuple<int>> tuples(15);
@@ -21,16 +22,39 @@ auto generateTuples(int i){
     
   }
 }
+*/
 
 template <typename f, typename arrayT>
-auto bfact( const f& x, const f& dwc, const f& beta_i, 
-  arrayT& bplus, arrayT& bminus ){
+auto bfact( const f& x, const f& dwc, const f& beta_i, arrayT& bplus, 
+  arrayT& bminus ){
+  /* bfact is meant to assist with the evaluation of Eq. 537, by evaluating
+   * the bessel function In and all exponential terms. 
+   *
+   * This calculates the bessel function terms for the discrete oscillator 
+   * terms. The bessel functions I_n are evaluated at point x and put into
+   * vector In such that In[0] = I1(x) (modified bessel function of first kind
+   * of order 1), In[1] = I2(x) (modified bessel function of first kind of
+   * order 2), etc. 
+   *
+   * The x that is input here is equal to 
+   *             alpha * weight / ( beta * sinh( beta / 2 ) )
+   * to match Eq. 537. 
+   *
+   * The dwc vector is populated with entries of dwc[i] = alpha * lambda_i,
+   * where lambda_i was calculated in prepareParams.h according to Eq. 538.
+   */
+ 
   f I0;
   f I1, expVal;
   f y = x / 3.75;
 
+  // I_0(x) and I_1(x) are computed first, and then reverse recursion is used
+  // to get the rest of the terms (check out numerical recipes for more info).
+  // We treat big x and small x differently. Large x is taking advantage of
+  // the e^x term, which can be seen when we add x to the var expVal.
   if ( y <= 1.0 ){
 
+    // Compute I0 and I1 via series expansion (manual pg. 714 top)
     f I1C[7] = { 4.5813e-3, 0.0360768, 0.2659732, 1.2067492, 3.0899424, 
                  3.5156229, 1.0 };
     f I2C[7] = { 3.2411e-4, 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 
@@ -52,6 +76,7 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   } 
   if ( y > 1.0 ) {
 
+    // Compute I0 and I1 via series expansion (manual pg. 714 top)
     f I1C[9] = { 0.00392377, -0.01647633, 0.02635537, -0.02057706, 
       0.00916281, -0.00157565, 0.00225319, 0.01328592, 0.39894228 };
 
@@ -86,6 +111,7 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
     
   auto c = iVec | ranges::view::transform([inv_x=1.0/x](auto entry){ 
                                 return 2.0 * (entry) * inv_x; } );
+  /*
   std::cout << c << std::endl;
   std::cout << std::endl;
 
@@ -103,13 +129,19 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   std::cout << "42  " << 1.0 + c[1]*c[0] + c[0]*c[3] + c[2]*c[3] + c[3]*c[2]*c[1]*c[0] + c[0]*c[5] + c[2]*c[5] + c[5]*c[2]*c[1]*c[0] + c[5]*c[4] + c[5]*c[4]*c[1]*c[0] + c[5]*c[4]*c[3]*c[0] + c[5]*c[4]*c[2]*c[3] + c[5]*c[4]*c[3]*c[2]*c[1]*c[0]<< std::endl;
   std::cout << std::endl;
 
-  generateTuples(2);
+  //generateTuples(2);
+  //std::cout << std::endl;
+  //generateTuples(4);
 
-  std::cout << std::endl;
-  generateTuples(4);
+  */
 
-
+  
+  // generate higher orders by reverse recursion
   std::vector<double> In ( 50, 0.0 );
+  // The "In" vector will be populated with Modified Bessel Functions of the 
+  // first kind, all evaluated at x, such that In[0] = I1(x), In[1] = I2(x),
+  // etc, where I's subscript denotes the order of the function.
+ 
   int i = 49;
   In[49] = 0; In[48] = 1;
   
@@ -117,18 +149,11 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
     In[i-1] = In[i+1] + 2 * (i+1) * In[i] / x;
     //std::cout << 2 * (i+1) / x  << "   " << i << std::endl;
     if (In[i-1] >= 1.0e10){ 
-      //for ( size_t j = i; j < In.size(); ++j ){
-      //  In[j-1]=In[j-1]*1.0e-10;
-      //} 
+      for ( size_t j = i; j < In.size(); ++j ){
+        In[j-1]=In[j-1]*1.0e-10;
+      } 
     }  
   } 
-  std::cout << std::endl;
-  std::cout << (In|ranges::view::all) << std::endl;
-  std::cout << std::endl;
-  std::cout << (IR|ranges::view::all) << std::endl;
-  std::cout << std::endl;
-
-
 
   auto InCutoff = IR | ranges::view::transform( [rat=I1/In[0]](auto x){ 
     return cutoff(x * rat); } );
@@ -140,7 +165,25 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
                    return std::make_pair( 
                      cutoff( exp(expVal - n*beta_i*0.5) * std::get<1>(t)),
                      cutoff( exp(expVal + n*beta_i*0.5) * std::get<1>(t)) );} );
- //std::cout << std::setprecision(15) << bCutoff <<std::endl;
+
+  // bessel function vector In is finished being populated
+
+
+  /* Having calculated In(alpha*weight/(beta*sinh(beta/2))) = In(x), we apply
+   * exponential terms to it. expVal = -dwc or -dwc + x. 
+   * dwc = alpha * lambda_i, where lambda_i was calculated in prepareParams.h
+   * according to Eq. 538. 
+   * Additionally, the exp( -n * beta / 2 ) term in Eq. 537 is evaluated.
+   * In total, bplus and bminus will be populated with 
+   *      exp(-a*lambda_i) * In( a*weight/(b*sinh(b/2)) ) * exp(-n*b/2)
+   * for positive and negative values of n, respectively. (b = beta, a = alpha)
+   */
+
+  /* blus and bminus are being populated with the A_in values for Eq. 537.
+   * The sum is for n ranging from -infty to infty, but we approximate by 
+   * having n range between 0 and 50, and putting +/- vals in bplus/minus.
+   */
+
 
   auto bplusCutoff  = bCutoff | ranges::view::keys;
   auto bminusCutoff = bCutoff | ranges::view::values;
@@ -156,20 +199,12 @@ auto bfact( const f& x, const f& dwc, const f& beta_i,
   }
   In[0] = cutoff( I1 );
 
-  //std::cout << std::setprecision(15) << (In|ranges::view::all) <<std::endl;
   for ( size_t n = 0; n < In.size(); ++n ){
     if ( In[n] != 0.0 ){
       bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i * 0.5 ) * In[n] );
       bminus[n] = cutoff( exp( expVal + (n+1) * beta_i * 0.5 ) * In[n] );
     }
   }
-  //std::cout << std::endl;
-  std::cout << (bplus|ranges::view::all) << std::endl;
-  std::cout << (bminus|ranges::view::all) << std::endl;
-
-  //std::cout << (bminus|ranges::view::all) << std::endl;
-  //std::cout << std::endl;
-  return std::make_tuple(I0*exp(expVal),bminus|ranges::view::all,bplus|ranges::view::all);
-  /*
-  */
+  // Return bzero value
+  return std::make_tuple(I0*exp(expVal),bminus,bplus);
 }

@@ -9,9 +9,6 @@ TEST_CASE( "prepare parameters helper function" ){
       exb(5,0.0), betan(5,0.0);
     double tev, tsave, weight, bk, sc;
 
-    energyNorm[0] = 2.030778478;
-    energyNorm[1] = 2.901112112;
-
     energy  = { 0.035, 0.05 };
     weights = { 0.2  , 0.8  };
     beta    = { 0.10, 0.15, 0.30, 0.60, 1.20 };

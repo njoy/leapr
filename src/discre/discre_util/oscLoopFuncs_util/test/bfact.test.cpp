@@ -46,11 +46,10 @@ TEST_CASE( "bfact" ){
         5.995048E-17, 1.486447E-20, 3.159074E-24, 5.874598E-28, 0.0}};
 
       THEN( "the outputs bplus, bminus, and bzero are correct" ){
-        //checkBminusBplus( bminusTrue, bplusTrue, b_minus, b_plus );
-        //REQUIRE( 0.98727473 == Approx(bzero).epsilon(1e-6) );
+        checkBminusBplus( bminusTrue, bplusTrue, b_minus, b_plus );
+        REQUIRE( 0.98727473 == Approx(bzero).epsilon(1e-6) );
       } // THEN
     } // WHEN
-    /*
     WHEN( "inputs that are of medium range size" ){
       double x = 0.01, dwc = 0.2, beta_i = 3.0;
       std::vector<double> bplus (50, 0.0), bminus (50, 0.0);
@@ -104,7 +103,6 @@ TEST_CASE( "bfact" ){
         REQUIRE( 5.443974920E-171 == Approx(bzero).epsilon(1e-6) );
       } // THEN
     } // WHEN
-    */
   } // GIVEN
 
 
