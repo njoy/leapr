@@ -1,8 +1,6 @@
-#include <iostream>
-#include <vector>
-#include "sumh_util/cn.h"
-#include "sumh_util/sjbes.h"
-
+#include "coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h"
+#include "coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/sjbes.h"
+#include <range/v3/all.hpp>
 
 auto sumh(int j, int jp, double y){
   /* Does sum over Bessel functions and Clebsch-Gordon coefficients
@@ -11,14 +9,10 @@ auto sumh(int j, int jp, double y){
   if      (j  == 0) { return std::pow( sjbes(jp, y) * cn(j, jp, jp), 2 ); } 
   else if (jp == 0) { return std::pow( sjbes(j , y) * cn(j, 0,  j ), 2 ); }
 
-  int end, start;
-  double sum1 = 0;
+  return ranges::accumulate(
+           ranges::view::iota(std::abs(j-jp)+1,std::min(j+jp+2,std::abs(j-jp)+11)) 
+         | ranges::view::transform( [y,j,jp](auto n){ 
+             return std::pow( sjbes(n-1,y) * cn(j,jp,n-1), 2 ); }),
+         0.0);
 
-  start = std::abs(j-jp) + 1;
-  end = std::min(j+jp+2, std::abs(j-jp)+11);
-  for ( auto n = start; n < end; ++n ){
-    sum1 += std::pow( sjbes(n-1,y) * cn(j,jp,n-1), 2 );
-    // sjbes is used to calculate the spherical bessel function j_l
-  }
-  return sum1;
 }
