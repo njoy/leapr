@@ -63,39 +63,49 @@ auto betaLoop( const A& betan, const A& rdbex, const A& bex, const A& sex,
            | ranges::view::transform([](auto range){ 
               return ranges::accumulate(range,0.0,[](auto l,auto r){
                        return l+std::get<0>(r)+std::get<1>(r);}); } );
-
   
-  auto snR2 = snR 
-            | ranges::view::slice(0,int(betan.size()));
- 
-  std::cout << snR << std::endl;
-
   auto snR2_2  = snR | ranges::view::slice(int(betan.size())-1,ranges::end);
 
+  /*
   auto snR2_rev = ranges::view::iota(0,int(betan.size())) 
-                | ranges::view::transform([snR2](auto i){ 
-                    return snR2[snR2.size()-i-1]; } );
+                | ranges::view::transform([&snR,&betan](auto i){ 
+                    return snR[int(betan.size())-i-1]; } );
+                    */
+  std::cout << snR << std::endl;
+  auto snR2_rev = snR | ranges::view::reverse;
 
-  int size_a = sym_sab.size()/betan.size();
-  int size_b = betan.size();
-  auto output_sym_sab_L = sym_sab | ranges::view::slice( 0, a*size_b );
-  auto output_sym_sab_R = sym_sab 
-                        | ranges::view::slice( (a+1)*size_b, ranges::end );
-  auto output_sym_sab = ranges::view::concat(output_sym_sab_L,snR2_rev,output_sym_sab_R);
-  auto output_sym_sab_2_L = sym_sab_2 | ranges::view::slice( 0, a*size_b );
-  auto output_sym_sab_2_R = sym_sab_2 
-                        | ranges::view::slice( (a+1)*size_b, ranges::end );
-  auto output_sym_sab_2 = ranges::view::concat(output_sym_sab_2_L,snR2_2,output_sym_sab_2_R);
+  int size_a = int(sym_sab.size()/betan.size());
+  int size_b = int(betan.size());
 
+  auto sab_output   = ranges::view::concat(
+                        sym_sab | ranges::view::slice( 0, a*size_b ),
+                        snR2_rev,
+                        //snR2_2,
+                        sym_sab | ranges::view::slice( (a+1)*size_b, ranges::end )
+                      );
 
+  auto sab_output_2 = ranges::view::concat(
+                        sym_sab_2 | ranges::view::slice( 0, a*size_b ),
+                        snR2_2,
+                        sym_sab_2 | ranges::view::slice( (a+1)*size_b, ranges::end )
+                      );
 
-  std::cout << output_sym_sab << std::endl;
-  std::cout << output_sym_sab_2 << std::endl;
+  std::cout << sab_output   << std::endl;
+  std::cout << sab_output_2 << std::endl;
+  //return ranges::view::iota(1,5);
+  //return sym_sab | ranges::view::slice( (a+1)*size_b, ranges::end );
+  return std::make_tuple(sab_output,sab_output_2);
+  //return sab_output;
+  //return ranges::view::concat(sab_output,sab_output_2);
+
+  //std::cout << sab_output << std::endl;
+  //std::cout << sab_output_2 << std::endl;
 
 //if (jj < betan.size())    sym_sab(a,k-1,itemp) = sn;
 //if (jj >= betan.size()-1) sym_sab_2(a,k-1,itemp) = sn;
 
 
+  /*
 
   int counter = 0;
 
@@ -128,4 +138,5 @@ auto betaLoop( const A& betan, const A& rdbex, const A& bex, const A& sex,
       //if (jj < betan.size())    sym_sab(a,k-1,itemp) = sn;
       //if (jj >= betan.size()-1) sym_sab_2(a,k-1,itemp) = sn;
   }
+  */
 }
