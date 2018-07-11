@@ -2,9 +2,13 @@
 //#include "../../../discre/discre_util/sint.h"
 
 template <typename F, typename A>
-auto jPrime( F& total, int j, const F& be, const F& x, const F& sumConst, 
-  const F& pj, int jj, const A& bex, const A& rdbex, const A& sex, const A& betan, 
-  const F& al, const F& wt, const F& tbart, const F& y, int nbx, bool odd, bool free ){
+//auto jPrime( F& total, int j, const F& be, const F& x, const F& sumConst, 
+//  const F& pj, int jj, const A& bex, const A& rdbex, const A& sex, const A& betan, 
+//  const F& al, const F& wt, const F& tbart, const F& y, int nbx, bool odd, bool free ){
+
+auto jPrime( F total, int j, F be, F x, F sumConst, 
+  F pj, int jj, A bex, A rdbex, A sex, A betan, 
+  F al, F wt, F tbart, F y, int nbx, bool odd, bool free ){
   //--sum over the odd or even values of j-prime
   
   // If we want odd values, 1-->9, if even 2-->8.

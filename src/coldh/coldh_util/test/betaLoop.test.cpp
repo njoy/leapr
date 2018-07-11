@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "discre/discre_util/sint.h"
 #include "coldh/coldh_util/betaLoop.h"
+#include <range/v3/all.hpp>
 //#include <unsupported/Eigen/CXX11/Tensor>
 
 /*
@@ -48,7 +49,7 @@ auto populateSymSab( int a_size, int b_size, bool is_normal ){
   }
   return sab;
 }
-
+*/
 
 TEST_CASE( "beta loop helper function" ){
   std::vector<double> betan, rdbex, bex, sex, goodSymSab1(25), goodSymSab2(25); 
@@ -64,8 +65,18 @@ TEST_CASE( "beta loop helper function" ){
   alpha = 0.1, x = 3.2, y = 4.3, swe = 1.42, swo = 2.41, wt = 1.5, tbart = 820;
   itemp = 0, nbx = 10, a = 0, ncold = 1;
 
-  auto sym_sab   = populateSymSab( 5, 5, true );
-  auto sym_sab_2 = populateSymSab( 5, 5, false );
+  /*
+  auto sym_sab   = ranges::view::iota(1,26) | ranges::view::chunk(5);
+  auto sym_sab_2 = ranges::view::iota(1,26) 
+                 | ranges::view::transform([](auto){return 0.0;})
+                 | ranges::view::chunk(5);
+                 */
+  auto sym_sab   = ranges::view::iota(1,26);
+  auto sym_sab_2 = ranges::view::iota(1,26) 
+                 | ranges::view::transform([](auto){return 0.0;});
+  
+ // auto sym_sab   = populateSymSab( 5, 5, true );
+ // auto sym_sab_2 = populateSymSab( 5, 5, false );
 
 
   GIVEN( "molecular translations are assumed to not be free" ){
@@ -81,9 +92,10 @@ TEST_CASE( "beta loop helper function" ){
     THEN( "output scattering laws are correct" ){
       betaLoop( betan, rdbex, bex, sex, alpha, wt, tbart, x, y, swe, swo, 
         itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
-      checkSab( sym_sab, goodSymSab1 );
-      checkSab( sym_sab_2, goodSymSab2 );
+  //    checkSab( sym_sab, goodSymSab1 );
+  //    checkSab( sym_sab_2, goodSymSab2 );
     } // THEN
+  /*
     //------------------------------------------------------------------------
     //------------------------------------------------------------------------
     
@@ -158,6 +170,6 @@ TEST_CASE( "beta loop helper function" ){
     //------------------------------------------------------------------------
     //------------------------------------------------------------------------
 
+*/
   } // GIVEN
 } // TEST CASE
-*/
