@@ -2,9 +2,8 @@
 #ifndef LEAPR_CONTIN_START_FSUM_HH
 #define LEAPR_CONTIN_START_FSUM_HH
 
-
-inline double fsum( const int& n, const std::vector<double>& p, const double& tau, 
-             const double& delta_b ){
+template <typename F, typename A>
+F fsum( const int& n, const A& p, const F& tau, const F& delta_b ){
   /* Inputs
    * ------------------------------------------------------------------------
    * n       : appears in equation being evaluated

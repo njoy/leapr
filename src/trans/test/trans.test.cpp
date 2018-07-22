@@ -32,7 +32,7 @@ TEST_CASE( "trans" ){
   double trans_weight = 0.03, delta = 220.0, diffusion_const = 1.5, 
     sc = 1.0, scaling = 1.0, lambda_s = 0.002, tbeta = 2.1, correct_t_eff_val;
 
-  Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
+  Eigen::Tensor<double,3> sym_sab( int(alpha.size()), int(beta.size()), int(temps.size()) );
   sym_sab.setValues ( { { { 0.1 }, { 0.2 }, { 0.3 } },
   		        { { 0.4 }, { 0.5 }, { 0.6 } },
                         { { 0.7 }, { 0.8 }, { 0.9 } },
@@ -61,7 +61,7 @@ TEST_CASE( "trans" ){
 
       alpha = {0.8, 1.0, 1.4, 1.5};
       beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
-      Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
+      Eigen::Tensor<double,3> sym_sab( int(alpha.size()), int(beta.size()), int(temps.size()) );
       temps = {800.0};
       t_eff_vec = {117.2};
       sym_sab.setValues( { { {0.001}, {0.002}, {0.003}, {0.004}, {0.006} },
@@ -111,7 +111,7 @@ TEST_CASE( "trans" ){
       beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
       temps = {800.0};
       t_eff_vec = {117.2};
-      Eigen::Tensor<double,3> sym_sab( alpha.size(), beta.size(), temps.size() );
+      Eigen::Tensor<double,3> sym_sab( int(alpha.size()), int(beta.size()), int(temps.size()) );
       sym_sab.setValues( { { {0.001}, {0.002}, {0.003}, {0.004}, {0.006} },
                            { {0.01 }, {0.02 }, {0.03 }, {0.04 }, {0.06 } },
                            { {0.1  }, {0.2  }, {0.3  }, {0.4  }, {0.6  } },

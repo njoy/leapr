@@ -1,7 +1,8 @@
 #include "contin/contin_util/start_util/fsum.h"
 
-void normalize( std::vector<double>& p, const double& delta_b, 
-  const double& tbeta ){
+template <typename F, typename A>
+void normalize( A& p, const F& delta_b, const F& tbeta ){
+
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
    * equation that is being normalized to integrate to tbeta. 
    *
@@ -25,7 +26,7 @@ void normalize( std::vector<double>& p, const double& delta_b,
    * * P(beta) is amended
    */
 
-  double sum = fsum( 1, p, 0.5, delta_b ) / tbeta; 
+  F sum = fsum( 1, p, 0.5, delta_b ) / tbeta; 
   for ( auto& entry : p ){
     entry = entry / sum;
   } 

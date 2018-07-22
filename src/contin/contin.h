@@ -4,12 +4,10 @@
 #include "contin_util/checkMoments.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
-
-auto contin( const int itemp, int nphon, double& delta, 
-  const double& tbeta, const double& scaling, const double& tev, 
-  const double& sc, std::vector<double> t1, const std::vector<double>& alpha, 
-  const std::vector<double>& beta, 
-  Eigen::Tensor<double,3>& symSab ){
+template <typename A, typename F>
+auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
+  const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
+  const A& beta, Eigen::Tensor<F,3>& symSab ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -51,10 +49,10 @@ auto contin( const int itemp, int nphon, double& delta,
   // leapr.f90 calls this deltab
     
   auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
-  double lambda_s = std::get<0>(lambda_s_t_eff);
-  double t_eff    = std::get<1>(lambda_s_t_eff);
+  F lambda_s = std::get<0>(lambda_s_t_eff),
+    t_eff    = std::get<1>(lambda_s_t_eff);
 
-  std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
+  A xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
     tlast(nphon*t1.size(),0.0);
 
   size_t npn = t1.size();
@@ -67,7 +65,7 @@ auto contin( const int itemp, int nphon, double& delta,
   // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
   
-  double add, exx;
+  F add, exx;
 
   // To be used when checking moments of S(a,b)
   std::vector<int> maxt (1000, 0);
@@ -85,19 +83,19 @@ auto contin( const int itemp, int nphon, double& delta,
     // Convolve T_n with T_n-1 (Eq. 526)
     if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
 
-    for( size_t a = 0; a < alpha.size(); ++a ){
+    for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
       exx = -lambda_s * alpha[a] * scaling + xa[a];
       if ( exx <= -250.0 ){ continue; }
       exx = exp(exx);
 
-      for( size_t b = 0; b < beta.size(); ++b ){
+      for( int b = 0; b < int(beta.size()); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
         if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
-          if ( add > symSab(a,b,itemp)/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; } 
+          if (add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
         } 
 
       } // for b in beta
@@ -112,7 +110,7 @@ auto contin( const int itemp, int nphon, double& delta,
     }
   } // for n in nphon (maxn in leapr.f90) 
 
-  double arat = sc/scaling;
+  F arat = sc/scaling;
   checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   return lambda_s_t_eff;

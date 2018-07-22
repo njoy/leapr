@@ -72,6 +72,7 @@ TEST_CASE( "contin eigen" ){
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
