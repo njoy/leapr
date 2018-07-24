@@ -5,6 +5,7 @@
 #include "discre_util/sint.h"
 #include "discre_util/addDeltaFuncs.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <range/v3/all.hpp>
 
 void swap( double& a, double& b ){ double c = a; a = b; b = c; }
 
@@ -33,10 +34,24 @@ auto discre( int itemp, const double& sc, const double& scaling,
     }
     */
 
+  /*
+  std::vector<double> energies, weights;
+  for ( size_t i = 0; i < oscEnergiesWeights.size(); ++i ){
+    energies[i] = std::get<0>(oscEnergiesWeights[i]);
+    weights[i]  = std::get<1>(oscEnergiesWeights[i]);
+  }
 
+  auto osc_E_wgt = ranges::view::zip( energies, weights );
+  */
+  
+  weight = 0;
+  tsave = 0;
+  std::cout << bk << sc << tev << std::endl;
+  //prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
+  //  lambda_i, bk, exb, betan, beta, sc );
 
-  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, bk, exb, betan, beta, sc );
+  //prepareParams(osc_E_wgt, tev, betaVals, weight, tsave, ar, t_eff_consts,
+  //  lambda_i, bk, exb, betan, beta, sc );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
    * --> betaVals = [ energy / tev ]
