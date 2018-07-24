@@ -1,17 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "discre/discre_util/oscLoopFuncs_util/bfact.h"
+#include "testFuncs.h"
 #include <range/v3/all.hpp>
 
-template <typename Vec, typename Array>
-void checkAgainstArray( const Array& correct, const Vec& output ){
-  for ( size_t i = 0; i < output.size(); ++i ){
-    if ( i < (sizeof(correct)/sizeof(*correct)) ) {
-      REQUIRE( correct[i] == Approx(output[i]).epsilon(1e-6) );
-    }
-    else { REQUIRE( 0.0 == Approx(output[i]).epsilon(1e-6) ); }
-  }
-}
 
 TEST_CASE( "bfact" ){
   double x, dwc, beta_i, bzero;

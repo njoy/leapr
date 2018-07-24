@@ -56,6 +56,7 @@ auto prepareParams(
         return ar; }),
       ranges::view::iota(int(E_range.size()),50)
     | ranges::view::transform( [](auto){ return 0.0; }));
+  std::cout << cumulativeWeights << std::endl;
   std::cout << ar_ranges << std::endl;
 
 

@@ -18,8 +18,8 @@ TEST_CASE( "exts" ){
         8.77522119, 6.06546228, 0.0, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        auto out = exts( sexpb, exb, beta );
-        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+        auto sex = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(sex,correctSex) ){
           REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
 
@@ -33,8 +33,8 @@ TEST_CASE( "exts" ){
         2.52E-3, 0.0, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        auto out = exts( sexpb, exb, beta );
-        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+        auto sex = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(sex,correctSex) ){
           REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
 
@@ -52,8 +52,8 @@ TEST_CASE( "exts" ){
         11.6262523, 10.960510, 8.7752211, 6.06546228, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        auto out = exts( sexpb, exb, beta );
-        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+        auto sex = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(sex,correctSex) ){
           REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
       } // THEN
@@ -63,8 +63,8 @@ TEST_CASE( "exts" ){
         10.960510, 8.77522119, 6.06546228, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        auto out = exts( sexpb, exb, beta );
-        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+        auto sex = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(sex,correctSex) ){
           REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
       } // THEN
@@ -78,8 +78,8 @@ TEST_CASE( "exts" ){
         0.2303999, 2.52E-3, 0 };
 
       THEN( "output sex vector is correct" ){
-        auto out = exts( sexpb, exb, beta );
-        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+        auto sex = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(sex,correctSex) ){
           REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
 

@@ -47,8 +47,8 @@ auto discre( int itemp, const double& sc, const double& scaling,
   weight = 0;
   tsave = 0;
   std::cout << bk << sc << tev << std::endl;
-  //prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-  //  lambda_i, bk, exb, betan, beta, sc );
+  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
+    lambda_i, bk, exb, betan, beta, sc );
 
   //prepareParams(osc_E_wgt, tev, betaVals, weight, tsave, ar, t_eff_consts,
   //  lambda_i, bk, exb, betan, beta, sc );
