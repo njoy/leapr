@@ -18,11 +18,11 @@ TEST_CASE( "exts" ){
         8.77522119, 6.06546228, 0.0, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        sex = exts( sexpb, exb, beta );
-        REQUIRE( sex.size() == correctSex.size() );
-        for ( size_t i = 0; i < sex.size(); ++i ){ 
-          REQUIRE( correctSex[i] == Approx( sex[i] ).epsilon(1e-6) ); 
+        auto out = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+          REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
+
       } // THEN
     } // WHEN
 
@@ -33,11 +33,11 @@ TEST_CASE( "exts" ){
         2.52E-3, 0.0, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        sex = exts( sexpb, exb, beta );
-        REQUIRE( sex.size() == correctSex.size() );
-        for ( size_t i = 0; i < sex.size(); ++i ){ 
-          REQUIRE( correctSex[i] == Approx( sex[i] ).epsilon(1e-6) ); 
+        auto out = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+          REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
+
       } // THEN
     } // WHEN
   } // GIVEN
@@ -52,23 +52,20 @@ TEST_CASE( "exts" ){
         11.6262523, 10.960510, 8.7752211, 6.06546228, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        sex = exts( sexpb, exb, beta );
-        REQUIRE( sex.size() == correctSex.size() );
-        for ( size_t i = 0; i < sex.size(); ++i ){ 
-          REQUIRE( correctSex[i] == Approx( sex[i] ).epsilon(1e-6) ); 
+        auto out = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+          REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
       } // THEN
-
 
       beta = { 1.1, 2.15, 3.30, 4.60, 5.20 };
       correctSex = { 6.3, 9.0, 11.1, 11.7, 11.9, 11.9, 11.6262523, 
         10.960510, 8.77522119, 6.06546228, 0.0 };
 
       THEN( "output sex vector is correct" ){
-        sex = exts( sexpb, exb, beta );
-        REQUIRE( sex.size() == correctSex.size() );
-        for ( size_t i = 0; i < sex.size(); ++i ){ 
-          REQUIRE( correctSex[i] == Approx( sex[i] ).epsilon(1e-6) ); 
+        auto out = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+          REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
       } // THEN
     } // WHEN
@@ -81,11 +78,11 @@ TEST_CASE( "exts" ){
         0.2303999, 2.52E-3, 0 };
 
       THEN( "output sex vector is correct" ){
-        sex = exts( sexpb, exb, beta );
-        REQUIRE( sex.size() == correctSex.size() );
-        for ( size_t i = 0; i < sex.size(); ++i ){ 
-          REQUIRE( correctSex[i] == Approx( sex[i] ).epsilon(1e-6) ); 
+        auto out = exts( sexpb, exb, beta );
+        RANGES_FOR( auto t, ranges::view::zip(out,correctSex) ){
+          REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
         }
+
       } // THEN
     } // WHEN
   } // GIVEN

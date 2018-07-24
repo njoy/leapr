@@ -81,7 +81,10 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // input = sym_sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
     //         order to go between S(a,b) and S(a,-b) 
-    std::vector<double> sex = exts( input, exb, betan );
+    
+    auto sex = exts( input, exb, betan )|ranges::to_vector;
+
+    //std::vector<double> sex = exts( input, exb, betan );
     // sex is populated with sym_sab entries, such that 
     //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
     //                             or 

@@ -44,6 +44,22 @@ auto prepareParams(
       ranges::view::iota(int(E_range.size()),50)
     | ranges::view::transform( [](auto){ return std::make_tuple(0.,0.,0.,0.); }));
 
+  auto ar_ranges = 
+    ranges::view::concat( 
+      ranges::view::zip( W_range, E_range, sinh_cosh_beta ) 
+    | ranges::view::transform([](auto t){ 
+        auto trig = std::get<2>(t);
+        double b = std::get<0>(trig); 
+        double w = std::get<0>(t);
+        double sinh_b = std::get<1>(trig);
+        double ar = w/(sinh_b*b);
+        return ar; }),
+      ranges::view::iota(int(E_range.size()),50)
+    | ranges::view::transform( [](auto){ return 0.0; }));
+  std::cout << ar_ranges << std::endl;
+
+
+
   //std::cout << cumulativeWeights << std::endl;
   std::cout << std::get<0>(ar_dist_dbw_ranges[0]) << std::endl;
   std::cout << std::get<1>(ar_dist_dbw_ranges[0]) << std::endl;
@@ -88,6 +104,7 @@ auto prepareParams(
   std::cout << (exb|ranges::view::all) << std::endl;
   std::cout << (betan|ranges::view::all) << std::endl;
 
+  return std::make_tuple(ar_dist_dbw_ranges,betan_range,exb_range,ar_ranges);
      
 
 }
