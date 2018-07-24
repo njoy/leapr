@@ -2,8 +2,11 @@
 #ifndef LEAPR_CONTIN_START_FSUM_HH
 #define LEAPR_CONTIN_START_FSUM_HH
 
-template <typename F, typename A>
-F fsum( const int& n, const A& p, const F& tau, const F& delta_b ){
+#include <range/v3/all.hpp>
+#include <iostream>
+
+template<typename T, typename V>
+T fsum( const int n, const V& p, const T& tau, const T& delta_b ){
   /* Inputs
    * ------------------------------------------------------------------------
    * n       : appears in equation being evaluated
@@ -24,7 +27,7 @@ F fsum( const int& n, const A& p, const F& tau, const F& delta_b ){
    *   int       2 * P(beta) * beta^n * cosh( tau*beta ) dbeta
    *      0
    *
-   *  depending on whether n is odd of even, respectively.
+   *  depending on whether n is odd or even, respectively.
    *
    * Outputs
    * ------------------------------------------------------------------------
@@ -32,28 +35,29 @@ F fsum( const int& n, const A& p, const F& tau, const F& delta_b ){
    *
    */
 
-
-  double beta = 0, func_sum = 0, func_val = 0;
-
   bool even = ( 1 - 2*(n%2) == 1 ); // +1 if even, -1 if odd. This is to 
                                     // help differentiate betwene sinh and 
                                     // cosh while evaluating the integrand
 
-  for( size_t i = 0; i < p.size(); ++i ){
-    
-    func_val = even ? 2 * p[i] * cosh( beta * tau ) * std::pow( beta, n ) :
-                      2 * p[i] * sinh( beta * tau ) * std::pow( beta, n );
+  // Create a range of beta values, [ 0, delta_b, 2*delta_b, 3*delta_b, ...]
+  auto b = ranges::view::zip(
+             ranges::view::iota(0,int(p.size()))
+           | ranges::view::transform([delta_b](auto x){return delta_b*x;}),
+	   p );
 
-    // If at either boundary, cut in half b/c rectangle is only half normal size
-    if( i == 0 or i == p.size() -1 ){ func_val = func_val * 0.5 ; }
+  auto funcVal = 
+    b | ranges::view::transform([tau,n,even,p,delta_b](auto x){ 
+          T p_i = std::get<1>(x), beta = std::get<0>(x);
+          T val = even ? 2.0 * p_i * cosh(beta*tau) * std::pow(beta,n) :
+                         2.0 * p_i * sinh(beta*tau) * std::pow(beta,n) ;
+          // If at boundary, cut in half b/c rectangles only half normal size
+          return (beta == 0 or beta == (p.size()-1)*delta_b) ? 0.5*val : val;});
 
-    beta += delta_b;  func_sum += func_val;
+  return delta_b * ranges::accumulate(funcVal,0.0);
+  // return the sum at all requested points, 
+  // multiplied by the width of the rectangles
+  // to give the Riemann summed area
 
-  } // for i in p
-
-  return func_sum * delta_b;  // return the sum at all requested points, 
-                              // multiplied by the width of the rectangles
-                              // to give the Riemann summed area
 }
 
 #endif

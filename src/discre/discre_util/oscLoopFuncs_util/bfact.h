@@ -1,12 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <range/v3/all.hpp>
 
-auto cutoff( double a ){
-  return a < 1.0e-30 ? 0.0 : a;
-}
+template <typename F>
+F cutoff( F a ){ return a < 1.0e-30 ? 0.0 : a; }
 
-auto bfact( const double& x, const double& dwc, const double& beta_i, 
-  std::vector<double>& bplus, std::vector<double>& bminus ){
+template <typename F, typename A>
+auto bfact( const F& x, const F& dwc, const F& beta_i, A& bplus, A& bminus ){
   /* bfact is meant to assist with the evaluation of Eq. 537, by evaluating
    * the bessel function In and all exponential terms. 
    *
@@ -24,9 +24,7 @@ auto bfact( const double& x, const double& dwc, const double& beta_i,
    * where lambda_i was calculated in prepareParams.h according to Eq. 538.
    */
     
-  double I0;
-  double I1, expVal;
-  double y = x / 3.75;
+  F I0, I1, expVal, y = x / 3.75;
 
   // I_0(x) and I_1(x) are computed first, and then reverse recursion is used
   // to get the rest of the terms (check out numerical recipes for more info).
@@ -35,34 +33,43 @@ auto bfact( const double& x, const double& dwc, const double& beta_i,
   if ( y <= 1.0 ){
 
     // Compute I0 and I1 via series expansion (manual pg. 714 top)
-    std::vector<double> I1Consts = { 0.0360768, 0.2659732, 1.2067492, 
-      3.0899424, 3.5156229, 1.0 };
-    std::vector<double> I2Consts = {0.0030153, 0.02658733, 0.15084934, 
-      0.51498869, 0.87890594, 0.5};
-    I0 = 0.0045813;
-    I1 = 0.00032411;
-    for ( auto entry : I1Consts ){ I0 = I0 * y * y + entry; }
-    for ( auto entry : I2Consts ){ I1 = I1 * y * y + entry; }
+    F I1C[7] = { 4.5813e-3, 0.0360768, 0.2659732, 1.2067492, 3.0899424, 
+                 3.5156229, 1.0 };
+    F I2C[7] = { 3.2411e-4, 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 
+                 0.87890594, 0.5};
 
-    I1 = I1 * x; 
+    auto yVec = ranges::view::iota(0,7) 
+              | ranges::view::reverse
+              | ranges::view::transform([y](auto num){
+                  return std::pow(y,2*num); } );
+    auto both = ranges::view::zip(I1C, I2C, yVec) 
+              | ranges::view::transform( [](auto t){ 
+                  return std::make_pair(std::get<0>(t)*std::get<2>(t),
+                         std::get<1>(t)*std::get<2>(t)); } );
+    I0 = ranges::accumulate( both|ranges::view::keys,   0.0 );
+    I1 = ranges::accumulate( both|ranges::view::values, 0.0 ) * x;
 
     expVal = -dwc;
   } 
   if ( y > 1.0 ) {
 
     // Compute I0 and I1 via series expansion (manual pg. 714 top)
-    std::vector<double> I1Consts { -0.01647633, 0.02635537, -0.02057706, 
+    F I1C[9] = { 0.00392377, -0.01647633, 0.02635537, -0.02057706, 
       0.00916281, -0.00157565, 0.00225319, 0.01328592, 0.39894228 };
-    std::vector<double> I2Consts { 0.01787654, -0.02895312, 0.02282967, 
+
+    F I2C[9] = { -0.00420059, 0.01787654, -0.02895312, 0.02282967, 
       -0.01031555, 0.00163801, -0.00362018, -0.03988024, 0.39894228 };
-    I0 = 0.00392377;
-    I1 = -0.00420059;
 
-    for ( auto entry : I1Consts){ I0 = I0 / y + entry; }
-    for ( auto entry : I2Consts){ I1 = I1 / y + entry; }
-
-    I0 /= sqrt(x);
-    I1 /= sqrt(x);
+    auto yVec = ranges::view::iota(0,9) 
+              | ranges::view::reverse
+              | ranges::view::transform([inv_y=1.0/y](auto num){
+                  return std::pow(inv_y,num); } );
+    auto both = ranges::view::zip(I1C, I2C, yVec) 
+              | ranges::view::transform( [](auto t){ 
+                  return std::make_pair(std::get<0>(t)*std::get<2>(t),
+                         std::get<1>(t)*std::get<2>(t)); } );
+    I0 = ranges::accumulate( both|ranges::view::keys,   0.0 )/sqrt(x);
+    I1 = ranges::accumulate( both|ranges::view::values, 0.0 )/sqrt(x);
 
     expVal = -dwc + x;
   }
