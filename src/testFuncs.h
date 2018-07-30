@@ -1,4 +1,11 @@
 
+template <typename Vec, typename Range>
+void checkVectorAgainstRange( const Range& output, const Vec& correct){
+  RANGES_FOR( auto t, ranges::view::zip(output,correct) ){
+    REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
+  }
+}
+
 
 template <typename Vec, typename Array>
 void checkAgainstArray( const Array& correct, const Vec& output ){

@@ -3,6 +3,7 @@
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <range/v3/all.hpp>
 
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
@@ -100,7 +101,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
       } // for b in beta
     } // for a in alpha
-
     if ( n > 0 ){
       // tnow and tlast will be populated with nphon-many iterations of t1 info,
       // so npn here is being pushed forward by t1 length so that we can get

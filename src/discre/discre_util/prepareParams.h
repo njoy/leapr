@@ -56,23 +56,23 @@ auto prepareParams(
         return ar; }),
       ranges::view::iota(int(E_range.size()),50)
     | ranges::view::transform( [](auto){ return 0.0; }));
-  std::cout << cumulativeWeights << std::endl;
-  std::cout << ar_ranges << std::endl;
+  //std::cout << cumulativeWeights << std::endl;
+  //std::cout << ar_ranges << std::endl;
 
 
 
   //std::cout << cumulativeWeights << std::endl;
-  std::cout << std::get<0>(ar_dist_dbw_ranges[0]) << std::endl;
-  std::cout << std::get<1>(ar_dist_dbw_ranges[0]) << std::endl;
-  std::cout << std::get<2>(ar_dist_dbw_ranges[0]) << std::endl;
-  std::cout << std::get<3>(ar_dist_dbw_ranges[0]) << std::endl;
+  //std::cout << std::get<0>(ar_dist_dbw_ranges[0]) << std::endl;
+  //std::cout << std::get<1>(ar_dist_dbw_ranges[0]) << std::endl;
+  //std::cout << std::get<2>(ar_dist_dbw_ranges[0]) << std::endl;
+  //std::cout << std::get<3>(ar_dist_dbw_ranges[0]) << std::endl;
 
   auto betan_range = beta | ranges::view:: transform( [sc](auto b){ return b*sc; } );
   auto exb_range = betan_range | ranges::view::transform( [](auto bn){ 
                                    return exp(-bn); } );
 
-  std::cout << betan_range << std::endl;
-  std::cout << exb_range << std::endl;
+  //std::cout << betan_range << std::endl;
+  //std::cout << exb_range << std::endl;
 
 
   //auto arRange = ranges::view::transform([](auto t){ return 
@@ -93,19 +93,20 @@ auto prepareParams(
     dbw[i]  = w / ( tanh(0.5*betaVals[i]) * betaVals[i] );
     tsave  += dist[i] / bk;
   }
-  std::cout << std::endl << betaVals[0] << std::endl;
-  std::cout << ar[0] << std::endl;
-  std::cout << dist[0] << std::endl;
-  std::cout << dbw[0] << std::endl;
+  //std::cout << std::endl << betaVals[0] << std::endl;
+  //std::cout << ar[0] << std::endl;
+  //std::cout << dist[0] << std::endl;
+  //std::cout << dbw[0] << std::endl;
 
   for ( size_t b = 0; b < betan.size(); ++b ){
     exb[b] = exp( -beta[b]*sc );
     betan[b] = beta[b]*sc;
   } 
-  std::cout << (exb|ranges::view::all) << std::endl;
-  std::cout << (betan|ranges::view::all) << std::endl;
+  //std::cout << (exb|ranges::view::all) << std::endl;
+  //std::cout << (betan|ranges::view::all) << std::endl;
 
   return std::make_tuple(ar_dist_dbw_ranges,betan_range,exb_range,ar_ranges);
      
+  std::cout << cumulativeWeights << std::endl;
 
 }

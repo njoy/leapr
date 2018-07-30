@@ -1,10 +1,9 @@
 #include "oscLoopFuncs_util/bfact.h"
+#include <range/v3/all.hpp>
 
-void posNegTerms( int& n, const double& beta_i, 
-  const std::vector<double>& b_minus_or_plus,
-  std::vector<double>& wts, const std::vector<double>& wtn, 
-  std::vector<double>& bes, const std::vector<double>& ben, const int nn,
-  int pos_or_neg ){
+template <typename F, typename A>
+void posNegTerms( int& n, const F& beta_i, const A& b_minus_or_plus, A& wts, 
+  const A& wtn, A& bes, const A& ben, const int nn, int pos_or_neg ){
 
   /* The point of these loops are to prepare wts and bes for the summation in
    * Eq. 542, which involves a sum of sums of sums etc, so we're really 
@@ -28,6 +27,7 @@ void posNegTerms( int& n, const double& beta_i,
   for ( auto k = 0; k < 50; ++k ){
     // It doesn't really make sense for b_minus_or_plus[k] to be negative
     // right? That's definitely wrong, right? It can be 0 just not < 0
+    //std::cout << b_minus_or_plus[k] << std::endl;
     if ( b_minus_or_plus[k] <= 0 ){ return; } 
 
     for ( auto m = 0; m < nn; ++m ){

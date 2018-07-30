@@ -1,6 +1,7 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <iostream> 
+#include <iomanip>
 #include <vector>
 #include <cmath>
 #include <tuple>
@@ -21,18 +22,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
   double dka, std::vector<double> kappaVals ){
 
-  //clock_t t;
-  //t = clock();
-
-  //Eigen::MatrixXd matrix1 = Eigen::MatrixXd::Random(2,3);
-  //Eigen::MatrixXd matrix1 = Eigen::MatrixXd(2,3);
-  //Eigen::MatrixXd matrix1(2,3);
-  //matrix1(0,0) = 100;
-  //std::cout << matrix1 << std::endl;
-
   double bk = 8.617385e-5;
   double therm = 0.0253;
-
+  double lambda_s,t_eff;
   // Loop over scatterers and temperatures
   int isecs = 0;
   double arat  = 1.0; // This is for scaling alpha and beta values later
@@ -72,42 +64,20 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
-      /*
-      std::cout << sym_sab[0][0][0] << std::endl;
-      std::cout << sym_sab[1][1][0] << std::endl;
-      std::cout << sym_sab[2][2][0] << std::endl;
-      std::cout << sym_sab[3][3][0] << std::endl;
-      std::cout << sym_sab[4][4][0] << std::endl;
-      std::cout << "    " << std::endl;
-      */
-
-
-      // Continuous part of the distribution
-      //std::cout << "\n-------- contin" << std::endl;
-
-
-      //sym_sab_eigen.setZero();
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen);
-      double lambda_s = std::get<0>(lambda_s_t_eff);
+      lambda_s = std::get<0>(lambda_s_t_eff);
+      t_eff    = std::get<1>(lambda_s_t_eff);
+    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
 
-
-      //double t_contin = clock();
-
-     // update the effective temperature list
-      //t_eff_vec[itemp] = std::get<1>(lambda_s_t_eff) * temp;
-
- 
-      // Translational part of distribution, if any
-      //std::cout << "\n-------- trans" << std::endl;
       if ( trans_weight > 0.0 ){
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
-      //double t_trans = clock();
+      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
 
       if ( oscEnergies.size() > 0 ){
-      //std::cout << "\n-------- discre" << std::endl;
         std::vector<std::tuple<double,double>> oscEnergiesWeights(oscEnergies.size());
         for ( size_t i = 0; i < oscEnergies.size(); ++i ){
           oscEnergiesWeights[i] = std::make_tuple(oscEnergies[i],oscWeights[i]);
@@ -115,23 +85,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
-      //double t_discre = clock();
+      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
 
-      std::cout << lambda_s << std::endl;
-
-      /*
-      std::cout << "contin: " << ((float)(t_contin-t))/CLOCKS_PER_SEC 
-        << " seconds" << std::endl;
-      std::cout << "trans:  " << ((float)(t_trans-t_contin))/CLOCKS_PER_SEC 
-        << " seconds" << std::endl;
-      std::cout << "discre: " << ((float)(t_discre-t_trans))/CLOCKS_PER_SEC 
-        << " seconds" << std::endl;
-      std::cout << "\n-------------------\nTotal: " << ((float)clock()-t)/CLOCKS_PER_SEC 
-        << " seconds\n\n" << std::endl;
-        */
       std::cout << "\n" << std::endl;
-      //return;
-      return sym_sab_eigen;
 
       if ( ncold != 0 ){
 	bool free = false;
@@ -140,13 +96,14 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 	  sym_sab_2_eigen );
       }
 
+      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
 
     }
     done = true;
   }
 
   //return;
-    return sym_sab_eigen;
+    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
     std::cout << "Card1: " << nout << std::endl;
     std::cout << "Card2: " <<  title<< std::endl;
     std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
@@ -175,6 +132,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 
     std::cout << "\n\n\n " << std::endl;
 
-  return sym_sab_eigen;
+    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
 }
 
