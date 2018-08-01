@@ -32,6 +32,7 @@ TEST_CASE( "contin eigen" ){
   std::vector<double> alpha, beta, rho, expected;
   std::tuple<double,double> output;
 
+  /*
   GIVEN( "input values from input card and leapr subroutine" ){
 
 
@@ -117,7 +118,7 @@ TEST_CASE( "contin eigen" ){
 
 
   GIVEN( "simplified water model (test case #9)" ){
-    ntempr = 1; nphon = 67; itemp = 0;
+    ntempr = 1; nphon = 100; itemp = 0;
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
     scaling = 0.99186670867058835; 
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 
@@ -161,6 +162,36 @@ TEST_CASE( "contin eigen" ){
         lambda_s =   0.23520650571218535; t_eff = 1.9344846581861184;
         REQUIRE( lambda_s == Approx(std::get<0>(output)).epsilon(1e-6) );
         REQUIRE( t_eff    == Approx(std::get<1>(output)).epsilon(1e-6) );
+        //std::cout << std::setprecision(16) << symSab(33,33,0) << std::endl;
+	//checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
+      } // THEN
+    } // WHEN
+  } // GIVEN 
+
+*/
+  GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
+    ntempr = 1; nphon = 6; itemp = 0;
+    delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
+    scaling = 0.99186670867058835; 
+    std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
+    std::vector<double> beta { 0.000000, 0.006375, 0.012750, 0.025500, 0.038250, 
+      0.051000, 0.065750 };
+    std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 
+      0.01, 0.013, 0.0165 };
+    WHEN( "  " ){
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
+
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab );
+
+      THEN( "contin output matches expected value" ){
+        lambda_s =   0.23520650571218535; t_eff = 1.9344846581861184;
+        //REQUIRE( lambda_s == Approx(std::get<0>(output)).epsilon(1e-6) );
+        //REQUIRE( t_eff    == Approx(std::get<1>(output)).epsilon(1e-6) );
+        std::cout << std::setprecision(16) << symSab(0,0,0) << std::endl;
+        std::cout << std::setprecision(16) << symSab(1,1,0) << std::endl;
+        //std::cout << std::setprecision(16) << symSab(33,33,0) << std::endl;
 	//checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
       } // THEN
     } // WHEN

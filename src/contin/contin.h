@@ -65,7 +65,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   // track which block we're at. So we start out with the size of t1, then it
   // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
-  
   F add, exx;
 
   // To be used when checking moments of S(a,b)
@@ -73,6 +72,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   for ( size_t b = 0; b < beta.size(); ++b ){
     maxt[b] = alpha.size() + 1;
   }
+  std::cout << std::setprecision(16) << tlast[0] << "   " << tlast[1] << "   " << tlast[2] << std::endl;
 
   // Do the phonon expansion sum 
   // For this, we treat the first iteration slightly different than the all
@@ -83,14 +83,17 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
     // Convolve T_n with T_n-1 (Eq. 526)
     if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
-
+    //tlast = convol(t1, tlast, delta); 
+    
     for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
       exx = -lambda_s * alpha[a] * scaling + xa[a];
-      if ( exx <= -250.0 ){ continue; }
+      //if ( exx <= -250.0 ){ continue; }
+      if ( exx <= -250.0 ){ exx = 0.0; }else {
       exx = exp(exx);
-
+      }
+        
       for( int b = 0; b < int(beta.size()); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
@@ -107,6 +110,9 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       // to the next block of vector
       npn += t1.size() - 1;
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+    }
+    else { 
+      npn += t1.size() - 1;
     }
   } // for n in nphon (maxn in leapr.f90) 
 
