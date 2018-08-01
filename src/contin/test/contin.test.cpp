@@ -168,7 +168,6 @@ TEST_CASE( "contin eigen" ){
     } // WHEN
   } // GIVEN 
 
-*/
   GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
     ntempr = 1; nphon = 6; itemp = 0;
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
@@ -185,15 +184,54 @@ TEST_CASE( "contin eigen" ){
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
 
+      std::vector<double> expected { 4.25432614274e-2, 4.26779756706e-2, 
+        4.28126899138e-2, 4.30821184002e-2, 4.33515468866e-2, 4.36209753731e-2, 
+        4.39326671515e-2, 6.24056051861e-2, 6.26017828244e-2, 6.27979604627e-2, 
+        6.31903157393e-2, 6.35826710159e-2, 6.39750262924e-2, 6.44289274947e-2, 
+        0.1017739563593, 0.1020891291752, 0.1024043019910, 0.1030346476228, 
+        0.1036649932545, 0.1042953388863, 0.1050245622642, 0.1302930540306, 
+        0.1306919703863, 0.1310908867421, 0.1318887194535, 0.1326865521650, 
+        0.1334843848765, 0.1344073678172, 0.1892607367913, 0.1898257672411, 
+        0.1903907976908, 0.1915208585903, 0.1926509194898, 0.1937809803893, 
+        0.1950883057436, 0.2640966882168, 0.2648573621913, 0.2656180361658, 
+        0.2671393841147, 0.2686607320637, 0.2701820800127, 0.2719420707772 };
       THEN( "contin output matches expected value" ){
         lambda_s =   0.23520650571218535; t_eff = 1.9344846581861184;
+        //checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
         //REQUIRE( lambda_s == Approx(std::get<0>(output)).epsilon(1e-6) );
         //REQUIRE( t_eff    == Approx(std::get<1>(output)).epsilon(1e-6) );
-        std::cout << std::setprecision(16) << symSab(0,0,0) << std::endl;
-        std::cout << std::setprecision(16) << symSab(1,1,0) << std::endl;
+        //std::cout << std::setprecision(16) << symSab(0,0,0) << std::endl;
+        //std::cout << std::setprecision(16) << symSab(1,1,0) << std::endl;
         //std::cout << std::setprecision(16) << symSab(33,33,0) << std::endl;
 	//checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
       } // THEN
     } // WHEN
   } // GIVEN 
+*/
+  GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
+    ntempr = 1; nphon = 3; itemp = 0;
+    delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
+    scaling = 0.99186670867058835; 
+    std::vector<double> alpha { 0.01008, 0.015, 0.0252 };
+    std::vector<double> beta { 0.000000, 0.006375, 0.012750, 0.025500 }; 
+    std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005 };
+    WHEN( "  " ){
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
+
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab );
+
+      std::vector<double> expected { 4.2013950235115596, 4.2051822834290125, 
+        4.1903092235717088, 4.1056164893480593, 3.4422747927866495, 
+        3.4478897966337048, 3.4432155723958129, 3.4032580694051107, 
+        2.6528252451192786, 2.6587589808723555, 2.6599732734315062, 
+        2.6482428242407785 };
+      THEN( "contin output matches expected value" ){
+        lambda_s = 14.500767787022335; t_eff = 1.0123228701111786;
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff );
+      } // THEN
+    } // WHEN
+  } // GIVEN 
+
 } // TEST CASE
