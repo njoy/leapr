@@ -80,35 +80,21 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   for( int n = 0; n < nphon; ++n ){
 
-    // Convolve T_n with T_n-1 (Eq. 526)
+    if ( n > 0 ){ std::cout << std::setprecision(15) << n+1 << "     " << symSab(0,0,0) << std::endl; }
     if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
-    //tlast = convol(t1, tlast, delta); 
    
     for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
-
-
       exx = -lambda_s * alpha[a] * scaling + xa[a];
+
       //if ( exx <= -250.0 ){ continue; }
-      if ( exx <= -250.0 ){ exx = 0.0; }else {
-      exx = exp(exx);
-      }
+      if ( exx <= -250.0 ){ exx = 0.0; }
+      else { exx = exp(exx); }
         
       for( int b = 0; b < int(beta.size()); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
-
-        /*
-    if ( n > 0 and a > 2 ){ 
-      //std::cout << std::setprecision(16) << xa[0] << "   " << xa[1] << "   " << xa[2] << std::endl;
-      //std::cout << std::setprecision(16) << add << std::endl;
-      std::cout << std::setprecision(16) << symSab(a,b,itemp) << std::endl;
-    }
-    if ( n > 0 and a > 2 and b > 3 ){ 
-      //return lambda_s_t_eff;
-    }
-    */
 
         if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
           if (add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
@@ -116,8 +102,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
       } // for b in beta
     } // for a in alpha
-    //std::cout << std::setprecision(16) << symSab(5,0,0) << std::endl;
-    //std::cout << std::setprecision(16) << symSab(0,0,0) << std::endl;
+
     if ( n > 0 ){
       // tnow and tlast will be populated with nphon-many iterations of t1 info,
       // so npn here is being pushed forward by t1 length so that we can get
