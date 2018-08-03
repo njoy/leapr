@@ -241,7 +241,7 @@ TEST_CASE( "contin eigen" ){
         0.27194207077720473 };
       THEN( "contin output matches expected value" ){
         lambda_s = 4.2065831071822970; t_eff = 1.0400408284374374;
-        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-5 );
       } // THEN
     } // WHEN
   } // GIVEN 
