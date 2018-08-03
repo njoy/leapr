@@ -93,6 +93,12 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
+    // problem is arising because when we go into n+1 = 4 (n=3) iteration of 
+    // this loop, tnow is not accurate. 
+    // tnow[0] here  = 0.3858522182488436, but 
+    // tnow(1) there = 0.39224501722727217
+    if ( n == 3 )std::cout << std::setprecision(16) << n+1 << "   " << tlast[0] << "   " << tlast[1] << "   " << tlast[2] << std::endl;
+    if ( n == 3 )std::cout << std::setprecision(16) << n+1 << "   " << tnow[0] << "   " << tnow[1] << "   " << tnow[2] << std::endl;
    
     for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
@@ -110,10 +116,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
         if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
           if (add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
         } 
-        //if ( b == 5 and a == 0 ){ std::cout << std::setprecision(15) << n+1 << "     " << add << "     " << std::abs(symSab(a,b,0) - correctSsm500[counter++]) << std::endl; }
-        if ( a == 5 and b == 0 and n == 3 ){ std::cout << std::setprecision(15) << n+1 << "     " << tnow[0] << "    " << tnow[1] << "    " << tnow[2] << "     " << tnow[3]<< std::endl; }
-        //if ( a == 5 and b == 0 ){ std::cout << std::setprecision(15) << n+1 << "     " << add << "     " << symSab(a,b,0) << "    " << correctSsm050[counter++]<< std::endl; }
-
       } // for b in beta
       //if ( a == 0 ){ std::cout << std::setprecision(16) << n+1 << "    " << std::abs(symSab(0,5,0)-correctSsm500[counter++]) << std::endl; }
     } // for a in alpha
