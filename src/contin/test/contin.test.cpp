@@ -34,7 +34,6 @@ TEST_CASE( "contin eigen" ){
   std::vector<double> alpha, beta, rho, expected;
   std::tuple<double,double> output;
 
-  /*
   GIVEN( "input values from input card and leapr subroutine" ){
 
 
@@ -175,46 +174,6 @@ TEST_CASE( "contin eigen" ){
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
     scaling = 0.99186670867058835; 
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
-    std::vector<double> beta { 0.000000, 0.006375, 0.012750, 0.025500, 0.038250, 
-      0.051000, 0.065750 };
-    std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 
-      0.01, 0.013, 0.0165 };
-    WHEN( "  " ){
-      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
-      symSab.setZero();
-
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
-          alpha, beta, symSab );
-
-      std::vector<double> expected { 4.25432614274e-2, 4.26779756706e-2, 
-        4.28126899138e-2, 4.30821184002e-2, 4.33515468866e-2, 4.36209753731e-2, 
-        4.39326671515e-2, 6.24056051861e-2, 6.26017828244e-2, 6.27979604627e-2, 
-        6.31903157393e-2, 6.35826710159e-2, 6.39750262924e-2, 6.44289274947e-2, 
-        0.1017739563593, 0.1020891291752, 0.1024043019910, 0.1030346476228, 
-        0.1036649932545, 0.1042953388863, 0.1050245622642, 0.1302930540306, 
-        0.1306919703863, 0.1310908867421, 0.1318887194535, 0.1326865521650, 
-        0.1334843848765, 0.1344073678172, 0.1892607367913, 0.1898257672411, 
-        0.1903907976908, 0.1915208585903, 0.1926509194898, 0.1937809803893, 
-        0.1950883057436, 0.2640966882168, 0.2648573621913, 0.2656180361658, 
-        0.2671393841147, 0.2686607320637, 0.2701820800127, 0.2719420707772 };
-      THEN( "contin output matches expected value" ){
-        lambda_s =   0.23520650571218535; t_eff = 1.9344846581861184;
-        //checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
-        //REQUIRE( lambda_s == Approx(std::get<0>(output)).epsilon(1e-6) );
-        //REQUIRE( t_eff    == Approx(std::get<1>(output)).epsilon(1e-6) );
-        //std::cout << std::setprecision(16) << symSab(0,0,0) << std::endl;
-        //std::cout << std::setprecision(16) << symSab(1,1,0) << std::endl;
-        //std::cout << std::setprecision(16) << symSab(33,33,0) << std::endl;
-        //checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
-      } // THEN
-    } // WHEN
-  } // GIVEN 
-  */
-  GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
-    ntempr = 1; nphon = 6; itemp = 0;
-    delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
-    scaling = 0.99186670867058835; 
-    std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
     std::vector<double> beta { 0.0, 0.006375, 0.01275, 0.0255, 0.03825, 0.051, 0.06575 }; 
     std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 0.0165 };
     WHEN( "  " ){
@@ -241,11 +200,10 @@ TEST_CASE( "contin eigen" ){
         0.27194207077720473 };
       THEN( "contin output matches expected value" ){
         lambda_s = 4.2065831071822970; t_eff = 1.0400408284374374;
-        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-5 );
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
       } // THEN
     } // WHEN
   } // GIVEN 
-  /*
   GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
     ntempr = 1; nphon = 30; itemp = 0;
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
@@ -272,6 +230,5 @@ TEST_CASE( "contin eigen" ){
       } // THEN
     } // WHEN
   } // GIVEN 
-*/
 
 } // TEST CASE
