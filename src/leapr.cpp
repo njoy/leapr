@@ -68,14 +68,15 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         sc, rho, alpha, beta, sym_sab_eigen);
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
-    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
+
+    //return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+      std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
       if ( trans_weight > 0.0 ){
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
-      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
+      std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
       if ( oscEnergies.size() > 0 ){
         std::vector<std::tuple<double,double>> oscEnergiesWeights(oscEnergies.size());
@@ -85,9 +86,8 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
-      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
+      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
-      std::cout << "\n" << std::endl;
 
       if ( ncold != 0 ){
 	bool free = false;
@@ -96,42 +96,40 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 	  sym_sab_2_eigen );
       }
 
-      std::cout << std::setprecision(15) << sym_sab_eigen(33,33,0) << std::endl;
-
+      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
     }
     done = true;
   }
 
-  //return;
-    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-    std::cout << "Card1: " << nout << std::endl;
-    std::cout << "Card2: " <<  title<< std::endl;
-    std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
-    std::cout << "Card4: " << mat    <<  "     " << za << std::endl;
-    std::cout << "Card5: " << awr    <<  "     " << spr    << "     " << npr << "      " << iel << "     " << ncold << std::endl;
-    std::cout << "Card6: " << nss    <<  "     " << aws << std::endl;
-    std::cout << "Card7: " << nalpha <<  "     " << nbeta  << "     " << lat<<   std::endl;
-    std::cout << "Card8: " << std::endl;
-    for( auto entry : alpha   ){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card9: " << std::endl;
-    for( auto entry : beta    ){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card10: " << std::endl;
-    for( auto entry : temp_vec){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card11: " << delta << "     " << ni <<  std::endl;
-    std::cout << "Card12: " << std::endl;
-    for( auto entry : rho     ){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card13: " << trans_weight << "     " << diffusion_const << "      " << tbeta << std::endl;
-    std::cout << "Card14: " << nd << std::endl;
-    std::cout << "Card15: " << std::endl;
-    for( auto entry : oscEnergies){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card16: " << std::endl;
-    for( auto entry : oscWeights){ std::cout << " -- " << entry << std::endl; }
-    std::cout << "Card17: " << nka << "     " << dka << std::endl;
-    std::cout << "Card18: " << std::endl;
-    for( auto entry : kappaVals){ std::cout << " -- " << entry << std::endl; }
+  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+  std::cout << "Card1: " << nout << std::endl;
+  std::cout << "Card2: " <<  title<< std::endl;
+  std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
+  std::cout << "Card4: " << mat    <<  "     " << za << std::endl;
+  std::cout << "Card5: " << awr    <<  "     " << spr    << "     " << npr << "      " << iel << "     " << ncold << std::endl;
+  std::cout << "Card6: " << nss    <<  "     " << aws << std::endl;
+  std::cout << "Card7: " << nalpha <<  "     " << nbeta  << "     " << lat<<   std::endl;
+  std::cout << "Card8: " << std::endl;
+  for( auto entry : alpha   ){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card9: " << std::endl;
+  for( auto entry : beta    ){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card10: " << std::endl;
+  for( auto entry : temp_vec){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card11: " << delta << "     " << ni <<  std::endl;
+  std::cout << "Card12: " << std::endl;
+  for( auto entry : rho     ){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card13: " << trans_weight << "     " << diffusion_const << "      " << tbeta << std::endl;
+  std::cout << "Card14: " << nd << std::endl;
+  std::cout << "Card15: " << std::endl;
+  for( auto entry : oscEnergies){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card16: " << std::endl;
+  for( auto entry : oscWeights){ std::cout << " -- " << entry << std::endl; }
+  std::cout << "Card17: " << nka << "     " << dka << std::endl;
+  std::cout << "Card18: " << std::endl;
+  for( auto entry : kappaVals){ std::cout << " -- " << entry << std::endl; }
 
-    std::cout << "\n\n\n " << std::endl;
+  std::cout << "\n\n\n " << std::endl;
 
-    return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
 }
 
