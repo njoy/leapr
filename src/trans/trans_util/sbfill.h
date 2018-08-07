@@ -58,7 +58,6 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
    *   bi is the ith beta value across this specific grid
    */
 
-  
   // nbt is the number of S_t(a,b) values that were computed in 
   // s_table_generation. So we want to take -beta and look at the values that
   // lie in the +- nbt interval. Since s_table_generation used a spacing of 
@@ -131,8 +130,8 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
     if ( indexInRange ){
 
       // Don't take the log of a negative number
-      current = s[j]   < 0 ? slim : log( s[j]   );
-      toLeft  = s[j-1] < 0 ? slim : log( s[j-1] );
+      current = s[j]   <= 0 ? slim : log( s[j]   );
+      toLeft  = s[j-1] <= 0 ? slim : log( s[j-1] );
 
       sb[i] = current + (b-betan[j])*(toLeft-current)/(betan[j-1]-betan[j]);
 

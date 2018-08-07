@@ -1,10 +1,12 @@
 #include <iostream> 
+#include <iomanip> 
 #include <cmath>
 #include <vector>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
 #include "trans_util/terps.h"
+#include <range/v3/all.hpp>
 
 
 void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
@@ -104,8 +106,8 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
       // loop over beta values
       for ( size_t b = 0; b < beta.size(); ++b ){
         double be = betan[b];
-
         // prepare table of continuous ss on new interval
+
         sbfill( sab, nsd, delta, be, ap, betan, ndmax );
 
         // convolve s-transport with s-continuous
@@ -119,7 +121,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
           if ( i == 0 or i == nsd - 1 ){ f = 1; }
                     
           s += f * sabTrans[i] * sab[nsd+i-1] + 
-               f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
+               f * sabTrans[i] * sab[nsd-i+1] * exp(-i*delta);
 
         }
         s = s < 1e-30 ? 0 : s * delta / 3;
@@ -130,7 +132,6 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
 	// This accounts for the first term in Eq. 535, which is a delta 
 	// function contribution corresponding to the zeroth term in Eq. 523
         if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
-
         sym_sab(a,b,itemp) = s;
 
       } // for beta
@@ -140,8 +141,6 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   // Update the effective temperature, following Eq. 536
   t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
                      ( tbeta + trans_weight );
-
-
 }
 
 

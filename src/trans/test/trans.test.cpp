@@ -40,6 +40,7 @@ TEST_CASE( "trans" ){
 
   int itemp = 0;
 
+  /*
 
   GIVEN( "that the translational motion is diffusive" ){
     WHEN( "temperature is relatively low" ){
@@ -133,6 +134,7 @@ TEST_CASE( "trans" ){
       } // THEN
     } // WHEN
   } // GIVEN
+  */
   GIVEN( "H in H2O inputs" ){
     diffusion_const = 0;
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 0.100812, 
@@ -143,7 +145,8 @@ TEST_CASE( "trans" ){
     3.578320, 3.923900, 4.302660, 4.717700, 5.172560, 5.671180, 6.217580, 
     6.816500, 7.472890, 8.192280, 8.980730, 9.844890, 10.79190, 11.83030, 
     12.96740, 14.21450, 15.58150, 17.07960, 18.72080, 20.52030, 22.49220, 
-    24.65260, 27.02160, 29.61750 },
+    24.65260, 27.02160, 29.61750, 32.46250, 35.58160, 38.99910, 42.74530, 
+    46.85030, 50.0 },
   beta { 0.000000, 0.006375, 0.012750, 0.025500, 0.038250, 0.051000, 0.065750, 
     0.0806495, 0.120974, 0.161299, 0.241949, 0.322598, 0.403248, 0.483897, 
     0.564547, 0.645197, 0.725846, 0.806496, 0.887145, 0.967795, 1.048440, 
@@ -152,7 +155,20 @@ TEST_CASE( "trans" ){
     2.258190, 2.338840, 2.419490, 2.500140, 2.580790, 2.669500, 2.767090, 
     2.874450, 2.992500, 3.122350, 3.265300, 3.422470, 3.595360, 3.785490, 
     3.994670, 4.224730, 4.477870, 4.756310, 5.062580, 5.399390, 5.769970, 
-    6.177660, 6.626070, 7.119240 };
+    6.177660, 6.626070, 7.119240, 7.661810, 8.258620, 8.915110, 9.637220, 
+    10.43200, 11.30510, 12.26680, 13.32430, 14.48670, 15.76600, 17.17330, 
+    18.72180, 20.42450, 22.29760, 24.35720, 25.0 };
+
+  Eigen::Tensor<double,3> sym_sab( int(alpha.size()), int(beta.size()), int(temps.size()) );
+  for ( size_t i = 0; i < alpha.size(); ++i ){
+    for ( size_t j = 0; j < beta.size(); ++j ){
+      sym_sab(i,j,0) = (i+j+2)*0.0005;
+    } 
+  }
+  std::cout << beta.size() << std::endl;
+  std::cout << sym_sab(49,65,0) << std::endl;
+   scaling = 0.99186670867058835; 
+   sc = 0.99186670867058835;
 
     trans_weight = 5.5556e-2; diffusion_const = 0.0;
     lambda_s = 0.23520650571218535; tbeta = 0.444444;
@@ -161,14 +177,29 @@ TEST_CASE( "trans" ){
 
     WHEN( "temperature is relatively low" ){
 
-      //trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling, 
-      //  itemp, lambda_s, tbeta, t_eff_vec, temps,  sym_sab );
-      correct = { 0.92779395, 0.462578, 0.18376845, 1.771662, 1.2519220,
-        0.74812670, 2.146880, 1.78983859, 1.384712, 2.2401082, 1.99146590, 
-        1.630380 };
-      correct_t_eff_val = 16.12676056;
+      trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling, 
+        itemp, lambda_s, tbeta, t_eff_vec, temps,  sym_sab );
+      std::vector<double> correct_alpha_0_49_beta_0_49 = { 11.942047, 9.6832173, 
+        7.3444064, 6.0882386, 4.7270718, 3.7768044, 3.1493396, 2.5589613, 
+        1.9599579, 1.5438730, 0.97229950, 0.59355179, 0.35779156, 0.21598531, 
+        0.13219498, 8.3561190e-2, 5.6782269e-2, 4.2119690e-2, 3.4104938e-2, 
+        2.9790332e-2, 2.7576664e-2, 2.6581416e-2, 2.6286551e-2, 2.6432962e-2, 
+        2.6842441e-2, 2.7429248e-2, 2.8129284e-2, 2.8902840e-2, 2.9728511e-2, 
+        3.0590201e-2, 3.1477126e-2, 3.2380600e-2, 3.3291412e-2, 3.4207080e-2, 
+        3.5122241e-2, 3.6034452e-2, 3.6938781e-2, 3.7826413e-2, 3.8699194e-2, 
+        3.9551834e-2, 4.0361894e-2, 4.1135875e-2, 4.1877405e-2, 4.2595236e-2, 
+        4.3300122e-2, 4.4007130e-2, 4.4730310e-2, 4.5481599e-2, 4.6271257e-2, 
+        4.7105334e-2 };
+      //correct_t_eff_val = 16.12676056;
+      //std::cout << std::setprecision(15) << sym_sab(0,0,0) << std::endl;
 
+      //std::cout << sym_sab.dimension(0) << std::endl;
+      //std::cout << sym_sab(48,48,0) << std::endl;
+      //std::cout << sym_sab(49,49,0) << std::endl;
       THEN( "S(a,b) and effective temperature outputs are correct" ){
+        for ( size_t i = 0; i < correct_alpha_0_49_beta_0_49.size(); ++i ){ 
+          REQUIRE( correct_alpha_0_49_beta_0_49[i] == Approx(sym_sab(i,i,0)).epsilon(1e-3) );
+        }
         //equalSAB( sym_sab, correct );
 	//REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
