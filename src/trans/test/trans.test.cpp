@@ -40,7 +40,6 @@ TEST_CASE( "trans" ){
 
   int itemp = 0;
 
-  /*
 
   GIVEN( "that the translational motion is diffusive" ){
     WHEN( "temperature is relatively low" ){
@@ -134,7 +133,6 @@ TEST_CASE( "trans" ){
       } // THEN
     } // WHEN
   } // GIVEN
-  */
   GIVEN( "H in H2O inputs" ){
     diffusion_const = 0;
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 0.100812, 
@@ -165,8 +163,6 @@ TEST_CASE( "trans" ){
       sym_sab(i,j,0) = (i+j+2)*0.0005;
     } 
   }
-  std::cout << beta.size() << std::endl;
-  std::cout << sym_sab(49,65,0) << std::endl;
    scaling = 0.99186670867058835; 
    sc = 0.99186670867058835;
 
@@ -190,21 +186,13 @@ TEST_CASE( "trans" ){
         3.9551834e-2, 4.0361894e-2, 4.1135875e-2, 4.1877405e-2, 4.2595236e-2, 
         4.3300122e-2, 4.4007130e-2, 4.4730310e-2, 4.5481599e-2, 4.6271257e-2, 
         4.7105334e-2 };
-      //correct_t_eff_val = 16.12676056;
-      //std::cout << std::setprecision(15) << sym_sab(0,0,0) << std::endl;
 
-      //std::cout << sym_sab.dimension(0) << std::endl;
-      //std::cout << sym_sab(48,48,0) << std::endl;
-      //std::cout << sym_sab(49,49,0) << std::endl;
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         for ( size_t i = 0; i < correct_alpha_0_49_beta_0_49.size(); ++i ){ 
-          REQUIRE( correct_alpha_0_49_beta_0_49[i] == Approx(sym_sab(i,i,0)).epsilon(1e-3) );
+          REQUIRE( correct_alpha_0_49_beta_0_49[i] == Approx(sym_sab(i,i,0)).epsilon(1e-6) );
         }
-        //equalSAB( sym_sab, correct );
-	//REQUIRE( correct_t_eff_val == Approx(t_eff_vec[0]).epsilon(1e-4) );
       } // THEN
     } // WHEN
   } // GIVEN
 
 } // TEST CASE
- 

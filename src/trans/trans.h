@@ -119,15 +119,18 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
           // f = 2 if i is even, 4 if i is odd, except 1 at boundaries
           double f = 2*(i%2)+2;
           if ( i == 0 or i == nsd - 1 ){ f = 1; }
+          //if (a==58 and b == 58)std::cout << std::setprecision(15) << sabTrans[i] << std::endl;
                     
           s += f * sabTrans[i] * sab[nsd+i-1] + 
-               f * sabTrans[i] * sab[nsd-i+1] * exp(-i*delta);
+               f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
+          //if (a==58 and b == 58)std::cout << std::setprecision(15) << s << std::endl;
 
         }
         s = s < 1e-30 ? 0 : s * delta / 3;
                 
 
         double st = terps(sabTrans,nsd,delta,be);
+
 
 	// This accounts for the first term in Eq. 535, which is a delta 
 	// function contribution corresponding to the zeroth term in Eq. 523
