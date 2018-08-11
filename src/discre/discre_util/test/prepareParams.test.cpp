@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "discre/discre_util/prepareParams.h"
+#include <range/v3/all.hpp>
 
 
 TEST_CASE( "prepare parameters helper function" ){
@@ -8,9 +9,6 @@ TEST_CASE( "prepare parameters helper function" ){
       energyNorm(50, 0.0), correctExb(5), energy(2), weights(2), beta(5), 
       exb(5,0.0), betan(5,0.0);
     double tev, tsave, weight, bk, sc;
-
-    energyNorm[0] = 2.030778478;
-    energyNorm[1] = 2.901112112;
 
     energy  = { 0.035, 0.05 };
     weights = { 0.2  , 0.8  };
@@ -42,6 +40,7 @@ TEST_CASE( "prepare parameters helper function" ){
     
     //REQUIRE( 8.213274e-2 == ar_range[0] );
     //REQUIRE( 0.1368162   == ar_range[1] );
+
 
 
     REQUIRE( 8.213274e-2 == Approx(ar[0]).epsilon(1e-6) );
@@ -84,6 +83,7 @@ TEST_CASE( "prepare parameters helper function" ){
       REQUIRE( beta[i] == Approx(betan[i]).epsilon(1e-6) ); 
     }  // because sc = 1.0 betan doesn't get scaled
 
+    */
   } // GIVEN
 } // TEST CASE
 

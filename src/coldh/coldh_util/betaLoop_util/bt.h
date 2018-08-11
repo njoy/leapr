@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <range/v3/all.hpp>
 
 auto bt ( int j, const double& x ){
   /* Inputs
@@ -28,11 +29,13 @@ auto bt ( int j, const double& x ){
    *
    */
 
-  double b = 0;
   // Loop either 0 --> 18 or 1 --> 19 to calculate the denominator first
-  for ( auto k = j%2; k < 20; k += 2 ){
-    b += (2*k+1) * exp( -k * (k+1) * x / 2 );
-  }
-  return (2*j+1) * exp( -j * (j+1) * x / 2 ) / ( 2 * b );
+  auto kRange = ranges::view::iota(0,10) 
+              | ranges::view::transform([j](auto i){ 
+                  return j%2 == 0 ? i*2 : i*2 + 1; });
+  auto b = ranges::accumulate( kRange | ranges::view::transform( [x](auto k){ 
+                           return (2*k+1) * exp( -k * (k+1) * x / 2 ); } ),0.0);
+
+  return (j+0.5) * exp(-j*(j+1)*x*0.5) / b;
 }
 

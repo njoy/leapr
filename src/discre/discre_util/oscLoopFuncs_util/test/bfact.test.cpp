@@ -5,6 +5,7 @@
 #include <range/v3/all.hpp>
 
 
+
 TEST_CASE( "bfact" ){
   double x, dwc, beta_i, bzero;
   std::vector<double> bplus (50, 0.0), bminus (50, 0.0);
@@ -66,4 +67,5 @@ TEST_CASE( "bfact" ){
       REQUIRE( 0.0 == Approx(bzero).epsilon(1e-6) );
     } // THEN
   } // GIVEN
+
 } // TEST CASE

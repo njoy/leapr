@@ -32,22 +32,5 @@ void normalize( A& p, const F& delta_b, const F& tbeta ){
   } 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 

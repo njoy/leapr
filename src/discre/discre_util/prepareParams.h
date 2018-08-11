@@ -20,6 +20,7 @@ auto prepareParams(
   auto E_range = EWRange | ranges::view::keys;
   auto W_range = EWRange | ranges::view::values;
 
+
   auto sinh_cosh_beta = E_range 
                       | ranges::view::transform([i_tev=1.0/tev](auto E){ 
                            auto b = E * i_tev;
@@ -40,6 +41,7 @@ auto prepareParams(
           sinh_b = std::get<1>(trig), cosh_b = std::get<2>(trig);
         double coth_b = cosh_b/sinh_b;
         double ar = w/(sinh_b*b), dist = 0.5*w*E*coth_b, dbw = w*coth_b/b;
+
         return std::make_tuple(b, ar,dist,dbw); }),
       ranges::view::iota(int(E_range.size()),50)
     | ranges::view::transform( [](auto){ return std::make_tuple(0.,0.,0.,0.); }));
@@ -67,6 +69,7 @@ auto prepareParams(
   //std::cout << std::get<2>(ar_dist_dbw_ranges[0]) << std::endl;
   //std::cout << std::get<3>(ar_dist_dbw_ranges[0]) << std::endl;
 
+
   auto betan_range = beta | ranges::view:: transform( [sc](auto b){ return b*sc; } );
   auto exb_range = betan_range | ranges::view::transform( [](auto bn){ 
                                    return exp(-bn); } );
@@ -77,8 +80,8 @@ auto prepareParams(
 
   //auto arRange = ranges::view::transform([](auto t){ return 
 
+
   // Set up oscillator parameters
-  
   weight = 0.0;
   tsave = 0.0;
   for ( size_t i = 0; i < oscEnergiesWeights.size(); ++i ){
@@ -102,11 +105,13 @@ auto prepareParams(
     exb[b] = exp( -beta[b]*sc );
     betan[b] = beta[b]*sc;
   } 
+
   //std::cout << (exb|ranges::view::all) << std::endl;
   //std::cout << (betan|ranges::view::all) << std::endl;
 
   return std::make_tuple(ar_dist_dbw_ranges,betan_range,exb_range,ar_ranges);
      
   std::cout << cumulativeWeights << std::endl;
+
 
 }

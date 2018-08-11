@@ -13,8 +13,8 @@ TEST_CASE( "cn" ){
       REQUIRE( cn( 2, 4, 6 ) == Approx( 0.67419986).epsilon(1e-6) );
       REQUIRE( cn( 2, 4, 4 ) == Approx(-0.50964719).epsilon(1e-6) );
       REQUIRE( cn( 7, 0, 5 ) == Approx(-1.30088727).epsilon(1e-6) );
-    }
-  }
+    } // THEN
+  } // GIVEN
 
   GIVEN( "the sum of jj, ll, and nn is odd" ){
     THEN( "a value of 0.0 is returned" ){

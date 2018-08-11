@@ -3,8 +3,9 @@
 #include "trans/trans_util/bessel_K1.h" 
 
 
-auto free_gas_s_table(const double& trans_weight, const double& alpha_sc, 
-  const int& ndmax, const double& delta, std::vector<double>& s_free ){
+template <typename floatT, typename arrayT>
+int free_gas_s_table(const floatT& trans_weight, const floatT& alpha_sc, 
+  const int& ndmax, const floatT& delta, arrayT& s_free ){
   /* Overview
    * ------------------------------------------------------------------------
    * This creates a table of translational S(a,-b) values in the array s_free, 
@@ -36,7 +37,7 @@ auto free_gas_s_table(const double& trans_weight, const double& alpha_sc,
    */
 
 
-  double beta = 0, wal = trans_weight * alpha_sc;
+  floatT beta = 0, wal = trans_weight * alpha_sc;
   int j = 0;
 
   while ( true ){
@@ -51,10 +52,10 @@ auto free_gas_s_table(const double& trans_weight, const double& alpha_sc,
   } // while
 }
 
-
-auto diffusion_s_table( const double& trans_weight, const double& alpha_sc, 
-  const int& ndmax, const double& delta, std::vector<double>& s_diffusion, 
-  const double& diffusion){
+template <typename floatT, typename arrayT>
+int diffusion_s_table( const floatT& trans_weight, const floatT& alpha_sc, 
+  const int& ndmax, const floatT& delta, arrayT& s_diffusion, 
+  const floatT& diffusion){
   /* Overview
    * ------------------------------------------------------------------------
    * This creates a table of translational S(a,-b) values in the array s_free, 
@@ -86,27 +87,28 @@ auto diffusion_s_table( const double& trans_weight, const double& alpha_sc,
    * * the s_diffusion vector is filled with values corresponding to Eq. 531.
    */
 
-  double beta = 0;
+  floatT beta = 0, wda = trans_weight * diffusion * alpha_sc; 
   int j = 0;
-  double wda = trans_weight * diffusion * alpha_sc; 
-  while ( true ){
-    
-    double expTerm = sqrt(beta*beta + 4*wda*wda) * 
-                     sqrt( diffusion*diffusion + 0.25 );
+
+  do{
+    double expVal = sqrt( beta*beta           + 4*wda*wda ) * 
+                    sqrt( diffusion*diffusion + 0.25      );
 
     // This is evaluating Eq. 531 from the NJOY manual        
     s_diffusion[j] = ( 2*wda/M_PI ) * sqrt( diffusion*diffusion + 0.25 ) * 
-                     bessel_K1_gen( expTerm ) / sqrt( beta*beta + 4*wda*wda );
-    s_diffusion[j] *= expTerm <= 1 ? exp( 2*wda*diffusion + beta/2 ) :
-                                     exp( 2*wda*diffusion + beta/2 - expTerm); 
+                     bessel_K1_gen( expVal ) / sqrt( beta*beta + 4*wda*wda );
+    s_diffusion[j] *= expVal <= 1 ? exp( 2*wda*diffusion + beta/2 ) :
+                                    exp( 2*wda*diffusion + beta/2 - expVal); 
 
     beta += delta; j += 1;
-
-    // nsd must always be odd for use with Simpson's rule.
-    if ( ( (j+1 >= ndmax) or (1e-7*s_diffusion[0] >= s_diffusion[j-1]) ) and
-       ( j%2 == 1 ) ){
+    
+  } 
+  // nsd must always be odd for use with Simpson's rule.
+  while( ( (j+1 < ndmax) and (1e-7*s_diffusion[0] < s_diffusion[j-1]) ) or
+       ( j%2 != 1 ) );
       return j;
-    } // if break
-  } // while
 }
+
+
+
 

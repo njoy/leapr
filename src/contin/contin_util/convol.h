@@ -33,6 +33,6 @@ auto convol( const A& t1, const A& t2, const F& delta, const int& nl=0,
 
   } // for
   return t3;
-}
 
+}
 
