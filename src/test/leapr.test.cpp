@@ -3,7 +3,6 @@
 #include "leapr.cpp"
 #include <unsupported/Eigen/CXX11/Tensor>
 
-/*
 
 
 void checkSab( const std::vector<double>& correctSab,
@@ -34,7 +33,6 @@ TEST_CASE( "leapr" ){
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, 
     kappa;
   std::string title;
-
 
   GIVEN( "simple H in H20 input" ) {
     nout   = 24;                                                 // Card 1
@@ -432,7 +430,7 @@ TEST_CASE( "leapr" ){
 
     REQUIRE( 0.73178450430084030 == Approx(lambda_s).epsilon(1e-6) );        
 
-
+ 
 
   } // GIVEN 
 
@@ -525,12 +523,6 @@ TEST_CASE( "leapr" ){
 
 
 
-  } // GIVEN 
-
-
-} // TEST CASE
-*/
-
 
     REQUIRE( 0.49335785747954103 == Approx(lambda_s).epsilon(1e-6) );        
 
@@ -539,4 +531,3 @@ TEST_CASE( "leapr" ){
   } // GIVEN 
 
 } // TEST CASE
-

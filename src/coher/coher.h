@@ -16,7 +16,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
    * of edges, maxb and emax are also there
    */
   int i,j,k,imax,ifl,nw,nbe;
-  double amne,econ,tsqx,a,c,mass,xsCoh,c1,c2,recon,scon,wint,t2,
+  double amne,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
 
     // Lattice Constants (a) in angstroms
@@ -121,6 +121,10 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      a = aFe;
      mass = massFe;
      xsCoh = xsCohFe / npr;
+  }
+  else { 
+    std::cout << "oh no, not a valid iel value" << std::endl;
+    throw std::exception(); 
   }
 
   // Convert lattice factors from angstroms to cm

@@ -21,8 +21,8 @@ auto endout( std::vector<double> bragg, int nedge,
   int ncards,idone,nc,n,nb,nw,nprnt,nscr;
   std::string text;
   std::string t;
-  std::vector<double> z[16];
-  // equivalence(t[0],z[0])
+  std::vector<double> z(17);
+  // equivalence(t(1),z(1))
   double small=1.e-9, tiny=-999.e0, tol=0.9e-7, up=1.01e0, therm=.0253e0;
   double bk = 8.617385e-5;
 
@@ -69,7 +69,7 @@ auto endout( std::vector<double> bragg, int nedge,
 
    // write endf-6 file 1.
    if (iel == 0 and twt == 0) { iel=-1; }
-   // write(nsyso,'(//)') This is just putting a blank line in the output file. 
+   // write(nsyso,'(//)') This is just putting a blank line in the output file
    nprnt=0;
    //nsp=0;
    nsc=0;
@@ -79,45 +79,43 @@ auto endout( std::vector<double> bragg, int nedge,
    text=' ';
    // read(text,'(16a4,a2)') (t(i),i=1,17); 
    // No idea what this does, maybe it's not important? Yikes
+   std::cout << "HERE" << std::endl;
    tpidio(0,nout,nprnt,nb,nw,nsc,nsh,mth,mfh,math);
    math=mat;
    mfh=1;
    mth=451;
-   scr[0]=za;
-   scr[1]=awr;
-   scr[2]=-1; // LRP
-   scr[3]=0;  // LFI
-   scr[4]=0;  // NLIB
-   scr[5]=0;  // NMOD
-   //all contio(0,nout,nprnt,scr[0],nb,nw);
-   scr[0]=0;  // ELIS
-   scr[1]=0;  // STA
-   scr[2]=0;  // LIS
-   scr[3]=0;  // LISO
-   scr[4]=0;  
-   scr[5]=6;  // NFOR
-   //call contio(0,nout,nprnt,scr[0],nb,nw);
-   scr[0]=1;  // AWI
-   scr[1]=0;  // EMAX
-   scr[2]=0;  // LREL
-   scr[3]=0;  
-   scr[4]=12; // NSUB
-   scr[5]=6;  // NVER
-   //call contio(0,nout,nprnt,scr[0],nb,nw);
-   scr[0]=0;  // TEMP
-   scr[1]=0;  
-   scr[2]=0;  // LDRV
-   scr[3]=0;  
-   scr[4]=0;  // NWD
-   scr[5]=    // NXC
-     (iel==0) ? 2 : 3; 
-
-   n=6;
-   nc=0;
-   idone=0;
-
-
+   scr[1]=za;
+   scr[2]=awr;
+   scr[3]=-1;
+   scr[4]=0;
+   scr[5]=0;
+   scr[6]=0;
+   //all contio[0,nout,nprnt,scr[1],nb,nw];
+   scr[1]=0;
+   scr[2]=0;
+   scr[3]=0;
+   scr[4]=0;
+   scr[5]=0;
+   scr[6]=6;
+   //call contio[0,nout,nprnt,scr[1],nb,nw];
+   scr[1]=1;
+   scr[2]=0;
+   scr[3]=0;
+   scr[4]=0;
+   scr[5]=12;
+   scr[6]=6;
+   //call contio(0,nout,nprnt,scr(1],nb,nw];
+   scr[1]=0;
+   scr[2]=0;
+   scr[3]=0;
+   scr[4]=0;
+   scr[5]=0;
+   scr[6]=2;
+   if (iel != 0) scr[6]=3;
    /*
+   n=6
+   nc=0
+   idone=0
    do while (idone == 0)
       text='$'
       read(nsysi,*) text
@@ -134,58 +132,46 @@ auto endout( std::vector<double> bragg, int nedge,
            &'scratch storage exceeded for hollerith data',' ')
       }
    }
-   scr[4]=17*nc
+   scr(5)=17*nc
    l=1
    call hdatio(0,nout,nprnt,scr(l),nb,nw)
-   */
-   // This is just all to print out the text comments. If I'm working with
-   // testcase09, with a final moder at the end, then this will appear
-   // in the 101 1451 5 --> 101 1451 12 lines. So this is not technically
-   // yet in the file 7 parts.
-
-
-   /*
    do while (nb != 0)
       l=l+nw
       call moreio(0,nout,nprnt,scr(l),nb,nw)
    }
-   */
-   scr[0]=0;   
-   scr[1]=0;
-   scr[2]=1;   // MF1 
-   scr[3]=451; // MT1
-   scr[4]=     // NC1
-          (iel==0) ? 5+nc+1 : 5+nc+2;
-   
-   scr[5]=0;   // MOD1
-
-   ii=6;
+   scr(1)=0
+   scr(2)=0
+   scr(3)=1
+   scr(4)=451
+   scr(5)=5+nc+1
+   if (iel != 0) scr(5)=scr(5)+1
+   scr(6)=0
+   ii=6
    if (iel != 0) {
-      scr[ii]   = 0;
-      scr[ii+1] = 0;
-      scr[ii+2] = 7; // MF2
-      scr[ii+3] = 2; // MT2
-      if (iel < 0) ncards=3+(2*int(tempr.size())+4)/6;
-      if (iel > 0) ncards=3+(2*nedge+4)/6;
-      if (iel > 0 and int(tempr.size()) > 1)
-        ncards=ncards+(int(tempr.size())-1)*(1+(nedge+5)/6);
-      scr[ii+4]=ncards;
-      scr[ii+5]=0;
-      ii=ii+6;
+      scr(ii+1)=0
+      scr(ii+2)=0
+      scr(ii+3)=7
+      scr(ii+4)=2
+      if (iel < 0) ncards=3+(2*ntempr+4)/6
+      if (iel > 0) ncards=3+(2*nedge+4)/6
+      if (iel > 0 and ntempr > 1)&
+        ncards=ncards+(ntempr-1)*(1+(nedge+5)/6)
+      scr(ii+5)=ncards
+      scr(ii+6)=0
+      ii=ii+6
    }
-   scr[ii]   = 0;
-   scr[ii+1] = 0;
-   scr[ii+2] = 7;      // MF2
-   scr[ii+3] = 4;      // MT2
-   ncards=2+(2*int(alpha.size())+4)/6;
-   if (int(tempr.size()) > 1) ncards=ncards+(int(tempr.size())-1)*(1+(int(alpha.size())+5)/6);
-   ncards=5+int(beta.size())*ncards;
-   scr[ii+4] = ncards; // NC2
-   scr[ii+5] = 0;      // MOD2
-   nw=2;
-   /*
+   scr(ii+1)=0
+   scr(ii+2)=0
+   scr(ii+3)=7
+   scr(ii+4)=4
+   ncards=2+(2*nalpha+4)/6
+   if (ntempr > 1) ncards=ncards+(ntempr-1)*(1+(nalpha+5)/6)
+   ncards=5+nbeta*ncards
+   scr(ii+5)=ncards
+   scr(ii+6)=0
+   nw=2
    if (iel != 0) nw=3
-   call dictio(0,nout,nprnt,scr[0],nb,nw)
+   call dictio(0,nout,nprnt,scr(1),nb,nw)
    call asend(nout,nprnt)
    call afend(nout,nprnt)
 
@@ -193,25 +179,25 @@ auto endout( std::vector<double> bragg, int nedge,
    if (iel < 0) {
       mfh=7
       mth=2
-      scr[0]=za
-      scr[1]=awr
-      scr[2]=2
-      scr[3]=0
-      scr[4]=0
-      scr[5]=0
-      call contio(0,nout,nprnt,scr[0],nb,nw)
-      scr[0]=sb*npr
-      scr[1]=0
-      scr[2]=0
-      scr[3]=0
-      scr[4]=1
-      ndw=int(tempr.size())
+      scr(1)=za
+      scr(2)=awr
+      scr(3)=2
+      scr(4)=0
+      scr(5)=0
+      scr(6)=0
+      call contio(0,nout,nprnt,scr(1),nb,nw)
+      scr(1)=sb*npr
+      scr(2)=0
+      scr(3)=0
+      scr(4)=0
+      scr(5)=1
+      ndw=ntempr
       if (ndw == 1) ndw=2
-      scr[5]=ndw
-      scr[6]=ndw
-      scr[7]=2
+      scr(6)=ndw
+      scr(7)=ndw
+      scr(8)=2
       do i=1,ndw
-         if (i <= int(tempr.size())) {
+         if (i <= ntempr) {
             scr(2*i+7)=tempr(i)
             scr(2*i+8)=sigfig(dwpix(i),7,0)
          else
@@ -219,7 +205,7 @@ auto endout( std::vector<double> bragg, int nedge,
             scr(2*i+8)=scr(2*i+6)
          }
       }
-      call tab1io(0,nout,nprnt,scr[0],nb,nw)
+      call tab1io(0,nout,nprnt,scr(1),nb,nw)
       call asend(nout,nprnt)
    }
 
@@ -227,19 +213,19 @@ auto endout( std::vector<double> bragg, int nedge,
    if (iel >= 1) {
       mfh=7
       mth=2
-      scr[0]=za
-      scr[1]=awr
-      scr[2]=1
-      scr[3]=0
-      scr[4]=0
-      scr[5]=0
-      call contio(0,nout,nprnt,scr[0],nb,nw)
+      scr(1)=za
+      scr(2)=awr
+      scr(3)=1
+      scr(4)=0
+      scr(5)=0
+      scr(6)=0
+      call contio(0,nout,nprnt,scr(1),nb,nw)
 
       !--thin out the 1/e part at high energies.
       sum=0
       suml=0
-      w=dwpix[0]
-      if (nss > 0 and b7 == 0) w=(dwpix[0]+dwp1[0])/2
+      w=dwpix(1)
+      if (nss > 0 and b7 == 0) w=(dwpix(1)+dwp1(1))/2
       do j=1,nedge
          e=bragg(1+2*j-2)
          sum=sum+exp(-4*w*e)*bragg(1+2*j-1)
@@ -250,16 +236,16 @@ auto endout( std::vector<double> bragg, int nedge,
       }
 
       !--now output the records for each temperature
-      do i=1,int(tempr.size())
+      do i=1,ntempr
          if (i == 1) {
-            scr[0]=tempr(i)
-            scr[1]=0
-            scr[2]=int(tempr.size())-1
-            scr[3]=0
-            scr[4]=1
-            scr[5]=jmax
-            scr[6]=jmax
-            scr[7]=1
+            scr(1)=tempr(i)
+            scr(2)=0
+            scr(3)=ntempr-1
+            scr(4)=0
+            scr(5)=1
+            scr(6)=jmax
+            scr(7)=jmax
+            scr(8)=1
             ii=8
             jj=0
             j1=0
@@ -277,23 +263,23 @@ auto endout( std::vector<double> bragg, int nedge,
                scr(ii+jj-j1)=sigfig(scr(ii+jj-j1),7,0)
                if (j >= nedge or jj-j1 >= npage) {
                   if (ii >= 8) {
-                     call tab1io(0,nout,nprnt,scr[0],nb,nw)
+                     call tab1io(0,nout,nprnt,scr(1),nb,nw)
                      ii=0
                      j1=npage
                      idone=1
                   else
-                     call moreio(0,nout,nprnt,scr[0],nb,nw)
+                     call moreio(0,nout,nprnt,scr(1),nb,nw)
                      j1=j1+npage
                   }
                }
             }
          else
-            scr[0]=tempr(i)
-            scr[1]=0
-            scr[2]=2
-            scr[3]=0
-            scr[4]=jmax
-            scr[5]=0
+            scr(1)=tempr(i)
+            scr(2)=0
+            scr(3)=2
+            scr(4)=0
+            scr(5)=jmax
+            scr(6)=0
             ii=6
             jj=0
             j1=0
@@ -308,11 +294,11 @@ auto endout( std::vector<double> bragg, int nedge,
                scr(ii+jj-j1)=sigfig(scr(ii+jj-j1),7,0)
                if (j >= nedge or jj-j1 >= npage) {
                   if (ii >= 6) {
-                     call listio(0,nout,nprnt,scr[0],nb,nw)
+                     call listio(0,nout,nprnt,scr(1),nb,nw)
                      ii=0
                      j1=npage
                   else
-                     call moreio(0,nout,nprnt,scr[0],nb,nw)
+                     call moreio(0,nout,nprnt,scr(1),nb,nw)
                      j1=j1+npage
                   }
                }
@@ -321,77 +307,70 @@ auto endout( std::vector<double> bragg, int nedge,
       }
       call asend(nout,nprnt)
    }
-*/
 
-   // write inelastic part
-   mfh=7;
-   mth=4;
-   scr[0]=za;   // ZA
-   scr[1]=awr;  // AWR
-   scr[2]=0;   
-   scr[3]=lat;  // LAT
-   scr[4]=isym; // LASYM
-   scr[5]=0;   
-   //call contio(0,nout,nprnt,scr[0],nb,nw)
-   scr[0]=0; 
-   scr[1]=0;
-   scr[2]=0;    // LLN
-   if (ilog != 0) scr[2]=1;
-   scr[3]=0;
-   scr[4]=6;    // NI
-   if (nss > 0) scr[4]=6*(nss+1);
-   scr[5]=nss;  // NS (number of nonprincial scatterers)
-   scr[6]=npr*spr;                         // B(1) = M0f0
-   scr[7]=beta[beta.size()-1];             // B(2) = E/kbT
-   scr[8]=awr;                             // B(3) = A0
-   scr[9]=sigfig(therm*beta(nbeta),7,0);   // B(4) = Emax
-   scr[10]=0;                              // B(5)
-   scr[11]=npr;                            // B(6) = number principal 
+   !--write inelastic part
+   mfh=7
+   mth=4
+   scr(1)=za
+   scr(2)=awr
+   scr(3)=0
+   scr(4)=lat
+   scr(5)=isym
+   scr(6)=0
+   call contio(0,nout,nprnt,scr(1),nb,nw)
+   scr(1)=0
+   scr(2)=0
+   scr(3)=0
+   if (ilog != 0) scr(3)=1
+   scr(4)=0
+   scr(5)=6
+   if (nss > 0) scr(5)=6*(nss+1)
+   scr(6)=nss
+   scr(7)=npr*spr
+   scr(8)=beta(nbeta)
+   scr(9)=awr
+   scr(10)=sigfig(therm*beta(nbeta),7,0)
+   scr(11)=0
+   scr(12)=npr
    if (nss != 0) {
-      scr[12]=b7;                          // B(7) 
-      scr[13]=mss*sps;                     // B(8) = M1f1
-      scr[14]=aws;                         // B(9) = A1
-      scr[15]=0;                           // B(10)
-      scr[16]=0;                           // B(11)
-      scr[17]=mss;                         // B(12) = M1, number atoms 
+      scr(13)=b7
+      scr(14)=mss*sps
+      scr(15)=aws
+      scr(16)=0
+      scr(17)=0
+      scr(18)=mss
    }
-
-   //call listio(0,nout,nprnt,scr[0],nb,nw)
-   
-
-   scr[0]=0;     //  |-----------------------------------------------
-   scr[1]=0;     //  |  All these zeros are just part of the tab2 format
-   scr[2]=0;     //  |  described at the end of 7.4.1 of ENDF manual
-   scr[3]=0;     //  |-----------------------------------------------
-   scr[4]=1;     // NR
-   nbt=nbeta;
-   if (isym == 1 or isym == 3) nbt=2*nbeta-1;
-   scr[5]=nbt;   // NB = # Beta Values
-
-   scr[6]=nbt;   // NB = # Beta Values       |  These are just 
-   scr[7]=4;     // Second interp. value     |  interpolation values
-   //call tab2io(0,nout,nprnt,scr[0],nb,nw)
-
-   ii=0;
-   /*
+   call listio(0,nout,nprnt,scr(1),nb,nw)
+   scr(1)=0
+   scr(2)=0
+   scr(3)=0
+   scr(4)=0
+   scr(5)=1
+   nbt=nbeta
+   if (isym == 1 or isym == 3) nbt=2*nbeta-1
+   scr(6)=nbt
+   scr(7)=nbt
+   scr(8)=4
+   call tab2io(0,nout,nprnt,scr(1),nb,nw)
+   ii=0
    do i=1,nbt
-      do nt=1,int(tempr.size())
+      do nt=1,ntempr
          sc=1
          if (lat == 1) sc=therm/(bk*tempr(nt))
          if (nt == 1) {
-            scr[0]=tempr(nt)                           // TEMP
-            if (mod(isym,2) == 0) scr[1]=beta(i)
+            scr(1)=tempr(nt)
+            if (mod(isym,2) == 0) scr(2)=beta(i)
             if (mod(isym,2) == 1 and i < nbeta)&
-              scr[1]=-beta(nbeta-i+1)
-            if (mod(isym,2) == 1 and i >= nbeta)&      // ith Beta value
-              scr[1]=beta(i-nbeta+1)
-            be=scr[1]*sc
-            scr[2]=int(tempr.size())-1                 // LT
-            scr[3]=0                                   
-            scr[4]=1                                   // NR
-            scr[5]=nalpha                              // NP (# alpha)
-            scr[6]=nalpha                              // NP (# alpha)
-            scr[7]=4
+              scr(2)=-beta(nbeta-i+1)
+            if (mod(isym,2) == 1 and i >= nbeta)&
+              scr(2)=beta(i-nbeta+1)
+            be=scr(2)*sc
+            scr(3)=ntempr-1
+            scr(4)=0
+            scr(5)=1
+            scr(6)=nalpha
+            scr(7)=nalpha
+            scr(8)=4
             do j=1,nalpha
                scr(7+2*j)=alpha(j)
                if (isym == 0) {
@@ -491,24 +470,24 @@ auto endout( std::vector<double> bragg, int nedge,
                }
                if (ilog == 0 and scr(8+2*j) < smin) scr(8+2*j)=0
             }
-            call tab1io(0,nout,nprnt,scr[0],nb,nw)
+            call tab1io(0,nout,nprnt,scr(1),nb,nw)
             ll=1+nw
             do while (nb != 0)
                call moreio(0,nout,nprnt,scr(ll),nb,nw)
                ll=ll+nw
             }
          else
-            scr[0]=tempr(nt)
-            if (mod(isym,2) == 0) scr[1]=beta(i)
+            scr(1)=tempr(nt)
+            if (mod(isym,2) == 0) scr(2)=beta(i)
             if (mod(isym,2) == 1 and i < nbeta)&
-              scr[1]=-beta(nbeta-i+1)
+              scr(2)=-beta(nbeta-i+1)
             if (mod(isym,2) == 1 and i >= nbeta)&
-              scr[1]=beta(i-nbeta+1)
-            be=scr[1]*sc
-            scr[2]=4
-            scr[3]=0
-            scr[4]=nalpha
-            scr[5]=0
+              scr(2)=beta(i-nbeta+1)
+            be=scr(2)*sc
+            scr(3)=4
+            scr(4)=0
+            scr(5)=nalpha
+            scr(6)=0
             do j=1,nalpha
                if (isym == 0) {
                   if (ilog == 0) {
@@ -607,7 +586,7 @@ auto endout( std::vector<double> bragg, int nedge,
                }
                if (ilog == 0 and scr(6+j) < smin) scr(6+j)=0
             }
-            call listio(0,nout,nprnt,scr[0],nb,nw)
+            call listio(0,nout,nprnt,scr(1),nb,nw)
             ll=1
             do while (nb != 0)
                ll=ll+nw
@@ -617,17 +596,17 @@ auto endout( std::vector<double> bragg, int nedge,
       }
    }
    if (nss != 0 and b7 <= 0) {
-      scr[0]=0
-      scr[1]=0
-      scr[2]=0
-      scr[3]=0
-      scr[4]=1
-      ntf=int(tempr.size())
-      scr[5]=ntf
-      scr[6]=ntf
-      scr[7]=2
+      scr(1)=0
+      scr(2)=0
+      scr(3)=0
+      scr(4)=0
+      scr(5)=1
+      ntf=ntempr
+      scr(6)=ntf
+      scr(7)=ntf
+      scr(8)=2
       do i=1,ntf
-         if (i <= int(tempr.size())) {
+         if (i <= ntempr) {
             scr(2*i+7)=sigfig(tempr(i),7,0)
             scr(2*i+8)=sigfig(tempf1(i),7,0)
          else
@@ -635,19 +614,19 @@ auto endout( std::vector<double> bragg, int nedge,
             scr(2*i+8)=scr(2*i+6)
          }
       }
-      call tab1io(0,nout,nprnt,scr[0],nb,nw)
+      call tab1io(0,nout,nprnt,scr(1),nb,nw)
    }
-   scr[0]=0
-   scr[1]=0
-   scr[2]=0
-   scr[3]=0
-   scr[4]=1
-   ntf=int(tempr.size())
-   scr[5]=ntf
-   scr[6]=ntf
-   scr[7]=2
+   scr(1)=0
+   scr(2)=0
+   scr(3)=0
+   scr(4)=0
+   scr(5)=1
+   ntf=ntempr
+   scr(6)=ntf
+   scr(7)=ntf
+   scr(8)=2
    do i=1,ntf
-      if (i <= int(tempr.size())) {
+      if (i <= ntempr) {
          scr(2*i+7)=sigfig(tempr(i),7,0)
          scr(2*i+8)=sigfig(tempf(i),7,0)
       else
@@ -655,7 +634,7 @@ auto endout( std::vector<double> bragg, int nedge,
          scr(2*i+8)=scr(2*i+6)
       }
    }
-   call tab1io(0,nout,nprnt,scr[0],nb,nw)
+   call tab1io(0,nout,nprnt,scr(1),nb,nw)
    call asend(nout,nprnt)
    call afend(nout,nprnt)
    call amend(nout,nprnt)

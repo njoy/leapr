@@ -1,5 +1,5 @@
-//#include <Eigen/Dense>
-//#include <unsupported/Eigen/CXX11/Tensor>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include <iostream> 
 #include <iomanip>
 #include <vector>
@@ -7,11 +7,10 @@
 #include <tuple>
 #include <string>
 #include "contin/contin.h"
-//#include "trans/trans.h"
-//#include "discre/discre.h"
-//#include "coldh/coldh.h"
+#include "trans/trans.h"
+#include "discre/discre.h"
+#include "coldh/coldh.h"
 #include <time.h>
-#include <range/v3/all.hpp>
 
 
 auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
@@ -22,7 +21,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   double trans_weight, double diffusion_const, double tbeta, int nd, 
   std::vector<double> oscEnergies, std::vector<double> oscWeights, int nka, 
   double dka, std::vector<double> kappaVals ){
-
 
   double bk = 8.617385e-5;
   double therm = 0.0253;
@@ -45,6 +43,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   Eigen::Tensor<double,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
   Eigen::Tensor<double,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
   sym_sab_eigen.setZero();
+
 
   std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
 
@@ -71,13 +70,12 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
 
-
     //return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
       //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
       if ( trans_weight > 0.0 ){
-        //trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          //itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
+        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
       //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
@@ -86,18 +84,17 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         for ( size_t i = 0; i < oscEnergies.size(); ++i ){
           oscEnergiesWeights[i] = std::make_tuple(oscEnergies[i],oscWeights[i]);
         }
-        //discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
-          //beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
+        discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
+          beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
       //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
 
-
       if ( ncold != 0 ){
 	bool free = false;
-       // coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
-//	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab_eigen, 
-//	  sym_sab_2_eigen );
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, t_eff_vec, 
+	  scaling, alpha, beta, dka, kappaVals, nbeta, lat, free, sym_sab_eigen, 
+	  sym_sab_2_eigen );
       }
 
       //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
@@ -135,6 +132,5 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   std::cout << "\n\n\n " << std::endl;
 
   return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-
 }
 

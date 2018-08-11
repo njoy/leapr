@@ -83,7 +83,6 @@ TEST_CASE( "prepare parameters helper function" ){
       REQUIRE( beta[i] == Approx(betan[i]).epsilon(1e-6) ); 
     }  // because sc = 1.0 betan doesn't get scaled
 
-    */
   } // GIVEN
 } // TEST CASE
 

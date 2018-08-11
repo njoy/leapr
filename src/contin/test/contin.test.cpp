@@ -8,7 +8,6 @@ void checkSabLambdaTeff( const std::vector<double>& correctSab,
     const Eigen::Tensor<double,3>& sab,  
     const double& lambda, const double& teff, const double& tol ){
 
-
   REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
 
   int l = 0;
@@ -30,6 +29,7 @@ TEST_CASE( "contin eigen" ){
   int ntempr, nphon, itemp;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
+  std::tuple<double,double> output;
 
   GIVEN( "input values from input card and leapr subroutine" ){
     ntempr = 1; nphon = 3; itemp = 0;
@@ -40,16 +40,11 @@ TEST_CASE( "contin eigen" ){
 
 
     WHEN( "3rd order expansion, with alpha & beta vals scaled by 0.0253/tev" ){
-      auto symSab = ranges::view::generate_n([alpha,beta](){return 
-                    ranges::view::generate_n([beta](){return 0.0;},int(beta.size()));},int(alpha.size()));
-      //RANGES_FOR( auto entry,symSab) { std::cout << entry << std::endl;}
-      //Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
 
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
-
           alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
@@ -66,11 +61,9 @@ TEST_CASE( "contin eigen" ){
           7.638863877E-5, 9.036457859E-5, 1.043405184E-4, 1.322923980E-4, 
           1.881961573E-4};
         checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
-
       } // THEN
     } // WHEN
 
-    /*
     WHEN( "6th order exp, alpha & beta vals scaled, and small grid space" ){
       nphon = 6; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
@@ -78,7 +71,7 @@ TEST_CASE( "contin eigen" ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
-      auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
@@ -101,7 +94,7 @@ TEST_CASE( "contin eigen" ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
-      auto output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
         alpha, beta, symSab );
 
       THEN( "contin output matches expected value" ){
@@ -117,7 +110,6 @@ TEST_CASE( "contin eigen" ){
         checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
       } // THEN
     } // WHEN
-*/
   } // GIVEN 
 
 
