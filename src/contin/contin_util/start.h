@@ -2,8 +2,9 @@
 #include "contin/contin_util/start_util/fsum.h"
 #include <range/v3/all.hpp>
 
-template <typename T, typename V>
-auto start( const V& p, T& delta, const T& tev, const T& tbeta ){
+template <typename A, typename F>
+auto start( A& p, F& delta, const F& tev, const F& tbeta ){
+
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -30,7 +31,7 @@ auto start( const V& p, T& delta, const T& tev, const T& tbeta ){
    *
    */
 
-  delta = delta / tev; // make delta is unitless (leapr.f90 calls this deltab)
+  delta /= tev; // make delta is unitless (leapr.f90 calls this deltab)
 
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.

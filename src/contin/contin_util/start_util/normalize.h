@@ -1,7 +1,8 @@
 #include "contin/contin_util/start_util/fsum.h"
-#include <range/v3/all.hpp> 
-template <typename T, typename V>
-auto normalize( V& p, const T& delta_b, const T& tbeta ){
+
+template <typename F, typename A>
+void normalize( A& p, const F& delta_b, const F& tbeta ){
+
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
    * equation that is being normalized to integrate to tbeta. 
    *
@@ -25,8 +26,11 @@ auto normalize( V& p, const T& delta_b, const T& tbeta ){
    * * P(beta) is amended
    */
 
-  T sum = fsum( 1, p, 0.5, delta_b ) / tbeta; 
-  return p | ranges::view::transform( [sum](T entry){ return entry / sum; } );
+  F sum = fsum( 1, p, 0.5, delta_b ) / tbeta; 
+  for ( auto& entry : p ){
+    entry = entry / sum;
+  } 
+}
 
 }
 

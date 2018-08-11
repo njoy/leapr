@@ -2,27 +2,12 @@
 #include <vector>
 #include <range/v3/all.hpp>
 
-template <typename floatT>
-floatT cutoff( floatT a ){ return a < 1.0e-30 ? 0.0 : a; }
+template <typename F>
+F cutoff( F a ){ return a < 1.0e-30 ? 0.0 : a; }
 
-/*
-auto generateTuples(int i){
-  bool even = i%2 == 0;
-  std::vector<std::tuple<int>> tuples(15);
-  if (even){
-    int maxDigits = i+1;
-    auto smallerEvens = ranges::view::iota(0,i/2+1) 
-                      | ranges::view::transform([](auto i){return 2*i;});
-    int counter = 0;
-    RANGES_FOR( int i, smallerEvens ){ tuples[counter++] = {i}; }
-    auto smallerNums = ranges::view::iota(0,i+1);
-    std::tuple<int> smallerNumTuple;
-    //RANGES_FOR( int i, smallerNums  ){ std::tuple_cat(
-    //tuples[counter++] = std::make_tuple(smallerNums);
-    
-  }
-}
-*/
+template <typename F, typename A>
+auto bfact( const F& x, const F& dwc, const F& beta_i, A& bplus, A& bminus ){
+
 
 template <typename f, typename arrayT>
 auto bfact( const f& x, const f& dwc, const f& beta_i, arrayT& bplus, 
@@ -43,10 +28,8 @@ auto bfact( const f& x, const f& dwc, const f& beta_i, arrayT& bplus,
    * The dwc vector is populated with entries of dwc[i] = alpha * lambda_i,
    * where lambda_i was calculated in prepareParams.h according to Eq. 538.
    */
- 
-  f I0;
-  f I1, expVal;
-  f y = x / 3.75;
+    
+  F I0, I1, expVal, y = x / 3.75;
 
   // I_0(x) and I_1(x) are computed first, and then reverse recursion is used
   // to get the rest of the terms (check out numerical recipes for more info).
@@ -55,9 +38,10 @@ auto bfact( const f& x, const f& dwc, const f& beta_i, arrayT& bplus,
   if ( y <= 1.0 ){
 
     // Compute I0 and I1 via series expansion (manual pg. 714 top)
-    f I1C[7] = { 4.5813e-3, 0.0360768, 0.2659732, 1.2067492, 3.0899424, 
+    F I1C[7] = { 4.5813e-3, 0.0360768, 0.2659732, 1.2067492, 3.0899424, 
                  3.5156229, 1.0 };
-    f I2C[7] = { 3.2411e-4, 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 
+    F I2C[7] = { 3.2411e-4, 3.0153e-3, 0.02658733, 0.15084934, 0.51498869, 
+
                  0.87890594, 0.5};
 
     auto yVec = ranges::view::iota(0,7) 
@@ -77,10 +61,11 @@ auto bfact( const f& x, const f& dwc, const f& beta_i, arrayT& bplus,
   if ( y > 1.0 ) {
 
     // Compute I0 and I1 via series expansion (manual pg. 714 top)
-    f I1C[9] = { 0.00392377, -0.01647633, 0.02635537, -0.02057706, 
+    F I1C[9] = { 0.00392377, -0.01647633, 0.02635537, -0.02057706, 
       0.00916281, -0.00157565, 0.00225319, 0.01328592, 0.39894228 };
 
-    f I2C[9] = { -0.00420059, 0.01787654, -0.02895312, 0.02282967, 
+    F I2C[9] = { -0.00420059, 0.01787654, -0.02895312, 0.02282967, 
+
       -0.01031555, 0.00163801, -0.00362018, -0.03988024, 0.39894228 };
 
     auto yVec = ranges::view::iota(0,9) 

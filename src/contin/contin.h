@@ -2,16 +2,13 @@
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
-//#include <unsupported/Eigen/CXX11/Tensor>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
-
-template <typename floatT, typename arrayT, typename rangeT>
-auto contin( const int itemp, const int nphon, floatT& delta, 
-  const floatT& tbeta, const floatT& scaling, const floatT& tev, 
-  const floatT& sc, arrayT t1, const arrayT& alpha, const arrayT& beta, 
-  rangeT symSab
-  /*Eigen::Tensor<floatT,3>& symSab*/ ){
+template <typename A, typename F>
+auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
+  const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
+  const A& beta, Eigen::Tensor<F,3>& symSab ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -52,27 +49,28 @@ auto contin( const int itemp, const int nphon, floatT& delta,
   // also change delta --> delta / tev where tev is temperature in eV. 
   // leapr.f90 calls this deltab
     
-  auto startTuple = start( t1, delta, tev, tbeta );
-  floatT lambda_s = std::get<0>(startTuple),
-         t_eff    = std::get<1>(startTuple);
-  auto   T1_Range = std::get<2>(startTuple);
+  auto lambda_s_t_eff = start( t1, delta, tev, tbeta );
+  F lambda_s = std::get<0>(lambda_s_t_eff),
+    t_eff    = std::get<1>(lambda_s_t_eff);
 
-  t1 = T1_Range | ranges::to_vector;
-  std::vector<double> xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
+  A xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
+
     tlast(nphon*t1.size(),0.0);
 
+
   size_t npn = t1.size();
-  std::copy( t1.begin(), t1.begin() + npn, tlast.begin() );
-  std::copy( t1.begin(), t1.begin() + npn, tnow.begin() );
+  size_t np = t1.size();
+//  std::copy( t1.begin(), t1.begin() + npn, tlast.begin() );
+//  std::copy( t1.begin(), t1.begin() + npn, tnow.begin() );
+  std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
+  std::copy( t1.begin(), t1.begin() + np, tnow.begin() );
 
   // This will populate tlast and tnow with blocks, each the same size as t1,
   // corresponding to each order of phonon expansion (nphon). npn is used to 
   // track which block we're at. So we start out with the size of t1, then it
   // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
-  std::cout << T1_Range << std::endl;
-  
-  floatT add, exx;
+  F add, exx;
 
   // To be used when checking moments of S(a,b)
   std::vector<int> maxt (1000, 0);
@@ -85,37 +83,41 @@ auto contin( const int itemp, const int nphon, floatT& delta,
   // subsequent iterations, because all subsequent iterations require
   // convolution with the one before it. This is following Eq. 526
   
+  int npl = np;
+
   for( int n = 0; n < nphon; ++n ){
-
-    // Convolve T_n with T_n-1 (Eq. 526)
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
-
-    for( size_t a = 0; a < alpha.size(); ++a ){
+    //std::cout << n << "    " << np << "    " << npl << "    " << npn << std::endl;
+    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
+    //if ( n > 0 ){
+    //for ( auto entry : tnow ){ std::cout << std::setprecision(16) << entry << std::endl; }
+    //return lambda_s_t_eff;
+   // }
+   
+    for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
       exx = -lambda_s * alpha[a] * scaling + xa[a];
-      if ( exx <= -250.0 ){ continue; }
-      exx = exp(exx);
 
-      auto addRanges = beta 
-                     | ranges::view::transform([exx,tnow,delta,sc](auto beta){
-                         return exx*interpolate(tnow,delta,beta*sc); }) 
-                     | ranges::view::transform([](auto entry){ 
-                         return entry < 1e-30 ? 0.0 : entry; });
-      
-      for( size_t b = 0; b < beta.size(); ++b ){
+      //if ( exx <= -250.0 ){ continue; }
+      if ( exx <= -250.0 ){ exx = 0.0; }
+      else { exx = exp(exx); }
+        
+      for( int b = 0; b < int(beta.size()); ++b ){
+
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         /*
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
         if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
-          if ( add > symSab(a,b,itemp)/1000.0 and int(a) < maxt[b] ){ maxt[b] = a; }
+          if (add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
         } 
+
         */
 
       } // for b in beta
     } // for a in alpha
 
+    npl = npn;
     if ( n > 0 ){
       // tnow and tlast will be populated with nphon-many iterations of t1 info,
       // so npn here is being pushed forward by t1 length so that we can get
@@ -123,9 +125,12 @@ auto contin( const int itemp, const int nphon, floatT& delta,
       npn += t1.size() - 1;
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
+    else { 
+      npn += t1.size() - 1;
+    }
   } // for n in nphon (maxn in leapr.f90) 
 
-  double arat = sc/scaling;
+  F arat = sc/scaling;
   checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   return startTuple;

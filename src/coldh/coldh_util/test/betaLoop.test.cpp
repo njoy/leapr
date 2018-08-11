@@ -14,10 +14,7 @@ void checkSab( const Eigen::Tensor<double,3>& sab,
   int l = 0;
   for ( int i = 0; i < sab.dimension(0); ++i ){
     for ( int j = 0; j < sab.dimension(1); ++j ){
-      for ( int k = 0; k < sab.dimension(2); ++k ){
-        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-6) );
-	l += 1;
-      }
+      REQUIRE( sab(i,j,0) == Approx(correctSab[l++]).epsilon(1e-6) );
     }
   }
 }
@@ -42,11 +39,11 @@ auto populateSymSab( int a_size, int b_size, bool is_normal ){
   int k = 1;
   for ( int i = 0; i < sab.dimension(0); ++i ){
     for ( int j = 0; j < sab.dimension(1); ++j ){
-      if ( is_normal ){ sab(i,j,0) = i; }
+      if ( is_normal ){ sab(i,j,0) = k++; }
       else {sab(i,j,0) = 0; }
-      k += 1;
     }
   }
+
   return sab;
 }
 */

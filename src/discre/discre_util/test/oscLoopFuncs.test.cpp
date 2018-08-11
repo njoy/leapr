@@ -35,6 +35,7 @@ TEST_CASE( "negative n terms loop" ){
       }
     } // THEN
   } // GIVEN
+ /*
 
   GIVEN( "other inputs" ){
     std::fill( wts.begin(), wts.end(), 0.0 );
@@ -170,7 +171,9 @@ TEST_CASE( "oscillator loop" ){
 
     } // THEN
   } // GIVEN
+  */
 } // TEST CASE
+
 
 
 

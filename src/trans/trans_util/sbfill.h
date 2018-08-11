@@ -112,21 +112,25 @@ void sbfill(arrayT& sb, int nbt, floatT delta, floatT be, arrayT& s,
       // right of j - 1 (farthest left point, 0), then I know that my point 
       // has to be at 0. So for those latter two cases, I found the correct
       // index location and I have found the correct range.
-      if ( b <= betan[j] and  b < betan[j-1] and j > 1 ){ --j; }
-    }  
-    while (
-         (b >  betan[j] or ( b < betan[j-1] and j > 1 ) ) and 
-         (b <= betan[j] or ( j+1 != betan.size() ) ) 
-    );
-    
-    // If not in desired range
-    if ( (b > betan[j] and ( j+1!=betan.size() or b >= 1.00001*betan[j]) ) ){
-      sb[i] = 0; 
-    }
-    // If in desired range
-    else { 
-      floatT current = s[j]   < 0 ? slim : log( s[j]   );
-      floatT toLeft  = s[j-1] < 0 ? slim : log( s[j-1] );
+      else {              
+        if ( b < betan[j-1] and j > 1 ){
+          j = j - 1;
+        }
+        else {
+          indexInRange = true;
+          foundRange = true;
+        } 
+      } // desired value is to the left
+    } // have you narrowed down to correct range
+
+    // Interpolate in this range
+    if ( indexInRange ){
+
+      // Don't take the log of a negative number
+      current = s[j]   <= 0 ? slim : log( s[j]   );
+      toLeft  = s[j-1] <= 0 ? slim : log( s[j-1] );
+
+
       sb[i] = current + (b-betan[j])*(toLeft-current)/(betan[j-1]-betan[j]);
       if (bet > 0) { sb[i] = sb[i] - bet; }
       if ( sb[i] > slim ){ sb[i] = exp(sb[i]); }

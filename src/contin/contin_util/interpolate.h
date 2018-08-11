@@ -1,6 +1,7 @@
 
-template<typename T, typename V>
-T interpolate( const V& y, const T& delta, const T& x ){
+template <typename F, typename A>
+double interpolate( const A& y, const F& delta, const F& x ){
+
   /* Inputs
    * ------------------------------------------------------------------------
    * y     : evenly spaced vector to be interpolated
