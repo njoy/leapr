@@ -86,12 +86,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   int npl = np;
 
   for( int n = 0; n < nphon; ++n ){
-    //std::cout << n << "    " << np << "    " << npl << "    " << npn << std::endl;
     if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
-    //if ( n > 0 ){
-    //for ( auto entry : tnow ){ std::cout << std::setprecision(16) << entry << std::endl; }
-    //return lambda_s_t_eff;
-   // }
    
     for( int a = 0; a < int(alpha.size()); ++a ){
       xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );

@@ -70,14 +70,10 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
 
-    //return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
-
       if ( trans_weight > 0.0 ){
         trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
-      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
 
       if ( oscEnergies.size() > 0 ){
         std::vector<std::tuple<double,double>> oscEnergiesWeights(oscEnergies.size());
@@ -87,8 +83,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
         discre( itemp, sc, scaling, tev, lambda_s, trans_weight, tbeta, alpha,
           beta, temp_vec, oscEnergiesWeights, t_eff_vec, sym_sab_eigen );
       }
-      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
-
 
       if ( ncold != 0 ){
 	bool free = false;
@@ -97,7 +91,6 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
 	  sym_sab_2_eigen );
       }
 
-      //std::cout << std::setprecision(15) << sym_sab_eigen(58,58,0) << std::endl;
     }
     done = true;
   }

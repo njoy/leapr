@@ -23,6 +23,7 @@ auto checkMoments( const F& sc, const A& alpha, const A& beta,
         //int jprt=(b)%nbint+1;               // This doesn't seem to do
         //if (b == beta.size()-1) jprt=1;     // anything
         be = beta[b]*sc;
+
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
         if (a+1 >= maxt[b]) {
