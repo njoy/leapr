@@ -30,20 +30,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   double arat  = 1.0; // This is for scaling alpha and beta values later
   bool done = false;
 
-
-  //std::vector<std::vector<std::vector<double>>> sym_sab( alpha.size(),
-  //  std::vector<std::vector<double>> (beta.size(), 
-  //  std::vector<double> ( ntempr, 0.0 ) ) );
-
-  // This is only going to be used by coldh
-  //std::vector<std::vector<std::vector<double>>> sym_sab_2( alpha.size(),
-  //  std::vector<std::vector<double>> (beta.size(), 
-  //  std::vector<double> ( ntempr, 0.0 ) ) );
-
   Eigen::Tensor<double,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
   Eigen::Tensor<double,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
   sym_sab_eigen.setZero();
-
 
   std::vector<double> t_eff_vec ( temp_vec.size(), 0.0 );
 

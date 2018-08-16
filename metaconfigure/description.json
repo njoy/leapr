@@ -368,6 +368,7 @@
   },
   "header files": [
     "src/copys.h",
+    "src/testFuncs.h",
     "src/contin/contin.h",
     "src/contin/contin_util/convol.h",
     "src/contin/contin_util/checkMoments.h",
@@ -394,6 +395,7 @@
     "src/coher/coher_util/hexLatticeFactors.h",
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
+    "src/cdf/cdf.h",
     "src/skold/skold.h",
     "src/skold/skold_util/terp1.h",
     "src/coldh/coldh.h",
@@ -428,6 +430,9 @@
   "strict": true,
   "test pattern": "test$",
   "tests": {
+    "cdf": [
+      "src/cdf/test/cdf.test.cpp"
+    ],
     "coher": [
       "src/coher/test/coher.test.cpp"
     ],
