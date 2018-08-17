@@ -37,7 +37,7 @@ void checkPartofSab( int aInit, int aFinal, int bInit, int bFinal,
 
 
 TEST_CASE( "leapr" ){
-  int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, nalpha, nbeta, 
+  int nout, ntempr, iprint, nphon, mat, npr, iel, ncold, nss, 
       lat, ni, nd, nka;
   //int mss;
   double sps, b7, za, awr, spr, aws, delta, twt, c, tbeta, dka;
@@ -54,7 +54,8 @@ TEST_CASE( "leapr" ){
     awr    = 0.99917; spr    = 20.449; npr   = 2;   iel = 0;   ncold = 0; // Card 5
     nss    = 1;       b7     = 1.;     aws   = 1.1; sps = 3.8883; //mss = 1; 
                                                                      // Card 6
-    nalpha = 5;       nbeta  = 7;      lat   = 1;                // Card 7
+    //nalpha = 5;       nbeta  = 7;      lat   = 1;                // Card 7
+    lat   = 1;                // Card 7
     alpha = { 0.01008, 0.015, 0.0252, 0.033, 0.050406 };        // Card 8
     beta  = { 0.0, 0.006375, 0.01275, 0.0255, 0.03825, 0.051, 0.06575 }; // Card 9
     temp  = { 296.0 };                                          // Card 10 
@@ -76,7 +77,7 @@ TEST_CASE( "leapr" ){
     kappa  = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
-        spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
+        spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
         temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
         oscW, nka, dka, kappa );
 
@@ -100,7 +101,8 @@ TEST_CASE( "leapr" ){
     mat    = 1;       za     = 1001.0;                                // Card 4
     awr    = 0.99917; spr    = 20.478;  npr   = 2;  iel = 0;   ncold = 0;
     nss    = 1;       b7     = 1.0;   aws = 15.85316;   sps = 3.8883; // Card 6
-    nalpha = 65;      nbeta  = 75;    lat   = 1;                      // Card 7
+    //nalpha = 65;      nbeta  = 75;    lat   = 1;                      // Card 7
+    lat   = 1;                      // Card 7
     alpha = { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 0.100812, 0.151218,
       0.201624, 0.25203, 0.302436, 0.352842, 0.403248, 0.453654, 0.50406, 
       0.554466, 0.609711, 0.670259, 0.736623, 0.809349, 0.889061, 0.976435, 
@@ -137,7 +139,7 @@ TEST_CASE( "leapr" ){
     kappa    = { };                             // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
-        spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
+        spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
         temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
         oscW, nka, dka, kappa );
 
@@ -192,7 +194,8 @@ TEST_CASE( "leapr" ){
     double smin = 2.0e-38;                                           // Card 4
     awr    = 0.99917; spr   = 20.478; npr = 2;   iel = 0; ncold = 2; // Card 5
     nss    = 0;       b7    = 0.0;    aws = 0.0; sps = 0.0;          // Card 6
-    nalpha = 59;      nbeta = 105;    lat = 0;                       // Card 7
+    //nalpha = 59;      nbeta = 105;    lat = 0;                       // Card 7
+    lat = 0;                       // Card 7
     alpha = { 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5, 
     0.7, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50, 
     60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 
@@ -253,7 +256,7 @@ TEST_CASE( "leapr" ){
     1.0031, 1.0024, 1.0016, 1.0009, 1.0001, 0.9994 };      // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out), 
@@ -298,7 +301,8 @@ TEST_CASE( "leapr" ){
     // double smin = 2.0e-38;                                       // Card 4
     awr    = 8.93478; spr   = 6.15; npr = 1;   iel = 2; ncold = 0; // Card 5
     nss    = 0;       b7    = 0.0;    aws = 0.0; sps = 0.0;          // Card 6
-    nalpha = 90;      nbeta = 103;    lat = 1;                       // Card 7
+    //nalpha = 90;      nbeta = 103;    lat = 1;                       // Card 7
+    lat = 1;                       // Card 7
     alpha = { 0.01008, 0.01500, 0.02520, 0.03300, 0.05040, 0.07560, 0.10080, 
               0.15000, 0.25203, 0.33000, 0.50406, 0.75609, 1.00812, 1.26015, 
               1.51218, 1.76421, 2.01624, 2.26827, 2.52030, 2.77233, 3.02436, 
@@ -343,7 +347,7 @@ TEST_CASE( "leapr" ){
     kappa = { };      // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out), 
@@ -388,7 +392,8 @@ TEST_CASE( "leapr" ){
     // double smin = 2.0e-38;                                       // Card 4
     awr    = 8.93478; spr   = 6.15; npr = 1;   iel = 3; ncold = 0; // Card 5
     nss    = 1;       b7    = 0.0;    aws = 15.858; sps = 3.7481; int mss = 1;          // Card 6
-    nalpha = 90;      nbeta = 117;    lat = 1;                       // Card 7
+    //nalpha = 90;      nbeta = 117;    lat = 1;                       // Card 7
+    lat = 1;                       // Card 7
     alpha = { 0.01008, 0.015, 0.0252, 0.033, 0.0504, 0.0756, 0.1008, 0.15, 0.252, 
     0.33, 0.504, 0.756, 1.008, 1.260, 1.512, 1.764, 2.016, 2.268, 2.520, 2.772, 
     3.024, 3.282, 3.544, 3.813, 4.087, 4.366, 4.652, 4.943, 5.241, 5.545, 5.855, 
@@ -425,7 +430,7 @@ TEST_CASE( "leapr" ){
     kappa = { };      // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out), 
@@ -465,7 +470,8 @@ TEST_CASE( "leapr" ){
     // double smin = 2.0e-38;                                       // Card 4
     awr    = 11.898; spr = 4.7392; npr = 1; iel = 1; ncold = 0; // Card 5
     nss    = 0;      b7  = 0.0;    aws = 0; sps = 0; int mss = 0;          // Card 6
-    nalpha = 72;     nbeta = 96;   lat = 1;                       // Card 7
+    //nalpha = 72;     nbeta = 96;   lat = 1;                       // Card 7
+    lat = 1;                       // Card 7
     alpha = { 0.01008, 0.015, 0.0252, 0.033, 0.0504, 0.0756, 0.1008, 0.15, 
     0.25203, 0.33, 0.50406, 0.75609, 1.00812, 1.26015, 1.51218, 1.76421, 
     2.01624, 2.27331, 2.53552, 2.80297, 3.07577, 3.35401, 3.6379, 3.92733, 
@@ -501,7 +507,7 @@ TEST_CASE( "leapr" ){
     kappa = { };                        // Card 18
 
     auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out), 
@@ -541,7 +547,8 @@ TEST_CASE( "leapr" ){
     // double smin = 2.0e-38;                                       // Card 4
     awr    = 0.99917; spr = 20.478; npr = 1; iel = -1; ncold = 0;    // Card 5
     nss    = 0;       b7  = 0.0;    aws = 0; sps = 0; int mss = 0;  // Card 6
-    nalpha = 48;      nbeta = 200;  lat = 1;                        // Card 7
+    //nalpha = 48;      nbeta = 200;  lat = 1;                        // Card 7
+    lat = 1;                        // Card 7
     alpha = { 0.504060, 1.00812, 1.51218, 2.01624, 2.52030, 3.02436, 3.52842, 
     4.03248, 4.53654, 5.04060, 5.60867, 6.24893, 6.97044, 7.78359, 8.69997, 
     9.73279, 10.8968, 12.2083, 13.6872, 15.3526, 17.2308, 19.3468, 21.7320, 
@@ -593,7 +600,7 @@ TEST_CASE( "leapr" ){
     kappa = { };                        // Card 18
 
     auto out1 = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out1);
@@ -631,7 +638,8 @@ TEST_CASE( "leapr" ){
     // double smin = 2.0e-38;                                       // Card 4
     awr    = 90.436; spr = 6.20; npr = 1; iel = 0; ncold = 0;    // Card 5
     nss    = 0;       b7  = 0.0;    aws = 0; sps = 0; int mss = 0;  // Card 6
-    nalpha = 40;      nbeta = 118;  lat = 1;                        // Card 7
+    //nalpha = 40;      nbeta = 118;  lat = 1;                        // Card 7
+    lat = 1;                        // Card 7
     alpha = { 0.00556996, 0.0111397, 0.0167096, 0.0222794, 0.0278503, 0.0334202, 0.0389900, 0.0445599, 0.0501297, 0.0556996, 0.0619772, 0.0690520, 0.0770243, 0.0860107, 0.0961362, 0.107546, 0.120410, 0.134906, 0.151248, 0.169646, 0.190403, 0.213782, 0.240144, 0.269843, 0.303323, 0.341047, 0.383559, 0.431475, 0.485480, 0.546340, 0.614923, 0.692215, 0.779327, 0.877507, 0.988159, 1.11286, 1.25339, 1.41177, 1.59021, 1.79143 };                                // Card 8
     beta = { 0.0, 0.0988350, 0.197672, 0.296508, 0.395344, 0.434872, 0.474411, 0.513939, 0.553478, 0.593016, 0.632545, 0.672083, 0.711611, 0.751150, 0.790678, 0.830217, 0.869755, 0.909284, 0.948822, 0.988350, 1.02788, 1.06740, 1.10691, 1.14653, 1.18605, 1.22557, 1.26509, 1.34412, 1.42326, 1.50230, 1.58134, 1.66047, 1.73951, 1.81855, 1.89768, 1.97672, 2.05576, 2.13479, 2.21393, 2.29297, 2.37200, 2.45114, 2.53018, 2.60921, 2.76739, 2.92556, 3.08364, 3.24181, 3.39988, 3.55805, 3.71623, 3.87430, 3.95344, 4.34872, 4.74411, 5.13939, 5.53478, 5.93016, 6.32545, 6.72083, 7.11611, 7.51150, 7.90678, 8.30217, 8.69755, 9.09283, 9.48822, 9.88350, 10.2788, 10.6740, 11.0691, 11.4653, 11.8605, 12.2557, 12.6509, 13.0461, 13.4412, 13.8364, 14.2326, 14.6278, 15.0230, 15.4182, 15.8134, 16.2085, 16.6047, 16.9999, 17.3951, 17.7903, 18.1855, 18.5806, 18.9768, 19.3720, 19.7672, 20.5576, 21.3479, 22.1393, 22.9297, 23.7200, 24.5114, 25.3018, 26.0921, 26.8835, 27.6739, 28.4642, 29.2556, 30.0460, 30.8363, 31.6277, 32.4181, 33.2085, 33.9988, 34.7902, 35.5806, 36.3709, 37.1623, 37.9527, 38.7430, 39.5344 }; // Card 9
     temp   = { 296.0 };                  // Card 10 
@@ -645,7 +653,7 @@ TEST_CASE( "leapr" ){
     kappa = { };                        // Card 18
 
     auto out1 = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, spr, 
-      npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, temp, delta, 
+      npr, iel, ncold, nss, aws, lat, alpha, beta, temp, delta, 
       ni, rho, twt, c, tbeta, nd, oscE, oscW, nka, dka, kappa );
   
     double lambda_s = std::get<0>(out1);

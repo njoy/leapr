@@ -43,7 +43,7 @@ auto populateSymSab( const std::vector<double>& alpha,
 TEST_CASE( "coldh" ){
   std::vector<double> tempf, alpha, beta, ska, goodSymSab(25), goodSymSab2(25);
   double temp, tev, tbeta, trans_weight, scaling, dka;
-  int itemp, ncold, nbeta, lat;
+  int itemp, ncold, lat;
   bool free;
 
   tempf = {193093.99765}; 
@@ -53,7 +53,7 @@ TEST_CASE( "coldh" ){
 
   temp = 200.0, tev = 1.723477e-2, tbeta = 2.0, trans_weight = 0.3, scaling = 1;
 
-  itemp = 0, ncold = 1, nbeta = 5, lat = 3;
+  itemp = 0, ncold = 1, lat = 3;
 
   auto sym_sab   = populateSymSab( alpha, beta, true );
   auto sym_sab_2 = populateSymSab( alpha, beta, false );
@@ -77,7 +77,7 @@ TEST_CASE( "coldh" ){
 
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling, 
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -101,7 +101,7 @@ TEST_CASE( "coldh" ){
 
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -111,7 +111,7 @@ TEST_CASE( "coldh" ){
 
         THEN( "output scattering law vectors are correct" ){
           coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-            alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+            alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
           checkSab( sym_sab, goodSymSab );
          checkSab( sym_sab_2, goodSymSab2 );
         } // THEN
@@ -135,7 +135,7 @@ TEST_CASE( "coldh" ){
 
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -162,7 +162,7 @@ TEST_CASE( "coldh" ){
 
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -187,7 +187,7 @@ TEST_CASE( "coldh" ){
     
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -212,7 +212,7 @@ TEST_CASE( "coldh" ){
     
       THEN( "output scattering law vectors are correct" ){
         coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
       } // THEN
@@ -236,7 +236,7 @@ TEST_CASE( "coldh" ){
       
     
       coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
-          alpha, beta, dka, ska, nbeta, lat, free, sym_sab, sym_sab_2 );
+          alpha, beta, dka, ska, lat, free, sym_sab, sym_sab_2 );
         checkSab( sym_sab, goodSymSab );
         checkSab( sym_sab_2, goodSymSab2 );
  

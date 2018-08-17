@@ -9,7 +9,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     double trans_weight, double tbeta, const std::vector<double>& tempf,
     double scaling, 
     const std::vector<double>& alpha, const std::vector<double>& beta, 
-    double& dka, std::vector<double>& ska, int nbeta, int lat, bool free, 
+    double& dka, std::vector<double>& ska, int lat, bool free, 
     Eigen::Tensor<double,3>& sym_sab,
     Eigen::Tensor<double,3>& sym_sab_2 ){
   /* Convolve current scattering law with discrete rotational modes for ortho
@@ -30,7 +30,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
   int nbx, maxbb = 2 * beta.size() + 1;
 
 
-  std::vector<double> exb(maxbb, 0.0), betan(nbeta, 0.0), bex(maxbb, 0.0), 
+  std::vector<double> exb(maxbb, 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
     rdbex(maxbb, 0.0);
  
 
@@ -125,7 +125,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     // prepare arrays for sint
     
    if (a == 0){ 
-      for ( int b = 0; b < nbeta; ++b ){
+      for ( int b = 0; b < int(beta.size()); ++b ){
           double be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
           exb[b] = exp(-be);

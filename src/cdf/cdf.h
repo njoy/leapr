@@ -129,8 +129,8 @@ int cdf(){
     kappa    = { };                             // Card 18
 
 
-    auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
-        spr, npr, iel, ncold, nss, aws, nalpha, nbeta, lat, alpha, beta, 
+    auto out = leaprWaterSpecific( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+        spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
         temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
         oscW, nka, dka, kappa );
 
@@ -140,7 +140,7 @@ int cdf(){
 
     for ( int i = 0; i < int(beta.size()); ++i ){ 
       //std::cout << beta[i] << "           " << calc_eq_14(i,ssm) << std::endl;
-      std::cout << calc_eq_16(i,ssm) << std::endl;
+      //std::cout << calc_eq_16(i,ssm) << std::endl;
     }
     std::cout << std::endl;
 
