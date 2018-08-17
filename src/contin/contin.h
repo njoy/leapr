@@ -93,7 +93,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
       exx = -lambda_s * alpha[a] * scaling + xa[a];
 
-      //if ( exx <= -250.0 ){ continue; }
+      if ( exx <= -250.0 ){ continue; }
       if ( exx <= -250.0 ){ exx = 0.0; }
       else { exx = exp(exx); }
         
@@ -113,6 +113,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       // so npn here is being pushed forward by t1 length so that we can get
       // to the next block of vector
       npn += t1.size() - 1;
+      if ( npn >= tlast.size() ){ return lambda_s_t_eff; }
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
     else { 

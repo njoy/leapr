@@ -529,7 +529,6 @@ TEST_CASE( "leapr" ){
     REQUIRE( 0.6675520 == Approx(lambda_s).epsilon(1e-6) ); 
   } // GIVEN 
   
-  /*
   GIVEN( "H in ZrH (pg 75 of NEW THERMAL NEUTRON SCATTERING FILES FOR "
     "ENDF/B-VI RELEASE 2 by R.E. MacFarlane, 1994, available at "
     "https://t2.lanl.gov/nis/publications/thermal.pdf" ) {
@@ -663,5 +662,4 @@ TEST_CASE( "leapr" ){
  
     // REQUIRE( 0.21630210 == Approx(lambda_s).epsilon(1e-6) ); 
   } // GIVEN 
-  */
 } // TEST CASE

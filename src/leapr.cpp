@@ -54,8 +54,12 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
+      std::cout << "going into contin" << std::endl;
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen);
+
+      std::cout << "got back to leapr" << std::endl;
+
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
 
