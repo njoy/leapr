@@ -129,7 +129,7 @@ int cdf(){
     kappa    = { };                             // Card 18
 
 
-    auto out = leaprWaterSpecific( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+    auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
         spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
         temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
         oscW, nka, dka, kappa );

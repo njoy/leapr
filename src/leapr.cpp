@@ -13,11 +13,11 @@
 #include <time.h>
 
 template<typename V, typename F>
-auto leaprWaterSpecific( int nout, std::string title, int ntempr, int iprint, 
-  int nphon, int mat, F za, F awr, F spr, int npr, int iel, int ncold, int nss, 
-  F aws, int lat, V alpha, V beta, V temp_vec, F delta, int ni, V rho, 
-  F trans_weight, F diffusion_const, F tbeta, int nd, V oscEnergies, 
-  V oscWeights, int nka, F dka, V kappaVals ){
+auto leaprWaterSpecific( int ntempr
+  int nphon, int mat, F za, F awr,  
+  int lat, V alpha, V beta, V temp_vec, F delta, V rho, 
+  F trans_weight, F diffusion_const, F tbeta 
+  ){
 
   F bk    = 8.617385e-5,
     therm = 0.0253,
@@ -59,35 +59,6 @@ auto leaprWaterSpecific( int nout, std::string title, int ntempr, int iprint,
     }
     done = true;
   }
-
-  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-  std::cout << "Card1: " << nout << std::endl;
-  std::cout << "Card2: " <<  title<< std::endl;
-  std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;
-  std::cout << "Card4: " << mat    <<  "     " << za << std::endl;
-  std::cout << "Card5: " << awr    <<  "     " << spr    << "     " << npr << "      " << iel << "     " << ncold << std::endl;
-  std::cout << "Card6: " << nss    <<  "     " << aws << std::endl;
-//  std::cout << "Card7: " << nalpha <<  "     " << nbeta  << "     " << lat<<   std::endl;
-  std::cout << "Card8: " << std::endl;
-  for( auto entry : alpha   ){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card9: " << std::endl;
-  for( auto entry : beta    ){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card10: " << std::endl;
-  for( auto entry : temp_vec){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card11: " << delta << "     " << ni <<  std::endl;
-  std::cout << "Card12: " << std::endl;
-  for( auto entry : rho     ){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card13: " << trans_weight << "     " << diffusion_const << "      " << tbeta << std::endl;
-  std::cout << "Card14: " << nd << std::endl;
-  std::cout << "Card15: " << std::endl;
-  for( auto entry : oscEnergies){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card16: " << std::endl;
-  for( auto entry : oscWeights){ std::cout << " -- " << entry << std::endl; }
-  std::cout << "Card17: " << nka << "     " << dka << std::endl;
-  std::cout << "Card18: " << std::endl;
-  for( auto entry : kappaVals){ std::cout << " -- " << entry << std::endl; }
-
-  std::cout << "\n\n\n " << std::endl;
 
   return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
 }
