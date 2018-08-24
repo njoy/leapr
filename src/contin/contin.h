@@ -88,24 +88,23 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
    
-    for( int a = 0; a < int(alpha.size()); ++a ){
-      xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
+    for( int b = 0; b < int(beta.size()); ++b ){
+      for( int a = 0; a < int(alpha.size()); ++a ){
+        if ( b == 0 ) xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
-      exx = -lambda_s * alpha[a] * scaling + xa[a];
+        exx = -lambda_s * alpha[a] * scaling + xa[a];
 
-      if ( exx <= -250.0 ){ continue; }
-      if ( exx <= -250.0 ){ exx = 0.0; }
-      else { exx = exp(exx); }
+        if ( exx <= -250.0 ){ continue; }
+        if ( exx <= -250.0 ){ exx = 0.0; }
+        else { exx = exp(exx); }
         
-      for( int b = 0; b < int(beta.size()); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
-        if ( symSab(a,b,itemp) != 0 and n >= nphon-1 ) {
-          if (add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
-        } 
-      } // for b in beta
-    } // for a in alpha
+        if ( symSab(a,b,itemp) != 0        and n >= nphon-1 and 
+             add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
+      } // for a in alpha
+    } // for b in beta
 
     npl = npn;
     if ( n > 0 ){

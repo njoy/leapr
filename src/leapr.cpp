@@ -13,11 +13,9 @@
 #include <time.h>
 
 template<typename V, typename F>
-auto leaprWaterSpecific( int ntempr
-  int nphon, int mat, F za, F awr,  
-  int lat, V alpha, V beta, V temp_vec, F delta, V rho, 
-  F trans_weight, F diffusion_const, F tbeta 
-  ){
+auto leaprWaterSpecific( int ntempr, int nphon, int lat, 
+  V alpha, V beta, V temp_vec, F delta, V rho, F trans_weight, F diffusion_const, 
+  F tbeta ){
 
   F bk    = 8.617385e-5,
     therm = 0.0253,
