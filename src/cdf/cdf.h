@@ -36,32 +36,36 @@ auto calc_eq_18(int a, int b, A ssm ){
 template <typename A>
 auto calc_eq_16(int b, A ssm){
   double sum = 0;
-  for ( int i = 0; i < b; ++i ){
+  for ( int i = 0; i <= b; ++i ){
     sum += calc_eq_14(i,ssm);
   }
   return sum;
 }
 
 template <typename F, typename I, typename A>
-I cdf(I ntempr, I nphon, 
+auto cdf(I ntempr, I nphon, 
   I lat, 
   F delta, F twt, F c, F tbeta, A alpha, A beta, A temp, A rho
   ){
 
-    auto out = leaprWaterSpecific( ntempr, nphon, lat, alpha, 
-        beta, temp, delta, rho, twt, c, tbeta );
- 
+    auto out = leaprWaterSpecific( ntempr, nphon, lat, alpha, beta, temp, 
+                                   delta, rho, twt, c, tbeta );
 
     double lambda_s = std::get<0>(out),
            t_eff    = std::get<1>(out);
+
     auto ssm = std::get<2>(out);
+
+    A eq14Values(beta.size()), eq16Values(beta.size());
 
     for ( int i = 0; i < int(beta.size()); ++i ){ 
       //std::cout << beta[i] << "           " << calc_eq_14(i,ssm) << std::endl;
-      //std::cout << calc_eq_14(i,ssm) << std::endl;
+      //std::cout << calc_eq_14(i,ssm) << "          " << calc_eq_16(i,ssm) << std::endl;
+      eq14Values[i] = calc_eq_14(i,ssm);
+      eq16Values[i] = calc_eq_16(i,ssm);
     }
-    std::cout << std::setprecision(16) << calc_eq_14(25,ssm) << std::endl;
-    std::cout << std::endl;
+    //std::cout << std::setprecision(16) << calc_eq_14(25,ssm) << std::endl;
+    //std::cout << std::endl;
 
-  return 0;
+  return std::make_tuple(eq14Values,eq16Values);
 }
