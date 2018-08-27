@@ -3,6 +3,43 @@
 #include "cdf/cdf.h"
 #include <range/v3/all.hpp>
 
+
+TEST_CASE("super simple cdf" ){
+   
+
+  Eigen::Tensor<double,3> ssm(3,4,1);
+  ssm(0,0,0) = 1;
+  ssm(0,1,0) = 2;
+  ssm(0,2,0) = 3;
+  ssm(0,3,0) = 4;
+  ssm(1,0,0) = 5;
+  ssm(1,1,0) = 6;
+  ssm(1,2,0) = 7;
+  ssm(1,3,0) = 8;
+  ssm(2,0,0) = 9;
+  ssm(2,1,0) = 10;
+  ssm(2,2,0) = 11;
+  ssm(2,3,0) = 12;
+
+
+  REQUIRE( 0.1923076923 == Approx(calc_eq_14(0,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.2307692308 == Approx(calc_eq_14(1,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.2692307692 == Approx(calc_eq_14(2,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.3076923077 == Approx(calc_eq_14(3,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.1923076923 == Approx(calc_eq_16(0,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.4230769231 == Approx(calc_eq_16(1,ssm)).epsilon(1e-6) );
+  REQUIRE( 0.6923076923 == Approx(calc_eq_16(2,ssm)).epsilon(1e-6) );
+  REQUIRE( 1.0000000000 == Approx(calc_eq_16(3,ssm)).epsilon(1e-6) );
+  //std::cout << std::setprecision(15) << calc_eq_16(3,ssm) << std::endl;
+
+
+  REQUIRE( true );
+  
+
+
+} // GIVEN
+
+
 TEST_CASE( "cdf" ){
   GIVEN( "" ){
     WHEN( "" ){
@@ -115,23 +152,37 @@ TEST_CASE( "cdf" ){
         0.907126, 0.915136, 0.922219, 0.92863, 0.934545, 0.940056, 0.945187, 
         0.949962, 0.954421, 0.958604, 0.962574, 0.96641, 0.970284, 0.974486, 
         0.979091, 0.983621, 0.987685, 0.991284, 0.994533, 0.997449, 1},
-      correctEq15_diag { 0, 0, 0, 0, 0, 0, 0, 0, 8.39455e-09, 3.36654e-06, 
-        0.000166712, 0.0016031, 0.00468893, 0.00718091, 0.00472821, 0.00733659, 
-        0.0111333, 0.0133464, 0.0127017, 0.0105297, 0.00840076, 0.00767875, 
-        0.00869503, 0.0110606, 0.0145791, 0.0190046, 0.0241772, 0.0300154, 
-        0.036258 };
-      auto eq14 = std::get<0>(out); 
-      auto eq15 = std::get<1>(out); 
-      auto eq16 = std::get<2>(out); 
-      auto eq17 = std::get<3>(out); 
-      for ( size_t i = 0; i < eq14.size(); ++i ){
-        REQUIRE( correctEq14[i] == Approx(eq14[i]).epsilon(1e-6) );
-        REQUIRE( correctEq16[i] == Approx(eq16[i]).epsilon(1e-6) );
-      }
-      for ( size_t i = 0; i < correctEq15_diag.size(); ++i ){
-        REQUIRE( correctEq15_diag[i] == Approx(eq15(21+i,21+i,0)).epsilon(1e-6) );
-      }
+      correctEq15_diag { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.16819e-09, 1.34959e-06, 6.88045e-05, 
+        6.84092e-4, 0.00208706, 0.00343118, 0.00472821, 0.00733659, 0.0111333, 
+        0.0133464, 0.0127017, 0.0105297, 0.00840076, 0.00767875, 0.00869503, 
+        0.0110606, 0.0145791, 0.0190046, 0.0241772, 0.0300154, 0.036258, 
+        0.0418962, 0.0451932, 0.0460467, 0.0465056, 0.0489754, 0.0459333, 
+        0.0381916, 0.0300796, 0.0222248, 0.0150976, 0.00934232, 0.00547785, 
+        0.00325159, 0.0020051, 0.00136336 },
+      correctEq17_diag { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.86167e-09, 2.53e-06, 0.00016968, 
+        0.00272544, 0.012404, 0.0220965, 0.030445, 0.053606, 0.112612, 0.186073, 
+        0.20931, 0.151338, 0.083666, 0.0565243, 0.055841, 0.0669216, 0.0884777, 
+        0.12005, 0.161382, 0.211117, 0.270526, 0.346111, 0.448182, 0.544764, 
+        0.628614, 0.682491, 0.757165, 0.8341, 0.89196, 0.933652, 0.962466, 
+        0.980829, 0.99096, 0.995979, 0.998481, 1 };
 
+      auto eq14 = std::get<0>(out); auto eq15 = std::get<1>(out); 
+      auto eq16 = std::get<2>(out); auto eq17 = std::get<3>(out); 
+
+      THEN( "Eq. 14 and Eq. 16 are calculated correctly" ){ 
+        for ( size_t i = 0; i < eq14.size(); ++i ){
+          REQUIRE( correctEq14[i] == Approx(eq14[i]).epsilon(1e-6) );
+          REQUIRE( correctEq16[i] == Approx(eq16[i]).epsilon(1e-6) );
+        }
+      } // THEN 
+      THEN( "Snippets of Eq. 15 appear to be correct" ){ 
+        for ( size_t i = 0; i < alpha.size(); ++i ){
+          REQUIRE( correctEq15_diag[i] == Approx(eq15(i,i,0)).epsilon(1e-6) );
+          REQUIRE( correctEq17_diag[i] == Approx(eq17(i,i,0)).epsilon(1e-6) );
+        }
+      } // THEN 
     } // WHEN
   } // GIVEN
 } // TEST CASE

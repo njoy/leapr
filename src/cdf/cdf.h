@@ -43,6 +43,14 @@ auto calc_eq_16(int b, A ssm){
   return sum;
 }
 
+template <typename A> 
+auto calc_eq_17( int a, int b, A ssm ){
+  double sum = 0;
+  for ( int i = 0; i <= a; ++i ){
+    sum += calc_eq_15(i,b,ssm);
+  }
+  return sum;
+}
 
 template <typename F, typename I, typename A>
 auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha, 
@@ -60,11 +68,13 @@ auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha,
   auto eq15Values = ssm;
   auto eq17Values = ssm;
 
-  for ( int i = 0; i < int(beta.size()); ++i ){ 
-    eq14Values[i] = calc_eq_14(i,ssm);
-    eq16Values[i] = calc_eq_16(i,ssm);
-    for ( int j = 0; j < int(alpha.size()); ++j ){
-      eq15Values(i,j,0) = calc_eq_15(i,j,ssm);
+  for ( int b = 0; b < int(beta.size()); ++b ){ 
+    eq14Values[b] = calc_eq_14(b,ssm);
+    eq16Values[b] = calc_eq_16(b,ssm);
+    for ( int a = 0; a < int(alpha.size()); ++a ){
+      eq15Values(a,b,0) = calc_eq_15(b,a,ssm);
+      eq17Values(a,b,0) = calc_eq_17(b,a,ssm);
+      //if ( b == 0 ){ std::cout << eq17Values(a,b,0) << std::endl; }
     }
   }
   return std::make_tuple(eq14Values,eq15Values,eq16Values,eq17Values);
