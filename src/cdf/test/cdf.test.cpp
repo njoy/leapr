@@ -6,34 +6,54 @@
 
 TEST_CASE("super simple cdf" ){
    
+  int a_size = 3, b_size = 4;
+  Eigen::Tensor<double,3> ssm(a_size,b_size,1), eq15(a_size,b_size,1),
+    eq17(a_size,b_size,1), correctEq_15(a_size,b_size,1);
 
-  Eigen::Tensor<double,3> ssm(3,4,1);
-  ssm(0,0,0) = 1;
-  ssm(0,1,0) = 2;
-  ssm(0,2,0) = 3;
-  ssm(0,3,0) = 4;
-  ssm(1,0,0) = 5;
-  ssm(1,1,0) = 6;
-  ssm(1,2,0) = 7;
-  ssm(1,3,0) = 8;
-  ssm(2,0,0) = 9;
-  ssm(2,1,0) = 10;
-  ssm(2,2,0) = 11;
-  ssm(2,3,0) = 12;
+  ssm(0,0,0) = 1; ssm(0,1,0) = 2;  ssm(0,2,0) = 3;  ssm(0,3,0) = 4; 
+  ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
+  ssm(2,0,0) = 9; ssm(2,1,0) = 10; ssm(2,2,0) = 11; ssm(2,3,0) = 12;
 
 
-  REQUIRE( 0.1923076923 == Approx(calc_eq_14(0,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.2307692308 == Approx(calc_eq_14(1,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.2692307692 == Approx(calc_eq_14(2,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.3076923077 == Approx(calc_eq_14(3,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.1923076923 == Approx(calc_eq_16(0,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.4230769231 == Approx(calc_eq_16(1,ssm)).epsilon(1e-6) );
-  REQUIRE( 0.6923076923 == Approx(calc_eq_16(2,ssm)).epsilon(1e-6) );
-  REQUIRE( 1.0000000000 == Approx(calc_eq_16(3,ssm)).epsilon(1e-6) );
-  //std::cout << std::setprecision(15) << calc_eq_16(3,ssm) << std::endl;
+
+  std::vector<double> 
+    correctEq_14 { 0.1923076923, 0.2307692308, 0.2692307692, 0.3076923077 },
+    correctEq_16 { 0.1923076923, 0.4230769231, 0.6923076923, 1.0000000000 };
+  for ( int b = 0; b < b_size; ++b ){
+    REQUIRE( correctEq_14[b] == Approx(calc_eq_14(b,ssm)).epsilon(1e-6) );
+    REQUIRE( correctEq_16[b] == Approx(calc_eq_16(b,ssm)).epsilon(1e-6) );
+  }
+
+  for ( int b = 0; b < b_size; ++b ){
+    for ( int a = 0; a < a_size; ++a ){
+      eq15(a,b,0) = calc_eq_15(a,b,ssm);
+    }
+  }
+
+  REQUIRE( 0.06666666 == Approx(eq15(0,0,0)).epsilon(1e-6) );
+  REQUIRE( 0.33333333 == Approx(eq15(1,0,0)).epsilon(1e-6) );
+  REQUIRE( 0.6        == Approx(eq15(2,0,0)).epsilon(1e-6) );
+  REQUIRE( 0.11111111 == Approx(eq15(0,1,0)).epsilon(1e-6) );
+  REQUIRE( 0.33333333 == Approx(eq15(1,1,0)).epsilon(1e-6) );
+  REQUIRE( 0.55555555 == Approx(eq15(2,1,0)).epsilon(1e-6) );
+  REQUIRE( 0.14285714 == Approx(eq15(0,2,0)).epsilon(1e-6) );
+  REQUIRE( 0.33333333 == Approx(eq15(1,2,0)).epsilon(1e-6) );
+  REQUIRE( 0.52380952 == Approx(eq15(2,2,0)).epsilon(1e-6) );
+  REQUIRE( 0.16666667 == Approx(eq15(0,3,0)).epsilon(1e-6) );
+  REQUIRE( 0.33333333 == Approx(eq15(1,3,0)).epsilon(1e-6) );
+  REQUIRE( 0.5        == Approx(eq15(2,3,0)).epsilon(1e-6) );
 
 
-  REQUIRE( true );
+
+
+
+
+
+
+  std::cout << std::setprecision(15) << eq15(0,1,0) << std::endl;
+  std::cout << std::setprecision(15) << eq15(1,1,0) << std::endl;
+  std::cout << std::setprecision(15) << eq15(2,1,0) << std::endl;
+
   
 
 
