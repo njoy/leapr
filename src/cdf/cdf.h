@@ -4,6 +4,9 @@
 
 template <typename A>
 auto calc_total_ssm(A ssm){
+
+  // INT INT S(a',b') db' da'
+  
   double sum = 0;
   for ( int a = 0; a < ssm.dimension(0); ++a ){
     for ( int b = 0; b < ssm.dimension(1); ++b ){
@@ -14,12 +17,26 @@ auto calc_total_ssm(A ssm){
 }
 
 template <typename A>
-auto calc_eq_14(int b, A ssm){
-  double numerator = 0;
+auto calc_eq_14_prime(int b, A ssm){
+
+  // g'(b) = INT  S(a',b) da'
+  
+  double g_prime = 0;
   for ( int a = 0; a < ssm.dimension(0); ++a ){
-    numerator += ssm(a,b,0);
+    g_prime += ssm(a,b,0);
   }
-  return numerator/calc_total_ssm(ssm);
+  return g_prime; 
+}
+
+
+template <typename A>
+auto calc_eq_14(int b, A ssm){
+
+  //             INT  S(a',b) da'
+  // g(b) =   -----------------------
+  //          INT INT S(a',b') db' da'
+  
+  return calc_eq_14_prime(b,ssm)/calc_total_ssm(ssm);
 }
 
 template <typename A> 
@@ -52,6 +69,30 @@ auto calc_eq_17( int a, int b, A ssm ){
   return sum;
 }
 
+
+template <typename I, typename A>
+auto cdf_no_leapr( A ssm ){
+  int a_size = ssm.dimension(0);
+  int b_size = ssm.dimension(1);
+
+  std::vector<double> eq14, eq16;
+  Eigen::Tensor<double,3> eq15(a_size,b_size), eq17(a_size,b_size);
+  for ( int b = 0; b < b_size; ++b ){
+    eq14[b] = calc_eq_14(b,ssm);
+    eq16[b] = calc_eq_16(b,ssm);
+  }
+  for ( int b = 0; b < b_size; ++b ){
+    for ( int a = 0; a < a_size; ++a ){
+      eq15(a,b) = calc_eq_15(a,b,ssm);
+      eq17(a,b) = calc_eq_17(a,b,ssm);
+    }
+  }
+  return std::make_tuple(eq14,eq15,eq16,eq17);
+
+}
+
+
+
 template <typename F, typename I, typename A>
 auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha, 
   A beta, A temp, A rho ){
@@ -74,8 +115,12 @@ auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha,
     for ( int a = 0; a < int(alpha.size()); ++a ){
       eq15Values(a,b,0) = calc_eq_15(b,a,ssm);
       eq17Values(a,b,0) = calc_eq_17(b,a,ssm);
-      //if ( b == 0 ){ std::cout << eq17Values(a,b,0) << std::endl; }
     }
   }
   return std::make_tuple(eq14Values,eq15Values,eq16Values,eq17Values);
 }
+
+
+
+
+

@@ -5,59 +5,53 @@
 
 
 TEST_CASE("super simple cdf" ){
-   
-  int a_size = 3, b_size = 4;
-  Eigen::Tensor<double,3> ssm(a_size,b_size,1), eq15(a_size,b_size,1),
-    eq17(a_size,b_size,1), correctEq_15(a_size,b_size,1);
+  GIVEN( "you call the functions separately" ){
+    int a_size = 3, b_size = 4;
+    Eigen::Tensor<double,3> ssm(a_size,b_size,1); 
+    Eigen::Tensor<double,2> eq15(a_size,b_size), eq17(a_size,b_size), 
+                            eq15Real(a_size,b_size), eq17Real(a_size,b_size);
 
-  ssm(0,0,0) = 1; ssm(0,1,0) = 2;  ssm(0,2,0) = 3;  ssm(0,3,0) = 4; 
-  ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
-  ssm(2,0,0) = 9; ssm(2,1,0) = 10; ssm(2,2,0) = 11; ssm(2,3,0) = 12;
+    ssm(0,0,0) = 1; ssm(0,1,0) = 2;  ssm(0,2,0) = 3;  ssm(0,3,0) = 4; 
+    ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
+    ssm(2,0,0) = 9; ssm(2,1,0) = 10; ssm(2,2,0) = 11; ssm(2,3,0) = 12;
 
+    std::vector<double> 
+      correctEq_14 { 0.1923076923, 0.2307692308, 0.2692307692, 0.3076923077 },
+      correctEq_16 { 0.1923076923, 0.4230769231, 0.6923076923, 1.0000000000 };
 
+    eq15Real(0,0) = 0.066666; eq15Real(1,0) = 0.333333; eq15Real(2,0) = 0.600000; 
+    eq15Real(0,1) = 0.111111; eq15Real(1,1) = 0.333333; eq15Real(2,1) = 0.555555; 
+    eq15Real(0,2) = 0.142857; eq15Real(1,2) = 0.333333; eq15Real(2,2) = 0.523809; 
+    eq15Real(0,3) = 0.166666; eq15Real(1,3) = 0.333333; eq15Real(2,3) = 0.500000;
 
-  std::vector<double> 
-    correctEq_14 { 0.1923076923, 0.2307692308, 0.2692307692, 0.3076923077 },
-    correctEq_16 { 0.1923076923, 0.4230769231, 0.6923076923, 1.0000000000 };
-  for ( int b = 0; b < b_size; ++b ){
-    REQUIRE( correctEq_14[b] == Approx(calc_eq_14(b,ssm)).epsilon(1e-6) );
-    REQUIRE( correctEq_16[b] == Approx(calc_eq_16(b,ssm)).epsilon(1e-6) );
-  }
+    eq17Real(0,0) = 0.066666; eq17Real(1,0) = 0.4;      eq17Real(2,0) = 1.0; 
+    eq17Real(0,1) = 0.111111; eq17Real(1,1) = 0.444444; eq17Real(2,1) = 1.0; 
+    eq17Real(0,2) = 0.142857; eq17Real(1,2) = 0.476190; eq17Real(2,2) = 1.0; 
+    eq17Real(0,3) = 0.166666; eq17Real(1,3) = 0.5;      eq17Real(2,3) = 1.0;
 
-  for ( int b = 0; b < b_size; ++b ){
-    for ( int a = 0; a < a_size; ++a ){
-      eq15(a,b,0) = calc_eq_15(a,b,ssm);
-    }
-  }
+    THEN( "Eq. 14-17 are correct" ){ 
 
-  REQUIRE( 0.06666666 == Approx(eq15(0,0,0)).epsilon(1e-6) );
-  REQUIRE( 0.33333333 == Approx(eq15(1,0,0)).epsilon(1e-6) );
-  REQUIRE( 0.6        == Approx(eq15(2,0,0)).epsilon(1e-6) );
-  REQUIRE( 0.11111111 == Approx(eq15(0,1,0)).epsilon(1e-6) );
-  REQUIRE( 0.33333333 == Approx(eq15(1,1,0)).epsilon(1e-6) );
-  REQUIRE( 0.55555555 == Approx(eq15(2,1,0)).epsilon(1e-6) );
-  REQUIRE( 0.14285714 == Approx(eq15(0,2,0)).epsilon(1e-6) );
-  REQUIRE( 0.33333333 == Approx(eq15(1,2,0)).epsilon(1e-6) );
-  REQUIRE( 0.52380952 == Approx(eq15(2,2,0)).epsilon(1e-6) );
-  REQUIRE( 0.16666667 == Approx(eq15(0,3,0)).epsilon(1e-6) );
-  REQUIRE( 0.33333333 == Approx(eq15(1,3,0)).epsilon(1e-6) );
-  REQUIRE( 0.5        == Approx(eq15(2,3,0)).epsilon(1e-6) );
+      for ( int b = 0; b < b_size; ++b ){
+        REQUIRE( correctEq_14[b] == Approx(calc_eq_14(b,ssm)).epsilon(1e-6) );
+        REQUIRE( correctEq_16[b] == Approx(calc_eq_16(b,ssm)).epsilon(1e-6) );
+      }
 
-
-
-
-
-
-
-
-  std::cout << std::setprecision(15) << eq15(0,1,0) << std::endl;
-  std::cout << std::setprecision(15) << eq15(1,1,0) << std::endl;
-  std::cout << std::setprecision(15) << eq15(2,1,0) << std::endl;
-
+      for ( int b = 0; b < b_size; ++b ){
+        for ( int a = 0; a < a_size; ++a ){
+          eq15(a,b) = calc_eq_15(a,b,ssm);
+          eq17(a,b) = calc_eq_17(a,b,ssm);
+        }
+      }
   
-
-
-} // GIVEN
+      for ( int b = 0; b < b_size; ++b ){
+        for ( int a = 0; a < a_size; ++a ){
+          REQUIRE( eq15(a,b) == Approx(eq15Real(a,b)).epsilon(1e-6) );
+          REQUIRE( eq17(a,b) == Approx(eq17Real(a,b)).epsilon(1e-6) );
+        } 
+      }
+    } // THEN
+  } // GIVEN
+} // TEST CASE
 
 
 TEST_CASE( "cdf" ){
