@@ -70,21 +70,26 @@ auto calc_eq_17( int a, int b, A ssm ){
 }
 
 
-template <typename I, typename A>
+template <typename A>
 auto cdf_no_leapr( A ssm ){
+
   int a_size = ssm.dimension(0);
   int b_size = ssm.dimension(1);
 
-  std::vector<double> eq14, eq16;
-  Eigen::Tensor<double,3> eq15(a_size,b_size), eq17(a_size,b_size);
+  std::vector<double> eq14(b_size),      eq16(b_size);
+  std::vector<double> eq14Prime(b_size), eq16Prime(b_size);
+  Eigen::Tensor<double,3> eq15(a_size,b_size,1), eq17(a_size,b_size,1);
   for ( int b = 0; b < b_size; ++b ){
+    eq14Prime[b] = calc_eq_14_prime(b,ssm);
+    eq16Prime[b] = ( b == 0 ) ? eq14Prime[b] : eq16Prime[b-1] + eq14Prime[b];
     eq14[b] = calc_eq_14(b,ssm);
     eq16[b] = calc_eq_16(b,ssm);
+    std::cout << eq16[b] << "      " << eq16Prime[b] << "      " << eq16Prime[b]/calc_total_ssm(ssm) << std::endl;
   }
   for ( int b = 0; b < b_size; ++b ){
     for ( int a = 0; a < a_size; ++a ){
-      eq15(a,b) = calc_eq_15(a,b,ssm);
-      eq17(a,b) = calc_eq_17(a,b,ssm);
+      eq15(a,b,0) = calc_eq_15(a,b,ssm);
+      eq17(a,b,0) = calc_eq_17(a,b,ssm);
     }
   }
   return std::make_tuple(eq14,eq15,eq16,eq17);
