@@ -1,5 +1,6 @@
 #include <iostream>
 #include "leapr.cpp"
+#include <range/v3/all.hpp>
 
 
 template <typename A>
@@ -88,15 +89,36 @@ auto cdf_no_leapr( A ssm ){
   std::vector<double> eq14Prime(b_size), eq16Prime(b_size);
   Eigen::Tensor<double,3> eq15(a_size,b_size,1),      eq17(a_size,b_size,1), 
                           eq15Prime(a_size,b_size,1), eq17Prime(a_size,b_size,1);
+
+  //auto eq14P_range = ranges::view::iota(0,b_size) | 
+  //                   ranges::view::transform([ssm](auto b){ 
+  //                     return calc_eq_14_prime(b,ssm); } );
+  //auto eq14_range = eq14P_range | ranges::view::transform([inv_total=1.0/eq14P_range[eq14P_range.size()-1]](auto entry){ return entry * inv_total; } );
+
+  //std::cout << eq14P_range << std::endl;
+  //std::cout << eq14_range << std::endl;
+  std::cout << std::endl;
+
   for ( int b = 0; b < b_size; ++b ){
     eq14Prime[b] = calc_eq_14_prime(b,ssm);
     eq16Prime[b] = ( b == 0 ) ? eq14Prime[b] : eq16Prime[b-1] + eq14Prime[b];
   }
-  double inv_total = 1.0 / eq16Prime[eq16Prime.size()-1];
+  double inv_T_14_16 = 1.0 / eq16Prime[eq16Prime.size()-1];
+  auto eq14_range = eq14Prime | 
+                    ranges::view::transform([inv_T=1.0/eq16Prime[b_size-1]]
+                      (auto entry){ return entry*inv_T; });
+  auto eq16_range = eq16Prime | 
+                    ranges::view::transform([inv_T=1.0/eq16Prime[b_size-1]]
+                      (auto entry){ return entry*inv_T; });
   for ( int b = 0; b < b_size; ++b ){
-    eq14[b] = eq14Prime[b] * inv_total;
-    eq16[b] = eq16Prime[b] * inv_total;
+    eq14[b] = eq14Prime[b] * inv_T_14_16;
+    eq16[b] = eq16Prime[b] * inv_T_14_16;
   }
+  std::cout << (eq14_range|ranges::view::all) << std::endl;
+  std::cout << (eq14|ranges::view::all) << std::endl;
+  std::cout << (eq16_range|ranges::view::all) << std::endl;
+  std::cout << (eq16|ranges::view::all) << std::endl;
+
 
   for ( int b = 0; b < b_size; ++b ){
     for ( int a = 0; a < a_size; ++a ){
