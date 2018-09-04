@@ -44,15 +44,15 @@ template <typename A>
 auto calc_eq_15(int a, int b, A ssm ){
   double numerator   = ssm(a,b,0);
   double denominator = 0;
-  for ( int aPrime = 0; aPrime < ssm.dimension(0); ++aPrime ){
-    denominator += ssm(aPrime,b,0);
+  for ( int aP = 0; aP < ssm.dimension(0); ++aP ){
+    denominator += ssm(aP,b,0);
   } 
   if (denominator < 1e-50){ return 0.0; } 
   return numerator/denominator;
 }
 
 template <typename A> 
-auto calc_eq_15Prime(int a, int b, A ssm ){
+auto calc_eq_15P(int a, int b, A ssm ){
   double numerator   = ssm(a,b,0);
   return numerator;
 }
@@ -82,55 +82,56 @@ auto calc_eq_17( int a, int b, A ssm ){
 template <typename A>
 auto cdf_no_leapr( A ssm ){
 
-  int a_size = ssm.dimension(0);
-  int b_size = ssm.dimension(1);
+  int a_size = ssm.dimension(0), b_size = ssm.dimension(1);
 
-  std::vector<double> eq14(b_size),      eq16(b_size);
-  std::vector<double> eq14Prime(b_size), eq16Prime(b_size);
-  Eigen::Tensor<double,3> eq15(a_size,b_size,1),      eq17(a_size,b_size,1), 
-                          eq15Prime(a_size,b_size,1), eq17Prime(a_size,b_size,1);
-
-  //auto eq14P_range = ranges::view::iota(0,b_size) | 
-  //                   ranges::view::transform([ssm](auto b){ 
-  //                     return calc_eq_14_prime(b,ssm); } );
-  //auto eq14_range = eq14P_range | ranges::view::transform([inv_total=1.0/eq14P_range[eq14P_range.size()-1]](auto entry){ return entry * inv_total; } );
-
-  //std::cout << eq14P_range << std::endl;
-  //std::cout << eq14_range << std::endl;
-  std::cout << std::endl;
+  std::vector<double> eq14(b_size),  eq16(b_size),
+                      eq14P(b_size), eq16P(b_size);
+  Eigen::Tensor<double,3> eq15(a_size,b_size,1),  eq17(a_size,b_size,1), 
+                          eq15P(a_size,b_size,1), eq17P(a_size,b_size,1);
 
   for ( int b = 0; b < b_size; ++b ){
-    eq14Prime[b] = calc_eq_14_prime(b,ssm);
-    eq16Prime[b] = ( b == 0 ) ? eq14Prime[b] : eq16Prime[b-1] + eq14Prime[b];
+    eq14P[b] = calc_eq_14_prime(b,ssm);
+    eq16P[b] = ( b == 0 ) ? eq14P[b] : eq14P[b] + eq16P[b-1];
   }
-  double inv_T_14_16 = 1.0 / eq16Prime[eq16Prime.size()-1];
-  auto eq14_range = eq14Prime | 
-                    ranges::view::transform([inv_T=1.0/eq16Prime[b_size-1]]
-                      (auto entry){ return entry*inv_T; });
-  auto eq16_range = eq16Prime | 
-                    ranges::view::transform([inv_T=1.0/eq16Prime[b_size-1]]
-                      (auto entry){ return entry*inv_T; });
+
+  double inv_T_14_16 = 1.0 / eq16P[b_size-1];
+
   for ( int b = 0; b < b_size; ++b ){
-    eq14[b] = eq14Prime[b] * inv_T_14_16;
-    eq16[b] = eq16Prime[b] * inv_T_14_16;
+    eq14[b] = eq14P[b] * inv_T_14_16;
+    eq16[b] = eq16P[b] * inv_T_14_16;
+
+    for ( int a = 0; a < a_size; ++a ){
+      eq15P(a,b,0) = calc_eq_15P(a,b,ssm);
+      eq17P(a,b,0) = ( a == 0 ) ? eq15P(a,b,0) : eq15P(a,b,0) + eq17P(a-1,b,0);
+    }
+    double inv_T_15_17 = 1.0 / eq17P(a_size-1,b,0);
+    for ( int a = 0; a < a_size; ++a ){
+      eq15(a,b,0) = eq15P(a,b,0) * inv_T_15_17;
+      eq17(a,b,0) = eq17P(a,b,0) * inv_T_15_17;
+    }
+
   }
-  std::cout << (eq14_range|ranges::view::all) << std::endl;
+
   std::cout << (eq14|ranges::view::all) << std::endl;
-  std::cout << (eq16_range|ranges::view::all) << std::endl;
   std::cout << (eq16|ranges::view::all) << std::endl;
 
-
   for ( int b = 0; b < b_size; ++b ){
-    for ( int a = 0; a < a_size; ++a ){
-      eq15Prime(a,b,0) = calc_eq_15Prime(a,b,ssm);
-      eq17Prime(a,b,0) = ( a == 0 ) ? eq15Prime(a,b,0) : eq17Prime(a-1,b,0) + eq15Prime(a,b,0);
-    }
-    double inv_total = 1.0 / eq17Prime(a_size-1,b,0);
-    for ( int a = 0; a < a_size; ++a ){
-      eq15(a,b,0) = eq15Prime(a,b,0) * inv_total;
-      eq17(a,b,0) = eq17Prime(a,b,0) * inv_total;
-    }
+    eq14P[b] = calc_eq_14_prime(b,ssm);
+    eq16P[b] = ( b == 0 ) ? eq14P[b] : eq14P[b] + eq16P[b-1];
   }
+  auto eq14_rangeP = ranges::view::iota(0,b_size) | 
+                     ranges::view::transform([&ssm](auto b){ 
+                       return calc_eq_14_prime(b,ssm); } );
+  auto eq14_range = eq14_rangeP | 
+                    ranges::view::transform([inv_T=1.0/eq16P[b_size-1]]
+                      (auto entry){ return entry*inv_T; });
+  auto eq16_range = eq16P | 
+                    ranges::view::transform([inv_T=1.0/eq16P[b_size-1]]
+                      (auto entry){ return entry*inv_T; });
+
+  std::cout << (eq14_range|ranges::view::all) << std::endl;
+  std::cout << (eq16_range|ranges::view::all) << std::endl;
+
   return std::make_tuple(eq14,eq15,eq16,eq17);
 
 }
