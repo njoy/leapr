@@ -38,10 +38,6 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
       F sc = 1.0;
       if ( lat == 1 ){ sc = therm/tev; }
       F scaling = sc/arat;
-      if ( itemp == 1 or temp >= 0 ){
-       // std::cout << "we want to read in tempdependent parameters" << std::endl;
-      } // if 1st temp or some positive temp, we want to calculate
-        // the temperature dependent parameters for this specifically 
 
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen);

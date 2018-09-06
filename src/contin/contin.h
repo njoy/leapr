@@ -78,6 +78,8 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     maxt[b] = alpha.size() + 1;
   }
 
+  std::vector<double> eq16(beta.size());
+
   // Do the phonon expansion sum 
   // For this, we treat the first iteration slightly different than the all
   // subsequent iterations, because all subsequent iterations require
@@ -95,14 +97,14 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
         exx = -lambda_s * alpha[a] * scaling + xa[a];
 
         if ( exx <= -250.0 ){ continue; }
-        if ( exx <= -250.0 ){ exx = 0.0; }
-        else { exx = exp(exx); }
+        exx = exp(exx);
         
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
 
         if ( symSab(a,b,itemp) != 0        and n >= nphon-1 and 
-             add > symSab(a,b,itemp)*0.001 and a < maxt[b]){ maxt[b] = a; }
+             add > symSab(a,b,itemp)*0.001 and a < maxt[b] ){ maxt[b] = a; }
+
       } // for a in alpha
     } // for b in beta
 
@@ -112,7 +114,8 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       // so npn here is being pushed forward by t1 length so that we can get
       // to the next block of vector
       npn += t1.size() - 1;
-      if ( npn >= tlast.size() ){ return lambda_s_t_eff; }
+      auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+      if ( npn >= tlast.size() ){ return lambda_s_t_eff_2; }
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
     else { 
@@ -121,9 +124,10 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   } // for n in nphon (maxn in leapr.f90) 
 
   F arat = sc/scaling;
-  checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
+  //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
-  return lambda_s_t_eff;
+  auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+  return lambda_s_t_eff_2;
 
 }
 

@@ -4,7 +4,7 @@
 
 
 void checkSabLambdaTeff( const std::vector<double>& correctSab, 
-    const std::tuple<double,double>& output, 
+    const std::tuple<double,double,std::vector<double>>& output, 
     const Eigen::Tensor<double,3>& sab,  
     const double& lambda, const double& teff, const double& tol ){
 
@@ -29,7 +29,7 @@ TEST_CASE( "contin eigen" ){
   int ntempr, nphon, itemp;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
-  std::tuple<double,double> output;
+  std::tuple<double,double,std::vector<double>> output;
 
   GIVEN( "input values from input card and leapr subroutine" ){
     ntempr = 1; nphon = 3; itemp = 0;

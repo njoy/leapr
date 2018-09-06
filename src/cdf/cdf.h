@@ -4,20 +4,6 @@
 
 
 template <typename A>
-auto calc_total_ssm(A ssm){
-
-  // INT INT S(a',b') db' da'
-  
-  double sum = 0;
-  for ( int a = 0; a < ssm.dimension(0); ++a ){
-    for ( int b = 0; b < ssm.dimension(1); ++b ){
-      sum += ssm(a,b,0);
-    }
-  }
-  return sum;
-}
-
-template <typename A>
 auto calc14Prime(int b, A ssm){
 
   // g'(b) = INT  S(a',b) da'
@@ -30,52 +16,9 @@ auto calc14Prime(int b, A ssm){
 }
 
 
-template <typename A>
-auto calc_eq_14(int b, A ssm){
-
-  //             INT  S(a',b) da'
-  // g(b) =   -----------------------
-  //          INT INT S(a',b') db' da'
-  
-  return calc14Prime(b,ssm)/calc_total_ssm(ssm);
-}
-
-template <typename A> 
-auto calc_eq_15(int a, int b, A ssm ){
-  double numerator   = ssm(a,b,0);
-  double denominator = 0;
-  for ( int aP = 0; aP < ssm.dimension(0); ++aP ){
-    denominator += ssm(aP,b,0);
-  } 
-  if (denominator < 1e-20){ return 0.0; } 
-  return numerator/denominator;
-}
-
 template <typename A> 
 auto calc15Prime(int a, int b, A ssm ){
-  double numerator   = ssm(a,b,0);
-  return numerator;
-}
-
-
-
-
-template <typename A>
-auto calc_eq_16(int b, A ssm){
-  double sum = 0;
-  for ( int i = 0; i <= b; ++i ){
-    sum += calc_eq_14(i,ssm);
-  }
-  return sum;
-}
-
-template <typename A> 
-auto calc_eq_17( int a, int b, A ssm ){
-  double sum = 0;
-  for ( int i = 0; i <= a; ++i ){
-    sum += calc_eq_15(i,b,ssm);
-  }
-  return sum;
+  return ssm(a,b,0);
 }
 
 
