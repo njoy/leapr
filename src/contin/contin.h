@@ -78,7 +78,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     maxt[b] = alpha.size() + 1;
   }
 
-  std::vector<double> eq16(beta.size());
+  std::vector<double> eq16(beta.size()), eq14(beta.size());
 
   // Do the phonon expansion sum 
   // For this, we treat the first iteration slightly different than the all
@@ -86,10 +86,12 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   // convolution with the one before it. This is following Eq. 526
   
   int npl = np;
+  double eq14Val;
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
    
+    eq14Val = 0.0;
     for( int b = 0; b < int(beta.size()); ++b ){
       for( int a = 0; a < int(alpha.size()); ++a ){
         if ( b == 0 ) xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
@@ -115,6 +117,18 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       // to the next block of vector
       npn += t1.size() - 1;
       auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+      if ( npn >= tlast.size() ){ 
+        for ( size_t b = 0; b < beta.size(); ++b ){
+          double g_prime = 0;
+          for ( size_t a = 0; a < alpha.size(); ++a ){ 
+            g_prime += symSab(a,b,0); 
+          }
+          eq14[b] = g_prime; 
+        }
+
+        std::cout << eq14[65] << "   " << eq14[66] << "   " << eq14[67] << std::endl;
+      } 
+
       if ( npn >= tlast.size() ){ return lambda_s_t_eff_2; }
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
@@ -127,6 +141,11 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+  std::cout << "Hello, world 2" << std::endl;
+  //for ( size_t b = 0; b < beta.size(); ++b ){
+  //  std::cout << eq14[b] << std::endl;
+  //}
+
   return lambda_s_t_eff_2;
 
 }

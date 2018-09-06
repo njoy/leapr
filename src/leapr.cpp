@@ -46,8 +46,8 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
       t_eff    = std::get<1>(lambda_s_t_eff);
 
       if ( trans_weight > 0.0 ){
-        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
+       // trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+       //   itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
 
     }
@@ -55,6 +55,7 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
   }
 
   return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+  std::cout << diffusion_const << std::endl;
 }
 
 
