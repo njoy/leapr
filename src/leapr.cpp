@@ -29,6 +29,7 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
   sym_sab_eigen.setZero();
 
   V t_eff_vec ( temp_vec.size(), 0.0 );
+  std::vector<double> eq16(beta.size());
 
   while ( not done ){
       
@@ -44,18 +45,19 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
 
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
+      eq16     = std::get<2>(lambda_s_t_eff);
 
       if ( trans_weight > 0.0 ){
-       // trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-       //   itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
+        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
 
     }
     done = true;
   }
 
-  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
-  std::cout << diffusion_const << std::endl;
+  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen,eq16);
+  //std::cout << diffusion_const << std::endl;
 }
 
 
@@ -133,6 +135,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   }
 
   return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+
+  //std::cout << diffusion_const << std::endl;
+
   std::cout << "Card1: " << nout << std::endl;
   std::cout << "Card2: " <<  title<< std::endl;
   std::cout << "Card3: " << ntempr <<  "     " << iprint << "     " << nphon<< std::endl;

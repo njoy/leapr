@@ -97,6 +97,8 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
         if ( b == 0 ) xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
 
         exx = -lambda_s * alpha[a] * scaling + xa[a];
+        // make sure to put this in an array or something so that you don't 
+        // keep on computing sorry i'm lazy
 
         if ( exx <= -250.0 ){ continue; }
         exx = exp(exx);
@@ -116,7 +118,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       // so npn here is being pushed forward by t1 length so that we can get
       // to the next block of vector
       npn += t1.size() - 1;
-      auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
       if ( npn >= tlast.size() ){ 
         for ( size_t b = 0; b < beta.size(); ++b ){
           double g_prime = 0;
@@ -124,12 +125,17 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
             g_prime += symSab(a,b,0); 
           }
           eq14[b] = g_prime; 
+          eq16[b] = (b == 0) ? eq14[b] : eq14[b] + eq16[b-1];
         }
 
-        std::cout << eq14[65] << "   " << eq14[66] << "   " << eq14[67] << std::endl;
+        //std::cout << eq14[65] << "   " << eq14[66] << "   " << eq14[67] << std::endl;
+        //std::cout << eq16[65] << "   " << eq16[66] << "   " << eq16[67] << std::endl;
       } 
 
-      if ( npn >= tlast.size() ){ return lambda_s_t_eff_2; }
+      if ( npn >= tlast.size() ){ 
+        auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+        return lambda_s_t_eff_2; 
+      }
       for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     }
     else { 
@@ -141,7 +147,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
-  std::cout << "Hello, world 2" << std::endl;
+  //std::cout << "Hello, world 2" << std::endl;
   //for ( size_t b = 0; b < beta.size(); ++b ){
   //  std::cout << eq14[b] << std::endl;
   //}

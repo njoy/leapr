@@ -8,9 +8,6 @@ auto calc14Prime(int b, A ssm){
   // g'(b) = INT  S(a',b) da'
   double g_prime = 0;
   for ( int a = 0; a < ssm.dimension(0); ++a ){ g_prime += ssm(a,b,0); }
-  if ( b == 0 ){
-    //for ( int a = 0; a < ssm.dimension(0); ++a ){ std::cout << g_prime << std::endl;; }
-  }
   return g_prime; 
 }
 
@@ -31,8 +28,10 @@ auto cdf_no_leapr( A ssm, double tol=1.0e-20 ){
     eq16[b] = (b == 0) ? calc14Prime(b,ssm) : calc14Prime(b,ssm) + eq16[b-1];
   }
   
-  std::cout << calc14Prime(65,ssm) << "    " << calc14Prime(66,ssm) << "    " 
-            << calc14Prime(67,ssm) << std::endl;
+//  std::cout << calc14Prime(65,ssm) << "    " << calc14Prime(66,ssm) << "    " 
+//            << calc14Prime(67,ssm) << std::endl;
+  std::cout << eq16[65] << "   " << eq16[66] << "   "  << eq16[67] << std::endl;
+
   double inv_T_16 = (eq16[bSize-1] < tol) ? 0.0 : 1.0/eq16[bSize-1];
 
   for ( int b = 0; b < bSize; ++b ){
@@ -62,6 +61,8 @@ auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha,
 
   double lambda_s = std::get<0>(out),
          t_eff    = std::get<1>(out);
+  auto eq16 = std::get<3>(out);
+  std::cout << eq16[65] << "   " << eq16[66] << "   " << eq16[67] << std::endl;
 
   auto ssm = std::get<2>(out);
   auto out2 = cdf_no_leapr(ssm);

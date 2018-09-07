@@ -5,7 +5,6 @@
 
 
 TEST_CASE("super simple cdf" ){
-  /*
   GIVEN( "you call the functions separately" ){
     int a_size = 3, b_size = 4;
     Eigen::Tensor<double,3> ssm(a_size,b_size,1); 
@@ -52,7 +51,6 @@ TEST_CASE("super simple cdf" ){
       }
     } // THEN
   } // GIVEN
-  */
   GIVEN( "you call the function as one big whole" ){
     int a_size = 3, b_size = 4;
     Eigen::Tensor<double,3> ssm(a_size,b_size,1); 
@@ -65,7 +63,6 @@ TEST_CASE("super simple cdf" ){
     ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
     ssm(2,0,0) = 9; ssm(2,1,0) = 10; ssm(2,2,0) = 11; ssm(2,3,0) = 12;
 
-    /*
     auto out = cdf_no_leapr(ssm);
     auto eq16 = std::get<0>(out);
     auto eq17 = std::get<1>(out);
@@ -87,7 +84,6 @@ TEST_CASE("super simple cdf" ){
         } 
       }
     } // THEN
-    */
   } // GIVEN
 
 } // TEST CASE
