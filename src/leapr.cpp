@@ -26,10 +26,11 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
 
   Eigen::Tensor<F,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
   Eigen::Tensor<F,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
+  Eigen::Tensor<F,3> eq17(alpha.size(),beta.size(),ntempr);
   sym_sab_eigen.setZero();
 
   V t_eff_vec ( temp_vec.size(), 0.0 );
-  std::vector<double> eq16(beta.size());
+  V eq16(beta.size());
 
   while ( not done ){
       
@@ -48,7 +49,7 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
       eq16     = std::get<2>(lambda_s_t_eff);
 
       if ( trans_weight > 0.0 ){
-        trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
+        eq16 = trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
           itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
       }
 
@@ -56,8 +57,8 @@ auto leaprWaterSpecific( int ntempr, int nphon, int lat,
     done = true;
   }
 
-  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen,eq16);
-  //std::cout << diffusion_const << std::endl;
+  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen,eq16,eq17);
+  std::cout << diffusion_const << std::endl;
 }
 
 

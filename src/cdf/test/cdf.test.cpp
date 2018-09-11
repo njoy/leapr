@@ -5,59 +5,10 @@
 
 
 TEST_CASE("super simple cdf" ){
-  GIVEN( "you call the functions separately" ){
-    int a_size = 3, b_size = 4;
-    Eigen::Tensor<double,3> ssm(a_size,b_size,1); 
-    Eigen::Tensor<double,2> eq15(a_size,b_size), eq17(a_size,b_size), 
-                            eq15Real(a_size,b_size), eq17Real(a_size,b_size);
-
-    ssm(0,0,0) = 1; ssm(0,1,0) = 2;  ssm(0,2,0) = 3;  ssm(0,3,0) = 4; 
-    ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
-    ssm(2,0,0) = 9; ssm(2,1,0) = 10; ssm(2,2,0) = 11; ssm(2,3,0) = 12;
-
-    std::vector<double> 
-      correctEq_14 { 0.1923076923, 0.2307692308, 0.2692307692, 0.3076923077 },
-      correctEq_16 { 0.1923076923, 0.4230769231, 0.6923076923, 1.0000000000 };
-
-    eq15Real(0,0) = 0.066666; eq15Real(1,0) = 0.333333; eq15Real(2,0) = 0.600000; 
-    eq15Real(0,1) = 0.111111; eq15Real(1,1) = 0.333333; eq15Real(2,1) = 0.555555; 
-    eq15Real(0,2) = 0.142857; eq15Real(1,2) = 0.333333; eq15Real(2,2) = 0.523809; 
-    eq15Real(0,3) = 0.166666; eq15Real(1,3) = 0.333333; eq15Real(2,3) = 0.500000;
-
-    eq17Real(0,0) = 0.066666; eq17Real(1,0) = 0.4;      eq17Real(2,0) = 1.0; 
-    eq17Real(0,1) = 0.111111; eq17Real(1,1) = 0.444444; eq17Real(2,1) = 1.0; 
-    eq17Real(0,2) = 0.142857; eq17Real(1,2) = 0.476190; eq17Real(2,2) = 1.0; 
-    eq17Real(0,3) = 0.166666; eq17Real(1,3) = 0.5;      eq17Real(2,3) = 1.0;
-
-    THEN( "Eq. 14-17 are correct" ){ 
-
-      for ( int b = 0; b < b_size; ++b ){
-        REQUIRE( correctEq_14[b] == Approx(calc_eq_14(b,ssm)).epsilon(1e-6) );
-        REQUIRE( correctEq_16[b] == Approx(calc_eq_16(b,ssm)).epsilon(1e-6) );
-      }
-
-      for ( int b = 0; b < b_size; ++b ){
-        for ( int a = 0; a < a_size; ++a ){
-          eq15(a,b) = calc_eq_15(a,b,ssm);
-          eq17(a,b) = calc_eq_17(a,b,ssm);
-        }
-      }
-  
-      for ( int b = 0; b < b_size; ++b ){
-        for ( int a = 0; a < a_size; ++a ){
-          REQUIRE( eq15(a,b) == Approx(eq15Real(a,b)).epsilon(1e-6) );
-          REQUIRE( eq17(a,b) == Approx(eq17Real(a,b)).epsilon(1e-6) );
-        } 
-      }
-    } // THEN
-  } // GIVEN
   GIVEN( "you call the function as one big whole" ){
     int a_size = 3, b_size = 4;
     Eigen::Tensor<double,3> ssm(a_size,b_size,1); 
-    Eigen::Tensor<double,2> 
-                            eq15Real(a_size,b_size), eq17Real(a_size,b_size);
-
-
+    Eigen::Tensor<double,2> eq15Real(a_size,b_size), eq17Real(a_size,b_size);
 
     ssm(0,0,0) = 1; ssm(0,1,0) = 2;  ssm(0,2,0) = 3;  ssm(0,3,0) = 4; 
     ssm(1,0,0) = 5; ssm(1,1,0) = 6;  ssm(1,2,0) = 7;  ssm(1,3,0) = 8; 
@@ -85,7 +36,6 @@ TEST_CASE("super simple cdf" ){
       }
     } // THEN
   } // GIVEN
-
 } // TEST CASE
 
 
@@ -164,7 +114,6 @@ TEST_CASE( "cdf" ){
       twt = 0.055556; c = 0.0; tbeta = 0.444444; 
 
       auto out = cdf(ntempr, nphon, lat, delta, twt, c, tbeta, alpha, beta, temp, rho );
-      //std::cout << (out|ranges::view::all) << std::endl;
       std::vector<double> correctEq16(100), correctEq17_diag(65); 
       correctEq16 = {0, 0, 0, 0, 0, 0, 2.55339e-28, 1.5773e-27, 1.60194e-26, 
         1.42342e-25, 1.10303e-24, 6.60929e-24, 3.38137e-23, 2.06908e-22, 
@@ -195,10 +144,11 @@ TEST_CASE( "cdf" ){
 
       THEN( "Eq. 16 and Eq. 17 are calculated correctly" ){ 
         for ( size_t i = 0; i < eq16.size(); ++i ){
-          //REQUIRE( correctEq16[i] == Approx(eq16[i]).epsilon(1e-6) );
+          REQUIRE( correctEq16[i] == Approx(eq16[i]).epsilon(1e-6) );
         }
         for ( size_t i = 0; i < alpha.size(); ++i ){
-         // REQUIRE( correctEq17_diag[i] == Approx(eq17(i,i,0)).epsilon(1e-6) );
+          //std::cout << i << "     " << eq17(i,i,0) << std::endl;
+          REQUIRE( correctEq17_diag[i] == Approx(eq17(i,i,0)).epsilon(1e-6) );
         }
       } // THEN 
     } // WHEN

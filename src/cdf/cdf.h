@@ -28,9 +28,6 @@ auto cdf_no_leapr( A ssm, double tol=1.0e-20 ){
     eq16[b] = (b == 0) ? calc14Prime(b,ssm) : calc14Prime(b,ssm) + eq16[b-1];
   }
   
-//  std::cout << calc14Prime(65,ssm) << "    " << calc14Prime(66,ssm) << "    " 
-//            << calc14Prime(67,ssm) << std::endl;
-  std::cout << eq16[65] << "   " << eq16[66] << "   "  << eq16[67] << std::endl;
 
   double inv_T_16 = (eq16[bSize-1] < tol) ? 0.0 : 1.0/eq16[bSize-1];
 
@@ -45,6 +42,7 @@ auto cdf_no_leapr( A ssm, double tol=1.0e-20 ){
 
     for ( int a = 0; a < aSize; ++a ){ eq17(a,b,0) *= inv_T_17; }
   }
+  std::cout << "1  " <<  eq17(35,35,0) << "   " << eq17(36,36,0) << "   " << eq17(37,37,0) << std::endl;
 
   return std::make_tuple(eq16,eq17);
 
@@ -61,13 +59,18 @@ auto cdf(I ntempr, I nphon, I lat, F delta, F twt, F c, F tbeta, A alpha,
 
   double lambda_s = std::get<0>(out),
          t_eff    = std::get<1>(out);
-  auto eq16 = std::get<3>(out);
-  std::cout << eq16[65] << "   " << eq16[66] << "   " << eq16[67] << std::endl;
+  auto ssm        = std::get<2>(out);
+  auto eq16       = std::get<3>(out);
+  auto eq17       = std::get<4>(out);
 
-  auto ssm = std::get<2>(out);
+  std::cout << "2  " <<  eq17(35,35,0) << "   " << eq17(36,36,0) << "   " << eq17(37,37,0) << std::endl;
+
   auto out2 = cdf_no_leapr(ssm);
-  return out2;
-  return cdf_no_leapr(ssm);
+  auto eq17_2 = std::get<1>(out2);
+
+  return std::make_tuple(eq16,eq17_2);
+  //return out2;
+  //return cdf_no_leapr(ssm);
 }
 
 

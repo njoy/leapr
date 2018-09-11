@@ -9,12 +9,20 @@
 #include <range/v3/all.hpp>
 
 
-void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
+template <typename A>
+auto calc14PrimeTrans(int b, A ssm){
+  // g'(b) = INT  S(a',b) da'
+  double g_prime = 0;
+  for ( int a = 0; a < ssm.dimension(0); ++a ){ g_prime += ssm(a,b,0); }
+  return g_prime; 
+}
+
+
+auto trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   const double& trans_weight, double delta, const double& diffusion, 
   const double& sc, const double& scaling, const int& itemp, 
-  const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
-  const std::vector<double>& temp_vec, 
-  Eigen::Tensor<double,3>& sym_sab ){
+const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
+  const std::vector<double>& temp_vec, Eigen::Tensor<double,3>& sym_sab ){
 
   /* Overview
    * ------------------------------------------------------------------------
@@ -143,6 +151,22 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   // Update the effective temperature, following Eq. 536
   t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
                      ( tbeta + trans_weight );
+
+
+  std::vector<double> eq16(beta.size());
+
+  for ( size_t b = 0; b < beta.size(); ++b ){
+    eq16[b] = (b == 0) ? calc14PrimeTrans(b,sym_sab) : calc14PrimeTrans(b,sym_sab) + eq16[b-1];
+  }
+  double inv_T_16 = (eq16[beta.size()-1] < 1.0e-20) ? 0.0 : 1.0/eq16[beta.size()-1];
+  for ( size_t b = 0; b < beta.size(); ++b ){
+    eq16[b] *= inv_T_16;
+  }
+
+ 
+ 
+  return eq16;
+  
 }
 
 
