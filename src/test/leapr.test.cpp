@@ -76,21 +76,47 @@ TEST_CASE( "leapr" ){
     nka    = 4;       dka    = 0.01;                             // Card 17
     kappa  = { 0.1, 0.2, 0.4, 0.7 };                             // Card 18
 
-    auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
-        spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
-        temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
-        oscW, nka, dka, kappa );
+    WHEN( "Energy grid is not specified (uniform grid assumed)" ){
+      auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+          spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
+          temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+          oscW, nka, dka, kappa );
+  
+      auto ssm = std::get<2>(out);
+      std::vector<double> ssmCorrect { 11.938046, 11.735856, 11.155244,  
+        9.0443536, 6.3625346, 3.8628806, 1.8164072, 9.7738685, 9.6782722, 
+        9.3564918, 8.1374819, 6.4298528, 4.6157859, 2.7837384, 7.5208611, 
+        7.4809653, 7.3383090, 6.7719176, 5.9103984, 4.8580934, 3.6066853, 
+        6.5590402, 6.5311685, 6.4410425, 6.0812430, 5.4710968, 4.7290575, 
+        3.7678728, 5.2833848, 5.2683518, 5.2324583, 5.0391002, 4.7189122,  
+        4.2971622, 3.7169103 };
 
-    auto ssm = std::get<2>(out);
-    std::vector<double> ssmCorrect { 11.938046, 11.735856, 11.155244,  
-      9.0443536, 6.3625346, 3.8628806, 1.8164072, 9.7738685, 9.6782722, 
-      9.3564918, 8.1374819, 6.4298528, 4.6157859, 2.7837384, 7.5208611, 
-      7.4809653, 7.3383090, 6.7719176, 5.9103984, 4.8580934, 3.6066853, 
-      6.5590402, 6.5311685, 6.4410425, 6.0812430, 5.4710968, 4.7290575, 
-      3.7678728, 5.2833848, 5.2683518, 5.2324583, 5.0391002, 4.7189122,  
-      4.2971622, 3.7169103 };
+      checkSab( ssmCorrect, ssm );
+    } // WHEN
 
-    checkSab( ssmCorrect, ssm );
+    WHEN( "Energy grid is specified (uniform grid not assumed)" ){
+      std::vector<double> energyGrid(rho.size());
+      for (size_t i = 0; i < rho.size(); ++i){
+        energyGrid[i] = delta*i;
+      }
+      auto out = leapr( nout, title, ntempr, iprint, nphon, mat, za, awr, 
+          spr, npr, iel, ncold, nss, aws, lat, alpha, beta, 
+          temp, delta, ni, rho, twt, c, tbeta, nd, oscE, 
+          oscW, nka, dka, kappa, energyGrid );
+  
+      auto ssm = std::get<2>(out);
+      std::vector<double> ssmCorrect { 11.938046, 11.735856, 11.155244,  
+        9.0443536, 6.3625346, 3.8628806, 1.8164072, 9.7738685, 9.6782722, 
+        9.3564918, 8.1374819, 6.4298528, 4.6157859, 2.7837384, 7.5208611, 
+        7.4809653, 7.3383090, 6.7719176, 5.9103984, 4.8580934, 3.6066853, 
+        6.5590402, 6.5311685, 6.4410425, 6.0812430, 5.4710968, 4.7290575, 
+        3.7678728, 5.2833848, 5.2683518, 5.2324583, 5.0391002, 4.7189122,  
+        4.2971622, 3.7169103 };
+
+      checkSab( ssmCorrect, ssm );
+    } // WHEN
+
+
   } // GIVEN 
 
   GIVEN( "H in H2O input (TEST 09)" ) {

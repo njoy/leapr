@@ -12,62 +12,13 @@
 #include "coldh/coldh.h"
 #include <time.h>
 
-template<typename V, typename F>
-auto leaprWaterSpecific( int ntempr, int nphon, int lat, 
-  V alpha, V beta, V temp_vec, F delta, V rho, F trans_weight, F diffusion_const, 
-  F tbeta ){
-
-  F bk    = 8.617385e-5,
-    therm = 0.0253,
-    lambda_s,t_eff,
-    arat  = 1.0; // This is for scaling alpha and beta values later
-  // Loop over scatterers and temperatures
-  bool done = false;
-
-  Eigen::Tensor<F,3> sym_sab_eigen(alpha.size(),beta.size(),ntempr);
-  Eigen::Tensor<F,3> sym_sab_2_eigen(alpha.size(),beta.size(),ntempr);
-  Eigen::Tensor<F,3> eq17(alpha.size(),beta.size(),ntempr);
-  sym_sab_eigen.setZero();
-
-  V t_eff_vec ( temp_vec.size(), 0.0 );
-  V eq16(beta.size());
-
-  while ( not done ){
-      
-    for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
-      F temp = temp_vec[itemp];
-      F tev = bk * temp;
-      F sc = 1.0;
-      if ( lat == 1 ){ sc = therm/tev; }
-      F scaling = sc/arat;
-
-      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab_eigen);
-
-      lambda_s = std::get<0>(lambda_s_t_eff);
-      t_eff    = std::get<1>(lambda_s_t_eff);
-      eq16     = std::get<2>(lambda_s_t_eff);
-
-      if ( trans_weight > 0.0 ){
-        eq16 = trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling,
-          itemp, lambda_s, tbeta, t_eff_vec, temp_vec, sym_sab_eigen );
-      }
-
-    }
-    done = true;
-  }
-
-  return std::make_tuple(lambda_s,t_eff,sym_sab_eigen,eq16,eq17);
-  std::cout << diffusion_const << std::endl;
-}
-
 
 template<typename V, typename F>
 auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon, 
   int mat, F za, F awr, F spr, int npr, int iel, int ncold, int nss, F aws, 
   int lat, V alpha, V beta, V temp_vec, F delta, int ni, V rho, F trans_weight, 
   F diffusion_const, F tbeta, int nd, V oscEnergies, V oscWeights, int nka, 
-  F dka, V kappaVals ){
+  F dka, V kappaVals, V energyGrid = V(0) ){
 
   F bk    = 8.617385e-5,
     therm = 0.0253,
@@ -86,7 +37,7 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
   while ( not done ){
     //if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
     if ( isecs >  0 ){ 
-      std::cout << "Secondary scatterer" << std::endl;
+      //std::cout << "Secondary scatterer" << std::endl;
       arat = aws / awr; 
     }
       
@@ -101,11 +52,9 @@ auto leapr( int nout, std::string title, int ntempr, int iprint, int nphon,
       } // if 1st temp or some positive temp, we want to calculate
         // the temperature dependent parameters for this specifically 
 
-      std::cout << "going into contin" << std::endl;
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
-        sc, rho, alpha, beta, sym_sab_eigen);
+        sc, rho, alpha, beta, sym_sab_eigen, energyGrid);
 
-      std::cout << "got back to leapr" << std::endl;
 
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);

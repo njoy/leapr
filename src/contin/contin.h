@@ -9,7 +9,8 @@
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
   const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
-  const A& beta, Eigen::Tensor<F,3>& symSab ){
+  const A& beta, Eigen::Tensor<F,3>& symSab, A energyGrid = A(0) ){
+  if (energyGrid.size() > 0){ std::cout << "Hello world" << std::endl; }
 
   /* Inputs
    * ------------------------------------------------------------------------
