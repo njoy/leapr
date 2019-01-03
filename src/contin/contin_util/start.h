@@ -1,8 +1,9 @@
 #include "contin/contin_util/start_util/normalize.h"
 #include "contin/contin_util/start_util/fsum.h"
+#include <iostream> 
 
 template <typename A, typename F>
-auto start( A& p, F& delta, const F& tev, const F& tbeta, A energyGrid = A(0) ){
+auto start( A& p, F& delta, const F& tev, const F& tbeta, A betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -29,16 +30,14 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta, A energyGrid = A(0) ){
    *
    */
 
-  bool customGrid = energyGrid.size() > 0 ? true : false;
-  for (size_t i = 0; i < energyGrid.size(); ++i){
-    energyGrid[i] /= tev;
-  }
+  bool customGrid = betaGrid.size() > 0 ? true : false;
+  std::cout << customGrid << "     " << tev << std::endl;
 
   delta /= tev; // make delta is unitless (leapr.f90 calls this deltab)
 
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.
-  double beta = delta;
+
   // What if the first phonon rho value is equal to zero? Then P(beta) is 
   // undefined, which just won't do. So to be safe we approximate the first 
   // value P(beta_0) with a Taylor series. sinh(b/2) ~= b/2 + (b/2)^3/3! + ...,
@@ -47,32 +46,23 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta, A energyGrid = A(0) ){
   // This is is following what the manual instructs on pg. 651 near bottom, that
   // the solid-type spectrum must vary as b^2 as b goes to zero.
   
-  p[0] = p[1] / ( beta * beta );
+  p[0] = p[1] / ( betaGrid[1] * betaGrid[1] );
   for ( size_t i = 1; i < p.size(); ++i ){
-    if (customGrid){
-      p[i] = p[i] / ( 2 * energyGrid[i] * sinh(energyGrid[i]/2) );
-    } else {
-      p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
-      beta += delta; 
-    }
+    p[i] = p[i] / ( 2 * betaGrid[i] * sinh(betaGrid[i]/2) );
   }
 
   // normalize p so now it integrates to tbeta
-  normalize( p, delta, tbeta, energyGrid );
+  normalize( p, delta, tbeta, betaGrid );
 
   // calculate debye-waller coefficient and effective temperature
-  double lambda_s = fsum( 0, p, 0.5, delta, energyGrid );
-  double t_eff    = fsum( 2, p, 0.5, delta, energyGrid ) / ( 2 * tbeta );
+  double lambda_s = fsum( 0, p, 0.5, delta, betaGrid );
+  double t_eff    = fsum( 2, p, 0.5, delta, betaGrid ) / ( 2 * tbeta );
 
   // convert p(beta) --> t1(beta) where t1 is defined to be
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  if (customGrid){
-    for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( energyGrid[i]/2 ) / lambda_s; }
-  } else {
-    for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
-  }
+  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( betaGrid[i]/2 ) / lambda_s; }
   
   return std::make_tuple( lambda_s, t_eff );
 }

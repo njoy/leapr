@@ -535,8 +535,8 @@ TEST_CASE( "leapr" ){
     59.25, 60, 60.75, 61.5, 62.25, 63, 63.75, 64.5, 65.25, 66, 66.75, 67.5, 
     68.25, 69, 69.75, 70.5, 71.25, 72, 72.75, 73.5, 74.25, 75, 75.75, 76.5, 
     77.25, 78.0 };
-    temp   = { 296.0 };                  
-    delta  = 0.001;                     
+    temp  = { 296.0 };                  
+    delta = 0.001;                     
     rho = { 0, 0.000875, 0.0035, 0.008, 0.015, 0.0235, 0.0340, 0.046, 0.061, 
     0.078, 0.094, 0.116, 0.144, 0.1606, 0.1969, 0.2606, 0.3479, 0.3559, 0.3500, 
     0.3322, 0.3328, 0.2911, 0.1617, 0.1431, 0.1248, 0.09738, 0.06067, 0.1221, 
@@ -585,45 +585,36 @@ TEST_CASE( "leapr" ){
 
   GIVEN( "artificial input to test rho energy grid" ) {
     nphon = 100;             
-    awr    = 0.99917; ncold = 0;
+    awr   = 0.99917; ncold = 0;
     aws   = 1.1; sps = 3.8883; 
     lat   = 1;               
     alpha = { 0.01, 0.02, 0.03 };       
     beta  = { 0.0, 0.006, 0.01, 0.02 };
     temp  = { 296.0 };                                          
-    delta = 0.00255;                                           
-    twt    = 0.055556;     c      = 0.0;    tbeta = 0.444444;   
-    oscE   = { 35.8,    0.48};                                 
-    oscW   = { 0.166667, 0.333333 };                            
-    dka    = 0.0;                            
-    kappa  = { };                            
+    delta = 1.0;                                           
+    twt   = 0.0; c = 0.0; tbeta = 0.5;   
+    oscE  = { 0.205,    0.48};                                 
+    oscW  = { 0.166667, 0.333333 };                            
+    dka   = 0.0;                            
+    kappa = { };                            
 
-//4.5705275051479635E-009   4.5970339986086680E-009   4.6147049942491374E-009   4.6588824833503055E-009   9.1372603005644147E-009   9.1902512709537933E-009   9.2255785865584117E-009   9.3138968826866152E-009   1.3701367965741643E-008   1.3780825055741895E-008   1.3833796647506908E-008   1.3966226328467962E-008
+    std::vector<double> ssmCorrect {4.57052750E-9, 4.59703399E-9, 4.61470499E-9, 
+      4.65888248E-9, 9.13726030E-9, 9.19025127E-9, 9.22557858E-9, 9.31389688E-9, 
+      1.37013679E-8, 1.37808250E-8, 1.38337966E-8, 1.39662263E-8};
 
     WHEN( "Energy grid is not specified (uniform grid assumed)" ){
       rho   = { 0.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 0.0 };
-      auto out = leapr( nphon, awr, 
-          ncold, aws, lat, alpha, beta, 
-          temp, delta, rho, twt, c, tbeta, oscE, 
-          oscW, dka, kappa );
-  
-      auto ssm = std::get<2>(out);
-      std::vector<double> ssmCorrect { };
-      //checkSab( ssmCorrect, ssm );
+      auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+                        rho, twt, c, tbeta, oscE, oscW, dka, kappa );
+      checkSab( ssmCorrect, std::get<2>(out) );
     } // WHEN
 
     WHEN( "Energy grid is specified (uniform grid not assumed)" ){
       rho = { 0.0, 2.0, 2.0, 3.0, 3.0, 0.0 };
       std::vector<double> energyGrid { 0.0, 2.0, 5.0, 6.0, 8.0, 9.0 };
-      auto out = leapr( nphon, awr, 
-          ncold, aws, lat, alpha, beta, 
-          temp, delta, rho, twt, c, tbeta, oscE, 
-          oscW, dka, kappa, energyGrid );
-  
-      auto ssm = std::get<2>(out);
-      std::vector<double> ssmCorrect { };
-      //checkSab( ssmCorrect, ssm );
-
+      auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+                        rho, twt, c, tbeta, oscE, oscW, dka, kappa, energyGrid );
+      checkSab( ssmCorrect, std::get<2>(out) );
     } // WHEN
 
   } // GIVEN 

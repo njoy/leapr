@@ -29,7 +29,9 @@ TEST_CASE( "start function" ){
 
     p = {0.1, 0.2, 0.3, 0.5, 0.8, 1.3};
     delta = 0.0001; tev = 0.001; tbeta = 1.0;
-    output = start(p, delta, tev, tbeta);
+    std::vector<double> betaGrid(p.size());
+    for ( size_t i = 0; i < p.size(); ++i ){ betaGrid[i] = i * delta / tev; }
+    output = start(p, delta, tev, tbeta, betaGrid);
 
     correct = {1.9662112, 2.06616, 0.8135182, 0.632185, 0.5964, 0.649624};
     correct_lambda_s = 41.517752; correct_t_eff = 1.0118507;
@@ -47,7 +49,10 @@ TEST_CASE( "start function" ){
 
     WHEN( "spacing and temperature are very medium" ){
       delta = 0.015, tev = 1.723477E-2;
-      output = start(p, delta, tev, tbeta);
+      std::vector<double> betaGrid(p.size());
+      for ( size_t i = 0; i < p.size(); ++i ){ betaGrid[i] = i * delta / tev; }
+
+      output = start(p, delta, tev, tbeta, betaGrid);
 
       correct = {2.691905E-3, 4.031148E-3, 2.841214E-3, 2.247653E-3, 
                  2.014354E-3, 4.746877E-3, 7.851893E-3, 8.945384E-3, 
@@ -61,7 +66,9 @@ TEST_CASE( "start function" ){
 
     WHEN( "temperature is changed" ){
       delta = 0.015; tev = 4.3086925E-2;
-      output = start(p, delta, tev, tbeta);
+      std::vector<double> betaGrid(p.size());
+      for ( size_t i = 0; i < p.size(); ++i ){ betaGrid[i] = i * delta / tev; }
+      output = start(p, delta, tev, tbeta, betaGrid);
       correct = {1.54443108E-2, 1.82883208E-2, 1.07199712E-2, 7.37431363E-3, 
                  5.96172958E-3, 1.30407541E-2, 2.04553735E-2, 2.24449206E-2, 
                  0.238766209, 0.62462916, 1.10947058, 1.332378};
@@ -74,7 +81,10 @@ TEST_CASE( "start function" ){
 
     WHEN( "spacing is very large" ){
       tev = 4.3086925E-2; delta = 4.015;
-      output = start(p, delta, tev, tbeta);
+      std::vector<double> betaGrid(p.size());
+      for ( size_t i = 0; i < p.size(); ++i ){ betaGrid[i] = i * delta / tev; }
+
+      output = start(p, delta, tev, tbeta, betaGrid);
 
       correct = {2.36543334e-7, 2.20419880e-5, 2.20419880e-5, 1.95928782e-5, 
                  1.83683233e-5, 4.40839761e-5, 7.34732935e-5, 8.39694783e-5, 

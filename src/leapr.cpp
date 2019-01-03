@@ -14,17 +14,19 @@
 
 
 template<typename V, typename F>
-auto leapr( int nphon, 
-  F awr, int ncold, F aws, 
-  int lat, V alpha, V beta, V temp_vec, F delta, V rho, F trans_weight, 
-  F diffusion_const, F tbeta, V oscEnergies, V oscWeights, 
-  F dka, V kappaVals, V energyGrid = V(0) ){
+auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta, 
+  V temp_vec, F delta, V rho, F trans_weight, F diffusion_const, F tbeta, 
+  V oscEnergies, V oscWeights, F dka, V kappaVals, V energyGrid = V(0) ){
 
-  F bk    = 8.617385e-5,
-    therm = 0.0253,
-    lambda_s,t_eff,
-    arat  = 1.0; // This is for scaling alpha and beta values later
-  // Loop over scatterers and temperatures
+  if (energyGrid.size() == 0){
+    energyGrid.resize(rho.size());
+    for ( size_t i = 0; i < energyGrid.size(); ++i ){
+      energyGrid[i] = i*delta;
+    }
+  }
+
+  F bk = 8.617385e-5, therm = 0.0253, lambda_s, t_eff, arat  = 1.0; 
+  // arat is for scaling alpha and beta values later
   int isecs = 0;
   bool done = false;
 
@@ -34,12 +36,8 @@ auto leapr( int nphon,
 
   V t_eff_vec ( temp_vec.size(), 0.0 );
 
-  while ( not done ){
-    //if ( isecs == 0 ){ std::cout << "Principal scatterer" << std::endl; }
-    if ( isecs >  0 ){ 
-      //std::cout << "Secondary scatterer" << std::endl;
-      arat = aws / awr; 
-    }
+  while ( not done ){                      // isecs = 0 --> principal scatterer
+    if ( isecs >  0 ){ arat = aws / awr; } // isecs > 0 --> sec. scatterer
       
     for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
       F temp = temp_vec[itemp];
@@ -47,10 +45,6 @@ auto leapr( int nphon,
       F sc = 1.0;
       if ( lat == 1 ){ sc = therm/tev; }
       F scaling = sc/arat;
-      if ( itemp == 1 or temp >= 0 ){
-       // std::cout << "we want to read in tempdependent parameters" << std::endl;
-      } // if 1st temp or some positive temp, we want to calculate
-        // the temperature dependent parameters for this specifically 
 
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen, energyGrid);

@@ -1,4 +1,3 @@
-
 #include "contin_util/start.h"
 #include "contin_util/convol.h"
 #include "contin_util/interpolate.h"
@@ -9,7 +8,7 @@
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
   const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
-  const A& beta, Eigen::Tensor<F,3>& symSab, A energyGrid = A(0) ){
+  const A& beta, Eigen::Tensor<F,3>& symSab, A betaGrid ){
 
   /* Inputs
    * ------------------------------------------------------------------------
@@ -49,8 +48,10 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   // Start calculates the T1 term, described in Eq. 525 calling start will 
   // also change delta --> delta / tev where tev is temperature in eV. 
   // leapr.f90 calls this deltab
+  
+  for ( F& x : betaGrid ){ x /= tev; }
     
-  auto lambda_s_t_eff = start( t1, delta, tev, tbeta, energyGrid );
+  auto lambda_s_t_eff = start( t1, delta, tev, tbeta, betaGrid );
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
