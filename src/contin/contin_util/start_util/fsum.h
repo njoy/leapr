@@ -2,7 +2,7 @@
 #define LEAPR_CONTIN_START_FSUM_HH
 
 template <typename F, typename A> 
-double fsum( const int& n, const A& p, const F& tau, const F& delta_b, A energyGrid = A(0) ){
+double fsum( const int& n, const A& p, const F& tau, const F& delta_b, A betaGrid = A(0) ){
   /* Inputs
    * ------------------------------------------------------------------------
    * n       : appears in equation being evaluated
@@ -31,7 +31,7 @@ double fsum( const int& n, const A& p, const F& tau, const F& delta_b, A energyG
    *
    */
 
-  bool customGrid = energyGrid.size() > 0 ? true : false;
+  bool customGrid = betaGrid.size() > 0 ? true : false;
 
   double beta = 0, func_sum = 0, func_val = 0, dx_left, dx_right;
 
@@ -42,12 +42,12 @@ double fsum( const int& n, const A& p, const F& tau, const F& delta_b, A energyG
   for( size_t i = 0; i < p.size(); ++i ){
 
     if (customGrid){
-      func_val = even ? 2 * p[i] * cosh( energyGrid[i]* tau ) * std::pow( energyGrid[i], n ) :
-                        2 * p[i] * sinh( energyGrid[i]* tau ) * std::pow( energyGrid[i], n );
+      func_val = even ? 2 * p[i] * cosh( betaGrid[i]* tau ) * std::pow( betaGrid[i], n ) :
+                        2 * p[i] * sinh( betaGrid[i]* tau ) * std::pow( betaGrid[i], n );
       dx_left  = 0.0;
       dx_right = 0.0;
-      if ( i != 0 )         { dx_left  = (energyGrid[i]-energyGrid[i-1])/2; }
-      if ( i != p.size()-1 ){ dx_right = (energyGrid[i+1]-energyGrid[i])/2; }
+      if ( i != 0 )         { dx_left  = (betaGrid[i]-betaGrid[i-1])/2; }
+      if ( i != p.size()-1 ){ dx_right = (betaGrid[i+1]-betaGrid[i])/2; }
       func_val = func_val * ( dx_left + dx_right ); 
 
     } else {
