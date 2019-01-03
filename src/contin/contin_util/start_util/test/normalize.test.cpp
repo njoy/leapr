@@ -10,7 +10,7 @@ TEST_CASE( "normalize" ){
     std::vector<double> betaGrid(p.size());
     for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
 
-    normalize( p, delta, tbeta, betaGrid );
+    normalize( p, tbeta, betaGrid );
     correct= {2.62155807E-2, 5.24311614E-2, 7.86467421E-2, 0.104862322, 
               0.1310779, 0.15729348};
 
@@ -29,7 +29,7 @@ TEST_CASE( "normalize" ){
     betaGrid.resize(p.size());
     for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
 
-    normalize( p, delta, tbeta, betaGrid );
+    normalize( p, tbeta, betaGrid );
     correct = {5.2978935E-2, 0.10595787, 0.15893680, 0.21191574, 
       0.26489467, 0.31787361, 0.37085254, 0.42383148, 
       0.47681042, 0.52978935, 0.58276829, 0.63574722};
@@ -52,8 +52,8 @@ TEST_CASE( "normalize" ){
     }
 
 
-    normalize( p1, delta, tbeta, betaGrid );
-    normalize( p2, delta, tbeta, betaGrid );
+    normalize( p1, tbeta, betaGrid );
+    normalize( p2, tbeta, betaGrid );
 
     std::vector<double> correct= {3.095826174E-2, 6.191652348E-2, 
       9.287478752E-2, 0.1238330469, 0.1547913063, 0.1857495750};

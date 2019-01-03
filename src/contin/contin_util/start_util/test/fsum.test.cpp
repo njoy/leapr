@@ -14,11 +14,11 @@ TEST_CASE( "fsum" ){
 
     WHEN( "n = 1 (used for normalizing p(beta)) " ){
       THEN( "returned value has as most a 1e-6 percent error" ){
-        REQUIRE( fsum(1,p,tau,delta,betaGrid) == Approx(29610795.32).epsilon(1e-6));
+        REQUIRE( fsum(1,p,tau,betaGrid) == Approx(29610795.32).epsilon(1e-6));
 
         delta = 1.0;
         for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
-        REQUIRE( fsum(1,p1,tau,delta,betaGrid) == Approx(39.387006).epsilon(1e-6) );
+        REQUIRE( fsum(1,p1,tau,betaGrid) == Approx(39.387006).epsilon(1e-6) );
 
       } // THEN
     } // WHEN
@@ -26,22 +26,22 @@ TEST_CASE( "fsum" ){
     WHEN( "n = 0 (used for debye-waller coefficient) " ){
       THEN( "returned value has as most a 1e-6 percent error" ){
 
-        REQUIRE( fsum(0,p,tau,delta,betaGrid) == Approx(1444532.8400).epsilon(1e-6) );
+        REQUIRE( fsum(0,p,tau,betaGrid) == Approx(1444532.8400).epsilon(1e-6) );
 
         delta = 0.1;
         for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
-        REQUIRE( fsum(0,p1,tau,delta,betaGrid) == Approx(0.035514341).epsilon(1e-6) );
+        REQUIRE( fsum(0,p1,tau,betaGrid) == Approx(0.035514341).epsilon(1e-6) );
   
       } // THEN
     } // WHEN
     WHEN( "n = 2 (used for effective temperature calculation) " ){
       THEN( "returned value has as most a 1e-6 percent error" ){
 
-        REQUIRE( fsum(2,p,tau,delta,betaGrid) == Approx(612298146.17046).epsilon(1e-6) );
+        REQUIRE( fsum(2,p,tau,betaGrid) == Approx(612298146.17046).epsilon(1e-6) );
  
         delta = 0.7;
         for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
-        REQUIRE( fsum(2,p1,tau,delta,betaGrid) == Approx(3.21945524).epsilon(1e-6) );
+        REQUIRE( fsum(2,p1,tau,betaGrid) == Approx(3.21945524).epsilon(1e-6) );
   
       } // THEN
     } // WHEN

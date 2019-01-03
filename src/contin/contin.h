@@ -51,7 +51,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   for ( F& x : betaGrid ){ x /= tev; }
     
-  auto lambda_s_t_eff = start( t1, delta, tev, tbeta, betaGrid );
+  auto lambda_s_t_eff = start( t1, tbeta, betaGrid );
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
@@ -60,7 +60,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
 
   size_t npn = t1.size();
-  size_t np = t1.size();
+  const size_t np = t1.size();
 //  std::copy( t1.begin(), t1.begin() + npn, tlast.begin() );
 //  std::copy( t1.begin(), t1.begin() + npn, tnow.begin() );
   std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
@@ -88,9 +88,10 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   double eq14Val;
+  delta /= tev;
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
+    if ( n > 0 ){ tnow = convol(t1, tlast, delta, betaGrid, npl, np, npn); }
    
     eq14Val = 0.0;
     for( int b = 0; b < int(beta.size()); ++b ){
@@ -129,8 +130,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
           eq16[b] = (b == 0) ? eq14[b] : eq14[b] + eq16[b-1];
         }
 
-        //std::cout << eq14[65] << "   " << eq14[66] << "   " << eq14[67] << std::endl;
-        //std::cout << eq16[65] << "   " << eq16[66] << "   " << eq16[67] << std::endl;
       } 
 
       if ( npn >= tlast.size() ){ 
@@ -148,10 +147,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
 
   auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
-  //std::cout << "Hello, world 2" << std::endl;
-  //for ( size_t b = 0; b < beta.size(); ++b ){
-  //  std::cout << eq14[b] << std::endl;
-  //}
 
   return lambda_s_t_eff_2;
 

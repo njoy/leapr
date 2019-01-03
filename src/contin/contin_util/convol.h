@@ -1,7 +1,7 @@
-
+#include <iostream>
 template <typename F, typename A>
-auto convol( const A& t1, const A& t2, const F& delta, const int& nl=0, 
-  const int& n1=0, const int& nn=0 ){
+auto convol( const A& t1, const A& t2, const F& delta, A betaGrid,
+  const int& nl=0, const int& n1=0, const int& nn=0 ){
 
   A t3(t2.size(),0.0);
 
@@ -17,10 +17,11 @@ auto convol( const A& t1, const A& t2, const F& delta, const int& nl=0,
       if ( t1[j] > 0 ){
         // Convolution will only be significant if t1[j] is not zero
     
-        f1 = ( i1 - 1 > nl ) ? 0 : t2[i1]*exp(-j*delta);
+        f1 = ( i1 - 1 > nl ) ? 0 : t2[i1]*exp(-betaGrid[j]);
 
         if      ( i2 >= 0 and  i2-1 < nl ){ f2 = t2[ i2];                   }
         else if ( i2 <  0 and -i2-3 < nl ){ f2 = t2[-i2] * exp( i2*delta ); }
+        //else if ( i2 <  0 and -i2-3 < nl ){ f2 = t2[-i2] * exp( -betaGrid[i2] ); }
         else                              { f2 = 0;                         }
 
         // If at one of the endpoints, only give half contribution

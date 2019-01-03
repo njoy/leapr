@@ -3,7 +3,7 @@
 #include <iostream> 
 
 template <typename A, typename F>
-auto start( A& p, F& delta, const F& tev, const F& tbeta, A betaGrid ){
+auto start( A& p, const F& tbeta, A betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -30,14 +30,8 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta, A betaGrid ){
    *
    */
 
-  bool customGrid = betaGrid.size() > 0 ? true : false;
-  std::cout << customGrid << "     " << tev << std::endl;
-
-  delta /= tev; // make delta is unitless (leapr.f90 calls this deltab)
-
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.
-
   // What if the first phonon rho value is equal to zero? Then P(beta) is 
   // undefined, which just won't do. So to be safe we approximate the first 
   // value P(beta_0) with a Taylor series. sinh(b/2) ~= b/2 + (b/2)^3/3! + ...,
@@ -45,24 +39,24 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta, A betaGrid ){
   //                                  --> rho / ( b * b )
   // This is is following what the manual instructs on pg. 651 near bottom, that
   // the solid-type spectrum must vary as b^2 as b goes to zero.
-  
   p[0] = p[1] / ( betaGrid[1] * betaGrid[1] );
+  
   for ( size_t i = 1; i < p.size(); ++i ){
     p[i] = p[i] / ( 2 * betaGrid[i] * sinh(betaGrid[i]/2) );
   }
 
   // normalize p so now it integrates to tbeta
-  normalize( p, delta, tbeta, betaGrid );
+  normalize( p, tbeta, betaGrid );
 
   // calculate debye-waller coefficient and effective temperature
-  double lambda_s = fsum( 0, p, 0.5, delta, betaGrid );
-  double t_eff    = fsum( 2, p, 0.5, delta, betaGrid ) / ( 2 * tbeta );
+  double lambda_s = fsum( 0, p, 0.5, betaGrid );
+  double t_eff    = fsum( 2, p, 0.5, betaGrid ) / ( 2 * tbeta );
 
   // convert p(beta) --> t1(beta) where t1 is defined to be
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( betaGrid[i]/2 ) / lambda_s; }
+  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp(betaGrid[i]/2) / lambda_s; }
   
   return std::make_tuple( lambda_s, t_eff );
 }
