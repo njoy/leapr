@@ -2,7 +2,7 @@
 #include "contin/contin_util/start_util/fsum.h"
 
 template <typename A, typename F>
-auto start( A& p, F& delta, const F& tev, const F& tbeta ){
+auto start( A& p, F& delta, const F& tev, const F& tbeta, A energyGrid = A(0) ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -29,6 +29,11 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta ){
    *
    */
 
+  bool customGrid = energyGrid.size() > 0 ? true : false;
+  for (size_t i = 0; i < energyGrid.size(); ++i){
+    energyGrid[i] /= tev;
+  }
+
   delta /= tev; // make delta is unitless (leapr.f90 calls this deltab)
 
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
@@ -44,22 +49,30 @@ auto start( A& p, F& delta, const F& tev, const F& tbeta ){
   
   p[0] = p[1] / ( beta * beta );
   for ( size_t i = 1; i < p.size(); ++i ){
-    p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
-    beta += delta; 
+    if (customGrid){
+      p[i] = p[i] / ( 2 * energyGrid[i] * sinh(energyGrid[i]/2) );
+    } else {
+      p[i] = p[i] / ( 2 * beta * sinh(beta/2) );
+      beta += delta; 
+    }
   }
 
   // normalize p so now it integrates to tbeta
-  normalize( p, delta, tbeta );
+  normalize( p, delta, tbeta, energyGrid );
 
   // calculate debye-waller coefficient and effective temperature
-  double lambda_s = fsum( 0, p, 0.5, delta );
-  double t_eff    = fsum( 2, p, 0.5, delta ) / ( 2 * tbeta );
+  double lambda_s = fsum( 0, p, 0.5, delta, energyGrid );
+  double t_eff    = fsum( 2, p, 0.5, delta, energyGrid ) / ( 2 * tbeta );
 
   // convert p(beta) --> t1(beta) where t1 is defined to be
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
+  if (customGrid){
+    for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( energyGrid[i]/2 ) / lambda_s; }
+  } else {
+    for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp( delta*i/2 ) / lambda_s; }
+  }
   
   return std::make_tuple( lambda_s, t_eff );
 }

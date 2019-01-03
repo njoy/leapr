@@ -1,7 +1,7 @@
 #include "contin/contin_util/start_util/fsum.h"
 
 template <typename F, typename A>
-void normalize( A& p, const F& delta_b, const F& tbeta ){
+void normalize( A& p, const F& delta_b, const F& tbeta, A energyGrid = A(0) ){
 
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
    * equation that is being normalized to integrate to tbeta. 
@@ -26,9 +26,9 @@ void normalize( A& p, const F& delta_b, const F& tbeta ){
    * * P(beta) is amended
    */
 
-  F sum = fsum( 1, p, 0.5, delta_b ) / tbeta; 
-  for ( auto& entry : p ){
-    entry = entry / sum;
+  F inv_sum = tbeta / fsum( 1, p, 0.5, delta_b, energyGrid ); 
+  for ( F& entry : p ){
+    entry = entry * inv_sum;
   } 
 }
 
