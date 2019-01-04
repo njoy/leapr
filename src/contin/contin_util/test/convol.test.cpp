@@ -14,7 +14,6 @@ TEST_CASE( "convol" ){
 
     int nn = 18, n1 = 6, nl = 6; 
     THEN( "the vectors are correctly convolved and result is returned" ){
-      /*
 
       output = convol( t1, t2, delta, nl, n1, nn ),
       correct = {3.8459762, 2.6993367, 1.0195307, 0.53364442, 0.37281623, 
@@ -39,7 +38,6 @@ TEST_CASE( "convol" ){
       for ( size_t i = 0; i < output.size(); ++i ){
         REQUIRE( output[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
       }
-      */
  
       t1 = {0.41483349, 0.49122347, 0.28793794, 0.19807373, 0.16013178, 
         0.35027406, 0.54943040};

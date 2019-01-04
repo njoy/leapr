@@ -85,22 +85,8 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   delta /= tev;
 
   for( int n = 0; n < nphon; ++n ){
-    //std::cout << (t1 | ranges::view::all ) << std::endl;
-    //std::cout << (tlast | ranges::view::all ) << std::endl;
-    //std::cout << std::endl;
-
 
     if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
-
-    // 
-    //if ( n > 0 ){
-    //F arat = sc/scaling;
-    //auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
-    //return lambda_s_t_eff_2;
-    //}
-    // 
-
-
    
     eq14Val = 0.0;
     for( int b = 0; b < int(beta.size()); ++b ){
