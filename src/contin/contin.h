@@ -55,14 +55,10 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
-  A xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), 
-    tlast(nphon*t1.size(),0.0);
-
+  A xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
 
   size_t npn = t1.size();
   const size_t np = t1.size();
-//  std::copy( t1.begin(), t1.begin() + npn, tlast.begin() );
-//  std::copy( t1.begin(), t1.begin() + npn, tnow.begin() );
   std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
   std::copy( t1.begin(), t1.begin() + np, tnow.begin() );
 
@@ -75,9 +71,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
   // To be used when checking moments of S(a,b)
   std::vector<int> maxt (1000, 0);
-  for ( size_t b = 0; b < beta.size(); ++b ){
-    maxt[b] = alpha.size() + 1;
-  }
+  for ( size_t b = 0; b < beta.size(); ++b ){ maxt[b] = alpha.size() + 1; }
 
   std::vector<double> eq16(beta.size()), eq14(beta.size());
 
@@ -91,7 +85,22 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   delta /= tev;
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta, betaGrid, npl, np, npn); }
+    //std::cout << (t1 | ranges::view::all ) << std::endl;
+    //std::cout << (tlast | ranges::view::all ) << std::endl;
+    //std::cout << std::endl;
+
+
+    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
+
+    // 
+    //if ( n > 0 ){
+    //F arat = sc/scaling;
+    //auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
+    //return lambda_s_t_eff_2;
+    //}
+    // 
+
+
    
     eq14Val = 0.0;
     for( int b = 0; b < int(beta.size()); ++b ){
