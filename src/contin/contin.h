@@ -55,7 +55,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
-  A xa(alpha.size(),0.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
+  A xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
 
   size_t npn = t1.size();
   const size_t np = t1.size();
@@ -67,11 +67,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   // track which block we're at. So we start out with the size of t1, then it
   // will basically go to 2*t1.size(), then 3*t1.size(), etc.
 
-  F add, exx;
-
-  // To be used when checking moments of S(a,b)
-  std::vector<int> maxt (1000, 0);
-  for ( size_t b = 0; b < beta.size(); ++b ){ maxt[b] = alpha.size() + 1; }
+  F add, exx, g_prime;
 
   std::vector<double> eq16(beta.size()), eq14(beta.size());
 
@@ -81,70 +77,49 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   // convolution with the one before it. This is following Eq. 526
   
   int npl = np;
-  double eq14Val;
   delta /= tev;
 
   for( int n = 0; n < nphon; ++n ){
-
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, np, npn); }
-   
-    eq14Val = 0.0;
-    for( int b = 0; b < int(beta.size()); ++b ){
-      for( int a = 0; a < int(alpha.size()); ++a ){
-        if ( b == 0 ) xa[a] +=  log(lambda_s * alpha[a] * scaling / ( n + 1 ) );
-
-        exx = -lambda_s * alpha[a] * scaling + xa[a];
-        // make sure to put this in an array or something so that you don't 
-        // keep on computing sorry i'm lazy
-
-        if ( exx <= -250.0 ){ continue; }
-        exx = exp(exx);
-        
+    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npn); }
+    for( size_t a = 0; a < alpha.size(); ++a ){
+      xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
+      exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
+      for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
-
-        if ( symSab(a,b,itemp) != 0        and n >= nphon-1 and 
-             add > symSab(a,b,itemp)*0.001 and a < maxt[b] ){ maxt[b] = a; }
-
-      } // for a in alpha
-    } // for b in beta
+      } // for b in beta
+    } // for a in alpha
 
     npl = npn;
-    if ( n > 0 ){
-      // tnow and tlast will be populated with nphon-many iterations of t1 info,
-      // so npn here is being pushed forward by t1 length so that we can get
-      // to the next block of vector
-      npn += t1.size() - 1;
-      if ( npn >= tlast.size() ){ 
-        for ( size_t b = 0; b < beta.size(); ++b ){
-          double g_prime = 0;
-          for ( size_t a = 0; a < alpha.size(); ++a ){ 
-            g_prime += symSab(a,b,0); 
-          }
-          eq14[b] = g_prime; 
-          eq16[b] = (b == 0) ? eq14[b] : eq14[b] + eq16[b-1];
-        }
 
-      } 
+    // tnow and tlast will be populated with nphon-many iterations of t1 info,
+    // so npn here is being pushed forward by t1 length so that we can get
+    // to the next block of vector
+    npn += t1.size() - 1;
+    if ( n == 0 ){ 
+      continue;
+    }
 
-      if ( npn >= tlast.size() ){ 
-        auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
-        return lambda_s_t_eff_2; 
+    
+    // ------------------------------------------------------------------------
+    // CDF THINGS
+    // ------------------------------------------------------------------------
+    if ( npn >= tlast.size() ){ 
+      for ( size_t b = 0; b < beta.size(); ++b ){
+        g_prime = 0.0;
+        for ( size_t a = 0; a < alpha.size(); ++a ){g_prime += symSab(a,b,0);}
+        eq16[b] = (b == 0) ? g_prime : g_prime + eq16[b-1]; // g_prime = Eq.14
       }
-      for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
-    }
-    else { 
-      npn += t1.size() - 1;
-    }
+    } 
+    // ------------------------------------------------------------------------
+
+    if ( npn >= tlast.size() ){ return std::make_tuple(lambda_s,t_eff,eq16); }
+
+    for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+
   } // for n in nphon (maxn in leapr.f90) 
 
-  F arat = sc/scaling;
-  //checkMoments( sc, alpha, beta, maxt, itemp, lambda_s, tbeta, arat, t_eff, symSab );
-
-  auto lambda_s_t_eff_2 = std::make_tuple(lambda_s,t_eff,eq16);
-
-  return lambda_s_t_eff_2;
-
+  return std::make_tuple(lambda_s,t_eff,eq16);
 }
 
 
