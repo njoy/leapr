@@ -7,48 +7,26 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
-void swap( double& a, double& b ){ double c = a; a = b; b = c; }
+template <typename F>
+void swap( F& a, F& b ){ F c = a; a = b; b = c; }
 
-auto discre( int itemp, const double& sc, const double& scaling, 
-  const double& tev, const double& lambda_s, const double& twt, 
-  const double& tbeta, const std::vector<double>& alpha, 
-  const std::vector<double>& beta, const std::vector<double>& temp_vec, 
-  std::vector<std::tuple<double,double>>& oscEnergiesWeights, 
-  std::vector<double>& t_eff_vec, 
-  Eigen::Tensor<double,3>& sym_sab ){
+template <typename V, typename F>
+auto discre( int itemp, const F& sc, const F& scaling, const F& tev, 
+  const F& lambda_s, const F& twt, const F& tbeta, const V& alpha, 
+  const V& beta, const V& temp_vec, std::vector<std::tuple<F,F>>& oscEnergiesWeights, 
+  V& t_eff_vec, Eigen::Tensor<F,3>& sym_sab ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
-  double bk = 8.617385E-5;
+  F bk = 8.617385E-5, weight, tsave;
 
-  // Set up oscillator parameters
-  // Prepare functions of beta
-  double weight, tsave;
-
-  std::vector<double> ar(50), t_eff_consts(50), lambda_i(50), 
-    betaVals(50), exb(beta.size()), betan(beta.size());
-
-  /*
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
-    for ( size_t i = 0; i < energy.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
-    }
-    */
-
-  /*
-  std::vector<double> energies, weights;
-  for ( size_t i = 0; i < oscEnergiesWeights.size(); ++i ){
-    energies[i] = std::get<0>(oscEnergiesWeights[i]);
-    weights[i]  = std::get<1>(oscEnergiesWeights[i]);
-  }
-
-  auto osc_E_wgt = ranges::view::zip( energies, weights );
-  */
+  V ar(50), t_eff_consts(50), lambda_i(50), betaVals(50), exb(beta.size()), 
+    betan(beta.size()), bex( maxbb ), rdbex( maxbb );
   
   weight = 0;
   tsave = 0;
-  //std::cout << bk << sc << tev << std::endl;
-  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, bk, exb, betan, beta, sc );
+
+  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, 
+    t_eff_consts, lambda_i, bk, exb, betan, beta, sc );
 
   //prepareParams(osc_E_wgt, tev, betaVals, weight, tsave, ar, t_eff_consts,
   //  lambda_i, bk, exb, betan, beta, sc );
@@ -64,27 +42,21 @@ auto discre( int itemp, const double& sc, const double& scaling,
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
-  std::vector<double> bex( maxbb ), rdbex( maxbb );
   int nbx = bfill( bex, rdbex, betan );
-  double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
+  F wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
 
     // Get all sym_sab entries for a given alpha and temperature (vary beta)
     // for use in exts
-    std::vector<double> input ( beta.size() );
-    for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab(a,b,itemp);
-    }
-
+    V input (beta.size());
+    for ( size_t b = 0; b < input.size(); ++b ){input[b] = sym_sab(a,b,itemp);}
     // input = sym_sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
     //         order to go between S(a,b) and S(a,-b) 
-    
     auto sex = exts( input, exb, betan )|ranges::to_vector;
-
-    //std::vector<double> sex = exts( input, exb, betan );
+    //V sex = exts( input, exb, betan );
     // sex is populated with sym_sab entries, such that 
     //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
     //                             or 
@@ -93,14 +65,13 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // The exp(-beta) values are explained above, because of Eq. 509
 
 
-    // Initialize delta loop
-    std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
+    // Initialize oscillator loop
+    V bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
       betaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, oscEnergiesWeights, 
-      t_eff_consts, 
-      temp_vec[itemp] );
-    // oscillator loop is mean to, for a given alpha and beta, populate the wts
+      t_eff_consts, temp_vec[itemp] );
+    // oscillator loop is meant to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
     // populate bes with entries of beta_k again for various k.
     // So at this point all we need to do is sum over k for W_k*S(a,b-b_k)
@@ -110,7 +81,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
     unsigned int n = nn; 
-    nn = n - 1;
+    nn -= 1;
     for ( size_t i = 1; i < n-1; ++i ){
       for ( size_t j = i+1; j < n; ++j ){
         if ( wts[j] > wts[i] ){
@@ -119,27 +90,17 @@ auto discre( int itemp, const double& sc, const double& scaling,
         } 
       }
     }
+    for (int i = 0; i < int(nn); ++i){
+      n = i;
+      if (wts[i-1] < 1e-6 and i > 5){break;};
+    }
 
-    /*
-    n = 0;
-    while ( n < nn ){
-      n += 1;
-      if ( wts[n-1] < 1e-6 and n > 5 ){ break; }
-    }
-    */
-    int i=0;
-    int idone=0;
-    while (i << nn and idone == 0){
-       i=i+1;
-       n=i;
-       if (wts[i-1] < 1e-6 and i > 5) idone=1;
-    }
+
 
 
 
     // Add the continuous part to the scattering law
-    std::vector<double> sexpb(beta.size(),0.0);
-    //std::cout << wts[0] << std::endl;
+    V sexpb(beta.size(),0.0);
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
@@ -153,7 +114,7 @@ auto discre( int itemp, const double& sc, const double& scaling,
     }
 
     // Add the delta functions to the scattering law
-    double dwf = exp( -alpha[a]*scaling*lambda_s );
+    F dwf = exp( -alpha[a]*scaling*lambda_s );
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
 
     // Record the results

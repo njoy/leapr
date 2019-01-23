@@ -31,5 +31,7 @@ for i in range(-len(x)+1,len(y)):
 
 
 
+print(np.convolve(x,y))
+print(np.array(z))
 print(np.convolve(x,y)-(np.array(z)))
 
