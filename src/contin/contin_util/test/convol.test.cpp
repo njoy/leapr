@@ -3,6 +3,7 @@
 #include "contin/contin_util/convol.h"
 
 TEST_CASE( "convol" ){
+  /*
   GIVEN( "two vectors" ){
     std::vector<double> 
       t1 {0.2, 0.6, 0.8, 2.0, 6.0, 8.0},
@@ -124,12 +125,13 @@ TEST_CASE( "convol" ){
       }
     } // THEN
   } // GIVEN
+  */
   GIVEN( "super simple case" ){
     std::vector<double> 
       t1 {0.1, 0.6, 0.4},
       t2 {0.1, 0.6, 0.4, 
           0.0, 0.0  };
-    double delta = 1.00;
+    double delta = 1.0;
 
     int nn = 5; 
     THEN( "the vectors are correctly convolved and result is returned" ){
