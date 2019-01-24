@@ -90,9 +90,17 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& tev,
         } 
       }
     }
-    for (int i = 0; i < int(nn); ++i){
-      n = i;
-      if (wts[i-1] < 1e-6 and i > 5){break;};
+    //for (int i = 0; i < int(nn); ++i){
+    //  std::cout << "---------------- " << i << "   " << n << "     " << nn << std::endl;
+    //  n = i;
+    //  if (wts[i-1] < 1e-6 and i > 5){break;};
+    //}
+    int i=0;
+    int idone=0;
+    while (i << nn and idone == 0){
+       i=i+1;
+       n=i;
+       if (wts[i-1] < 1e-6 and i > 5) idone=1;
     }
 
 

@@ -78,16 +78,14 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   delta /= tev;
-  A betaGrid_phonon(t1.size(),0.0);
-  for (size_t i = 0; i < t1.size(); ++i){ betaGrid_phonon[i] = i*delta; }
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid_phonon); }
+    if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate( tnow, delta, beta[b] * sc );
+        add = exx * interpolate( tnow, delta, beta[b] * sc,betaGrid );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
       } // for b in beta
     } // for a in alpha
