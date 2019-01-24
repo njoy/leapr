@@ -26,11 +26,13 @@ def convol(t1,t2,delta):
 #delta = 1.0
 #t3 = convol(t1,t2,delta)
 #print(np.array(t3))
+"""
 t1 = [0.1, 0.2, 0.2, 0.2, 0.4]
 t2 = [0.1, 0.2, 0.2, 0.2, 0.4, 0, 0, 0, 0]
 delta = 1.0
 t3 = convol(t1,t2,delta)
 print(np.array(t3))
+"""
 
 
 
@@ -55,6 +57,7 @@ def convol_under_construction(t1,t2,betaVals):
             value_left = getTnVal_2(t1,i,deltaVals[i])*getTnVal_2(t2,j-i,deltaVals[i])
             value_right = getTnVal_2(t1,i+1,deltaVals[i])*getTnVal_2(t2,j-i-1,deltaVals[i])
             value = (value_left + value_right)*0.5*deltaVals[i]
+            if (j == 0): print(value_left,value_right,value,t3[j])
             t3[j] += value 
     return t3
 
@@ -64,13 +67,29 @@ def convol_under_construction(t1,t2,betaVals):
 #t3 = convol_under_construction(t1,t2,betaVals)
 #print(np.array(t3))
 
+"""
 t1 = [0.1, 0.2, 0.2, 0.2, 0.4]
 t2 = [0.1, 0.2, 0.2, 0.2, 0.4, 0, 0, 0, 0]
 betaVals = [0.0,1.0,2.0,3.0,4.0]
+t3 = convol_under_construction(t1,t2,betaVals)
+print(np.array(t3))
+"""
+
+
+
+t1 = [0.2, 0.6, 0.8, 2.0, 6.0, 8.0]
+t2 = [0.2, 0.6, 0.8, 2.0, 6.0, 8.0,\
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0,\
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+print()
+delta = 0.03
 t3 = convol(t1,t2,delta)
 print(np.array(t3))
 
-
+print()
+betaVals = [i*delta for i in range(2*len(t1)-1)]
+t3 = convol_under_construction(t1,t2,betaVals)
+print(np.array(t3))
 
 
 

@@ -78,9 +78,11 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   delta /= tev;
+  A betaGrid_phonon(t1.size(),0.0);
+  for (size_t i = 0; i < t1.size(); ++i){ betaGrid_phonon[i] = i*delta; }
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npn); }
+    if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid_phonon); }
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
