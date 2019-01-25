@@ -19,6 +19,7 @@ double interpolate( const A& y, const F& delta2, const F& x, const A& betaGrid )
 
   // This is the index just to the left of desired x point
   unsigned int i = x / delta2; 
+  if ( x >= (y.size()-1)*delta2 ){ return 0.0; }
   double x_L = i * delta2; 
                      
   // Return 0.0 if out of range (above), else return interpolated value
