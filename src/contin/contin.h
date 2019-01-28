@@ -5,6 +5,128 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
+template <typename A, typename F>
+auto interp(A Tn, A betas, F beta){
+  if (beta < betas[0] or betas[betas.size()-1] < beta){ return 0.0; }
+  for ( size_t i = 0; i < betas.size()-1; ++i ){
+    if (betas[i] <= beta and beta <= betas[i+1]){
+      F y1 = Tn[i],    y2 = Tn[i+1];
+      F x1 = betas[i], x2 = betas[i+1];
+      return ((y2-y1)/(x2-x1)*beta + y1 - (y2-y1)/(x2-x1)*x1);
+    }
+  }
+  return 0.0;
+}
+
+
+template <typename A, typename F>
+auto contin_NEW( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
+  const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
+  const A& beta, Eigen::Tensor<F,3>& symSab, A phononGrid ){
+
+  int nBeta = beta.size();
+
+  // Scale beta/energy phonon grid 
+  for ( F& x : phononGrid ){ x /= tev; }
+    
+  auto lambda_s_t_eff = start( t1, tbeta, phononGrid );
+  F lambda_s = std::get<0>(lambda_s_t_eff),
+    t_eff    = std::get<1>(lambda_s_t_eff);
+
+  // Reflect beta values
+  A posNegBetas (nBeta*2-1,0.0);
+  int j = 0;
+  for (int i = -nBeta+1; i < nBeta; ++i){posNegBetas[j++] = sgn(i)*beta[abs(i)];}
+
+  // Shift T1 so that it lies on the requested beta value grid
+  A t1_newGrid(nBeta,0.0);
+  for (int i = 0; i < nBeta; ++i){
+    t1_newGrid[i] = interp(t1,phononGrid,beta[i]);
+  }
+
+  // Reflect T1 values
+  A T1(2*nBeta-1,0.0);
+  j = 0; 
+  for (int i = -nBeta+1; i < nBeta; ++i){
+    if (i >= 0){
+      T1[j] = t1_newGrid[i];
+    }
+    else {
+      T1[j] = t1_newGrid[abs(i)]*exp(posNegBetas[j]);
+    }
+    j++;
+  }
+  
+ 
+  
+  //for ( auto x : posNegBetas){ std::cout << x << std::endl; }
+  //std::cout << std::endl;
+  for ( auto x : T1){ std::cout << x << std::endl; }
+
+
+
+
+
+
+  A xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
+
+
+
+ 
+
+  size_t npn = t1.size();
+  const size_t np = t1.size();
+  std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
+  std::copy( t1.begin(), t1.begin() + np, tnow.begin() );
+
+  F add, exx, g_prime;
+
+  std::vector<double> eq16(nBeta), eq14(nBeta);
+
+  int npl = np;
+  delta /= tev;
+  A alpha0Additions(beta.size(),0.0);
+  A alpha1Additions(beta.size(),0.0);
+
+  for( int n = 0; n < nphon; ++n ){
+    if ( n > 0 ){ tnow = convol(t1, tlast, npn, phononGrid); }
+    for( size_t a = 0; a < alpha.size(); ++a ){
+      xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
+      exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
+      for( size_t b = 0; b < beta.size(); ++b ){
+        add = exx * interpolate( tnow, delta, beta[b] * sc,phononGrid );
+        symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
+        if (a == 0){ alpha0Additions[b] += add; }
+        if (a == 1){ alpha1Additions[b] += add; }
+      } // for b in beta
+    } // for a in alpha
+
+    npl = npn;
+
+    // tnow and tlast will be populated with nphon-many iterations of t1 info,
+    // so npn here is being pushed forward by t1 length so that we can get
+    // to the next block of vector
+    npn += t1.size() - 1;
+    if ( n == 0 ){ 
+      continue;
+    }
+
+    
+    if ( npn >= tlast.size() ){ 
+      return std::make_tuple(lambda_s,t_eff,eq16); }
+
+    for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+
+  } // for n in nphon (maxn in leapr.f90) 
+
+  return std::make_tuple(lambda_s,t_eff,eq16);
+}
+
+
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
   const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
@@ -80,24 +202,24 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   delta /= tev;
-  A alpha0Additions(beta.size(),0.0);
-  A alpha1Additions(beta.size(),0.0);
-  std::cout << "scaling " << scaling << std::endl;
+  //A alpha0Additions(beta.size(),0.0);
+  //A alpha1Additions(beta.size(),0.0);
+  //std::cout << "scaling " << scaling << std::endl;
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
-    std::cout << tnow[0] << "     " << tnow[1] << "    " << tnow[2]<< std::endl;
-    std::cout << tnow[3] << "     " << tnow[4] << "    " << tnow[5]<< std::endl;
+    //std::cout << tnow[0] << "     " << tnow[1] << "    " << tnow[2]<< std::endl;
+    //std::cout << tnow[3] << "     " << tnow[4] << "    " << tnow[5]<< std::endl;
     //std::cout << tnow[6] << "     " << tnow[7] << "    " << tnow[8]<< std::endl;
-    std::cout << std::endl;
+    //std::cout << std::endl;
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc,betaGrid );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
-        if (a == 0){ alpha0Additions[b] += add; }
-        if (a == 1){ alpha1Additions[b] += add; }
+        //if (a == 0){ alpha0Additions[b] += add; }
+        //if (a == 1){ alpha1Additions[b] += add; }
       } // for b in beta
     } // for a in alpha
 
@@ -125,16 +247,16 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     // ------------------------------------------------------------------------
 
     if ( npn >= tlast.size() ){ 
-      for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
-      std::cout << std::endl;
-      for ( auto x : alpha1Additions ) { std::cout << x << std::endl; }
+      //for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
+      //std::cout << std::endl;
+      //for ( auto x : alpha1Additions ) { std::cout << x << std::endl; }
       return std::make_tuple(lambda_s,t_eff,eq16); }
 
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
 
   } // for n in nphon (maxn in leapr.f90) 
 
-  for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
+  //for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
   return std::make_tuple(lambda_s,t_eff,eq16);
 }
 

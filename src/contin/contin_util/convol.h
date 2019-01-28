@@ -1,10 +1,7 @@
 #include <iostream>
 #include <stdlib.h> // abs()
 
-template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
- 
+
 template <typename F, typename A>
 auto getTnVal( int j, const A& tn, const F& delta ){
   if (abs(j) >= int(tn.size())){ return 0.0; }
@@ -31,12 +28,6 @@ auto getConvolAtPoint( int i, const A& t1, const A& t2, const A betaGrid ){
 template <typename A>
 auto convol( const A& t1, const A& t2, int len_t3, const A betaGrid){
   A t3(t2.size(),0.0);
-  A posNegBetas (betaGrid.size()*2-1,0.0);
-  int counter = 0;
-  for (int i = -betaGrid.size()+1; i < int(betaGrid.size()); ++i ){
-    posNegBetas[counter++] = sgn(i)*betaGrid[abs(i)];
-  }
-  //for ( auto x : posNegBetas ){ std::cout << x << std::endl; }
  
   for (int i = 0; i<len_t3; ++i){
     t3[i] = getConvolAtPoint(i,t1,t2,betaGrid);
