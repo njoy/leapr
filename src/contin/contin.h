@@ -23,8 +23,30 @@ auto interp(A Tn, A betas, F beta){
 }
 
 
+
+template <typename A>
+A getNextTn(A betas, A T1, A Tn){
+  A T_next(betas.size());
+  //std::cout << "HERE I AM " << betas.size() << std::endl;
+  //for ( auto x : Tn){ std::cout << x << std::endl; }
+  for ( size_t b = 0; b < betas.size(); ++b ){
+    //std::cout << "------------  " << b << std::endl;
+    double T_next_val = 0.0;
+    for ( size_t b_prime = 0; b_prime < betas.size()-1; ++b_prime){
+      double termL = T1[b_prime]*interp(Tn,betas,(betas[b]-betas[b_prime]));
+      double termR = T1[b_prime+1]*interp(Tn,betas,(betas[b]-betas[b_prime+1]));
+      //std::cout << "-----------------------  " << b_prime << "     " << Tn[b_prime] << std::endl;
+      T_next_val += (termL+termR)*0.5*(betas[b+1]-betas[b]);
+    }
+    T_next[b] = T_next_val;
+  }
+  return T_next;
+}
+
+
+
 template <typename A, typename F>
-auto contin_NEW( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
+auto contin_NEW( const unsigned int itemp, int nphon, const F& tbeta, 
   const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
   const A& beta, Eigen::Tensor<F,3>& symSab, A phononGrid ){
 
@@ -52,78 +74,34 @@ auto contin_NEW( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   A T1(2*nBeta-1,0.0);
   j = 0; 
   for (int i = -nBeta+1; i < nBeta; ++i){
-    if (i >= 0){
-      T1[j] = t1_newGrid[i];
-    }
-    else {
-      T1[j] = t1_newGrid[abs(i)]*exp(posNegBetas[j]);
-    }
+    if (i >= 0){ T1[j] = t1_newGrid[i]; }
+    else {       T1[j] = t1_newGrid[abs(i)]*exp(posNegBetas[j]); }
     j++;
   }
-  
- 
-  
-  //for ( auto x : posNegBetas){ std::cout << x << std::endl; }
-  //std::cout << std::endl;
-  for ( auto x : T1){ std::cout << x << std::endl; }
 
+  A T_now(T1.size(),0.0), T_next(T1.size(),0.0);
+  std::copy( T1.begin(), T1.begin() + T1.size(), T_now.begin() );
+  std::copy( T1.begin(), T1.begin() + T1.size(), T_next.begin() );
 
-
-
-
-
-  A xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
-
-
-
- 
-
-  size_t npn = t1.size();
-  const size_t np = t1.size();
-  std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
-  std::copy( t1.begin(), t1.begin() + np, tnow.begin() );
-
-  F add, exx, g_prime;
-
-  std::vector<double> eq16(nBeta), eq14(nBeta);
-
-  int npl = np;
-  delta /= tev;
-  A alpha0Additions(beta.size(),0.0);
-  A alpha1Additions(beta.size(),0.0);
-
-  for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, npn, phononGrid); }
-    for( size_t a = 0; a < alpha.size(); ++a ){
-      xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
-      exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
-      for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate( tnow, delta, beta[b] * sc,phononGrid );
-        symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
-        if (a == 0){ alpha0Additions[b] += add; }
-        if (a == 1){ alpha1Additions[b] += add; }
-      } // for b in beta
-    } // for a in alpha
-
-    npl = npn;
-
-    // tnow and tlast will be populated with nphon-many iterations of t1 info,
-    // so npn here is being pushed forward by t1 length so that we can get
-    // to the next block of vector
-    npn += t1.size() - 1;
-    if ( n == 0 ){ 
-      continue;
+  F factorialTerm = 1.0;
+  for (int n = 1; n < nphon+1; ++n){
+    if (n>1){
+      factorialTerm /= n;
+      T_next = getNextTn(posNegBetas,T1,T_now);
     }
+    for (size_t a = 0; a < alpha.size(); ++a){
+      F alpha_term = exp(-alpha[a]*scaling*lambda_s);
+      for (size_t b = 0; b < beta.size(); ++b){
+        if (n>1){return std::make_tuple(lambda_s,t_eff);}
+        symSab(a,b,itemp) += alpha_term*factorialTerm*std::pow(alpha[a]*scaling*lambda_s,n)*T_next[b+int(T_next.size()/2)];
+      }
+    }
+    T_now = T_next;
 
-    
-    if ( npn >= tlast.size() ){ 
-      return std::make_tuple(lambda_s,t_eff,eq16); }
+  } // n order of expansion
+  return std::make_tuple(lambda_s,t_eff);
+  std::cout << sc << std::endl;
 
-    for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
-
-  } // for n in nphon (maxn in leapr.f90) 
-
-  return std::make_tuple(lambda_s,t_eff,eq16);
 }
 
 

@@ -16,10 +16,12 @@ def interp(Tn,betas,beta):
 def getNextTn(betas,T1,Tn):
     def getT1Tn(b,beta): return T1[b] * interp(Tn,betas,(beta-betas[b]))
     T_next = []
-    for beta in betas:
+    for b in range(len(betas)):
         T_next_val = 0.0
-        for b in range(len(betas)-1):
-            T_next_val += ( getT1Tn(b,beta)+getT1Tn(b+1,beta) ) * 0.5 * (betas[b+1]-betas[b])
+        for b_prime in range(len(betas)-1):
+            term1 = T1[b_prime]*interp(Tn,betas,(betas[b]-betas[b_prime]))
+            term2 = T1[b_prime+1]*interp(Tn,betas,(betas[b]-betas[b_prime+1]))
+            T_next_val += (term1 + term2)*0.5*(betas[b_prime+1]-betas[b_prime])
         T_next.append(T_next_val)
     return T_next
 
