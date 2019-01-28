@@ -36,7 +36,7 @@ auto convol( const A& t1, const A& t2, int len_t3, const A betaGrid){
   for (int i = -betaGrid.size()+1; i < int(betaGrid.size()); ++i ){
     posNegBetas[counter++] = sgn(i)*betaGrid[abs(i)];
   }
-  for ( auto x : posNegBetas ){ std::cout << x << std::endl; }
+  //for ( auto x : posNegBetas ){ std::cout << x << std::endl; }
  
   for (int i = 0; i<len_t3; ++i){
     t3[i] = getConvolAtPoint(i,t1,t2,betaGrid);

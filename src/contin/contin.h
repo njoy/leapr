@@ -55,12 +55,14 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
+  //std::cout << lambda_s << std::endl;
   A xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
 
   size_t npn = t1.size();
   const size_t np = t1.size();
   std::copy( t1.begin(), t1.begin() + np, tlast.begin() );
   std::copy( t1.begin(), t1.begin() + np, tnow.begin() );
+  //for ( auto x : t1 ){ std::cout << x << std::endl;}
 
   // This will populate tlast and tnow with blocks, each the same size as t1,
   // corresponding to each order of phonon expansion (nphon). npn is used to 
@@ -78,19 +80,24 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   delta /= tev;
+  A alpha0Additions(beta.size(),0.0);
+  A alpha1Additions(beta.size(),0.0);
+  std::cout << "scaling " << scaling << std::endl;
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
-    //std::cout << tnow[0] << "     " << tnow[1] << "    " << tnow[2]<< std::endl;
-    //std::cout << tnow[3] << "     " << tnow[4] << "    " << tnow[5]<< std::endl;
+    std::cout << tnow[0] << "     " << tnow[1] << "    " << tnow[2]<< std::endl;
+    std::cout << tnow[3] << "     " << tnow[4] << "    " << tnow[5]<< std::endl;
     //std::cout << tnow[6] << "     " << tnow[7] << "    " << tnow[8]<< std::endl;
-    //std::cout << std::endl;
+    std::cout << std::endl;
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc,betaGrid );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
+        if (a == 0){ alpha0Additions[b] += add; }
+        if (a == 1){ alpha1Additions[b] += add; }
       } // for b in beta
     } // for a in alpha
 
@@ -117,12 +124,17 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     } 
     // ------------------------------------------------------------------------
 
-    if ( npn >= tlast.size() ){ return std::make_tuple(lambda_s,t_eff,eq16); }
+    if ( npn >= tlast.size() ){ 
+      for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
+      std::cout << std::endl;
+      for ( auto x : alpha1Additions ) { std::cout << x << std::endl; }
+      return std::make_tuple(lambda_s,t_eff,eq16); }
 
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
 
   } // for n in nphon (maxn in leapr.f90) 
 
+  for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
   return std::make_tuple(lambda_s,t_eff,eq16);
 }
 

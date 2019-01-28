@@ -63,6 +63,7 @@ TEST_CASE( "contin eigen" ){
         checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
       } // THEN
     } // WHEN
+    /*
 
     WHEN( "6th order exp, alpha & beta vals scaled, and small grid space" ){
       nphon = 6; delta = 0.04; sc = 1.0; scaling = 1.0;
@@ -277,6 +278,7 @@ TEST_CASE( "contin eigen" ){
         checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-5 );
       } // THEN
     } // WHEN
+    */
   } // GIVEN 
 
 } // TEST CASE
