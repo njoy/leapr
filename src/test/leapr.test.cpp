@@ -42,6 +42,8 @@ TEST_CASE( "leapr" ){
   double sps, awr, aws, delta, twt, c, tbeta, dka;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, kappa,
                       ssmDiag(70), ssmChangeA(70), ssmChangeB(70);
+
+  /*
   GIVEN( "quickTest" ) {
     nphon = 100;
     awr    = 0.99917;  ncold = 0; 
@@ -80,9 +82,9 @@ TEST_CASE( "leapr" ){
     }
     std::cout << std::endl;
   } // GIVEN
+  */
 
 
-  /*
 
   GIVEN( "simple H in H2O input" ) {
     nphon = 100;
@@ -665,7 +667,6 @@ TEST_CASE( "leapr" ){
 
   } // GIVEN 
 
-  */
 } // TEST CASE
 
 

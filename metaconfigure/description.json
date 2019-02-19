@@ -367,7 +367,6 @@
     ]
   },
   "header files": [
-    "src/copys.h",
     "src/testFuncs.h",
     "src/contin/contin.h",
     "src/contin/contin_util/convol.h",
@@ -395,6 +394,8 @@
     "src/coher/coher_util/hexLatticeFactors.h",
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
+    "src/simple/simpleLEAPR.h",
+    "src/simple/continuous/continuous.h",
     "src/skold/skold.h",
     "src/skold/skold_util/terp1.h",
     "src/coldh/coldh.h",
@@ -496,6 +497,12 @@
     ],
     "leapr": [
       "src/test/leapr.test.cpp"
+    ],
+    "simple": [
+      "src/simple/test/simpleLEAPR.test.cpp"
+    ],
+    "simple.continuous": [
+      "src/simple/continuous/test/continuous.test.cpp"
     ],
     "skold": [
       "src/skold/test/skold.test.cpp"
