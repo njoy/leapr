@@ -486,4 +486,77 @@ TEST_CASE( "contin (new version with less weird integration)" ){
       } // THEN
     } // WHEN
   } // GIVEN 
+  /*
+
+  GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
+    ntempr = 1; nphon = 6; itemp = 0;
+    delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
+    scaling = 0.99186670867058835; 
+    std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
+    std::vector<double> beta { 0.0, 0.006375, 0.01275, 0.0255, 0.03825, 0.051, 0.06575 }; 
+    std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 0.0165 };
+    std::vector<double> energyGrid(rho.size());
+    for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
+
+
+    WHEN( "  " ){
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
+
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab, energyGrid );
+
+      std::vector<double> expected { 4.2543261427413936e-2, 4.2677975670624702e-2, 
+        4.2812689913835460e-2, 4.3082118400256997e-2, 4.3351546886678527e-2, 
+        4.3620975373100043e-2, 4.3932667151509258e-2, 6.2405605186179013e-2, 
+        6.2601782824467045e-2, 6.2797960462755043e-2, 6.3190315739331079e-2, 
+        6.3582671015907102e-2, 6.3975026292483125e-2, 6.4428927494796562e-2, 
+        0.10177395635934081, 0.10208912917521698, 0.10240430199109316, 
+        0.10303464762284552, 0.10366499325459788, 0.10429533888635020, 
+        0.10502456226425980, 0.13029305403062777, 0.13069197038636696, 
+        0.13109088674210612, 0.13188871945358452, 0.13268655216506289, 
+        0.13348438487654118, 0.13440736781727111, 0.18926073679135993, 
+        0.18982576724110425, 0.19039079769084855, 0.19152085859033724, 
+        0.19265091948982599, 0.19378098038931460, 0.19508830574362507, 
+        0.26409668821687571, 0.26485736219135630, 0.26561803616583685, 
+        0.26713938411479798, 0.26866073206375923, 0.27018208001272020, 
+        0.27194207077720473 };
+      THEN( "contin output matches expected value" ){
+        lambda_s = 4.2065831071822970; t_eff = 1.0400408284374374;
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-6 );
+      } // THEN
+    } // WHEN
+  } // GIVEN 
+  GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
+    ntempr = 1; nphon = 30; itemp = 0;
+    delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835; 
+    scaling = 0.99186670867058835; 
+    std::vector<double> alpha { 0.01008, 0.015, 0.0252 },
+      beta { 0.000000, 0.006375, 0.012750, 0.025500 },
+      rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005 };
+    std::vector<double> energyGrid(rho.size());
+    for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
+
+
+    WHEN( "  " ){
+      Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
+      symSab.setZero();
+
+      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
+          alpha, beta, symSab, energyGrid );
+
+      std::vector<double> expected { 0.21338252777792166, 0.21401421222255254, 
+        0.21464589666718339, 0.21590926555644518, 0.30365460687728840, 
+        0.30451809601992325, 0.30538158516255781, 0.30710856344782711, 
+        0.46547917133239852, 0.46669713613840202, 0.46791510094440553, 
+        0.47035103055641264 };
+
+      THEN( "contin output matches expected value" ){
+        lambda_s = 14.500767787022335; t_eff = 1.0123228701111786;
+        checkSabLambdaTeff( expected, output, symSab, lambda_s, t_eff, 1.0e-5 );
+      } // THEN
+    } // WHEN
+  } // GIVEN 
+    */
+
 } // TEST CASE

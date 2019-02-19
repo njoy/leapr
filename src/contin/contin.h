@@ -27,15 +27,11 @@ auto interp(A Tn, A betas, F beta){
 template <typename A>
 A getNextTn(A betas, A T1, A Tn){
   A T_next(betas.size());
-  //std::cout << "HERE I AM " << betas.size() << std::endl;
-  //for ( auto x : Tn){ std::cout << x << std::endl; }
   for ( size_t b = 0; b < betas.size(); ++b ){
-    //std::cout << "------------  " << b << std::endl;
     double T_next_val = 0.0;
     for ( size_t b_prime = 0; b_prime < betas.size()-1; ++b_prime){
       double termL = T1[b_prime]*interp(Tn,betas,(betas[b]-betas[b_prime]));
       double termR = T1[b_prime+1]*interp(Tn,betas,(betas[b]-betas[b_prime+1]));
-      //std::cout << "-----------------------  " << b_prime << "     " << Tn[b_prime] << std::endl;
       T_next_val += (termL+termR)*0.5*(betas[b+1]-betas[b]);
     }
     T_next[b] = T_next_val;
@@ -67,7 +63,7 @@ auto contin_NEW( const unsigned int itemp, int nphon, const F& tbeta,
   // Shift T1 so that it lies on the requested beta value grid
   A t1_newGrid(nBeta,0.0);
   for (int i = 0; i < nBeta; ++i){
-    t1_newGrid[i] = interp(t1,phononGrid,beta[i]);
+    t1_newGrid[i] = interp(t1,phononGrid,sc*beta[i]);
   }
 
   // Reflect T1 values
@@ -186,18 +182,12 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
-    //std::cout << tnow[0] << "     " << tnow[1] << "    " << tnow[2]<< std::endl;
-    //std::cout << tnow[3] << "     " << tnow[4] << "    " << tnow[5]<< std::endl;
-    //std::cout << tnow[6] << "     " << tnow[7] << "    " << tnow[8]<< std::endl;
-    //std::cout << std::endl;
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, delta, beta[b] * sc,betaGrid );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
-        //if (a == 0){ alpha0Additions[b] += add; }
-        //if (a == 1){ alpha1Additions[b] += add; }
       } // for b in beta
     } // for a in alpha
 
@@ -225,9 +215,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     // ------------------------------------------------------------------------
 
     if ( npn >= tlast.size() ){ 
-      //for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
-      //std::cout << std::endl;
-      //for ( auto x : alpha1Additions ) { std::cout << x << std::endl; }
       return std::make_tuple(lambda_s,t_eff,eq16); }
 
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }

@@ -49,6 +49,9 @@ auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta,
       auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen, energyGrid);
 
+      //auto lambda_s_t_eff = contin_NEW( itemp, nphon, tbeta, scaling, tev,
+      //  sc, rho, alpha, beta, sym_sab_eigen, energyGrid);
+
 
       lambda_s = std::get<0>(lambda_s_t_eff);
       t_eff    = std::get<1>(lambda_s_t_eff);
@@ -75,6 +78,7 @@ auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta,
       }
 
     }
+
     done = true;
   }
 
