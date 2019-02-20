@@ -396,6 +396,9 @@
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
     "src/simple/simpleLEAPR.h",
     "src/simple/continuous/continuous.h",
+    "src/simple/continuous/integrate.h",
+    "src/simple/continuous/convolution.h",
+    "src/simple/continuous/interpolate.h",
     "src/skold/skold.h",
     "src/skold/skold_util/terp1.h",
     "src/coldh/coldh.h",
@@ -502,6 +505,8 @@
       "src/simple/test/simpleLEAPR.test.cpp"
     ],
     "simple.continuous": [
+      "src/simple/continuous/test/integrate.test.cpp",
+      "src/simple/continuous/test/interpolate.test.cpp",
       "src/simple/continuous/test/continuous.test.cpp"
     ],
     "skold": [

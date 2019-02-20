@@ -1,5 +1,8 @@
 
-add_executable( simple.continuous.test continuous.test.cpp )
+add_executable( simple.continuous.test
+                integrate.test.cpp
+                interpolate.test.cpp
+                continuous.test.cpp )
 target_compile_options( simple.continuous.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

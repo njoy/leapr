@@ -1,31 +1,7 @@
 #include <iostream>
+#include "simple/continuous/interpolate.h"
+#include "simple/continuous/convolution.h"
 
-
-template <typename V, typename F>
-F interpolate(const V& xList, const V& yList, const F& x){
-  for (size_t i = 0; i < xList.size()-1; ++i){
-    if (xList[i] <= x and x < xList[i+1]){
-      F m = (yList[i+1]-yList[i]) / (xList[i+1]-xList[i]);
-      F b = yList[i] - m * xList[i];
-      return m*x+b;
-    }
-  }
-  return 0.0;
-}
-
-
-template <typename V>
-V convolve(V x, V y1, V y2){ 
-  V y3 (x.size());
-  for (size_t i = 0; i < x.size(); ++i ){
-    for (size_t j = 0; j < x.size()-1; ++j ){
-      auto val_L = y1[j]*interpolate(x,y2,x[i]-x[j]);
-      auto val_R = y1[j+1]*interpolate(x,y2,x[i]-x[j+1]);
-      y3[i] = (val_L + val_R) * 0.5 * (x[j+1]-x[j]);
-    }
-  }
-  return y3;
-}
 
 
 
