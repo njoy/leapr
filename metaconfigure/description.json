@@ -395,6 +395,7 @@
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
     "src/simple/simpleLEAPR.h",
+    "src/simple/continuous/sumOVerTn.h",
     "src/simple/continuous/continuous.h",
     "src/simple/continuous/integrate.h",
     "src/simple/continuous/convolution.h",
@@ -507,6 +508,7 @@
     "simple.continuous": [
       "src/simple/continuous/test/integrate.test.cpp",
       "src/simple/continuous/test/interpolate.test.cpp",
+      "src/simple/continuous/test/sumOverTn.test.cpp",
       "src/simple/continuous/test/continuous.test.cpp"
     ],
     "skold": [

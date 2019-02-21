@@ -1,59 +1,67 @@
 #include <iostream>
 #include "simple/continuous/interpolate.h"
-#include "simple/continuous/convolution.h"
+#include "simple/continuous/integrate.h"
 
 
 
 
-template <typename V>
-void continuous(V Egrid, V rho, V alphas, V betas){
+template <typename V, typename F>
+void continuous(V phononGrid, V rho, V alphas, V betas, F kbT){
+  int nAlpha = alphas.size();
+  int nBeta  = betas.size();
 
+  // Change phononGrid from eV --> nondimensional beta values    betas = E/kbT
+  F inv_kbT = 1.0/(kbT);
+  for ( auto& x : phononGrid ){ x *= inv_kbT; }
 
-  // Calculate P(beta) = rho(beta) / beta * sinh(beta/2)
-  V P(rho.size());
-  P[0] = rho[1] / (Egrid[1]*Egrid[1]);
-  for (size_t i = 1; i < rho.size(); ++i ){ 
-    P[i] = rho[i]/(Egrid[i]*sinh(Egrid[i]*0.5));
+  // Change rho, which is now on the phononGrid, to be on the betas grid
+  V P(nBeta);
+  P[0] = rho[1]/(betas[1]*betas[1]);
+  for ( int b = 1; b < nBeta; ++b ){ 
+    F beta = betas[b];
+    P[b] = interpolate(phononGrid,rho,beta)/(2.0*beta*sinh(beta*0.5));
   }
 
+  // Now we want to find lambda_s = int -infty -> infty P(b)*exp(-b/2) db
+  // int -inf -> inf P(b)*exp(-b/2)
+  // int   0  -> inf P(-b)*exp(b/2) + P(b)*exp(-b/2) db
+  // int   0  -> inf P(b)*exp(b/2) + P(b)*exp(-b/2) db
+  // int   0  -> inf P(b)*2*cosh(b/2) db
+  V integrand(P.size());
+  for ( size_t b = 0; b < P.size(); ++b ){
+    integrand[b] = P[b]*2*cosh(betas[b]*0.5);
+  }
+  F lambda_s = integrate(betas,integrand);
 
-  // Calculate lambda_s (2.0*cosh(b/2) is filling in for e^(-b/2), because 
-  // NJOY Eq. 521 is -infty-->infty, but for simplicity we only consider positive
-  // Egrid values here (rho is symmetric in energy)
-  double lambda_s = 0.0;
-  for (size_t i = 0; i < rho.size()-1; ++i ){
-    auto val_L = 2.0 * P[i]   * cosh(Egrid[i]*0.5);
-    auto val_R = 2.0 * P[i+1] * cosh(Egrid[i+1]*0.5);
-    lambda_s += (val_L+val_R)*(Egrid[i+1]-Egrid[i])*0.5;
+  // Calculate T1 = P(b)*exp(-b/2) / lambda_s
+  V T1(P.size());
+  for ( size_t b = 0; b < P.size(); ++b ){
+    T1[b] = P[b] * exp(-betas[b]*0.5) / lambda_s;
   }
 
+  //print(betas);
+  //print(P);
+  //print(T1);
 
 
-  // P(beta) to be on the same grid as my requested beta grid 
-  V P_beta(rho.size());
-  for (size_t b = 0; b < betas.size(); ++b){
-    P_beta[b] = interpolate(Egrid,P,betas[b]);
-  }
+  alphas = {2,4};
+  betas = {0,1,2,3,4};
+  T1 = {1,2,3,2,1};
+  lambda_s = 0.5;
 
 
-  // calculate T1 (this is now on my beta grid)
-  V T1(betas.size());
-  std::copy( P_beta.begin(), P_beta.begin() + betas.size(), T1.begin() );
-  for (size_t b = 0; b < betas.size(); ++b){
-    T1[b] = P_beta[b]*exp(-betas[b]*0.5)/lambda_s;
-  }
+  nAlpha = alphas.size();
+  nBeta  = betas.size();
+  V Tn(nBeta);
+  std::copy( T1.begin(), T1.begin() + nBeta, Tn.begin() );
 
 
 
-  V T_left(betas.size());
-  std::copy( T1.begin(), T1.begin() + betas.size(), T_left.begin() );
-  V T_right = convolve(betas, T1, T_left);
 
-  for (auto& x : T1){ std::cout << x << "   ";} std::cout << std::endl;
-  for (auto& x : T_right){ std::cout << x << "   ";} std::cout << std::endl;
 
 
   return;
+
   std::cout << alphas.size() << std::endl;
 
 
