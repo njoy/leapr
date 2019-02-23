@@ -1,4 +1,4 @@
-#include "simple/continuous/convolution.h"
+//#include "simple/continuous/convolution.h"
 #include <iostream>
 
 
@@ -45,7 +45,7 @@ V sumOverTn( const V& alphas, const V& betas, const V& T1, const F& lambda_s,
       } // beta loop
     } // alpha loop
     if (n == 0){ continue; }
-    Tn = convolve(betas,T1,Tn);
+    //Tn = convolve(betas,T1,Tn);
     //print(n);
     //print(Tn);
   } // summation loop
