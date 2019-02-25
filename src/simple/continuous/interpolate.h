@@ -12,6 +12,7 @@ F interpolate(const V& xList, const V& yList, const F& x){
       return m*x+b;
     }
   }
+  if (xList[xList.size()-1] < x){ return 0.0; }
   return (std::abs(x-xList[len-1])/xList[len-1] < 1e-6) ? yList[len-1] : 0.0;
 }
 

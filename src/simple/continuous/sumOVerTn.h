@@ -1,4 +1,4 @@
-//#include "simple/continuous/convolution.h"
+#include "simple/continuous/convolution.h"
 #include <iostream>
 
 
@@ -10,14 +10,20 @@ void print(std::vector<double> x){
   std::cout << std::endl;
 }
 
-void print(double x){
+template<typename T>
+void print(T x){
   std::cout << std::endl << x << std::endl;
+}
+template<typename T>
+void print(T x,T y){
+  std::cout << std::endl << x  << "    " << y<< std::endl;
 }
 
 
 
+
 template <typename V, typename F>
-V sumOverTn( const V& alphas, const V& betas, const V& T1, const F& lambda_s,
+V sumOverTn( const V& alphas, V betas, V T1, const F& lambda_s,
   int N = 0){
 
   int nAlpha = alphas.size();
@@ -35,6 +41,7 @@ V sumOverTn( const V& alphas, const V& betas, const V& T1, const F& lambda_s,
     for ( int a = 0; a < nAlpha; ++a ){
       F alpha = alphas[a];
       F alphaTerm = exp(-alpha*lambda_s)*(1.0/fact(n))*std::pow(alpha*lambda_s,n);
+      //if ( a == 0){ print(1.0*n,alphaTerm); }
       // Accounting for our T0(b) = delta(b) term
       if (n == 0){
         if (betas[0] == 0){ sab[a*nBeta+0] = alphaTerm; } 
@@ -45,9 +52,7 @@ V sumOverTn( const V& alphas, const V& betas, const V& T1, const F& lambda_s,
       } // beta loop
     } // alpha loop
     if (n == 0){ continue; }
-    //Tn = convolve(betas,T1,Tn);
-    //print(n);
-    //print(Tn);
+    Tn = convolve(betas,T1,Tn);
   } // summation loop
 
   return sab;
