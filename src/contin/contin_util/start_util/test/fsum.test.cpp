@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "contin/contin_util/start_util/fsum.h"
-#include <range/v3/all.hpp>
 
 
 TEST_CASE( "fsum" ){

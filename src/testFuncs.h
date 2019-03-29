@@ -1,3 +1,4 @@
+#include <range/v3/all.hpp>
 
 template <typename Vec, typename Range>
 void checkVectorAgainstRange( const Range& output, const Vec& correct){

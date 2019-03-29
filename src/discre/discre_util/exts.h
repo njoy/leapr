@@ -1,9 +1,7 @@
 #include <algorithm>
-#include <iostream>
-#include <range/v3/all.hpp>
 
-template <typename A>
-A exts( const A& sexpb, const A& exb, const A& beta ){
+std::vector<double> exts( const std::vector<double>& sexpb,
+  const std::vector<double>& exb, const std::vector<double>& beta ){
   /* When used by discre, sexpb is a vector populated with sym_sab entries for 
    * a given alpha and temp and increasing values of beta. Also exts is 
    * a vector populated with exp( -beta * sc / 2 ) entries. The purpose for 
@@ -20,44 +18,22 @@ A exts( const A& sexpb, const A& exb, const A& beta ){
    *                               else
    */
 
+  std::vector<double> sex ( 2 * sexpb.size() + 1, 0.0 );
 
   // Here we reverse the vector sexpb and put it in the beginning of sex.
   
+  std::reverse_copy(std::begin(sexpb), std::end(sexpb), std::begin(sex) );
+
   unsigned int k = beta[0] <= 1.0e-9 ? beta.size() + 1 : beta.size() + 2;
+  sex[k-2] = sexpb[0];
 
-  auto zeros1 = ranges::view::iota( 1, int(beta.size()+2)) 
-              | ranges::view::transform([](auto){return 0.0;});
-
-  auto zeros2 = ranges::view::iota( 1, int(beta.size()-k+4) )
-              | ranges::view::transform( [](auto){ return 0.0; } );
-
-  // { sexpb[1]*exb[1]   sexpb[2]*exb[2]   sexpb[3]*exb[3] .... }
-  auto sexpb_times_exb = ranges::view::zip(sexpb,exb) 
-                       | ranges::view::transform([](auto t){
-                           return std::get<0>(t)*std::get<1>(t); }) 
-                       | ranges::view::slice(1,ranges::end);
-
-  // First k-2 entries of { sexpb[n], ... , sexpb[0], 0, 0, ... 0 }
-  auto sex = ranges::view::concat( sexpb | ranges::view::reverse, zeros1 )
-           | ranges::view::slice( 0, int(k-2) );
- 
-  // Potentially making two s1's (in the example at the beginning of this 
-  // function)
-  return ranges::view::concat( 
-           sex,
-           ranges::view::single(sexpb[0]),
-           sexpb_times_exb,
-           zeros2);
-  /*                |--sex--|   single |-- sexpb*exb --|  zero(s)
-   *              [ s3, s2, s1,   s1,  s2*e2*e2, s3*e3*e3,   0   ]
-   *                              or
-   *                |--sex--|   single |-- sexpb*exb --|  zero(s)
-   *              [ s3, s2, s1,        s2*e2*e2, s3*e3*e3, 0, 0 ]
-   */
- 
-
-  // sex --> ssm_i * exp( -beta ) 
-  // S(a,b) = exp( -beta ) * S(a,-b)    Eq. 509
-  // Notice that we only apply this to half of the sex vector, since only
-  // half of it needs to be flipped
+  for ( size_t b = 1; b < beta.size(); ++b ){
+    // sex --> ssm_i * exp( -beta ) 
+    // S(a,b) = exp( -beta ) * S(a,-b)    Eq. 509
+    // Notice that we only apply this to half of the sex vector, since only
+    // half of it needs to be flipped
+    sex[k-1] = sexpb[b]*exb[b];
+    k += 1;
+  }
+  return sex;
 }
