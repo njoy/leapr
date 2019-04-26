@@ -15,6 +15,8 @@ TEST_CASE( "continuous" ){
     //continuous(rhoEnergy,rho,alphas,betas);
     REQUIRE(true);
   } // GIVEN
+  /*
+
   GIVEN( "int" ){
 
     std::vector<double> rhoEnergy { 0.00, 0.01, 0.02, 0.04, 0.08 }, 
@@ -25,6 +27,7 @@ TEST_CASE( "continuous" ){
     continuous(rhoEnergy,rho,alphas,betas,kbT);
     REQUIRE(true);
   } // GIVEN
+  */
 
 } // TEST
 

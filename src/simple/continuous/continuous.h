@@ -13,6 +13,7 @@ void continuous(V phononGrid, V rho, V alphas, V betas, F kbT){
   // Change phononGrid from eV --> nondimensional beta values    betas = E/kbT
   F inv_kbT = 1.0/(kbT);
   for ( auto& x : phononGrid ){ x *= inv_kbT; }
+  for ( auto& x : phononGrid ){ std::cout << x << "   "; }
 
   // Change rho, which is now on the phononGrid, to be on the betas grid
   V P(nBeta);

@@ -7,9 +7,7 @@ V reflect(V v){
   V fullVec( 2*v.size()-1 );
   std::reverse_copy (v.begin(), v.begin()+v.size(), fullVec.begin());
   std::copy (v.begin(), v.begin()+v.size(), fullVec.begin()+int(fullVec.size()/2));
-
   return fullVec;
-
 }
 
 

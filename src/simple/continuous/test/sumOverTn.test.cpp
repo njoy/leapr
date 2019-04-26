@@ -62,7 +62,6 @@ TEST_CASE( "sumOverTn" ){
       }
     } // THEN
   } // GIVEN
-  */
   GIVEN( "Three iterations are performed (T0, T1, T2)" ){
     THEN( "" ){
       {
@@ -91,6 +90,7 @@ TEST_CASE( "sumOverTn" ){
       }
     } // THEN
   } // GIVEN
+  */
 
 } // TEST
 

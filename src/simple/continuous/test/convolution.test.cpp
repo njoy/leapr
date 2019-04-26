@@ -2,10 +2,7 @@
 #include "simple/continuous/convolution.h"
 
 
-
-
 TEST_CASE( "convolution" ){
-  /*
   GIVEN( "vectors" ){
 
     std::vector<double> beta {0, 1, 3, 6},
@@ -15,6 +12,15 @@ TEST_CASE( "convolution" ){
     REQUIRE( 1525.7249602 == Approx(T3[0]).epsilon(1e-6) );
   } // GIVEN
   GIVEN( "vectors" ){
+    std::vector<double> beta {0, 1, 2, 3},
+                        T1   {1,2,3,4},
+                        T2   {2,3,4,5};
+    std::vector<double> T3 = convolve(beta,T1,T2);
+    for ( auto& x : T3){ std::cout << x << "  ";}
+    //REQUIRE( 1525.7249602 == Approx(T3[0]).epsilon(1e-6) );
+  } // GIVEN
+
+  GIVEN( "vectors" ){
 
     std::vector<double> beta {0, 2, 3},
                         T1   {1, 2, 3},
@@ -23,10 +29,7 @@ TEST_CASE( "convolution" ){
     REQUIRE( 154.9252839 == Approx(T3[0]).epsilon(1e-6) );
     REQUIRE( 26.33358414 == Approx(T3[1]).epsilon(1e-6) );
     REQUIRE( 14.0        == Approx(T3[2]).epsilon(1e-6) );
-    
-    std::cout << T3[1]*exp(2) << std::endl;
   } // GIVEN
-  */
   GIVEN( "vectors" ){
 
     std::vector<double> beta {0, 2},
@@ -47,15 +50,8 @@ TEST_CASE( "convolution" ){
     REQUIRE( 1227.0270880 == Approx(T3[1]).epsilon(1e-6) ); // T3(2)
     REQUIRE( 72           == Approx(T3[2]).epsilon(1e-6) ); // T3(4)
     REQUIRE( 54           == Approx(T3[3]).epsilon(1e-6) ); // T3(6)
-    //std::cout << T3[2] << std::endl;
-    //for ( auto x : beta ){ std::cout << x << "  "; }
-    //std::cout << std::endl;
-
     
   } // GIVEN
-
-
-
 } // TEST
 
 
