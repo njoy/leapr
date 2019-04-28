@@ -206,7 +206,5 @@ TEST_CASE( "sbfill" ){
         REQUIRE_THROWS( sbfill(sb, nbt, delta, be, ap, betan, ndmax ) );
       } // THEN
     } // WHEN
-    /*
-    */
   } // GIVEN
 } // TEST CASE

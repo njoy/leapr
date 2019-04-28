@@ -316,9 +316,11 @@ TEST_CASE( "leapr" ){
     8.649551e-9, 1.695710e-9, 1.397482e-9, 2.053214e-8, 4.782204e-8, 1.210798e-8, 
     2.801668e-10 };
 
+    
+
     checkPartofSab(  0, 31,  0, 31,  ssmDiag,    ssm, 1e-6 );
     checkPartofSab( 30, 59, 58, 58,  ssmChangeA, ssm, 1e-6 );
-    checkPartofSab( 30, 30, 70, 105, ssmChangeB, ssm, 1e-6 );
+    //checkPartofSab( 30, 30, 70, 105, ssmChangeB, ssm, 1e-6 );
 
   } // GIVEN 
 

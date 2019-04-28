@@ -3,7 +3,6 @@
 #include "contin_util/interpolate.h"
 #include "contin_util/checkMoments.h"
 #include <unsupported/Eigen/CXX11/Tensor>
-#include <range/v3/all.hpp>
 
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));

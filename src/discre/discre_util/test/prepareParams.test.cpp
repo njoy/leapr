@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "discre/discre_util/prepareParams.h"
-#include <range/v3/all.hpp>
 
 
 TEST_CASE( "prepare parameters helper function" ){
@@ -10,38 +9,24 @@ TEST_CASE( "prepare parameters helper function" ){
       exb(5,0.0), betan(5,0.0);
     double tev, tsave, weight, bk, sc;
 
+    energyNorm[0] = 2.030778478;
+    energyNorm[1] = 2.901112112;
+
     energy  = { 0.035, 0.05 };
     weights = { 0.2  , 0.8  };
     beta    = { 0.10, 0.15, 0.30, 0.60, 1.20 };
 
     tev = 1.723477E-2; bk = 8.617385e-5; sc = 1.0;
 
-
-    correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };
-
     std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
     for ( size_t i = 0; i < energy.size(); ++i ){
       oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
     }
 
-    auto out = prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
+    prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
       dbw, bk, exb, betan, beta, sc );
-    auto ar_dist_dbw_ranges = std::get<0>(out);
-    auto betan_range        = std::get<1>(out);
-    auto exb_range          = std::get<2>(out);
-    auto ar_range           = std::get<3>(out);
 
-    RANGES_FOR( auto t, ranges::view::zip(betan_range,beta,exb_range,correctExb) ){
-      REQUIRE( std::get<1>(t) == Approx(std::get<0>(t)).epsilon(1e-6) );
-      REQUIRE( std::get<3>(t) == Approx(std::get<2>(t)).epsilon(1e-6) );
-    }
-
-
-    
-    //REQUIRE( 8.213274e-2 == ar_range[0] );
-    //REQUIRE( 0.1368162   == ar_range[1] );
-
-
+    correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };
 
     REQUIRE( 8.213274e-2 == Approx(ar[0]).epsilon(1e-6) );
     REQUIRE( 0.1368162   == Approx(ar[1]).epsilon(1e-6) );
