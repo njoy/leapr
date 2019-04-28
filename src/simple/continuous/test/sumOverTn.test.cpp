@@ -1,10 +1,10 @@
 #include "catch.hpp"
 #include "simple/continuous/sumOverTn.h"
 
+/*
 
 
 TEST_CASE( "sumOverTn" ){
-  /*
   GIVEN( "Only one iteration is performed (only want T0)" ){
     THEN( "We only see the effects of the T0(b) = delta(b) term" ){
       {
@@ -79,8 +79,7 @@ TEST_CASE( "sumOverTn" ){
   GIVEN( "Four iterations are performed (T0, T1, T2, T3)" ){
     THEN( "" ){
       {
-        std::vector<double> alphas {0.1,0.4}, betas {0,2}, T1 {1,3};
-        double lambda_s = 0.75;
+        std::vector<double> alphas {0.1,0.4}, betas {0,2}, T1 {1,3}; double lambda_s = 0.75;
         int N = 4;
         auto sab = sumOverTn(alphas,betas,T1,lambda_s,N);
         REQUIRE( 1.4192540142165 == Approx(sab[0*betas.size()+0]).epsilon(1e-6) );
@@ -90,9 +89,9 @@ TEST_CASE( "sumOverTn" ){
       }
     } // THEN
   } // GIVEN
-  */
 
 } // TEST
 
+  */
 
 

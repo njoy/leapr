@@ -1,6 +1,104 @@
 #include "catch.hpp"
 #include "simple/continuous/convolution.h"
 
+TEST_CASE( "convolution with padding" ){
+  /*
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -1.0, 0.0, 1.0 },
+                        beta { -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0 },
+                        T1   {  0.0,  0.0,  1.0, 2.0, 3.0, 0.0, 0.0 },
+                        T2   {  0.0,  0.0,  2.0, 4.0, 1.0, 0.0, 0.0 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    std::vector<double> correctT3 {0.0, 2.0, 8.0, 15.0, 14.0, 3.0, 0.0};
+    for (size_t i = 0; i < T3.size(); ++i){
+      REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -1.0, 0.0, 1.0 },
+                        beta { -2.0, -1.0, 0.0, 1.0, 2.0 },
+                        T1   {  0.0,  22.1672, 1.0, 3.0, 0.0 },
+                        T2   {  0.0,  22.1672, 1.0, 3.0, 0.0 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    std::vector<double> correctT3 {491.38475584,  44.3344, 134.0032, 6.0, 9.0 };
+    for (size_t i = 0; i < T3.size(); ++i){
+      REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+  */
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -2, -1, 0, 1, 2 },
+                        beta { -4,-3,-2,-1, 0, 1, 2, 3, 4 },
+                        T1   {  0, 0, 4, 3, 5, 1, 2, 0, 0 },
+                        T2   {  0, 0, 4, 3, 5, 1, 2, 0, 0 },
+                 correctT3   { 16,24,49,38,47,22,21, 4, 4 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    for (size_t i = 0; i < T3.size(); ++i){
+      REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -2, -1, 0, 1, 2 },
+                        beta { -4,-3,-2,-1, 0, 1, 2, 3, 4 },
+                        T1   {  0, 0, 1, 2, 3, 4, 5, 0, 0 },
+                        T2   {  0, 0, 1, 2, 3, 4, 5, 0, 0 },
+                 correctT3   {  1, 4,10,20,35,44,46,40,25 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    for (size_t i = 0; i < T3.size(); ++i){
+      REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -2, -0.999999, 0, 0.999999, 2 },
+                        beta { -4,-3,-2,-1, 0, 1, 2, 3, 4 },
+                        T1   {  0, 0, 1, 2, 3, 4, 5, 0, 0 },
+                        T2   {  0, 0, 1, 2, 3, 4, 5, 0, 0 },
+                 correctT3   {  1, 4,10,20,35,44,46,40,25 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    for (size_t i = 0; i < T3.size(); ++i){
+      std::cout << T3[i] << std::endl;
+      //REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -1, 0, 1 },
+                        beta { -4,-3,-2,-1, 0, 1, 2, 3, 4 },
+                        T1   {  0, 0, 0, 1, 2, 3, 0, 0, 0 },
+                 correctT2   {  0, 0, 1, 4,10,12, 9, 0, 0 },
+                 correctT3   {  0, 1, 6,21,44,63,54,27, 0 },
+                 correctT4   {  1, 8,36,104,214,312,324,216,81 };
+    std::vector<double> T2 = convolutionWithPadding(beta_original,beta,T1,T1);
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    std::vector<double> T4 = convolutionWithPadding(beta_original,beta,T1,T3);
+    for (size_t i = 0; i < T3.size(); ++i){
+      REQUIRE( correctT2[i] == Approx(T2[i]).epsilon(1e-6) );
+      REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+      REQUIRE( correctT4[i] == Approx(T4[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+
+
+  /*
+
+  GIVEN( "vectors" ){
+    std::vector<double> beta_original { -4, -3, -2, -1, 0, 1, 2, 3, 4 },
+                        beta { -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6 },
+                        T1 = {  0.0, 0.0, 54.5982, 40.1711, 22.1672, 5.43656, 1, 
+                                2, 3, 2, 1, 0.0, 0.0 },
+                        T2 = {  0.0, 0.0, 54.5982, 40.1711, 22.1672, 5.43656, 1, 
+                                2, 3, 2, 1, 0.0, 0.0 };
+    std::vector<double> T3 = convolutionWithPadding(beta_original,beta,T1,T2);
+    std::vector<double> correctT3 {491.38475584,  44.3344, 134.0032, 6.0, 9.0 };
+    for (size_t i = 0; i < T3.size(); ++i){
+      //std::cout << T3[i] << std::endl;
+      //REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
+    }
+  } // GIVEN
+} // TEST
+
+
+
 
 TEST_CASE( "convolution" ){
   GIVEN( "vectors" ){
@@ -16,7 +114,7 @@ TEST_CASE( "convolution" ){
                         T1   {1,2,3,4},
                         T2   {2,3,4,5};
     std::vector<double> T3 = convolve(beta,T1,T2);
-    for ( auto& x : T3){ std::cout << x << "  ";}
+    //for ( auto& x : T3){ std::cout << x << "  ";}
     //REQUIRE( 1525.7249602 == Approx(T3[0]).epsilon(1e-6) );
   } // GIVEN
 
@@ -52,6 +150,7 @@ TEST_CASE( "convolution" ){
     REQUIRE( 54           == Approx(T3[3]).epsilon(1e-6) ); // T3(6)
     
   } // GIVEN
+*/
 } // TEST
 
 

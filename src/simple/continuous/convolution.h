@@ -1,5 +1,47 @@
 #include "simple/continuous/interpolate.h"
+#include "simple/continuous/integrate.h"
 #include <iostream>
+
+
+
+
+template <typename V>
+V convolutionWithPadding(V& beta_original, V& beta, V& T1, V& T2){
+  /* I'm going to assume that I've been given beta, T1, and T2 such that there
+   * is a reasonable amount of zero's padding each side, so that when I convolve
+   * T1 and T2 to get T3, I won't have to worry abount dropping terms off the
+   * end. This is something you should be worrying about in the upstairs func.
+   * I also care about getting b_original (which is the beta grid that describes
+   * where the nonzero values of T1 are) so that I can easily tell which values
+   * of beta' to traverse across. Note that no matter what values of T2 are 
+   * nonzero, the only values of beta' that will result in nonzero contributions
+   * are those that have T1(beta') != 0
+   */
+
+  // How many zeros did I add on to go from beta_original --> beta ? 
+  int numZeros = 0.5*(beta.size() - beta_original.size());
+  
+  V T3 (beta.size(),0.0);
+  for (size_t b = 0; b < beta.size(); ++b){
+    V integrand (beta.size(),0.0);
+    for (size_t bp = 0; bp < beta_original.size(); ++bp){
+      auto T1_piece = interpolate(beta,T1,beta_original[bp]);
+      auto T2_piece = interpolate(beta,T2,beta[b]-beta_original[bp]);
+      integrand[numZeros+bp] = T1_piece*T2_piece;
+    }
+    T3[b] = integrate(beta,integrand);
+  }
+  return T3;
+
+}
+
+
+
+
+
+
+
+
 
 
 template <typename V>
