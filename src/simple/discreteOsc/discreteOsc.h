@@ -20,14 +20,14 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
   // Prepare functions of beta
   double weight, tsave;
 
-  std::vector<double> ar(50), t_eff_consts(50), lambda_i(50), 
-    betaVals(50), exb(beta.size()), betan(beta.size());
+  std::vector<double> I_argument(50), t_eff_consts(50), lambda_i(50), 
+    oscBetaVals(50), exb(beta.size()), betan(beta.size());
 
-  prepareParams(oscEnergiesWeights, kbT, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, exb, betan, beta, sc );
+  prepareParams(oscEnergiesWeights, kbT, oscBetaVals, weight, tsave, I_argument, 
+    t_eff_consts, lambda_i, exb, betan, beta, sc );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / kbT ) * energy / kbT ) ]
    *            This ends up being argument for bessel function in Eq. 537
-   * --> betaVals = [ energy / kbT ]
+   * --> oscBetaVals = [ energy / kbT ]
    * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / kbT ) ]
    *             This is used to calculate the effective temperature Eq. 544
    * --> lambda_i = [ weight / ( tanh( 0.5 * energy / kbT ) * energy / kbT ) ]
@@ -65,10 +65,9 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
     // Initialize delta loop
     std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
     
-    unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
-      betaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, oscEnergiesWeights, 
-      t_eff_consts, 
-      temp_vec[itemp] );
+    unsigned int nn = oscillatorLoop( alpha, lambda_i, I_argument, scaling, wts, 
+      bes, oscBetaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, 
+      oscEnergiesWeights, t_eff_consts, temp_vec[itemp] );
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
     // populate bes with entries of beta_k again for various k.
@@ -89,24 +88,14 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
       }
     }
 
-    //n = 0;
-    //while ( n < nn ){
-    //  n += 1;
-    //  if ( wts[n-1] < 1e-6 and n > 5 ){ break; }
-    //}
-    int i=0;
-    int idone=0;
-    while (i << nn and idone == 0){
-       i=i+1;
-       n=i;
-       if (wts[i-1] < 1e-6 and i > 5) idone=1;
+    int i = 0;
+    while (i << nn){
+       n = ++i;
+       if (wts[i-1] < 1e-6 and i > 5) break;
     }
-
-
 
     // Add the continuous part to the scattering law
     std::vector<double> sexpb(beta.size(),0.0);
-    //std::cout << wts[0] << std::endl;
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
         auto beta_val = -betan[b] - bes[m];
@@ -119,7 +108,7 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
       } 
     }
 
-    // Add the delta functions to the scattering law
+    // Add the delta functions to sexpb vec
     double dwf = exp( -alpha[a]*scaling*lambda_s );
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
 
@@ -128,6 +117,4 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
       sym_sab[itemp*nalpha*nbeta+a*nbeta+b] = sexpb[b];
     }
   }
-  /*
-*/
 }

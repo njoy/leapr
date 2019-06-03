@@ -6,7 +6,8 @@ auto cutoff( double a ){
 }
 
 template <typename V, typename F>
-auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
+auto bfact( const F& x, const F& alpha_lambda_i, const F& beta_i, V& bplus, 
+  V& bminus ){
   /* bfact is meant to assist with the evaluation of Eq. 537, by evaluating
    * the bessel function In and all exponential terms. 
    *
@@ -20,7 +21,7 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
    *             alpha * weight / ( beta * sinh( beta / 2 ) )
    * to match Eq. 537. 
    *
-   * The dwc vector is populated with entries of dwc[i] = alpha * lambda_i,
+   * The alpha_lambda_i vector is populated with entries of alpha_lambda_i[i] = alpha * lambda_i,
    * where lambda_i was calculated in prepareParams.h according to Eq. 538.
    */
     
@@ -42,7 +43,7 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
 
     I1 = I1 * x; 
 
-    expVal = -dwc;
+    expVal = -alpha_lambda_i;
   } 
   if ( y > 1.0 ) {
 
@@ -59,7 +60,7 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
     I0 /= sqrt(x);
     I1 /= sqrt(x);
 
-    expVal = -dwc + x;
+    expVal = -alpha_lambda_i + x;
   }
 
   // generate higher orders by reverse recursion
@@ -76,7 +77,7 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
     i = i - 1;
     if (In[i-1] >= 1.0e10){ 
       for ( auto j = i; j < nmax; ++j ){
-        In[j-1]=In[j-1]/1.0e10;
+        In[j-1]=In[j-1]*1.0e-10;
       } 
     }  
   } 
@@ -89,8 +90,8 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
 
 
   /* Having calculated In(alpha*weight/(beta*sinh(beta/2))) = In(x), we apply
-   * exponential terms to it. expVal = -dwc or -dwc + x. 
-   * dwc = alpha * lambda_i, where lambda_i was calculated in prepareParams.h
+   * exponential terms to it. expVal = -alpha_lambda_i or -alpha_lambda_i + x. 
+   * alpha_lambda_i = alpha * lambda_i, where lambda_i is from prepareParams.h
    * according to Eq. 538. 
    * Additionally, the exp( -n * beta / 2 ) term in Eq. 537 is evaluated.
    * In total, bplus and bminus will be populated with 
@@ -104,8 +105,8 @@ auto bfact( const F& x, const F& dwc, const F& beta_i, V& bplus, V& bminus ){
    */
 
   for ( auto n = 0; n < nmax; ++n ){
-    bplus[n]  = cutoff( exp( expVal - (n+1) * beta_i / 2 ) * In[n] );
-    bminus[n] = cutoff( exp( expVal + (n+1) * beta_i / 2 ) * In[n] );
+    bplus[n]  = cutoff( exp(expVal - (n+1) * beta_i * 0.5) * In[n] );
+    bminus[n] = cutoff( exp(expVal + (n+1) * beta_i * 0.5) * In[n] );
   }
 
   // Return bzero value

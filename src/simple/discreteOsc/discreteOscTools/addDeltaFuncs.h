@@ -5,7 +5,8 @@ template <typename V, typename F>
 auto addDeltaFuncs( const F twt, const F dwf, const V& bes, const V& betan, 
   const V& wts, V& sexpb, const int n ) {
 
-  // Add the delta functions to the scattering law 
+  // Add the delta functions to the sexpb vec so it can be added to the 
+  // scattering law 
   // delta(0.0) is saved for the incoherent elastic scattering
   
   if ( twt > 0.0  or dwf < 1.0e-10 ){ return; }
