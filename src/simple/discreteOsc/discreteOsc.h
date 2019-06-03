@@ -1,13 +1,16 @@
-#include "simple/generalTools/values.h"
 #include "simple/discreteOsc/discreteOscTools/prepareParams.h"
+#include "simple/discreteOsc/discreteOscTools/bfill.h"
+#include "simple/discreteOsc/discreteOscTools/exts.h"
 
 void swap( double& a, double& b ){ double c = a; a = b; b = c; }
 
 template <typename V, typename F>
-auto discre( int itemp, const F& sc, const F& scaling, const F& tev, const F& lambda_s, const F& twt, const F& tbeta, const V& alpha, const V& beta, const V& temp_vec, std::vector<std::tuple<F,F>>& oscEnergiesWeights, V& t_eff_vec, V& sym_sab ){
+auto discre( int itemp, const F& sc, const F& scaling, const F& kbT, 
+  const F& lambda_s, const F& twt, const F& tbeta, const V& alpha, const V& beta, 
+  const V& temp_vec, std::vector<std::tuple<F,F>>& oscEnergiesWeights, 
+  V& t_eff_vec, V& sym_sab ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
-
 
   // Set up oscillator parameters
   // Prepare functions of beta
@@ -16,35 +19,24 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& tev, const F& la
   std::vector<double> ar(50), t_eff_consts(50), lambda_i(50), 
     betaVals(50), exb(beta.size()), betan(beta.size());
 
-  /*
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
-    for ( size_t i = 0; i < energy.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
-    }
-    */
-
-
-
-
-  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, bk, exb, betan, beta, sc );
-  /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
+  prepareParams(oscEnergiesWeights, kbT, betaVals, weight, tsave, ar, t_eff_consts,
+    lambda_i, exb, betan, beta, sc );
+  /* --> ar = [ weight / ( sinh( 0.5 * energy / kbT ) * energy / kbT ) ]
    *            This ends up being argument for bessel function in Eq. 537
-   * --> betaVals = [ energy / tev ]
-   * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / tev ) ]
+   * --> betaVals = [ energy / kbT ]
+   * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / kbT ) ]
    *             This is used to calculate the effective temperature Eq. 544
-   * --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
+   * --> lambda_i = [ weight / ( tanh( 0.5 * energy / kbT ) * energy / kbT ) ]
    *             This is lambda_i, defined in Eq. 538. Used for Eq. 537.
    * --> exb = [ exp( -beta * sc / 2 ) ]
    *          This is used in calculating the sex vector, since to go from 
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
-  /*
   std::vector<double> bex( maxbb ), rdbex( maxbb );
   int nbx = bfill( bex, rdbex, betan );
   double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
-     
+  /*
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
 

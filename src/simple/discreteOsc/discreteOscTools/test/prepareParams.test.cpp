@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "simple/discreteOsc/discreteOscTools/prepareParams.h"
+#include "simple/generalTools/testing.h"
 
 
 TEST_CASE( "prepare parameters helper function" ){
@@ -8,7 +9,7 @@ TEST_CASE( "prepare parameters helper function" ){
     std::vector<double> ar(50, 0.0), dist(50,0.0), dbw(50,0.0),
       energyNorm(50, 0.0), correctExb(5), energy(2), weights(2), beta(5), 
       exb(5,0.0), betan(5,0.0);
-    double tev, tsave, weight, bk, sc;
+    double tev, tsave, weight, sc;
 
     energyNorm[0] = 2.030778478;
     energyNorm[1] = 2.901112112;
@@ -17,7 +18,7 @@ TEST_CASE( "prepare parameters helper function" ){
     weights = { 0.2  , 0.8  };
     beta    = { 0.10, 0.15, 0.30, 0.60, 1.20 };
 
-    tev = 1.723477E-2; bk = 8.617385e-5; sc = 1.0;
+    tev = 1.723477E-2; sc = 1.0;
 
     std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
     for ( size_t i = 0; i < energy.size(); ++i ){
@@ -25,7 +26,7 @@ TEST_CASE( "prepare parameters helper function" ){
     }
 
     prepareParams( oscEnergiesWeights, tev, energyNorm, weight, tsave, ar, dist,
-      dbw, bk, exb, betan, beta, sc );
+      dbw, exb, betan, beta, sc );
 
     correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };
 
@@ -41,7 +42,6 @@ TEST_CASE( "prepare parameters helper function" ){
     for( size_t i = 2; i < dist.size(); ++i ){ 
       REQUIRE( 0.0 == Approx(dist[i]).epsilon(1e-6) ); 
     }
-
 
     REQUIRE( 0.1282379 == Approx(dbw[0]).epsilon(1e-6) );
     REQUIRE( 0.3078315 == Approx(dbw[1]).epsilon(1e-6) );
