@@ -166,8 +166,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
 
   F add, exx, g_prime;
 
-  std::vector<double> eq16(beta.size()), eq14(beta.size());
-
   // Do the phonon expansion sum 
   // For this, we treat the first iteration slightly different than the all
   // subsequent iterations, because all subsequent iterations require
@@ -175,9 +173,6 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   int npl = np;
   delta /= tev;
-  //A alpha0Additions(beta.size(),0.0);
-  //A alpha1Additions(beta.size(),0.0);
-  //std::cout << "scaling " << scaling << std::endl;
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
@@ -201,27 +196,15 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
     }
 
     
-    // ------------------------------------------------------------------------
-    // CDF THINGS
-    // ------------------------------------------------------------------------
     if ( npn >= tlast.size() ){ 
-      for ( size_t b = 0; b < beta.size(); ++b ){
-        g_prime = 0.0;
-        for ( size_t a = 0; a < alpha.size(); ++a ){g_prime += symSab(a,b,0);}
-        eq16[b] = (b == 0) ? g_prime : g_prime + eq16[b-1]; // g_prime = Eq.14
-      }
-    } 
-    // ------------------------------------------------------------------------
-
-    if ( npn >= tlast.size() ){ 
-      return std::make_tuple(lambda_s,t_eff,eq16); }
+      return std::make_tuple(lambda_s,t_eff); }
 
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
 
   } // for n in nphon (maxn in leapr.f90) 
 
   //for ( auto x : alpha0Additions ) { std::cout << x << std::endl; }
-  return std::make_tuple(lambda_s,t_eff,eq16);
+  return std::make_tuple(lambda_s,t_eff);
 }
 
 

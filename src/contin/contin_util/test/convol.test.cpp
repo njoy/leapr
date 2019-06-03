@@ -134,26 +134,6 @@ TEST_CASE( "convol" ){
       }
     } // THEN
   } // GIVEN
-  
-  /*
-  GIVEN( "super simple case" ){
-    std::vector<double> 
-      t1 {0.1, 0.6, 0.4},
-      t2 {0.1, 0.6, 0.4, 
-          0.0, 0.0  };
-    double delta = 1.00;
-
-    int nn = 5; 
-    THEN( "the vectors are correctly convolved and result is returned" ){
-
-      auto output = convol( t1, t2, delta, nn );
-      std::cout << (output|ranges::view::all) << std::endl;
-
- 
-    } // THEN
-  } // GIVEN
-  */
-
 } // TEST CASE
 
 

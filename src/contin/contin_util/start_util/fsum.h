@@ -15,13 +15,9 @@ double fsum( const int& n, const A& p, const F& tau, const A& betaGrid ){
    * ------------------------------------------------------------------------
    * * Compute an integral of the form
    *
-   *      infty
-   *   int       2 * P(beta) * beta^n * sinh( tau*beta ) dbeta
-   *      0
+   *   int 0->infty  2 * P(beta) * beta^n * sinh( tau*beta ) dbeta
    *                                or
-   *      infty
-   *   int       2 * P(beta) * beta^n * cosh( tau*beta ) dbeta
-   *      0
+   *   int 0->infty  2 * P(beta) * beta^n * cosh( tau*beta ) dbeta
    *
    *  depending on whether n is odd of even, respectively.
    *
@@ -35,19 +31,16 @@ double fsum( const int& n, const A& p, const F& tau, const A& betaGrid ){
   bool even = ( 1 - 2*(n%2) == 1 ); // +1 if even, -1 if odd. This is to
                                     // help differentiate betwene sinh and
                                     // cosh while evaluating the integrand
-
   for( size_t i = 0; i < p.size(); ++i ){
-      func_val = even ? 2 * p[i] * cosh( betaGrid[i]* tau ) * std::pow( betaGrid[i], n ) :
-                        2 * p[i] * sinh( betaGrid[i]* tau ) * std::pow( betaGrid[i], n );
+      func_val = even ? 2*p[i]*cosh(betaGrid[i]*tau)*std::pow(betaGrid[i],n) :
+                        2*p[i]*sinh(betaGrid[i]*tau)*std::pow(betaGrid[i],n) ;
       dx_left  = 0.0; // We look a half space left, if there's anything <---
       dx_right = 0.0; // We look a half space right, if there's anything --->
-      if ( i != 0 )         { dx_left  = (betaGrid[i]-betaGrid[i-1])/2; }
-      if ( i != p.size()-1 ){ dx_right = (betaGrid[i+1]-betaGrid[i])/2; }
+      if ( i != 0 )         { dx_left  = (betaGrid[i]-betaGrid[i-1])*0.5; }
+      if ( i != p.size()-1 ){ dx_right = (betaGrid[i+1]-betaGrid[i])*0.5; }
       func_val = func_val * ( dx_left + dx_right ); 
     func_sum += func_val;
-
   } // for i in p
-
   return func_sum;
 }
 

@@ -4,7 +4,7 @@
 
 
 template <typename A, typename F>
-void checkSabLambdaTeff( const A& correctSab, const std::tuple<F,F,A>& output, 
+void checkSabLambdaTeff( const A& correctSab, const std::tuple<F,F>& output, 
   const Eigen::Tensor<F,3>& sab, const F& lambda, const F& teff, const F& tol ){
 
   REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
@@ -31,7 +31,7 @@ void checkSabLambdaTeff_NEW( const A& correctSab, const std::tuple<F,F>& output,
   for ( int i = 0; i < sab.dimension(0); ++i ){
     for ( int j = 0; j < sab.dimension(1); ++j ){
       for ( int k = 0; k < sab.dimension(2); ++k ){
-        std::cout << sab(i,j,k) << "       " << correctSab[l] << std::endl;
+        //std::cout << sab(i,j,k) << "       " << correctSab[l] << std::endl;
         REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(tol) );
 	l += 1;
       }
@@ -49,7 +49,7 @@ TEST_CASE( "contin eigen" ){
   int ntempr, nphon, itemp;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
-  std::tuple<double,double,std::vector<double>> output;
+  std::tuple<double,double> output;
 
   GIVEN( "input values from input card and leapr subroutine" ){
     ntempr = 1; nphon = 3; itemp = 0;

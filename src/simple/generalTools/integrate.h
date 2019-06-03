@@ -1,4 +1,5 @@
-
+#ifndef LEAPR_SIMPLE_CONTINUOUS_INTEGRATE
+#define LEAPR_SIMPLE_CONTINUOUS_INTEGRATE
 
 
 template <typename V>
@@ -13,3 +14,4 @@ auto integrate(const V& x, const V& y){
   return value;
 }
 
+#endif 

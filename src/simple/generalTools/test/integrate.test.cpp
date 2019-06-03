@@ -1,8 +1,8 @@
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "simple/continuous/integrate.h"
+#include "simple/generalTools/integrate.h"
 
 
-/*
 
 TEST_CASE( "integrate" ){
   GIVEN( "a vector to represent the grid and a vector to represent integrand" ){
@@ -17,6 +17,5 @@ TEST_CASE( "integrate" ){
   } // GIVEN
 } // TEST
 
-*/
 
 

@@ -3,32 +3,19 @@
 #include "simple/continuous/continuous.h"
 
 
-
-
 TEST_CASE( "continuous" ){
   GIVEN( "vectors" ){
 
-    std::vector<double> rhoEnergy { 0.0, 1.0, 2.0 }, 
-                        rho       { 1.2, 1.4, 1.0 },
-                        alphas    { 0.01, 0.02, 0.03, 0.04},
-                        betas     { 0.0, 0.5, 1.0};
-    //continuous(rhoEnergy,rho,alphas,betas);
+    std::vector<double> rhoEnergy { 0.0, 0.01, 0.02, 0.03 }, 
+                        rho       { 0.0, 1.2, 1.4, 1.0 },
+                        alphas    { 0.1, 0.2, 0.3, 0.4},
+                        betas     { 0.0, 0.5, 1.0, 5.0};
+    betas = rho;
+    int lat = 1;
+    double kbT = 296*8.617333262145E-5, tbeta = 1.0, arat = 1.0;
+    continuous(rhoEnergy,rho,alphas,betas,kbT,tbeta,lat,arat);
     REQUIRE(true);
   } // GIVEN
-  /*
-
-  GIVEN( "int" ){
-
-    std::vector<double> rhoEnergy { 0.00, 0.01, 0.02, 0.04, 0.08 }, 
-                        rho       { 1.00, 2.00, 1.50, 3.00, 0.00 },
-                        alphas    { 0.01, 0.02, 0.03, 0.04 },
-                        betas     { 0.0, 0.1, 0.7, 1.0, 2.4 };
-    double kbT = 0.025;
-    continuous(rhoEnergy,rho,alphas,betas,kbT);
-    REQUIRE(true);
-  } // GIVEN
-  */
-
 } // TEST
 
 

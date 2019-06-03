@@ -1,5 +1,9 @@
-#include "simple/continuous/interpolate.h"
-#include "simple/continuous/integrate.h"
+#ifndef LEAPR_SIMPLE_CONTINUOUS_CONVOLUTION
+#define LEAPR_SIMPLE_CONTINUOUS_CONVOLUTION
+
+
+#include "simple/generalTools/interpolate.h"
+#include "simple/generalTools/integrate.h"
 #include <iostream>
 
 
@@ -61,6 +65,8 @@ V convolve(V& b, V& y1_0, V y2_0){
   for ( int i = 0; i < int(bp.size()/2); ++i ){ bp[i] *= -1; }
   for ( int i = 0; i < int(y1.size()/2); ++i ){ y1[i] *= exp(-bp[i]); }
   for ( int i = 0; i < int(y2.size()/2); ++i ){ y2[i] *= exp(-bp[i]); }
+  //for (auto& x : y1){ std::cout << x << "  "; }
+  //std::cout << std::endl;
 
   V y3 (b.size()+1,0.0);
 
@@ -78,4 +84,6 @@ V convolve(V& b, V& y1_0, V y2_0){
   y1_0[y1_0.size()-1] = 0.0;
   return y3;
 }
+
+#endif
 

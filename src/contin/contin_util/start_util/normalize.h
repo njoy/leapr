@@ -26,7 +26,7 @@ void normalize( A& p, const F& tbeta, const A& betaGrid ){
    * * P(beta) is amended
    */
 
-  F inv_sum = tbeta / fsum( 1, p, 0.5, betaGrid ); 
+  F inv_sum = tbeta / fsum( 1, p, 0.5, betaGrid );  // This gives you 
   for ( F& entry : p ){ entry = entry * inv_sum; } 
 }
 

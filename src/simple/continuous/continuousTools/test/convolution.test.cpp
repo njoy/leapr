@@ -1,5 +1,6 @@
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "simple/continuous/convolution.h"
+#include "simple/continuous/continuousTools/convolution.h"
 
 
 template <typename V>
@@ -77,10 +78,7 @@ TEST_CASE( "convolution with padding" ){
       } // AND WHEN 
     } // WHEN 
   } // GIVEN
-} // TEST CASE
-
   /*
-
   GIVEN( "vectors" ){
     std::vector<double> beta0 { -4, -3, -2, -1, 0, 1, 2, 3, 4 },
                         beta { -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6 },
@@ -95,6 +93,7 @@ TEST_CASE( "convolution with padding" ){
       //REQUIRE( correctT3[i] == Approx(T3[i]).epsilon(1e-6) );
     }
   } // GIVEN
+  */
 } // TEST
 
 
@@ -151,7 +150,6 @@ TEST_CASE( "convolution" ){
     
   } // GIVEN
 } // TEST
-*/
 
 
 

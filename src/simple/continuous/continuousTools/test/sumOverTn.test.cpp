@@ -1,12 +1,32 @@
 #include "catch.hpp"
-#include "simple/continuous/sumOverTn.h"
+#include "simple/continuous/continuousTools/sumOverTn.h"
 
 /*
+template <typename V>
+void checkVec( V y1, V y2, float tol=1e-6 ){
+  for (size_t i = 0; i < y1.size(); ++i){
+    REQUIRE( y2[i] == Approx(y1[i]).epsilon(tol) );
+  }
+}
+
 
 
 TEST_CASE( "sumOverTn" ){
-  GIVEN( "Only one iteration is performed (only want T0)" ){
-    THEN( "We only see the effects of the T0(b) = delta(b) term" ){
+  GIVEN( "Two iterations are performed (T0 and T1)" ){
+    THEN( "T0(b) = delta(b) and T1 which is already defined are used" ){
+        std::vector<double> alphas{0.5}, betas{0,0.25,0.5}, 
+          T1 {1.17883311, 1.03761234, 0.340718301}, 
+          correctSAB = {2.167110944e-5, 1.79529164e-5, 5.89515652e-6};
+        double lambda_s = 27.14548778055639;
+        int N = 2;
+        auto sab = sumOverTn(alphas,betas,T1,lambda_s,N);
+        checkVec(sab,correctSAB);
+    } // THEN
+  } // GIVEN
+} // TEST CASE 
+*/
+
+  /*
       {
         std::vector<double> alphas {2,4}, betas {0,1,2,3,4}, T1 {1,2,3,2,1};
         double lambda_s = 0.5;
@@ -19,6 +39,7 @@ TEST_CASE( "sumOverTn" ){
           REQUIRE( 0.0 == Approx(sab[1*betas.size()+b]).epsilon(1e-6) );
         }
       }
+
       {
         std::vector<double> alphas {0.1,0.4}, betas {0,2}, T1 {1,3};
         double lambda_s = 0.75;
@@ -49,6 +70,9 @@ TEST_CASE( "sumOverTn" ){
         REQUIRE( 6.0*exp(-2) == Approx(sab[1*betas.size()+2]).epsilon(1e-6) );
         REQUIRE( 4.0*exp(-2) == Approx(sab[1*betas.size()+3]).epsilon(1e-6) );
         REQUIRE( 2.0*exp(-2) == Approx(sab[1*betas.size()+4]).epsilon(1e-6) );
+    }}}
+  */
+  /*
       }
       {
         std::vector<double> alphas {0.1,0.4}, betas {0,2}, T1 {1,3};

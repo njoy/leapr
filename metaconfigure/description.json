@@ -395,11 +395,12 @@
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
     "src/simple/simpleLEAPR.h",
-    "src/simple/continuous/sumOverTn.h",
     "src/simple/continuous/continuous.h",
-    "src/simple/continuous/integrate.h",
-    "src/simple/continuous/convolution.h",
-    "src/simple/continuous/interpolate.h",
+    "src/simple/continuous/continuousTools/sumOverTn.h",
+    "src/simple/continuous/continuousTools/convolution.h",
+    "src/simple/generalTools/integrate.h",
+    "src/simple/generalTools/interpolate.h",
+    "src/simple/generalTools/print.h",
     "src/skold/skold.h",
     "src/skold/skold_util/terp1.h",
     "src/coldh/coldh.h",
@@ -506,11 +507,15 @@
       "src/simple/test/simpleLEAPR.test.cpp"
     ],
     "simple.continuous": [
-      "src/simple/continuous/test/integrate.test.cpp",
-      "src/simple/continuous/test/interpolate.test.cpp",
-      "src/simple/continuous/test/convolution.test.cpp",
-      "src/simple/continuous/test/sumOverTn.test.cpp",
       "src/simple/continuous/test/continuous.test.cpp"
+    ],
+    "simple.continuous.continuousTools": [
+      "src/simple/continuous/continuousTools/test/convolution.test.cpp",
+      "src/simple/continuous/continuousTools/test/sumOverTn.test.cpp"
+    ],
+    "simple.generalTools": [
+      "src/simple/generalTools/test/integrate.test.cpp",
+      "src/simple/generalTools/test/interpolate.test.cpp"
     ],
     "skold": [
       "src/skold/test/skold.test.cpp"

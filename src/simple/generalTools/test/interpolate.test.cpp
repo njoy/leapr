@@ -1,9 +1,8 @@
 #include "catch.hpp"
-#include "simple/continuous/interpolate.h"
+#include "simple/generalTools/interpolate.h"
 
 
 
-/*
 TEST_CASE( "interpolate" ){
   GIVEN( "the requested value is within reasonable bounds" ){
     THEN( "we interpolate" ){
@@ -25,7 +24,6 @@ TEST_CASE( "interpolate" ){
     } // THEN
   } // GIVEN
 } // TEST
-*/
 
 
 
