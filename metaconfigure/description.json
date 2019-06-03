@@ -395,11 +395,16 @@
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
     "src/simple/simpleLEAPR.h",
+    "src/simple/discreteOsc/discreteOsc.h",
+    "src/simple/discreteOsc/discreteOscTools/prepareParams.h",
+    "src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/bfact.h",
     "src/simple/continuous/continuous.h",
     "src/simple/continuous/continuousTools/sumOverTn.h",
     "src/simple/continuous/continuousTools/convolution.h",
+    "src/simple/generalTools/testing.h",
     "src/simple/generalTools/integrate.h",
     "src/simple/generalTools/interpolate.h",
+    "src/simple/generalTools/values.h",
     "src/simple/generalTools/print.h",
     "src/skold/skold.h",
     "src/skold/skold_util/terp1.h",
@@ -512,6 +517,15 @@
     "simple.continuous.continuousTools": [
       "src/simple/continuous/continuousTools/test/convolution.test.cpp",
       "src/simple/continuous/continuousTools/test/sumOverTn.test.cpp"
+    ],
+    "simple.discreteOsc": [
+      "src/simple/discreteOsc/test/discreteOsc.test.cpp"
+    ],
+    "simple.discreteOsc.discreteOscTools": [
+      "src/simple/discreteOsc/discreteOscTools/test/prepareParams.test.cpp"
+    ],
+    "simple.discreteOsc.discreteOscTools.oscillatorLoopTools": [
+      "src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/test/bfact.test.cpp"
     ],
     "simple.generalTools": [
       "src/simple/generalTools/test/integrate.test.cpp",

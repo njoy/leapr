@@ -7,7 +7,6 @@
 
 double fact(int n){ return n == 0 ? 1 : n*fact(n-1); }
 
-/*
 
 
 template <typename V>
@@ -90,7 +89,6 @@ V sumOverTn( const V& alphas, V betas, V T1, const F& lambda_s, int N = 0){
 
 }
 
-*/
 #endif
 
 

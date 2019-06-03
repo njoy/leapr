@@ -1,14 +1,6 @@
 #include "catch.hpp"
 #include "simple/continuous/continuousTools/sumOverTn.h"
-
-/*
-template <typename V>
-void checkVec( V y1, V y2, float tol=1e-6 ){
-  for (size_t i = 0; i < y1.size(); ++i){
-    REQUIRE( y2[i] == Approx(y1[i]).epsilon(tol) );
-  }
-}
-
+#include "simple/generalTools/testing.h"
 
 
 TEST_CASE( "sumOverTn" ){
@@ -21,12 +13,6 @@ TEST_CASE( "sumOverTn" ){
         int N = 2;
         auto sab = sumOverTn(alphas,betas,T1,lambda_s,N);
         checkVec(sab,correctSAB);
-    } // THEN
-  } // GIVEN
-} // TEST CASE 
-*/
-
-  /*
       {
         std::vector<double> alphas {2,4}, betas {0,1,2,3,4}, T1 {1,2,3,2,1};
         double lambda_s = 0.5;
@@ -70,9 +56,6 @@ TEST_CASE( "sumOverTn" ){
         REQUIRE( 6.0*exp(-2) == Approx(sab[1*betas.size()+2]).epsilon(1e-6) );
         REQUIRE( 4.0*exp(-2) == Approx(sab[1*betas.size()+3]).epsilon(1e-6) );
         REQUIRE( 2.0*exp(-2) == Approx(sab[1*betas.size()+4]).epsilon(1e-6) );
-    }}}
-  */
-  /*
       }
       {
         std::vector<double> alphas {0.1,0.4}, betas {0,2}, T1 {1,3};
@@ -84,8 +67,10 @@ TEST_CASE( "sumOverTn" ){
         REQUIRE( 0.20874228442 == Approx(sab[0*betas.size()+1]).epsilon(1e-6) );
         REQUIRE( 0.66673639861 == Approx(sab[1*betas.size()+1]).epsilon(1e-6) );
       }
+
     } // THEN
   } // GIVEN
+/*
   GIVEN( "Three iterations are performed (T0, T1, T2)" ){
     THEN( "" ){
       {
@@ -113,9 +98,5 @@ TEST_CASE( "sumOverTn" ){
       }
     } // THEN
   } // GIVEN
-
-} // TEST
-
   */
-
-
+} // TEST
