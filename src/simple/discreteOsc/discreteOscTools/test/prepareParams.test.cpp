@@ -32,42 +32,25 @@ TEST_CASE( "prepare parameters helper function" ){
 
     REQUIRE( 8.213274e-2 == Approx(ar[0]).epsilon(1e-6) );
     REQUIRE( 0.1368162   == Approx(ar[1]).epsilon(1e-6) );
-
-    for( size_t i = 2; i < ar.size(); ++i ){ 
-      REQUIRE( 0.0 == Approx(ar[i]).epsilon(1e-6) ); 
-    }
+    restAreZero(2,ar);
 
     REQUIRE( 4.55739924e-3 == Approx(dist[0]).epsilon(1e-6) );
     REQUIRE( 2.23263430e-2 == Approx(dist[1]).epsilon(1e-6) );
-    for( size_t i = 2; i < dist.size(); ++i ){ 
-      REQUIRE( 0.0 == Approx(dist[i]).epsilon(1e-6) ); 
-    }
+    restAreZero(2,dist);
 
     REQUIRE( 0.1282379 == Approx(dbw[0]).epsilon(1e-6) );
     REQUIRE( 0.3078315 == Approx(dbw[1]).epsilon(1e-6) );
-    for( size_t i = 2; i < dbw.size(); ++i ){ 
-      REQUIRE( 0.0 == Approx(dbw[i]).epsilon(1e-6) ); 
-    }
-
+    restAreZero(2,dbw);
 
     REQUIRE( 2.030778 == Approx(energyNorm[0]).epsilon(1e-6) );
     REQUIRE( 2.901112 == Approx(energyNorm[1]).epsilon(1e-6) );
-    for( size_t i = 2; i < energyNorm.size(); ++i ){ 
-      REQUIRE( 0.0 == Approx(energyNorm[i]).epsilon(1e-6) ); 
-    }
+    restAreZero(2,energyNorm);
 
     REQUIRE( 1.0 == Approx(weight).epsilon(1e-6) );
     REQUIRE( 311.9710021 == Approx(tsave).epsilon(1e-6) );
 
-    REQUIRE( exb.size() == correctExb.size() );
-    for( size_t i = 0; i < exb.size(); ++i ){ 
-      REQUIRE( correctExb[i] == Approx(exb[i]).epsilon(1e-6) ); 
-    }
-
-    REQUIRE( beta.size() == betan.size() );
-    for( size_t i = 0; i < beta.size(); ++i ){ 
-      REQUIRE( beta[i] == Approx(betan[i]).epsilon(1e-6) ); 
-    }  // because sc = 1.0 betan doesn't get scaled
+    checkVec(exb, correctExb);
+    checkVec(beta, betan); // because sc = 1.0 betan doesn't get scaled
 
   } // GIVEN
 } // TEST CASE

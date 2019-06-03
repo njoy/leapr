@@ -1,6 +1,9 @@
 #include "simple/discreteOsc/discreteOscTools/prepareParams.h"
 #include "simple/discreteOsc/discreteOscTools/bfill.h"
 #include "simple/discreteOsc/discreteOscTools/exts.h"
+#include "simple/discreteOsc/discreteOscTools/sint.h"
+#include "simple/discreteOsc/discreteOscTools/oscillatorLoop.h"
+#include "simple/discreteOsc/discreteOscTools/addDeltaFuncs.h"
 
 void swap( double& a, double& b ){ double c = a; a = b; b = c; }
 
@@ -11,6 +14,7 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
   V& t_eff_vec, V& sym_sab ){
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
+  int nalpha = alpha.size(), nbeta = beta.size();
 
   // Set up oscillator parameters
   // Prepare functions of beta
@@ -36,7 +40,6 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
   std::vector<double> bex( maxbb ), rdbex( maxbb );
   int nbx = bfill( bex, rdbex, betan );
   double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
-  /*
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
 
@@ -44,7 +47,7 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
     // for use in exts
     std::vector<double> input ( beta.size() );
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab(a,b,itemp);
+      input[b] = sym_sab[itemp*nalpha*nbeta+a*nbeta+b];
     }
 
     // input = sym_sab values for constant temp and alpha. 
@@ -122,8 +125,9 @@ auto discre( int itemp, const F& sc, const F& scaling, const F& kbT,
 
     // Record the results
     for ( size_t b = 0; b < betan.size(); ++b ){
-      sym_sab(a,b,itemp) = sexpb[b];
+      sym_sab[itemp*nalpha*nbeta+a*nbeta+b] = sexpb[b];
     }
   }
+  /*
 */
 }

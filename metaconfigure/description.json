@@ -397,11 +397,11 @@
     "src/simple/simpleLEAPR.h",
     "src/simple/discreteOsc/discreteOsc.h",
     "src/simple/discreteOsc/discreteOscTools/prepareParams.h",
+    "src/simple/discreteOsc/discreteOscTools/oscillatorLoop.h",
     "src/simple/discreteOsc/discreteOscTools/addDeltaFuncs.h",
     "src/simple/discreteOsc/discreteOscTools/exts.h",
     "src/simple/discreteOsc/discreteOscTools/bfill.h",
     "src/simple/discreteOsc/discreteOscTools/sint.h",
-    "src/simple/discreteOsc/discreteOscTools/oscLoopFuncs.h",
     "src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/bfact.h",
     "src/simple/continuous/continuous.h",
     "src/simple/continuous/continuousTools/sumOverTn.h",
@@ -529,7 +529,7 @@
     "simple.discreteOsc.discreteOscTools": [
       "src/simple/discreteOsc/discreteOscTools/test/exts.test.cpp",
       "src/simple/discreteOsc/discreteOscTools/test/bfill.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/oscLoopFuncs.test.cpp",
+      "src/simple/discreteOsc/discreteOscTools/test/oscillatorLoop.test.cpp",
       "src/simple/discreteOsc/discreteOscTools/test/prepareParams.test.cpp",
       "src/simple/discreteOsc/discreteOscTools/test/addDeltaFuncs.test.cpp",
       "src/simple/discreteOsc/discreteOscTools/test/sint.test.cpp"

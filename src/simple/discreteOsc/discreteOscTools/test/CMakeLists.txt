@@ -2,7 +2,7 @@
 add_executable( simple.discreteOsc.discreteOscTools.test
                 exts.test.cpp
                 bfill.test.cpp
-                oscLoopFuncs.test.cpp
+                oscillatorLoop.test.cpp
                 prepareParams.test.cpp
                 addDeltaFuncs.test.cpp
                 sint.test.cpp )

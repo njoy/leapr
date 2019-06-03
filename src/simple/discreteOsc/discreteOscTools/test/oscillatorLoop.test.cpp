@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "simple/discreteOsc/discreteOscTools/oscLoopFuncs.h"
+#include "simple/discreteOsc/discreteOscTools/oscillatorLoop.h"
 
 
 TEST_CASE( "negative n terms loop" ){

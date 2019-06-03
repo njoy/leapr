@@ -1,49 +1,17 @@
-
-
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp" 
 #include "simple/discreteOsc/discreteOsc.h"
+#include "simple/generalTools/testing.h"
 
-
-//void equal_vec_mega_vec( Eigen::Tensor<double,3>& sab, 
-//  std::vector<double> correctSab ){
-//
-//  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
-
- // int l = 0;
-//  for ( int i = 0; i < sab.dimension(0); ++i ){
-//    for ( int j = 0; j < sab.dimension(1); ++j ){
-//      for ( int k = 0; k < sab.dimension(2); ++k ){
-//        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
-//	l += 1;
-//      }
-//    }
-//  }
-//}
-
-//auto populateSymSab( const std::vector<double>& alpha, const std::vector<double>& beta ){
-//  Eigen::Tensor<double,3> sab(alpha.size(),beta.size(),1);
-//  int k = 1;
-//  for ( int i = 0; i < sab.dimension(0); ++i ){
-//    for ( int j = 0; j < sab.dimension(1); ++j ){
-//      sab(i,j,0) = k;
-//      k += 1;
-//    }
-//  }
-//  return sab;
-//}
-
-
-
-TEST_CASE( "discre" ){
+TEST_CASE( "discrete oscillators" ){
   GIVEN( "two oscillators" ){
     WHEN( "alpha and beta values are slightly small" ){
       std::vector<double> osc_energies{0.035, 0.05}, osc_weights{0.2, 0.8},
         alpha{0.1, 0.2, 0.4, 0.8, 1.6}, beta{0.10, 0.15, 0.30, 0.60, 1.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      //auto sym_sab = populateSymSab( alpha, beta );
-      std::vector<double> sym_sab (10,0.0);
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, tev = 1.723477E-2,
              tbeta = 2.0, twt = 0.3;
@@ -64,18 +32,19 @@ TEST_CASE( "discre" ){
         12.78842, 13.48618, 14.74575, 10.74546, 11.25461, 11.77105, 12.24116, 
         13.75305};
 
-      //THEN( "scattering law matrix is correctly changed" ){
-      //  equal_vec_mega_vec( sym_sab, correctSymSab );
-      //} // THEN
+      THEN( "scattering law matrix is correctly changed" ){
+        checkVec(sym_sab, correctSymSab, 1e-5);
+      } // THEN
     } // WHEN
 
-    /*
     WHEN( "alpha and beta values are slightly larger" ){
       std::vector<double> osc_energies{0.035, 0.05}, osc_weights{0.2, 0.8},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      auto sym_sab = populateSymSab( alpha, beta );
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
+
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
@@ -95,7 +64,7 @@ TEST_CASE( "discre" ){
         5.625912, 6.256402, 1.551690, 2.499096, 3.173748, 5.098916, 5.735165};
 
       THEN( "scattering law matrix is correctly changed" ){
-        equal_vec_mega_vec( sym_sab, correctSymSab );
+        checkVec(sym_sab, correctSymSab, 1e-5);
       } // THEN
     } // WHEN
 
@@ -104,7 +73,8 @@ TEST_CASE( "discre" ){
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      auto sym_sab = populateSymSab( alpha, beta );
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
@@ -126,7 +96,7 @@ TEST_CASE( "discre" ){
         15.57309};
 
       THEN( "scattering law matrix is correctly changed" ){
-        equal_vec_mega_vec( sym_sab, correctSymSab );
+        checkVec(sym_sab, correctSymSab, 1e-5);
       } // THEN
     } // WHEN
     WHEN( "oscillator weights don't add up to 1" ){
@@ -134,7 +104,8 @@ TEST_CASE( "discre" ){
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      auto sym_sab = populateSymSab( alpha, beta );
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
@@ -155,7 +126,7 @@ TEST_CASE( "discre" ){
         8.9771372, 9.7354967, 14.613342, 16.15261};
 
       THEN( "scattering law matrix is correctly changed" ){
-        equal_vec_mega_vec( sym_sab, correctSymSab );
+        checkVec(sym_sab, correctSymSab, 1e-5);
       } // THEN
     } // WHEN
   } // GIVEN
@@ -166,7 +137,9 @@ TEST_CASE( "discre" ){
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      auto sym_sab = populateSymSab( alpha, beta );
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
+
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
@@ -187,7 +160,7 @@ TEST_CASE( "discre" ){
         12.70126}; 
 
       THEN( "scattering law matrix is correctly changed" ){
-        equal_vec_mega_vec( sym_sab, correctSymSab );
+        checkVec(sym_sab, correctSymSab, 1e-5);
       } // THEN
     } // WHEN
     
@@ -196,7 +169,9 @@ TEST_CASE( "discre" ){
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20}, 
         t_eff_vec{81178.935219}, temp_vec{200.0};
 
-      auto sym_sab = populateSymSab( alpha, beta );
+      std::vector<double> sym_sab (alpha.size()*beta.size());
+      for (size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
+
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
@@ -218,9 +193,8 @@ TEST_CASE( "discre" ){
         21.32620}; 
 
       THEN( "scattering law matrix is correctly changed" ){
-        equal_vec_mega_vec( sym_sab, correctSymSab );
+        checkVec(sym_sab, correctSymSab, 1e-5);
       } // THEN
     } // WHEN
-    */
   } // GIVEN
 } // TEST CASE
