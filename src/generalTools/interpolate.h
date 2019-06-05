@@ -18,8 +18,8 @@ Float interpolate( RangeZip xyRange, Float x ){
   int len = xyRange.size();
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values;
-  if ( x < std::get<0>(xyRange[0]) or 
-       x > std::get<0>(xyRange[len-1]) ){
+  if ( x < std::get<0>(xVec[0]) or 
+       x > std::get<0>(xVec[len-1]) ){
     return 0.0;
   }
 
