@@ -273,7 +273,9 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/sbfill.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/s_table_generation.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/bessel_K1.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/trapezoidIntegral.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/print.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/leapr.cpp" )
 
 target_include_directories( leapr PUBLIC src )

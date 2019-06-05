@@ -180,7 +180,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate( tnow, delta, beta[b] * sc,betaGrid );
+        add = exx * interpolate( tnow, beta[b] * sc,betaGrid );
         symSab(a,b,itemp) += add < 1e-30 ? 0 : add;
       } // for b in beta
     } // for a in alpha
