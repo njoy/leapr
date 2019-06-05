@@ -4,18 +4,26 @@
 #include <tuple>
 #include <memory>
 #include <iostream>
+#include "generalTools/print.h"
 
-void check( const std::vector<double>& p, const std::vector<double>& correct,
-  const std::tuple<double,double>& output, const double& lambda, 
-  const double& effectiveTemp ){
+template <typename Range, typename Tuple, typename Float>
+void check( std::vector<double> P, const Range correct,
+  const Tuple output, const Float lambda, 
+  const Float effectiveTemp ){
 
-  REQUIRE( p.size() == correct.size() );
-  for ( size_t i = 0; i < p.size(); ++i ){
-    REQUIRE( p[i] == Approx(correct[i]).epsilon(1e-6) );
+  std::cout << "In test func" <<std::endl;
+  printRange(std::get<2>(output));
+  printRange(P);
+
+  REQUIRE( P.size() == correct.size() );
+  for ( size_t i = 0; i < P.size(); ++i ){
+    REQUIRE( P[i] == Approx(correct[i]).epsilon(1e-6) );
   }
   REQUIRE( std::get<0>(output) == Approx(lambda).epsilon(1e-6) );
   REQUIRE( std::get<1>(output) == Approx(effectiveTemp).epsilon(1e-6) );
 
+  return;
+  std::cout << correct.size();
 }
 
 
@@ -31,16 +39,21 @@ TEST_CASE( "start function" ){
     delta = 0.0001; tev = 0.001; tbeta = 1.0;
     std::vector<double> betaGrid(p.size());
     for ( size_t i = 0; i < p.size(); ++i ){ betaGrid[i] = i * delta / tev; }
-    output = start(p, tbeta, betaGrid);
+    auto output = start(p, tbeta, betaGrid);
+    std::cout << "In test" <<std::endl;
+    printRange(std::get<2>(output));
+    std::vector<double> P = std::get<2>(output) | ranges::view::all;
+    printRange(P);
 
     correct = {1.9662112, 2.06616, 0.8135182, 0.632185, 0.5964, 0.649624};
     correct_lambda_s = 41.517752; correct_t_eff = 1.0118507;
 
     THEN( "T1, debye waller, and effective temp are correctly computed" ){
-      check( p, correct, output, correct_lambda_s, correct_t_eff );
+      check( P,correct, output, correct_lambda_s, correct_t_eff );
     } // THEN
 
   } // GIVEN
+  /*
 
   GIVEN( "more frequency distribution values" ){
 
@@ -96,4 +109,5 @@ TEST_CASE( "start function" ){
       } // THEN
     } // WHEN
   } // GIVEN
+  */
 } // TEST_CASE

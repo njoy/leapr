@@ -1,9 +1,11 @@
 #include "contin/contin_util/start_util/normalize.h"
 #include "contin/contin_util/start_util/fsum.h"
 #include <iostream> 
+#include <range/v3/all.hpp>
+#include "generalTools/print.h"
 
-template <typename A, typename F>
-auto start( A& p, const F& tbeta, A betaGrid ){
+template <typename Range, typename Float>
+auto start( Range& rho, const Float& tbeta, Range betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -39,26 +41,47 @@ auto start( A& p, const F& tbeta, A betaGrid ){
   //                                  --> rho / ( b * b )
   // This is is following what the manual instructs on pg. 651 near bottom, that
   // the solid-type spectrum must vary as b^2 as b goes to zero.
-  p[0] = p[1] / ( betaGrid[1] * betaGrid[1] );
   
-  for ( size_t i = 1; i < p.size(); ++i ){
-    p[i] = p[i] / ( 2 * betaGrid[i] * sinh(betaGrid[i]/2) );
-  }
+  auto rhoToP = [](auto betaRhoPair){ 
+    auto beta = std::get<0>(betaRhoPair);
+    auto rho  = std::get<1>(betaRhoPair);
+    return rho / ( 2.0 * beta * sinh(beta*0.5) );
+  };
+  
 
-  // normalize p so now it integrates to tbeta
-  normalize( p, tbeta, betaGrid );
+  using std::pow;
+  auto P = ranges::view::concat(ranges::view::single(rho[1]/pow(betaGrid[1],2)),
+                                ranges::view::zip(betaGrid,rho) 
+                              | ranges::view::transform(rhoToP) 
+                              | ranges::view::drop(1));
+  //p[0] = p[1] / ( betaGrid[1] * betaGrid[1] );
+  //for ( size_t i = 1; i < p.size(); ++i ){
+  //  p[i] = p[i] / ( 2 * betaGrid[i] * sinh(betaGrid[i]/2) );
+  //}
+
+  auto betaPZipped_unnormalized = ranges::view::zip(betaGrid, P);
+  auto betaPZipped = ranges::view::zip(
+                       betaGrid, normalize(betaPZipped_unnormalized, tbeta) );
 
   // calculate debye-waller coefficient and effective temperature
-  double lambda_s = fsum( 0, p, 0.5, betaGrid );
-  double t_eff    = fsum( 2, p, 0.5, betaGrid ) / ( 2 * tbeta );
+  Float lambda_s = fsum( 0, betaPZipped, 0.5 );
+  Float t_eff    = fsum( 2, betaPZipped, 0.5 ) / ( 2 * tbeta );
 
   // convert p(beta) --> t1(beta) where t1 is defined to be
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
   // lamda_s is the debye-waller coefficient. This relationship
   // is defined by Eq. 525.
-  for( size_t i = 0; i < p.size(); ++i ){ p[i] *= exp(betaGrid[i]/2) / lambda_s; }
+  //for( size_t i = 0; i < P.size(); ++i ){ P[i] *= exp(betaGrid[i]/2) / lambda_s; }
+
+  auto T1 = betaPZipped 
+          | ranges::view::transform( [lambda_s](auto pair){
+              auto beta = std::get<0>(pair); auto P = std::get<1>(pair);
+              return P * exp(beta*0.5)/lambda_s; });
+
+  std::cout << "In function" << std::endl;
+  printRange(T1);
   
-  return std::make_tuple( lambda_s, t_eff );
+  return std::make_tuple( lambda_s, t_eff, T1 );
 }
 
 
