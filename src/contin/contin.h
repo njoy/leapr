@@ -102,7 +102,7 @@ auto contin_NEW( const unsigned int itemp, int nphon, const F& tbeta,
 
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
-  const F& scaling, const F& tev, const F& sc, A t1, const A& alpha, 
+  const F& scaling, const F& tev, const F& sc, A rho, const A& alpha, 
   const A& beta, Eigen::Tensor<F,3>& symSab, A betaGrid ){
 
   /* Inputs
@@ -117,7 +117,7 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
    *           is a mass ratio. Computed in leapr.cpp and applied to all a,b.
    * tev     : temperature in eV. Computed in leapr.cpp vie T * k_b.
    * sc      : user influenced scaling term
-   * t1      : phonon distribution, (Card12)
+   * rho     : phonon distribution, (Card12)
    * alpha   : alpha values (Card 8)
    * beta    : beta values  (Card 9)
    * symSab  : symmetric S(a,b). S[1][2][3] = S(a=1,b=2,T=3). Starts blank.
@@ -146,12 +146,14 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   
   for ( F& x : betaGrid ){ x /= tev; }
     
-  auto lambda_s_t_eff = start( t1, tbeta, betaGrid );
+  auto lambda_s_t_eff = start( rho, tbeta, betaGrid );
   F lambda_s = std::get<0>(lambda_s_t_eff),
     t_eff    = std::get<1>(lambda_s_t_eff);
 
-  //std::cout << lambda_s << std::endl;
+  auto t1 = std::get<2>(lambda_s_t_eff);
+
   A xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
+
 
   size_t npn = t1.size();
   const size_t np = t1.size();

@@ -5,7 +5,7 @@
 #include "generalTools/print.h"
 
 template <typename Range, typename Float>
-auto start( Range& rho, const Float& tbeta, Range betaGrid ){
+auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -75,12 +75,10 @@ auto start( Range& rho, const Float& tbeta, Range betaGrid ){
 
   auto T1 = betaPZipped 
           | ranges::view::transform( [lambda_s](auto pair){
-              auto beta = std::get<0>(pair); auto P = std::get<1>(pair);
+              auto beta = std::get<0>(pair); 
+              auto P = std::get<1>(pair);
               return P * exp(beta*0.5)/lambda_s; });
 
-  std::cout << "In function" << std::endl;
-  printRange(T1);
-  
   return std::make_tuple( lambda_s, t_eff, T1 );
 }
 
