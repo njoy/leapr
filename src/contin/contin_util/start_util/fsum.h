@@ -1,5 +1,8 @@
 #ifndef LEAPR_CONTIN_START_FSUM_HH
 #define LEAPR_CONTIN_START_FSUM_HH
+#include <range/v3/all.hpp>
+#include <tuple>
+#include <iostream>
 
 template <typename F, typename A> 
 double fsum( const int& n, const A& p, const F& tau, const A& betaGrid ){
@@ -45,7 +48,6 @@ double fsum( const int& n, const A& p, const F& tau, const A& betaGrid ){
 }
 
 
-/*
 template <typename Float>
 auto even(Float tau, int n, Float beta){
   using std::cosh; using std::pow;
@@ -57,37 +59,100 @@ auto odd(Float tau, int n, Float beta){
   using std::sinh; using std::pow;
   return 2.0*sinh(beta*tau)*pow(beta,n);
 }
-*/
+
+  //ranges::for_each(xVec, [](auto x){
+  //      std::cout << x << ' ';
+  //  });
+
+
+template <typename Range, typename Callable >
+auto trapezoidIntegral( Range inputXY, Callable callable ){
+  auto xVec = inputXY | ranges::view::keys;
+  auto yVec = inputXY | ranges::view::values;
+  auto binWidths = xVec | ranges::view::sliding(2) 
+                        | ranges::view::transform([](auto pair){ 
+                            return pair[1]-pair[0]; } );
+  auto argument = inputXY | ranges::view::transform(callable);
+  auto outputWindows = argument | ranges::view::sliding(2);
+  auto trapezoid = [](auto binWidth, auto leftRightPair){ 
+    return (leftRightPair[0]+leftRightPair[1])*0.5*binWidth;
+  };
+  auto integral = ranges::view::zip_with(trapezoid,binWidths,outputWindows);
+  return ranges::accumulate(integral,0.0);
+}
+
+
+template <typename Float, typename Tuple>
+auto even2(Float tau, int n, Tuple xyPair){
+  using std::cosh; using std::pow;
+  Float beta = std::get<0>(xyPair);
+  Float pVal = std::get<1>(xyPair);
+  return 2.0*pVal*cosh(beta*tau)*pow(beta,n);
+}
+
+template <typename Float, typename Tuple>
+auto odd2(Float tau, int n, Tuple xyPair){
+  using std::sinh; using std::pow;
+  Float beta = std::get<0>(xyPair);
+  Float pVal = std::get<1>(xyPair);
+  return 2.0*pVal*sinh(beta*tau)*pow(beta,n);
+}
+
+
+template <typename Range, typename Float>// = Range::value_type >
+auto fsum3( int n, Range p, Float tau, Range betas ){
+  auto inputXY = ranges::view::zip(betas,p);
+  if (n%2 == 0){ 
+    auto evenLambda = [tau, n](auto xyPair){ return even2(tau,n,xyPair); };
+    return trapezoidIntegral( inputXY, evenLambda );
+  }
+  else { 
+    auto oddLambda  = [tau, n](auto xyPair){ return odd2(tau,n,xyPair);  };
+    return trapezoidIntegral( inputXY, oddLambda );
+  }
+
+ 
+}
 
 
 
-template <typename Range, typename Float = Range::value_type>
-auto fsum_new_new( int n, Range p, Float tau, Range betaGrid ){
+
+
+template <typename Range, typename Float>// = Range::value_type >
+auto fsum2( int n, Range p, Float tau, Range betas ){
 
   auto do_the_thing = [&](auto lambda){  
-    auto betaFunc = betas | ranges::view::transform(lambda);
-    auto argument = ranges::view::zip_with(std::times<void>,p,betaFunc);
     auto binWidths = betas | ranges::view::sliding(2) 
                            | ranges::view::transform([](auto pair){ 
-                               return std::get<1>(pair)-std::get<0>(pair); } );
+                               return pair[1]-pair[0]; } );
+    auto argument = ranges::view::zip_with([](auto a, auto b){return a*b;},
+                      betas | ranges::view::transform(lambda), p );
     auto outputWindows = argument | ranges::view::sliding(2);
-    auto trapezoid = [](auto binWidth, auto outputPair){ 
-      return (std::get<0>(outputPair)+std::get<1>(outputPair))*0.5*binWidth
-    }
+    auto trapezoid = [](auto binWidth, auto leftRightPair){ 
+      return (leftRightPair[0]+leftRightPair[1])*0.5*binWidth;
+    };
     auto integral = ranges::view::zip_with(trapezoid,binWidths,outputWindows);
+    auto XY = ranges::view::zip(betas,argument);
     return ranges::accumulate(integral,0.0);
   };
 
-  if (n%2 == 0){ // even
+  if (n%2 == 0){ 
     auto evenLambda = [tau, n](auto beta){ return even(tau,n,beta); };
     return do_the_thing(evenLambda);
   }
-  else { //odd
+  else { 
     auto oddLambda  = [tau, n](auto beta){ return odd(tau,n,beta);  };
     return do_the_thing(oddLambda);
   }
 
 }
+
+
+
+
+
+
+
 
 
 
