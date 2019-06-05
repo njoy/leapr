@@ -45,4 +45,74 @@ double fsum( const int& n, const A& p, const F& tau, const A& betaGrid ){
 }
 
 
+/*
+template <typename Float>
+auto even(Float tau, int n, Float beta){
+  using std::cosh; using std::pow;
+  return 2.0*cosh(beta*tau)*pow(beta,n);
+}
+
+template <typename Float>
+auto odd(Float tau, int n, Float beta){
+  using std::sinh; using std::pow;
+  return 2.0*sinh(beta*tau)*pow(beta,n);
+}
+*/
+
+
+
+template <typename Range, typename Float = Range::value_type>
+auto fsum_new_new( int n, Range p, Float tau, Range betaGrid ){
+
+  auto do_the_thing = [&](auto lambda){  
+    auto betaFunc = betas | ranges::view::transform(lambda);
+    auto argument = ranges::view::zip_with(std::times<void>,p,betaFunc);
+    auto binWidths = betas | ranges::view::sliding(2) 
+                           | ranges::view::transform([](auto pair){ 
+                               return std::get<1>(pair)-std::get<0>(pair); } );
+    auto outputWindows = argument | ranges::view::sliding(2);
+    auto trapezoid = [](auto binWidth, auto outputPair){ 
+      return (std::get<0>(outputPair)+std::get<1>(outputPair))*0.5*binWidth
+    }
+    auto integral = ranges::view::zip_with(trapezoid,binWidths,outputWindows);
+    return ranges::accumulate(integral,0.0);
+  };
+
+  if (n%2 == 0){ // even
+    auto evenLambda = [tau, n](auto beta){ return even(tau,n,beta); };
+    return do_the_thing(evenLambda);
+  }
+  else { //odd
+    auto oddLambda  = [tau, n](auto beta){ return odd(tau,n,beta);  };
+    return do_the_thing(oddLambda);
+  }
+
+}
+
+
+
+/*
+template <typename Callable, typename Range,
+  typename Inputs = Range::value_type, 
+  typename Result = std::invoke_result_t<Callable,Inputs> >
+auto fsum_new( Callable callable, Range grid ){
+  std::vector<Result> result;
+  result.reserve(grid.size());
+  for (auto&& gridVals : grid){
+    result.push_back(callable(gridVals));
+  }
+  return result;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
 #endif
