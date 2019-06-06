@@ -2,6 +2,8 @@
 #include "contin/contin_util/start_util/normalize.h"
 #include "generalTools/print.h"
 
+auto equal = [](auto x, auto y){return x == Approx(y).epsilon(1e-6);};
+
 TEST_CASE( "normalize" ){
   std::vector<double> p, correct;
   double continWgt, delta;
@@ -17,10 +19,7 @@ TEST_CASE( "normalize" ){
               0.1310779, 0.15729348};
 
     THEN( "each value in vector has as most a 1e-6 percent error" ){
-      REQUIRE( normalizedP.size() == correct.size() );
-      for ( size_t i = 0; i < normalizedP.size(); ++i ){
-        REQUIRE( normalizedP[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
-      }
+      ranges::equal(normalizedP, correct, equal);
     } // THEN
 
     {
@@ -40,10 +39,7 @@ TEST_CASE( "normalize" ){
 
 
       THEN( "each value in vector has as most a 1e-6 percent error" ){
-        REQUIRE( normalizedP.size() == correct.size() );
-        for ( size_t i = 0; i < normalizedP.size(); ++i ){
-          REQUIRE( normalizedP[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
-        }
+        ranges::equal(normalizedP, correct, equal);
       } // THEN
     }
   } // GIVEN
@@ -53,27 +49,18 @@ TEST_CASE( "normalize" ){
     std::vector<double> p1 = {0.02, 0.04, 0.06, 0.08, 0.10, 0.12}, 
                         p2 = {0.2, 0.4, 0.6, 0.8, 1.0, 1.2};
     continWgt = 5.0, delta = 0.8;
-    std::vector<double> betaGrid(p1.size());
-    for (size_t i = 0; i < betaGrid.size(); ++i){
-      betaGrid[i] = i*delta;
-    }
+    auto betaGrid = ranges::view::iota(0,int(p1.size())) 
+             | ranges::view::transform([delta](auto x){ return x * delta;});
 
-    auto beta_P_zipped_1 = ranges::view::zip(betaGrid,p1);
-    auto beta_P_zipped_2 = ranges::view::zip(betaGrid,p2);
+    auto normalizedP1 = normalize( ranges::view::zip(betaGrid,p1), continWgt );
+    auto normalizedP2 = normalize( ranges::view::zip(betaGrid,p2), continWgt );
 
-    auto normalizedP1 = normalize( beta_P_zipped_1, continWgt );
-    auto normalizedP2 = normalize( beta_P_zipped_2, continWgt );
-
-    std::vector<double> correct= {3.095826174E-2, 6.191652348E-2, 
+    std::vector<double> correct= { 3.095826174E-2, 6.191652348E-2, 
       9.287478752E-2, 0.1238330469, 0.1547913063, 0.1857495750};
 
     THEN( "outputs should be same, and both within 1e-6 to true value" ){
-      REQUIRE( normalizedP1.size() == correct.size() );
-      REQUIRE( normalizedP2.size() == correct.size() );
-      for ( size_t i = 0; i < correct.size(); ++i ){
-        REQUIRE( normalizedP1[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
-        REQUIRE( normalizedP2[i] == Approx( correct[i] ).epsilon(1e-6 ) );  
-      }
+      ranges::equal(normalizedP1, correct, equal);
+      ranges::equal(normalizedP2, correct, equal);
     } // THEN
   } // GIVEN
 } // TEST CASE

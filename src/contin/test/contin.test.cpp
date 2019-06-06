@@ -7,7 +7,7 @@ template <typename A, typename F>
 void checkSabLambdaTeff( const A& correctSab, const std::tuple<F,F>& output, 
   const Eigen::Tensor<F,3>& sab, const F& lambda, const F& teff, const F& tol ){
 
-  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == int(correctSab.size()) );
   int l = 0;
   for ( int i = 0; i < sab.dimension(0); ++i ){
     for ( int j = 0; j < sab.dimension(1); ++j ){
@@ -26,7 +26,7 @@ template <typename A, typename F>
 void checkSabLambdaTeff_NEW( const A& correctSab, const std::tuple<F,F>& output, 
   const Eigen::Tensor<F,3>& sab, const F& lambda, const F& teff, const F& tol ){
 
-  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
+  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == int(correctSab.size()) );
   int l = 0;
   for ( int i = 0; i < sab.dimension(0); ++i ){
     for ( int j = 0; j < sab.dimension(1); ++j ){

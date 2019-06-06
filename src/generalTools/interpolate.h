@@ -2,6 +2,7 @@
 #include <iostream>
 #include "generalTools/print.h"
 #include <algorithm>
+#include <tuple>
 
 template <typename Range, typename Float>
 auto search( Range xRange, Float x, int i, int left, int right ){
@@ -18,10 +19,7 @@ Float interpolate( RangeZip xyRange, Float x ){
   int len = xyRange.size();
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values;
-  if ( x < std::get<0>(xVec[0]) or 
-       x > std::get<0>(xVec[len-1]) ){
-    return 0.0;
-  }
+  if ( x < xVec[0] or x > xVec[len-1] ){ return 0.0; }
 
   int index = search(xVec, x, int(len*0.5), 0, len);
   Float b = yVec[index];

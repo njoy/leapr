@@ -10,8 +10,8 @@ auto getTnVal( int j, const A& tn, const F& delta ){
 }
 
 
-template <typename A>
-auto getConvolAtPoint( int i, const A& t1, const A& t2, const A betaGrid ){
+template <typename A, typename Range, typename B>
+auto getConvolAtPoint( int i, const A& t1, const B& t2, const Range betaGrid ){
   int len_t1 = int(t1.size());
   double sumVal = 0.0, val_L, val_R;
   for (int j = -len_t1+1; j < len_t1-1; ++j){
