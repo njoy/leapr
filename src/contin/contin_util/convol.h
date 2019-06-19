@@ -25,9 +25,9 @@ auto getConvolAtPoint( int i, const A& t1, const A& t2, const A betaGrid ){
 }
 
 
-template <typename A>
-auto convol( const A& t1, const A& t2, int len_t3, const A betaGrid){
-  A t3(t2.size(),0.0);
+template <typename Range, typename Array>
+auto convol( const Range& t1, const Array& t2, int len_t3, const Array betaGrid){
+  Array t3(t2.size(),0.0);
  
   for (int i = 0; i<len_t3; ++i){
     t3[i] = getConvolAtPoint(i,t1,t2,betaGrid);

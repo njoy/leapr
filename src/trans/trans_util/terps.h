@@ -1,3 +1,6 @@
+#include "generalTools/interpolate.h"
+#include <range/v3/all.hpp>
+#include <cmath>
 
 
 double terps( const std::vector<double>& sd, int nsd, const double& delta, 
@@ -20,3 +23,26 @@ double terps( const std::vector<double>& sd, int nsd, const double& delta,
 
   return y_val >= min ? exp(y_val) : 0.0;
 }
+
+
+/*
+template <typename Range, typename Float>
+double terps2( const Range& sd, int nsd, const Float& delta, 
+  const Float& x_val ){
+
+  using std::log;
+  //auto xVals = ranges::view::linear_distribute(0.0,sd.size()*delta,sd.size());
+  //auto sd2 = sd | ranges::view::transform([](auto x){return log(x);}) | ranges::view::all;
+  auto a = ranges::view::iota(0,20);
+  auto b = ranges::view::iota(0,20);
+
+  //printRange(xVals);
+  //printRange(sd2);
+  //return interpolate( ranges::view::zip(xVals,sd2), x_val );
+  return interpolate( ranges::view::zip(a,b), x_val );
+  std::cout << nsd << delta << x_val << sd.size()<< std::endl;
+
+}
+
+*/
+

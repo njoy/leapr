@@ -425,7 +425,10 @@
     "src/trans/trans_util/terps.h",
     "src/trans/trans_util/sbfill.h",
     "src/trans/trans_util/s_table_generation.h",
-    "src/trans/trans_util/bessel_K1.h"
+    "src/trans/trans_util/bessel_K1.h",
+    "src/generalTools/interpolate.h",
+    "src/generalTools/trapezoidIntegral.h",
+    "src/generalTools/print.h"
   ],
   "ignore pattern": "$^",
   "implementation files": [
@@ -509,6 +512,10 @@
     "endout.endout_util": [
       "src/endout/endout_util/test/tpidio.test.cpp",
       "src/endout/endout_util/test/repoz.test.cpp"
+    ],
+    "generalTools": [
+      "src/generalTools/test/interpolate.test.cpp",
+      "src/generalTools/test/trapezoidIntegral.test.cpp"
     ],
     "leapr": [
       "src/test/leapr.test.cpp"
