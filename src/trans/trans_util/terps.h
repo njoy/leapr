@@ -1,4 +1,5 @@
 #include "generalTools/interpolate.h"
+#include "generalTools/print.h"
 #include <range/v3/all.hpp>
 #include <cmath>
 
@@ -25,11 +26,28 @@ double terps( const std::vector<double>& sd, int nsd, const double& delta,
 }
 
 
-/*
-template <typename Range, typename Float>
-double terps2( const Range& sd, int nsd, const Float& delta, 
-  const Float& x_val ){
 
+template <typename Range, typename Float>
+auto terps2( Range sd, int nsd, const Float delta, const Float x_val ){
+
+  std::vector<double> x { 0, 1, 2, 3 }, y { 2, 3, 0, 10 };
+  auto xyRange = ranges::view::zip(x,y);
+  std::cout << interpolate(xyRange,2.4) << std::endl;
+
+  //auto xVals = ranges::view::linear_distribute(0.0,double(sd.size()*delta),int(sd.size())) | ranges::view::all;
+  auto xVals = ranges::view::iota(0,20);//sd.size()*delta,sd.size()) | ranges::view::all;
+  auto sd2 = sd | ranges::view::transform([](auto x){return log(x);}) | ranges::view::all;
+  //auto xyRange2 = ranges::view::zip(xVals,sd2);
+  //std::cout << interpolate(xyRange2,2.4) << std::endl;
+  printRange(xVals);
+  printRange(sd2);
+  std::cout << xVals[0] << std::endl;
+  std::cout << sd2[0] << std::endl;
+ 
+
+  return;
+  std::cout << x_val << sd.size() << nsd << delta << std::endl;
+  /*
   using std::log;
   //auto xVals = ranges::view::linear_distribute(0.0,sd.size()*delta,sd.size());
   //auto sd2 = sd | ranges::view::transform([](auto x){return log(x);}) | ranges::view::all;
@@ -41,8 +59,9 @@ double terps2( const Range& sd, int nsd, const Float& delta,
   //return interpolate( ranges::view::zip(xVals,sd2), x_val );
   return interpolate( ranges::view::zip(a,b), x_val );
   std::cout << nsd << delta << x_val << sd.size()<< std::endl;
+  */
 
 }
 
-*/
+
 

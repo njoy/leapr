@@ -18,6 +18,7 @@ TEST_CASE( "terps" ){
                 //     terps( input, nps, delta, xval ) 
                 equal2( terps( input, 4, 1.5, 2.5 ), 3.17480210 );
                 //std::cout << terps2( input, 4, 1.5, 2.5 ) << std::endl;
+                terps2( input, 4, 1.5, 2.5 );
                 equal2( terps( input, 4, 1.5, 1.5 ), 2.0 );
                 equal2( terps( input, 4, 1.5, 0.5 ), 1.6509636 );
                 equal2( terps( input, 4, 1.2, 0.5 ), 1.6910212 );
