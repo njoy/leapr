@@ -43,9 +43,11 @@ TEST_CASE( "trans" ){
 
   GIVEN( "that the translational motion is diffusive" ){
     WHEN( "temperature is relatively low" ){
+      auto SAB = ranges::view::iota(1,13) 
+               | ranges::view::transform([](auto x){return double(x*0.1);});
 
       trans( alpha, beta, trans_weight, delta, diffusion_const, sc, scaling, 
-        itemp, lambda_s, tbeta, t_eff_vec, temps,  sym_sab );
+        itemp, lambda_s, tbeta, t_eff_vec, temps,  sym_sab );//, SAB );
       correct = { 0.23049978, 0.25982880, 0.19141505, 0.62197701, 0.58781315, 
         0.39163902, 1.08210491, 0.92354902, 0.64343974, 1.41011128, 1.18123544, 
         0.84745080};

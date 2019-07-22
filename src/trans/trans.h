@@ -5,14 +5,17 @@
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
 #include "trans_util/terps.h"
+#include "generalTools/print.h"
+#include "range/v3/all.hpp"
 
 
-void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
-  const double& trans_weight, double delta, const double& diffusion, 
-  const double& sc, const double& scaling, const int& itemp, 
-  const double& lambda_s, const double& tbeta, std::vector<double>& t_eff_vec, 
-  const std::vector<double>& temp_vec, 
-  Eigen::Tensor<double,3>& sym_sab ){
+template <typename Range, typename Float, typename Range2>//, typename Range3>
+auto trans( const Range& alpha, const Range& beta,
+  const Float& trans_weight, Float delta, const Float& diffusion, 
+  const Float& sc, const Float& scaling, const int& itemp, 
+  const Float& lambda_s, const Float& tbeta, Range& t_eff_vec, 
+  const Range& temp_vec, 
+  Range2& sym_sab ){//, Range3 SAB ){
 
   /* Overview
    * ------------------------------------------------------------------------
@@ -73,6 +76,11 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
    * * The effective temperature is altered according to Eq. 536.
    */
 
+
+  //int nalpha = alpha.size();
+  //int nbeta  = beta.size();
+
+
   double deltaInitial = delta;
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
@@ -99,6 +107,8 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
       for ( size_t b = 0; b < beta.size(); ++b ){
         betan[b] = beta[b] * sc;
         ap[b] = sym_sab(a,b,itemp);
+        //ap[b] = SAB[nbeta*a + b];
+        
       }
 
       // loop over beta values
@@ -132,6 +142,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
         if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
 
         sym_sab(a,b,itemp) = s;
+        //SAB[nbeta*a + b] = s;
 
       } // for beta
     } // if nsd > 0
@@ -141,6 +152,7 @@ void trans( const std::vector<double>& alpha, const std::vector<double>& beta,
   t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
                      ( tbeta + trans_weight );
 
+  //return SAB;
 
 }
 

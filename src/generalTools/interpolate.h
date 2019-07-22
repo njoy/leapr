@@ -15,7 +15,7 @@ auto search( Range xRange, Float x, int i, int left, int right ){
 
 
 template <typename RangeZip, typename Float>
-Float interpolate( RangeZip xyRange, Float x ){
+Float interpolate( RangeZip&& xyRange, Float& x ){
   int len = xyRange.size();
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values;
@@ -25,6 +25,16 @@ Float interpolate( RangeZip xyRange, Float x ){
   Float b = yVec[index];
   Float m = (yVec[index+1]-yVec[index])/(xVec[index+1]-xVec[index]);
   return m*(x-xVec[index])+b;
+}
+
+template <typename RangeZip, typename Float>
+Float interpolateLog( RangeZip&& xyRange, Float& x ){
+  using std::log;
+  using std::exp;
+  auto xVec = xyRange | ranges::view::keys;
+  auto yVec = xyRange | ranges::view::values
+                      | ranges::view::transform([](auto x){return log(x);});
+  return exp(interpolate( ranges::view::zip(xVec,yVec), x ));
 }
 
 
