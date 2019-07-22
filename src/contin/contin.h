@@ -177,7 +177,9 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
   delta /= tev;
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, npn, betaGrid); }
+    std::cout << " --  " << n << std::endl;
+    if ( n > 0 ){ tnow = convol(t1, tlast, delta); }
+    std::cout << "(done)" << std::endl;
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *=  lambda_s * alpha[a] * scaling / ( n + 1 );
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];

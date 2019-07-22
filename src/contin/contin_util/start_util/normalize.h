@@ -2,7 +2,7 @@
 #include <range/v3/all.hpp>
 
 template <typename Float, typename Range>
-auto normalize( Range P_beta, const Float& continWgt ){
+auto normalize( Range beta_P, const Float& continWgt ){
 
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
    * equation that is being normalized to integrate to tbeta. 
@@ -27,8 +27,15 @@ auto normalize( Range P_beta, const Float& continWgt ){
    * * P(beta) is amended
    */
 
-  Float invSum = continWgt / fsum( 1, P_beta, 0.5 );  
-  return  ranges::view::values(P_beta)
+  using std::sinh;
+
+  auto integrand = [](auto xy){
+    auto beta = std::get<0>(xy); 
+    auto P = std::get<1>(xy); 
+    return P*2.0*beta*sinh(beta*0.5);};
+
+  Float invSum = continWgt / trapezoidIntegral(beta_P,integrand);
+  return  ranges::view::values(beta_P)
         | ranges::view::transform([invSum](auto x){return x*invSum;});
 }
 

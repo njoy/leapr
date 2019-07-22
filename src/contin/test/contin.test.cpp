@@ -184,8 +184,10 @@ TEST_CASE( "contin eigen" ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
+      std::cout << "BEFORE" << std::endl;
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab, energyGrid );
+      std::cout << "AFTER" << std::endl;
       std::vector<double> correct_alpha_0_to_49_beta_0 { 5.70056684e-4, 
       5.71888708e-4, 5.73720731e-4, 5.77384778e-4, 5.81048825e-4, 5.84712872e-4, 
       5.88951672e-4, 5.93233434e-4, 5.42056424e-4, 4.28244768e-4, 3.06057223e-4, 
@@ -247,8 +249,10 @@ TEST_CASE( "contin eigen" ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
 
+      std::cout << "BEFORE" << std::endl;
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab, energyGrid );
+      std::cout << "AFTER" << std::endl;
 
       std::vector<double> expected { 4.2543261427413936e-2, 4.2677975670624702e-2, 
         4.2812689913835460e-2, 4.3082118400256997e-2, 4.3351546886678527e-2, 
@@ -285,9 +289,11 @@ TEST_CASE( "contin eigen" ){
     WHEN( "  " ){
       Eigen::Tensor<double,3> symSab( alpha.size(), beta.size(), ntempr );
       symSab.setZero();
+      std::cout << "BEFORE" << std::endl;
 
       output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho, 
           alpha, beta, symSab, energyGrid );
+      std::cout << "AFTER" << std::endl;
 
       std::vector<double> expected { 0.21338252777792166, 0.21401421222255254, 
         0.21464589666718339, 0.21590926555644518, 0.30365460687728840, 

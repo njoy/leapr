@@ -11,7 +11,7 @@ auto getTnVal( int j, const A& tn, const F& delta ){
 
 
 template <typename A, typename Range, typename B>
-auto getConvolAtPoint( int i, const A& t1, const B& t2, const Range betaGrid ){
+auto getConvolAtPoint( int i, const A& t1, const B& t2, const Range& betaGrid ){
   int len_t1 = int(t1.size());
   double sumVal = 0.0, val_L, val_R;
   for (int j = -len_t1+1; j < len_t1-1; ++j){
@@ -26,7 +26,7 @@ auto getConvolAtPoint( int i, const A& t1, const B& t2, const Range betaGrid ){
 
 
 template <typename Range, typename Array>
-auto convol( const Range& t1, const Array& t2, int len_t3, const Array betaGrid){
+auto convol( const Range& t1, const Array& t2, int len_t3, const Array& betaGrid){
   Array t3(t2.size(),0.0);
  
   for (int i = 0; i<len_t3; ++i){

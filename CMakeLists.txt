@@ -1,4 +1,5 @@
 
+set(CMAKE_CXX_STANDARD 14)
 cmake_minimum_required( VERSION 3.2 ) 
 set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Supported configuration types" FORCE )
         
@@ -81,18 +82,6 @@ set( leapr_AppleClang_Darwin_link_time_optimization_flags "-flto" )
 set( leapr_AppleClang_Darwin_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_AppleClang_Darwin_nonportable_optimization_flags "-march=native" )
 set( leapr_AppleClang_Darwin_static_flags "-static" )
-set( leapr_GNU_Linux_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_GNU_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
-set( leapr_GNU_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_GNU_Linux_strict_flags "-Werror" )
-set( leapr_GNU_Linux_coverage_flags "--coverage" )
-set( leapr_GNU_Linux_subproject_flags  )
-set( leapr_GNU_Linux_base_project_flags  )
-set( leapr_GNU_Linux_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Linux_link_time_optimization_flags "-flto" )
-set( leapr_GNU_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_GNU_Linux_nonportable_optimization_flags "-march=native" )
-set( leapr_GNU_Linux_static_flags "-static" )
 set( leapr_GNU_Darwin_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
 set( leapr_GNU_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
 set( leapr_GNU_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
@@ -117,18 +106,18 @@ set( leapr_GNU_Windows_link_time_optimization_flags "-flto" )
 set( leapr_GNU_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_GNU_Windows_nonportable_optimization_flags "-march=native" )
 set( leapr_GNU_Windows_static_flags "-static" )
-set( leapr_Clang_Linux_common_flags "-stdlib=libstdc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
-set( leapr_Clang_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
-set( leapr_Clang_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
-set( leapr_Clang_Linux_strict_flags "-Werror" )
-set( leapr_Clang_Linux_coverage_flags "--coverage" )
-set( leapr_Clang_Linux_subproject_flags  )
-set( leapr_Clang_Linux_base_project_flags  )
-set( leapr_Clang_Linux_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Linux_link_time_optimization_flags "-flto" )
-set( leapr_Clang_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
-set( leapr_Clang_Linux_nonportable_optimization_flags "-march=native" )
-set( leapr_Clang_Linux_static_flags "-static" )
+set( leapr_GNU_Linux_common_flags "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_GNU_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" "-fsignaling-nans" )
+set( leapr_GNU_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_GNU_Linux_strict_flags "-Werror" )
+set( leapr_GNU_Linux_coverage_flags "--coverage" )
+set( leapr_GNU_Linux_subproject_flags  )
+set( leapr_GNU_Linux_base_project_flags  )
+set( leapr_GNU_Linux_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Linux_link_time_optimization_flags "-flto" )
+set( leapr_GNU_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_GNU_Linux_nonportable_optimization_flags "-march=native" )
+set( leapr_GNU_Linux_static_flags "-static" )
 set( leapr_Clang_Darwin_common_flags "-stdlib=libc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
 set( leapr_Clang_Darwin_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
 set( leapr_Clang_Darwin_RELEASE_flags "-O3" "-DNDEBUG" )
@@ -153,6 +142,18 @@ set( leapr_Clang_Windows_link_time_optimization_flags "-flto" )
 set( leapr_Clang_Windows_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
 set( leapr_Clang_Windows_nonportable_optimization_flags "-march=native" )
 set( leapr_Clang_Windows_static_flags "-static" )
+set( leapr_Clang_Linux_common_flags "-stdlib=libstdc++" "-Wall" "-Wextra" "-Wpedantic" "-std=c++14" )
+set( leapr_Clang_Linux_DEBUG_flags "-O0" "-g" "-gdwarf-3" )
+set( leapr_Clang_Linux_RELEASE_flags "-O3" "-DNDEBUG" )
+set( leapr_Clang_Linux_strict_flags "-Werror" )
+set( leapr_Clang_Linux_coverage_flags "--coverage" )
+set( leapr_Clang_Linux_subproject_flags  )
+set( leapr_Clang_Linux_base_project_flags  )
+set( leapr_Clang_Linux_profile_generate_flags "-fprofile-generate='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Linux_link_time_optimization_flags "-flto" )
+set( leapr_Clang_Linux_profile_use_flags "-fprofile-use='${CMAKE_BINARY_DIR}/profiling'" )
+set( leapr_Clang_Linux_nonportable_optimization_flags "-march=native" )
+set( leapr_Clang_Linux_static_flags "-static" )
 
 if ( static_leapr )
     set( leapr_library_linkage STATIC )
@@ -222,6 +223,7 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start_util/fsum.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start_util/normalize.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/start_util/getDebyeWaller.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/tpidio.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/endout/endout_util/contio.h"
@@ -273,6 +275,7 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/sbfill.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/s_table_generation.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/bessel_K1.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/testing.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/trapezoidIntegral.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/print.h"

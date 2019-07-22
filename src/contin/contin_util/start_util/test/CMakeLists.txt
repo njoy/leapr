@@ -1,5 +1,6 @@
 
 add_executable( contin.contin_util.start_util.test
+                getDebyeWaller.test.cpp
                 normalize.test.cpp
                 fsum.test.cpp )
 target_compile_options( contin.contin_util.start_util.test PRIVATE ${${PREFIX}_common_flags}

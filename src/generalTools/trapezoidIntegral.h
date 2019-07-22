@@ -1,3 +1,5 @@
+#ifndef LEAPR_GENERALTOOLS_TRAPEZOID_INTEGRAL
+#define LEAPR_GENERALTOOLS_TRAPEZOID_INTEGRAL
 #include <range/v3/all.hpp>
 
 template <typename Range, typename Callable >
@@ -15,3 +17,4 @@ auto trapezoidIntegral( Range inputXY, Callable callable ){
   auto integral = ranges::view::zip_with(trapezoid,binWidths,outputWindows);
   return ranges::accumulate(integral,0.0);
 }
+#endif
