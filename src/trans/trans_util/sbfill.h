@@ -71,12 +71,12 @@ void sbfill(std::vector<double>& sb, int nbt, double delta, double be,
   // if ( 2 * nbt - 0.99 > ndmax ){
   // which is effectively the same as 2*nbt > ndmax, since ndmax is an int
   if ( 1 + (bmax-bmin) / delta > ndmax){ 
-    std::cout << "Oh no! Error in contin's sbfill." << std::endl;
-    std::cout << "To appropriately represent S_t(a,b), there were" << std::endl;
-    std::cout << "nbt many values computed. Since we want to " << std::endl;
-    std::cout << "reflect this about a beta value in the positive" << std::endl;
-    std::cout << "and negative directions, we need 2*nbt spaces" << std::endl;
-    std::cout << "available. There are too few values available." << std::endl;
+    //std::cout << "Oh no! Error in contin's sbfill." << std::endl;
+    //std::cout << "To appropriately represent S_t(a,b), there were" << std::endl;
+    //std::cout << "nbt many values computed. Since we want to " << std::endl;
+    //std::cout << "reflect this about a beta value in the positive" << std::endl;
+    //std::cout << "and negative directions, we need 2*nbt spaces" << std::endl;
+    //std::cout << "available. There are too few values available." << std::endl;
     throw std::exception();
   }
   
