@@ -6,13 +6,13 @@ auto equal = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon
 
 TEST_CASE( "contin eigen" ){
 
-  int ntempr, nphon, itemp;
+  int ntempr, nphon;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_eff;
   std::vector<double> alpha, beta, rho, expected;
   std::tuple<double,double> output;
 
   GIVEN( "input values from input card and leapr subroutine" ){
-    ntempr = 1; nphon = 3; itemp = 0;
+    ntempr = 1; nphon = 3; 
     delta = 0.1; tbeta = 1.0; tev = 0.01723477; sc = 0.0253/tev; scaling = sc;
     alpha = { 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1.28};
     beta  = { 0.00, 0.15, 0.30, 0.60, 1.20 };
@@ -25,7 +25,7 @@ TEST_CASE( "contin eigen" ){
 
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab, energyGrid );
 
       THEN( "contin output matches expected value" ){
@@ -55,7 +55,7 @@ TEST_CASE( "contin eigen" ){
       std::vector<double> energyGrid(rho.size());
       for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab, energyGrid );
 
       THEN( "contin output matches expected value" ){
@@ -83,7 +83,7 @@ TEST_CASE( "contin eigen" ){
 
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
         alpha, beta, symSab, energyGrid );
 
       THEN( "contin output matches expected value" ){
@@ -107,7 +107,7 @@ TEST_CASE( "contin eigen" ){
 
 
   GIVEN( "simplified water model (test case #9)" ){
-    ntempr = 1; nphon = 100; itemp = 0;
+    ntempr = 1; nphon = 100; 
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835;
     scaling = 0.99186670867058835;
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756,
@@ -147,7 +147,7 @@ TEST_CASE( "contin eigen" ){
 
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab, energyGrid );
       std::vector<double> correct_beta_0_to_49_alpha_0 { 5.70056684e-4,
       5.71888708e-4, 5.73720731e-4, 5.77384778e-4, 5.81048825e-4, 5.84712872e-4,
@@ -190,7 +190,7 @@ TEST_CASE( "contin eigen" ){
         }
         //std::cout << symSab[64+64*beta.size()] << std::endl;
         //for ( size_t i = 0; i < correct_beta_49_to_74_alpha_64.size(); ++i ){
-        //  REQUIRE( correct_beta_49_to_74_alpha_64[i] == Approx(symSab(64,49+i,0)).epsilon(1e-6) );
+        //  REQUIRE( correct_beta_49_to_74_alpha_64[i] == Approx(symSab[49+i+64*beta.size()]).epsilon(1e-6) );
         //}
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
@@ -201,7 +201,7 @@ TEST_CASE( "contin eigen" ){
   } // GIVEN
 
   GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
-    ntempr = 1; nphon = 6; itemp = 0;
+    ntempr = 1; nphon = 6; 
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835;
     scaling = 0.99186670867058835;
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
@@ -214,7 +214,7 @@ TEST_CASE( "contin eigen" ){
     WHEN( "  " ){
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab, energyGrid );
 
       std::vector<double> expected { 4.2543261427413936e-2, 4.2677975670624702e-2,
@@ -241,7 +241,7 @@ TEST_CASE( "contin eigen" ){
     } // WHEN
   } // GIVEN
   GIVEN( "extremely simplified water model (test case #9) (simplifiedLeaprInput)" ){
-    ntempr = 1; nphon = 30; itemp = 0;
+    ntempr = 1; nphon = 30; 
     delta = 0.00255; tbeta = 0.444444; tev = 2.55074596e-2; sc = 0.99186670867058835;
     scaling = 0.99186670867058835;
     std::vector<double> alpha { 0.01008, 0.015, 0.0252 },
@@ -254,7 +254,7 @@ TEST_CASE( "contin eigen" ){
     WHEN( "  " ){
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
-      output = contin( itemp, nphon, delta, tbeta, scaling, tev, sc, rho,
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab, energyGrid );
 
       std::vector<double> expected { 0.21338252777792166, 0.21401421222255254,

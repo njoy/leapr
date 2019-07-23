@@ -1,14 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "contin/contin_util/start_util/getDebyeWaller.h"
-#include "range/v3/all.hpp"
-
-
-template <typename Float>
-auto makeGrid( int len, Float delta ){
-  return ranges::view::iota(0,len) 
-       | ranges::view::transform([delta](auto x){ return x*delta;});
-}
+#include "generalTools/testing.h"
+#include <range/v3/all.hpp>
 
 TEST_CASE( "getting Debye Waller coefficient" ){
   GIVEN( "a specified beta grid" ){ 

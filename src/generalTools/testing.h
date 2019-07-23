@@ -14,8 +14,6 @@ void checkVec( V y1, V y2, Int end, float tol=1e-6 ){
   }
 }
 
-
-
 template <typename V>
 void restAreZero(int n, const V& vec){
   for (size_t i = n; i < vec.size(); ++i){
@@ -23,4 +21,11 @@ void restAreZero(int n, const V& vec){
   }
 }
 
+template <typename Float>
+auto makeGrid( int len, Float delta ){
+  return ranges::view::iota(0,len) 
+       | ranges::view::transform([delta](auto x){ return x*delta;});
+}
+
+auto equal = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
 

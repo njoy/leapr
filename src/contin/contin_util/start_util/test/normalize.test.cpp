@@ -1,8 +1,6 @@
 #include "catch.hpp"
 #include "contin/contin_util/start_util/normalize.h"
-#include "generalTools/print.h"
-
-auto equal = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
+#include "generalTools/testing.h"
 
 TEST_CASE( "normalize" ){
   std::vector<double> p, correct;
@@ -10,8 +8,7 @@ TEST_CASE( "normalize" ){
   GIVEN( "some vector p, spacing delta, normalizing value continWgt" ){
     p = {0.02, 0.04, 0.06, 0.08, 0.10, 0.12};
     continWgt = 0.8, delta = 0.5;
-    std::vector<double> betaGrid(p.size());
-    for (size_t i = 0; i < betaGrid.size(); ++i){ betaGrid[i] = i*delta; }
+    std::vector<double> betaGrid = makeGrid(int(p.size()),delta);
 
     auto beta_P_zipped = ranges::view::zip(betaGrid,p);
     auto normalizedP = normalize( beta_P_zipped, continWgt );

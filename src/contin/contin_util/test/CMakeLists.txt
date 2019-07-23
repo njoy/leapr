@@ -2,7 +2,6 @@
 add_executable( contin.contin_util.test
                 convol.test.cpp
                 start.test.cpp
-                interpolate.test.cpp
                 checkMoments.test.cpp )
 target_compile_options( contin.contin_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:

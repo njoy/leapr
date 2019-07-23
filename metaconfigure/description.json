@@ -372,7 +372,6 @@
     "src/contin/contin_util/convol.h",
     "src/contin/contin_util/checkMoments.h",
     "src/contin/contin_util/start.h",
-    "src/contin/contin_util/interpolate.h",
     "src/contin/contin_util/start_util/normalize.h",
     "src/contin/contin_util/start_util/getEffectiveTemp.h",
     "src/contin/contin_util/start_util/getDebyeWaller.h",
@@ -487,7 +486,6 @@
     "contin.contin_util": [
       "src/contin/contin_util/test/convol.test.cpp",
       "src/contin/contin_util/test/start.test.cpp",
-      "src/contin/contin_util/test/interpolate.test.cpp",
       "src/contin/contin_util/test/checkMoments.test.cpp"
     ],
     "contin.contin_util.start_util": [

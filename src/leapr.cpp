@@ -46,7 +46,7 @@ auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta,
       if ( lat == 1 ){ sc = therm/tev; }
       F scaling = sc/arat;
 
-      auto lambda_s_t_eff = contin( itemp, nphon, delta, tbeta, scaling, tev,
+      auto lambda_s_t_eff = contin( nphon, delta, tbeta, scaling, tev,
         sc, rho, alpha, beta, sym_sab_eigen, energyGrid);
 
       //auto lambda_s_t_eff = contin_NEW( itemp, nphon, tbeta, scaling, tev,

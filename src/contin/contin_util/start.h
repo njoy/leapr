@@ -41,36 +41,23 @@ auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
   // This is is following what the manual instructs on pg. 651 near bottom, that
   // the solid-type spectrum must vary as b^2 as b goes to zero.
   
-  auto rhoToP = [](auto betaRhoPair){ 
-    auto beta = std::get<0>(betaRhoPair);
-    auto rho  = std::get<1>(betaRhoPair);
+  auto rhoToP = [](auto betaRho){ 
+    auto beta = std::get<0>(betaRho);
+    auto rho  = std::get<1>(betaRho);
     return rho / ( 2.0 * beta * sinh(beta*0.5) );
   };
   
-
   using std::pow;
   auto P = ranges::view::concat(ranges::view::single(rho[1]/pow(betaGrid[1],2)),
                                 ranges::view::zip(betaGrid,rho) 
                               | ranges::view::transform(rhoToP) 
                               | ranges::view::drop(1));
-  //p[0] = p[1] / ( betaGrid[1] * betaGrid[1] );
-  //for ( size_t i = 1; i < p.size(); ++i ){
-  //  p[i] = p[i] / ( 2 * betaGrid[i] * sinh(betaGrid[i]/2) );
-  //}
-
   auto betaPZipped_unnormalized = ranges::view::zip(betaGrid, P);
   auto betaPZipped = ranges::view::zip(
                        betaGrid, normalize(betaPZipped_unnormalized, tbeta) );
 
-  // calculate debye-waller coefficient and effective temperature
   Float lambda_s = getDebyeWaller( betaPZipped );
   Float t_eff = getEffectiveTemp(betaPZipped)/(2.0*tbeta);
-
-  // convert p(beta) --> t1(beta) where t1 is defined to be
-  // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where
-  // lamda_s is the debye-waller coefficient. This relationship
-  // is defined by Eq. 525.
-  //for( size_t i = 0; i < P.size(); ++i ){ P[i] *= exp(betaGrid[i]/2) / lambda_s; }
 
   auto T1 = betaPZipped 
           | ranges::view::transform( [lambda_s](auto pair){
