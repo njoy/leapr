@@ -3,8 +3,8 @@
 
 template <typename F, typename A, typename A_of_ints>
 auto checkMoments( const F& sc, const A& alpha, const A& beta, 
-  const A_of_ints& maxt, unsigned int itemp, const F& f0, const F& tbeta, 
-  const F& arat, F tbar, Eigen::Tensor<F,3>& ssm ){
+  const A_of_ints& maxt, const F& f0, const F& tbeta, 
+  const F& arat, F tbar, A& ssm ){
 
   F ff1, ff2, be, ssct, ex, al, alw;
 
@@ -27,11 +27,10 @@ auto checkMoments( const F& sc, const A& alpha, const A& beta,
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
         if (a+1 >= maxt[b]) {
-          ssm(a,b,itemp) = ssct;
+          ssm[b+a*beta.size()] = ssct;
         }
-        ff2 = ssm(a,b,itemp);
-        ff1 = ssm(a,b,itemp)*exp(-be);
-        //ff0 = ssm[a][b][itemp]*exp(-be/2);   // This isn't used either
+        ff2 = ssm[b+a*beta.size()];
+        ff1 = ssm[b+a*beta.size()]*exp(-be);
         if (b > 1) {
           sum0 = sum0+(be-bel)*(ff1l+ff2l+ff1+ff2)/2;
           sum1 = sum1+(be-bel)*(ff2l*bel+ff2*be-ff1l*bel-ff1*be)/2;

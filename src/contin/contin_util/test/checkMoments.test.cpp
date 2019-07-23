@@ -1,60 +1,25 @@
 #include "catch.hpp"
 #include "contin/contin_util/checkMoments.h"
-#include <vector>
-#include <tuple>
-#include <memory>
-#include <iostream>
+#include <range/v3/all.hpp>
 
-
-
-void checkSab( const std::vector<double>& correctSab, 
-  const Eigen::Tensor<double,3>& sab ){
-	
-  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
-
-  int l = 0;
-  for ( int i = 0; i < sab.dimension(0); ++i ){
-    for ( int j = 0; j < sab.dimension(1); ++j ){
-      for ( int k = 0; k < sab.dimension(2); ++k ){
-        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-6) );
-	l += 1;
-      }
-    }
-  }
-
-}
-
-
-
+auto equal = [](auto x, auto y, double tol = 1e-6){ return x == Approx(y).epsilon(tol); };
 
 TEST_CASE( "check moments" ){
-
 
   int ntempr = 1;
   std::vector<double> alpha { 1.008e-2, 1.5e-2, 2.52e-2, 3.3e-2, 5.0406e-2 },
   beta { 0.0, 6.375e-3, 1.275e-2, 2.55e-2, 3.825e-2, 5.1e-2, 6.575e-2 };
 
-  Eigen::Tensor<double,3> ssm( alpha.size(), beta.size(), ntempr );
-  for ( int i = 0; i < ssm.dimension(0); ++i ){
-    for ( int j = 0; j < ssm.dimension(1); ++j ){
-      for ( int k = 0; k < ssm.dimension(2); ++k ){
-        ssm(i,j,k) = 0;
-      }
-    }
-  }
+  std::vector<double> ssm(alpha.size()*beta.size(),0.0);
 
   GIVEN( "inputs" ){
 
-    double sc = 0.99186670867058835;
     std::vector<int> maxt ( 1000, 0.0 );
     maxt[0] = 6;
+    double sc = 0.9918667, f0 = 0.23520651, tbeta = 0.444444, arat = 1, 
+           tbar = 1.93448465, explim = -250;
 
-    int itemp = 0;
-    double f0 = 0.23520650571218535;
-    double tbeta = 0.444444;
-    double arat = 1, tbar = 1.9344846581861184, explim = -250;
-
-    checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
+    checkMoments( sc, alpha, beta, maxt, f0, tbeta, arat, tbar, ssm );
 
     std::vector<double> correctSab {0.00000000, 3.04230221, 3.03666664, 
       3.00439217, 2.94493755, 2.85993079, 2.73274581, 0.00000000, 2.49419786, 
@@ -64,24 +29,20 @@ TEST_CASE( "check moments" ){
       1.64367368, 0.00000000, 1.35861931, 1.35989255, 1.36054304, 1.35866398, 
       1.35426586, 1.34606790 };
 
-
-    checkSab( correctSab, ssm );
+    ranges::equal(correctSab,ssm,equal);
     
   } // GIVEN
 
   GIVEN( "other inputs" ){
 
-    double sc = 0.99186670867058835;
     std::vector<int> maxt ( 1000, 0.0 );
     maxt[0] = 6; maxt[1] = 1; maxt[2] = 2; maxt[3] = 1; maxt[4] = 2;
     maxt[5] = 1; maxt[6] = 2;
 
-    int itemp = 0;
-    double f0 = 0.23520650571218535;
-    double tbeta = 0.444444;
-    double arat = 1, tbar = 1.9344846581861184, explim = -250;
+    double sc = 0.9918667, f0 = 0.23520651, tbeta = 0.444444, arat = 1, 
+           tbar = 1.93448465, explim = -250;
 
-    checkMoments( sc, alpha, beta, maxt, itemp, f0, tbeta, arat, tbar, ssm );
+    checkMoments( sc, alpha, beta, maxt, f0, tbeta, arat, tbar, ssm );
 
     std::vector<double> correctSab { 0.00000000, 3.04230221, 0.00000000, 
       3.00439217, 0.00000000, 2.85993079, 0.00000000, 0.00000000, 2.49419786, 
@@ -91,9 +52,7 @@ TEST_CASE( "check moments" ){
       1.64367368, 0.00000000, 1.35861931, 1.35989255, 1.36054304, 1.35866398, 
       1.35426586, 1.34606790 };
 
-
-    checkSab( correctSab, ssm );
-
+    ranges::equal(correctSab,ssm,equal);
     
   } // GIVEN
 

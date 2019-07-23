@@ -1,7 +1,7 @@
-#include "contin_util/start.h"
-#include "contin_util/convol.h"
-#include "contin_util/interpolate.h"
-#include "contin_util/checkMoments.h"
+#include "contin/contin_util/start.h"
+#include "contin/contin_util/convol.h"
+#include "generalTools/interpolate.h"
+#include <range/v3/all.hpp>
 
 template <typename A, typename F>
 auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta, 
@@ -39,6 +39,8 @@ auto contin( const unsigned int itemp, int nphon, F& delta, const F& tbeta,
       exx = exp(-lambda_s * alpha[a] * scaling)*xa[a];
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate( tnow, beta[b] * sc,betaGrid );
+        //auto zipped = ranges::view::zip(betaGrid,tnow);
+        //add = exx * interpolate( zipped, beta[b]*sc );
         symSab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
       } // for b in beta
     } // for a in alpha

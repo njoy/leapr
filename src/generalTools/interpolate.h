@@ -1,6 +1,8 @@
+#ifndef LEAPR_GENERAL_TOOLS_INTERPOLATE
+#define LEAPR_GENERAL_TOOLS_INTERPOLATE
+
 #include <range/v3/all.hpp>
 #include <iostream>
-#include "generalTools/print.h"
 #include <algorithm>
 #include <tuple>
 
@@ -29,8 +31,7 @@ Float interpolate( RangeZip&& xyRange, Float& x ){
 
 template <typename RangeZip, typename Float>
 Float interpolateLog( RangeZip&& xyRange, Float& x ){
-  using std::log;
-  using std::exp;
+  using std::log; using std::exp;
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values
                       | ranges::view::transform([](auto x){return log(x);});
@@ -38,6 +39,29 @@ Float interpolateLog( RangeZip&& xyRange, Float& x ){
 }
 
 
+template <typename Float, typename Range>
+Float interpolate( const Range& y, const Float& x, const Range& betaGrid ){
+  if ( x >= betaGrid[betaGrid.size()-1] ){ return 0.0; }
+  if ( x < betaGrid[0] ){ return 0.0; }
+ 
+  unsigned int i = 0;
+  Float x_L = 0.0;
+  for ( size_t j = 0; j < betaGrid.size(); ++j ){
+    if ( x < betaGrid[j+1] ){ 
+      i = j;
+      x_L = betaGrid[j];
+      break;
+    }
+  }
+  if ( abs(x - x_L) < 1e-8 ){ return y[i]; }
+  Float delta = betaGrid[i+1]-betaGrid[i];
+  return y[i] + (x-x_L) * (y[i+1]-y[i]) / delta;
+}
 
+
+
+
+
+#endif
 
 
