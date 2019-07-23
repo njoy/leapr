@@ -1,5 +1,5 @@
-#include "contin/contin_util/start_util/fsum.h"
 #include <range/v3/all.hpp>
+#include "generalTools/trapezoidIntegral.h"
 
 template <typename Float, typename Range>
 auto normalize( Range beta_P, const Float& continWgt ){

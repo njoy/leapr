@@ -1,9 +1,9 @@
 #include "contin/contin_util/start_util/normalize.h"
-#include "contin/contin_util/start_util/fsum.h"
 #include <iostream> 
 #include <range/v3/all.hpp>
 #include "generalTools/print.h"
 #include "contin/contin_util/start_util/getDebyeWaller.h"
+#include "contin/contin_util/start_util/getEffectiveTemp.h"
 
 template <typename Range, typename Float>
 auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
@@ -65,10 +65,8 @@ auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
                        betaGrid, normalize(betaPZipped_unnormalized, tbeta) );
 
   // calculate debye-waller coefficient and effective temperature
-  //Float lambda_s = fsum( 0, betaPZipped, 0.5 );
   Float lambda_s = getDebyeWaller( betaPZipped );
-
-  Float t_eff    = fsum( 2, betaPZipped, 0.5 ) / ( 2 * tbeta );
+  Float t_eff = getEffectiveTemp(betaPZipped)/(2.0*tbeta);
 
   // convert p(beta) --> t1(beta) where t1 is defined to be
   // t1( beta ) = p( beta ) * exp( -beta / 2 ) / lambda_s where

@@ -373,8 +373,8 @@
     "src/contin/contin_util/checkMoments.h",
     "src/contin/contin_util/start.h",
     "src/contin/contin_util/interpolate.h",
-    "src/contin/contin_util/start_util/fsum.h",
     "src/contin/contin_util/start_util/normalize.h",
+    "src/contin/contin_util/start_util/getEffectiveTemp.h",
     "src/contin/contin_util/start_util/getDebyeWaller.h",
     "src/endout/endout.h",
     "src/endout/endout_util/tpidio.h",
@@ -493,7 +493,7 @@
     "contin.contin_util.start_util": [
       "src/contin/contin_util/start_util/test/getDebyeWaller.test.cpp",
       "src/contin/contin_util/start_util/test/normalize.test.cpp",
-      "src/contin/contin_util/start_util/test/fsum.test.cpp"
+      "src/contin/contin_util/start_util/test/getEffectiveTemp.test.cpp"
     ],
     "discre": [
       "src/discre/test/discre.test.cpp"

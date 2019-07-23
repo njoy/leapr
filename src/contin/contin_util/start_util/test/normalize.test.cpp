@@ -2,7 +2,7 @@
 #include "contin/contin_util/start_util/normalize.h"
 #include "generalTools/print.h"
 
-auto equal = [](auto x, auto y){return x == Approx(y).epsilon(1e-6);};
+auto equal = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
 
 TEST_CASE( "normalize" ){
   std::vector<double> p, correct;
@@ -19,7 +19,7 @@ TEST_CASE( "normalize" ){
               0.1310779, 0.15729348};
 
     THEN( "each value in vector has as most a 1e-6 percent error" ){
-      ranges::equal(normalizedP, correct, equal);
+      REQUIRE(ranges::equal(normalizedP, correct, equal));
     } // THEN
 
     {
@@ -39,7 +39,7 @@ TEST_CASE( "normalize" ){
 
 
       THEN( "each value in vector has as most a 1e-6 percent error" ){
-        ranges::equal(normalizedP, correct, equal);
+        REQUIRE(ranges::equal(normalizedP, correct, equal));
       } // THEN
     }
   } // GIVEN
@@ -59,8 +59,8 @@ TEST_CASE( "normalize" ){
       9.287478752E-2, 0.1238330469, 0.1547913063, 0.1857495750};
 
     THEN( "outputs should be same, and both within 1e-6 to true value" ){
-      ranges::equal(normalizedP1, correct, equal);
-      ranges::equal(normalizedP2, correct, equal);
+      REQUIRE(ranges::equal(normalizedP1, correct, equal));
+      REQUIRE(ranges::equal(normalizedP2, correct, equal));
     } // THEN
   } // GIVEN
 } // TEST CASE
