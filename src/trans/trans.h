@@ -1,20 +1,15 @@
-#include <iostream> 
-#include <cmath>
-#include <vector>
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
 #include "trans_util/terps.h"
-#include "generalTools/print.h"
 #include "range/v3/all.hpp"
 
 
 template <typename Range, typename Float, typename Range2>
-auto trans( const Range& alpha, const Range& beta,
-  const Float& trans_weight, Float delta, const Float& diffusion, 
-  const Float& sc, const Float& scaling, const int& itemp, 
-  const Float& lambda_s, const Float& tbeta, Range& t_eff_vec, 
-  const Range& temp_vec, 
-  Range2& sym_sab ){
+auto trans( const Range& alpha, const Range& beta, const Float& trans_weight, 
+  Float delta, const Float& diffusion, const Float& sc, const Float& scaling, 
+  const int& itemp, const Float& lambda_s, const Float& tbeta, Range& t_eff_vec, 
+  const Range& temp_vec, Range2& sym_sab ){
+  using std::exp; 
 
   Float deltaInitial = delta;
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
@@ -30,10 +25,9 @@ auto trans( const Range& alpha, const Range& beta,
         sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
 
     delta = std::min( ded, 10.0 * alpha_sc * deltaInitial );
-
-    nsd = diffusion == 0 ? free_gas_s_table ( trans_weight, alpha_sc, ndmax, 
+    nsd = diffusion == 0 ? getFreeGas ( trans_weight, alpha_sc, ndmax, 
                                              delta, sabTrans ) : 
-                           diffusion_s_table( trans_weight, alpha_sc, ndmax, 
+                           getDiffusion( trans_weight, alpha_sc, ndmax, 
                                              delta, sabTrans, diffusion );
     if ( nsd > 1 ){
       for ( size_t b = 0; b < beta.size(); ++b ){
@@ -53,12 +47,11 @@ auto trans( const Range& alpha, const Range& beta,
                f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
 
         }
-        s = s < 1e-30 ? 0 : s * delta / 3;
+        s = (s < 1e-30) ? 0 : s*delta*0.33333333;
 
         Float st = terps(sabTrans,delta,be);
 
-        if ( st > 0.0 ){ s += exp( -alpha_sc * lambda_s ) * st; }
-
+        if ( st > 0.0 ){ s += exp(-alpha_sc*lambda_s)*st; }
         sym_sab[beta.size()*a + b] = s;
 
       } // for beta
