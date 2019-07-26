@@ -49,8 +49,11 @@ auto discre( int itemp, const double& sc, const double& scaling,
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
-  std::vector<double> bex( maxbb ), rdbex( maxbb );
-  int nbx = bfill( bex, rdbex, betan );
+  std::vector<double> rdbex( maxbb );
+  auto output = bfill_new(maxbb, rdbex, betan);
+  int nbx = std::get<0>(output);
+  std::vector<double> bex = std::get<1>(output);
+
   double wt = tbeta, tbart = t_eff_vec[itemp]/temp_vec[itemp];
      
   // Main alpha loop

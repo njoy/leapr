@@ -131,7 +131,14 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
           exb[b] = exp(-be);
           betan[b] = be;
       } 
-      nbx = bfill(bex,rdbex,betan);
+      auto output = bfill(bex,rdbex,betan);
+      nbx = std::get<0>(output);
+      for ( size_t i = 0; i < bex.size(); ++i ){
+        bex[i] = std::get<1>(output)[i];
+      }
+
+
+
     }
     std::vector<double> input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
