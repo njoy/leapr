@@ -1,9 +1,9 @@
 #include "oscLoopFuncs_util/bfact.h"
+#include <range/v3/all.hpp>
 
-void posNegTerms( int& n, const double& beta_i, 
-  const std::vector<double>& b_minus_or_plus,
-  std::vector<double>& wts, const std::vector<double>& wtn, 
-  std::vector<double>& bes, const std::vector<double>& ben, const int nn,
+template <typename Float, typename Range>
+void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus, 
+  Range& wts, const Range& wtn, Range& bes, const Range& ben, const int nn, 
   int pos_or_neg ){
 
   /* The point of these loops are to prepare wts and bes for the summation in
@@ -41,13 +41,12 @@ void posNegTerms( int& n, const double& beta_i,
 }
 
 
-auto oscillatorLoop( const std::vector<double>& alpha,
-  std::vector<double>& lambda_i, std::vector<double>& ar, const double& scaling,
-  std::vector<double>& wts, std::vector<double>& bes,
-  std::vector<double>& betaVals, int a, int maxdd,
-  int numOscillators, double& wt, double& tbart, 
-  const std::vector<std::tuple<double,double>>& oscEnergiesWeights,
-  std::vector<double>& t_eff_consts, const double& temp ){
+template <typename Float, typename Range>
+auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar, 
+  const Float& scaling, Range& wts, Range& bes, Range& betaVals, int a, 
+  int maxdd, int numOscillators, Float& wt, Float& tbart, 
+  const std::vector<std::tuple<Float,Float>>& oscEnergiesWeights, 
+  Range& t_eff_consts, const Float& temp ){
   /* alpha          --> yup
    * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
    *                    --defined in Eq. 538, evaluated in prepareParams.h
@@ -69,9 +68,9 @@ auto oscillatorLoop( const std::vector<double>& alpha,
    *                    --in leapr.f90, this is called dist
    */
 
-  std::vector<double> ben( maxdd, 0.0 ), wtn( maxdd, 0.0 ); wtn[0] = 1.0;
+  Range ben(maxdd, 0), wtn(maxdd, 0); wtn[0] = 1.0;
 
-  double bk = 8.617385E-5, alpha_lambda_i, x, bzero;
+  Float bk = 8.617385E-5, alpha_lambda_i, x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators
@@ -94,7 +93,7 @@ auto oscillatorLoop( const std::vector<double>& alpha,
      *                I0(x)*e^(-alpha*lambda_i+x)
      * depending on the size of x.
      */
-    std::vector<double> bminus (50,0.0), bplus(50,0.0);
+    Range bminus (50,0), bplus(50,0);
     bzero = bfact( x, alpha_lambda_i, betaVals[i], bplus, bminus );
     
     // do convolution for delta function
@@ -118,10 +117,10 @@ auto oscillatorLoop( const std::vector<double>& alpha,
     // Basically we're going to be populating wts with A_i,n terms muliplied
     // by each other, for many different i and n. 
     // negative n terms
-    posNegTerms( n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1 );
+    posNegTerms(n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1);
 
     // positive n terms
-    posNegTerms( n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1  );
+    posNegTerms(n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1 );
 
     // continue loop
     // Copy first n entries of permanent array into our temporary arrays
@@ -130,7 +129,6 @@ auto oscillatorLoop( const std::vector<double>& alpha,
       wtn[m] = wts[m];
     }
     //n = 0;  // Comment this to pass discre and oscloopFuncs test cases
-
     wt += std::get<1>(oscEnergiesWeights[i]);
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( bk * temp );

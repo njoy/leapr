@@ -1,7 +1,8 @@
 #include <algorithm>
+#include <iostream>
 
-std::vector<double> exts( const std::vector<double>& sexpb,
-  const std::vector<double>& exb, const std::vector<double>& beta ){
+template <typename Range>
+Range exts( const Range& sexpb, const Range& exb, const Range& beta ){
   /* When used by discre, sexpb is a vector populated with sym_sab entries for 
    * a given alpha and temp and increasing values of beta. Also exts is 
    * a vector populated with exp( -beta * sc / 2 ) entries. The purpose for 
@@ -18,20 +19,12 @@ std::vector<double> exts( const std::vector<double>& sexpb,
    *                               else
    */
 
-  std::vector<double> sex ( 2 * sexpb.size() + 1, 0.0 );
-
-  // Here we reverse the vector sexpb and put it in the beginning of sex.
-  
+  Range sex ( 2 * sexpb.size() + 1, 0.0 );
   std::reverse_copy(std::begin(sexpb), std::end(sexpb), std::begin(sex) );
-
-  unsigned int k = beta[0] <= 1.0e-9 ? beta.size() + 1 : beta.size() + 2;
+  unsigned int k = (beta[0] <= 1.0e-9) ? beta.size() + 1 : beta.size() + 2;
   sex[k-2] = sexpb[0];
 
   for ( size_t b = 1; b < beta.size(); ++b ){
-    // sex --> ssm_i * exp( -beta ) 
-    // S(a,b) = exp( -beta ) * S(a,-b)    Eq. 509
-    // Notice that we only apply this to half of the sex vector, since only
-    // half of it needs to be flipped
     sex[k-1] = sexpb[b]*exb[b];
     k += 1;
   }
