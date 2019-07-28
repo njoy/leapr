@@ -9,7 +9,7 @@ TEST_CASE( "sjbes" ){
     WHEN( "n >= 30,000 or x > 30,000" ){
       THEN( "value of 0.0 is returned" ){
         REQUIRE( sjbes(30000,5) ==  Approx(0.0).epsilon(1e-6) );
-        //REQUIRE( sjbes(0,30000) ==  Approx(0.0).epsilon(1e-6) );
+        REQUIRE( sjbes(0,30000) ==  Approx(0.0).epsilon(1e-6) );
         REQUIRE( sjbes(30000,30001) == Approx(0.0).epsilon(1e-6) );
         REQUIRE( sjbes(30000,29999) == Approx(0.0).epsilon(1e-6) );
         REQUIRE( sjbes(29999,30001) == Approx(0.0).epsilon(1e-6) );

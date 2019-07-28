@@ -2,6 +2,8 @@
 #include "contin/contin_util/start_util/getDebyeWaller.h"
 #include "contin/contin_util/start_util/getEffectiveTemp.h"
 #include <range/v3/all.hpp>
+#include <iostream>
+
 
 template <typename Range, typename Float>
 auto start( Range& rho, const Float& tbeta, Range& betaGrid ){

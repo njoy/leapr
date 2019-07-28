@@ -2,6 +2,7 @@
 #include "contin/contin_util/start.h"
 #include "generalTools/testing.h"
 
+
 TEST_CASE( "start function" ){
 
   std::vector<double> p, correct;

@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "../sumh.h"
+#include "coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h"
 
 
 TEST_CASE( "sumh" ){

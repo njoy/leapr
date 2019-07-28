@@ -133,7 +133,5 @@ TEST_CASE( "jprime loop" ){
         REQUIRE( total == Approx(5.86644429347).epsilon(1e-6) );
       } // THEN
     } // WHEN
-
   } // GIVEN
-
 } // TEST CASE

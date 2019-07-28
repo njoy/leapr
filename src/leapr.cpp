@@ -1,5 +1,5 @@
-#include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
+//#include <Eigen/Dense>
+//#include <unsupported/Eigen/CXX11/Tensor>
 #include <iostream> 
 #include <iomanip>
 #include <vector>
@@ -26,10 +26,26 @@ auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta,
   }
 
   F bk = 8.617385e-5, therm = 0.0253, lambda_s, t_eff, arat  = 1.0; 
-  // arat is for scaling alpha and beta values later
-  int isecs = 0;
-  bool done = false;
 
+  for ( size_t itemp = 0; itemp < temp_vec.size(); ++itemp ){ 
+    F temp = temp_vec[itemp];
+    F tev = bk * temp;
+    F sc = 1.0;
+    if ( lat == 1 ){ sc = therm/tev; }
+    F scaling = sc/arat;
+  }
+
+    //auto lambda_s_t_eff = contin( nphon, delta, tbeta, scaling, tev,
+    //  sc, rho, alpha, beta, sym_sab, energyGrid);
+
+
+  return;
+  std::cout << nphon << awr << ncold << aws << lat << alpha[0] << beta[0] << temp_vec[0] << delta << rho[0] << trans_weight << diffusion_const << tbeta << oscEnergies[0] << oscWeights[0] << dka << kappaVals[0] <<energyGrid[0] << std::endl;
+  // arat is for scaling alpha and beta values later
+  //int isecs = 0;
+  //bool done = false;
+
+  /*
   Eigen::Tensor<F,3> sym_sab_eigen(alpha.size(),beta.size(),int(temp_vec.size()));
   Eigen::Tensor<F,3> sym_sab_2_eigen(alpha.size(),beta.size(),int(temp_vec.size()));
   sym_sab_eigen.setZero();
@@ -83,6 +99,7 @@ auto leapr( int nphon, F awr, int ncold, F aws, int lat, V alpha, V beta,
   }
 
   return std::make_tuple(lambda_s,t_eff,sym_sab_eigen);
+  */
 
 }
 

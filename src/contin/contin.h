@@ -5,9 +5,10 @@
 
 template <typename A, typename F>
 auto contin(int nphon, F& delta, const F& tbeta, const F& scaling, const F& tev, 
-  const F& sc, A rho, const A& alpha, const A& beta, A& symSab, A betaGrid ){
+  const F& sc, A rho, const A& alpha, const A& beta, A& symSab ){
 
-  for ( F& x : betaGrid ){ x /= tev; }
+  std::vector<double> betaGrid = ranges::view::iota(0,int(rho.size())) | ranges::view::transform([delta,tev](auto x){return x*delta/tev;});
+  //for ( F& x : betaGrid ){ x /= tev; }
     
   auto lambda_s_t_eff = start( rho, tbeta, betaGrid );
   F lambda_s = std::get<0>(lambda_s_t_eff),
