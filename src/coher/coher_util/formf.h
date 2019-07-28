@@ -40,6 +40,7 @@ inline double formf( int lat, int l1, int l2, int l3 ){
    * * Form factor |F|^2, as defined in Eq. 554.
    */
 
+  using std::pow;
 
    int i;
    double e1,e2,e3, c1=7.54e0, c2=4.24e0, c3=11.31e0, pi=3.14159265358979;
@@ -50,7 +51,7 @@ inline double formf( int lat, int l1, int l2, int l3 ){
      // even or odd. Note that the returned value differs from Eq. 564 however
      // in that either possibility is divided by 4.
      return l3%2 == 0 ? (6+10*cos(2*pi*(l1-l2)/3))/4 :  // even
-	                std::pow(sin(pi*(l1-l2)/3),2);  // odd
+	                pow(sin(pi*(l1-l2)/3),2);  // odd
    }
 
    //  beryllium -- HCP
@@ -76,14 +77,14 @@ inline double formf( int lat, int l1, int l2, int l3 ){
      e1 = 2 * pi * l1;
      e2 = 2 * pi * (l1+l2);
      e3 = 2 * pi * (l1+l3);
-     return std::pow( cos(e1) + cos(e2) + cos(e3) + 1, 2 ) + 
-            std::pow( sin(e1) + sin(e2) + sin(e3),     2 );
+     return pow( cos(e1) + cos(e2) + cos(e3) + 1, 2 ) + 
+            pow( sin(e1) + sin(e2) + sin(e3),     2 );
    }
 
    // bcc lattices
    else {
-      return std::pow( cos( 2*pi*(l1+l2+l3) ) + 1,2 ) +
-	     std::pow( sin( 2*pi*(l1+l2+l3) ),    2 );
+      return pow( cos( 2*pi*(l1+l2+l3) ) + 1,2 ) +
+	     pow( sin( 2*pi*(l1+l2+l3) ),    2 );
    }
 }
 

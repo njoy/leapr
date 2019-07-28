@@ -1,7 +1,7 @@
 
-void swap( double& a, double& b ){
-  double c = a;
-  a = b; b = c;
+template <typename Float>
+void swap( Float& a, Float& b ){
+  Float c = a; a = b; b = c;
 }
 
 auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k, 
@@ -16,7 +16,7 @@ auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k,
       }
     }
   }
-  k = k + 1;
+  k++;
   b[ifl+2*k-3] = ulim;
   b[ifl+2*k-2] = b[ifl+2*k-4];
   nw = 2 * k;

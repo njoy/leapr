@@ -14,13 +14,13 @@ Theory
   COMMENT: .. contents:: Table of Contents
 
 Thermal Neutrons
-=============
+=====================
 
 This project aims to describe the ways in which low energy neutrons (with energy on the order of 1 eV or less) interact with material. Accurately describing these interactions is crucial for adequate modeling of thermal nuclear systems. A neutron at room temperature has an energy of approximately 0.025 eV, meaning that its de Broglie wavelength is about 1 angstrom which is close to typical interatomic spacing in materials. This can complicate neutron-target interactions and the wave-like behavior of neutrons must be carefully accounted for.
 
 
 Overview of Scattering
-=============
+=========================
 
 The probability of a neutron with initial energy and solid angle :math:`(E,\Omega)` scattering to have some final energy and solid angle :math:`(E',\Omega')` is described using the double differential scattering cross section :math:`\sigma(E\rightarrow E', \Omega\rightarrow\Omega')`. This cross section describes both elastic and inelastic scattering, both of which have a coherent and incoherent contribution.
 
@@ -30,7 +30,7 @@ In elastic scattering, total kinetic energy (i.e. sum of neutron and target kine
 
 
 Elastic Scattering
--------------
+---------------------
 .. math::
   \sigma(E\rightarrow E,\Omega\rightarrow\Omega') = \sigma_{coh}(E\rightarrow E,\Omega\rightarrow\Omega') + \sigma_{inc}(E\rightarrow E',\Omega\rightarrow\Omega') 
 
@@ -38,7 +38,7 @@ Elastic Scattering
 
 
 Inelastic Scattering
--------------
+-----------------------
 
 For inelastic scattering kinetic energy is not conserved, meaning that some excitation (or de-excitation) occurred. For high energy neutrons, this excitation is a *nuclear* excitation, where the target nucleus is brought to some excited state. This requires a significant amount of energy, and thus nuclear inelastic scattering is a *threshold* reaction, as seen below.
 
@@ -58,7 +58,7 @@ For thermal (low energy) neutrons, this excitation is typically a *molecular* or
 
 
 Pair Distribution Function
-=============
+===============================
 
 The scattering kernel :math:`\sigma_s(E\rightarrow E',\Omega\rightarrow\Omega')` is typically separated into a coherent and an incoherent contribution (Note that in separating the coherent and incoherent contributions, one ignores spin-correlation effects. These effects are of little to no importance for most applications, except for instances like thermal scattering in liquid hydrogen, which has correlated spins (CITE PARKS). Such materials are considered apart from this simple coherent/incoherent discussion), both of which can be defined in terms of so-called "van Hove pair distribution function" :math:`G(\boldsymbol{r},t)`, which contains information regarding the scattering material. The pair distribution function is split into two terms :math:`G(\boldsymbol{r},t)=G_s(\boldsymbol{r},t)+G_d(\boldsymbol{r},t)` which represent a "self" term and a "distinct" term, respectively. In a classical system, :math:`G(\boldsymbol{r},t)` can be interpreted as the probability that an atom will be at location :math:`\boldsymbol{r}` at time :math:`t`, given that an atom existed at the origin at time :math:`t=0`.
 

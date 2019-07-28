@@ -111,7 +111,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   i1m = 2;
   GIVEN( "few iterations" ){
     THEN( "outputs" ){
-      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
+      int imax2 = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
           i, wint, t2, ulim, imax, c, i1m );
       //REQUIRE( imax == 51 );
       /*
@@ -133,7 +133,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	2.5266187955454579E19, 8.2524210602627214E-8, 2.8523157496587395E19,
 	1.2735509579295717E-8 };
       */
-      REQUIRE( imax == 51 );
+      REQUIRE( imax2 == 51 );
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
       for ( size_t i = 0; i < bVals.size(); ++i ){ 
         REQUIRE( bVals[i] == Approx(b[i]).epsilon(1e-6) ); 
@@ -147,7 +147,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   i1m = 10;
   GIVEN( "few iterations" ){
     THEN( "outputs" ){
-      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
+      int imax2 = hexLatticeFactors( a, tsq, c1, c2, lat, nw, tsqx, b, ifl, 
           i, wint, t2, ulim, imax, c, i1m );
       /*
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448.,
@@ -168,7 +168,7 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 	2.5266187955454579E19, 8.2524210602627214E-8, 2.8523157496587395E19,
 	1.2735509579295717E-8 };
   */
-      REQUIRE( imax == 51 );
+      REQUIRE( imax2 == 51 );
 
       std::vector<double> bVals { 98696046700994448., 0, 98696046700994448., 0,3.9478418680397779E+017, 3.7496904081434691E-008, 3.9478418680397779E+017, 3.7496904081434691E-008, 8.8826442030895002E+017, 0, 8.8826442030895002E+017, 0, 1.5791367472159112E+018, 3.6992121213998630E-009, 2.4674011675248614E+018, 2.2396046029577356E-007, 3.5530576812358001E+018, 1.1097719365713786E-007, 4.8361062883487283E+018, 3.0773349369262785E-008 };
       for ( size_t i = 0; i < bVals.size(); ++i ){ 

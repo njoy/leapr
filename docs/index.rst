@@ -10,7 +10,10 @@ Welcome to cats's documentation!
    :maxdepth: 4
    :caption: Contents:
 
-   demo
+   theory 
+   quickStart
+   usersGuide
+   codingDetails 
    examples
 
 
