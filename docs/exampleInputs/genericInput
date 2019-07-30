@@ -1,0 +1,14 @@
+Module1                / specify first module to call
+  input1               / module1 tape1
+  input1 input2 input3 / module1 tape2
+  input1 input2        / module1 tape3
+Module2                / specify second module 
+  input1               / 
+  input1 input2        / modules are called in the order they appear here
+  input1 input2 input3 / so that (for example) module2 can take module1 
+  input1 input2        / output as its own input.
+  input1 input2 input3 / 
+Module3                / this is the final module
+  input1 input2        / 
+stop                   / this tells NJOY to stop reading file
+
