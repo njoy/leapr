@@ -136,6 +136,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      c2=1/(c*c);
      double volume = sqrt(3)*a*a*c/2;
      scon /= 4*volume*econ;
+     //scon /= (2*a*a*c*sqrt(3)*econ);
   }
   else if (iel == 4 or iel == 5) {
      c1=3/(a*a);
@@ -159,8 +160,11 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     // compute lattice factors for hexagonal lattices
     phi = ulim/(4.0*M_PI*M_PI);
     int i1m = a*sqrt(phi) + 1;
-    //std::cout << "phi:    " << phi << std::endl;
-    i1m += 1;
+    //std::cout << "phi:   " << phi << std::endl;
+    //std::cout << "sqrt   " << sqrt(phi) << std::endl;
+    //std::cout << "a*sqrt "<< a*sqrt(phi) << std::endl;
+    //std::cout << "eh     "<< int(a*sqrt(phi)) << std::endl;
+    //std::cout << "i1m    "<< i1m << std::endl;
     //std::cout << a << "   " << tsq << "   " << c1 << std::endl;
     //std::cout << c2 << "   " << iel << "   " << nw << std::endl;
     //std::cout << tsqx << "   " << ifl << "   " << i << std::endl;
@@ -172,7 +176,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     //for ( int i = 0; i < 10; ++i ){ std::cout << b[i] << "  ";}
     //std::cout << std::endl;
     k = imax + 1;
-    std::cout << k << std::endl;
+    //std::cout << k << std::endl;
   }
 
   else if ( iel < 6 ){
@@ -186,9 +190,20 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     imax = bccLatticeFactors( ulim, b, ifl, wint, t2, iel, a, c1 );
     k = imax + 1;
   }
+  //std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
+  //std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
+  //std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
+  //std::cout << std::endl;
+  //std::cout << ifl << "   " << k << "   " << recon << "   " << scon << std::endl;
 
-  
   end( ifl, b, k, recon, maxb, toler, scon, nw, ulim, imax );
+
+  //std::cout << std::endl;
+  //std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
+  //std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
+  //std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
+
+ 
  
   nbe = 1;
   return nbe;

@@ -8,6 +8,8 @@ auto hexLatticeFactorsHelper( int& k, const Float& tsq, const Float& tsqx,
     if ((2*k) > nw) { throw std::invalid_argument("2k must be <= nw"); } 
     b[ifl+2*k-3] = tsq;
     b[ifl+2*k-2] = f;
+    //std::cout << "HERE   " << ifl << "    " << k << "    " << ifl+2*k-3 << std::endl;
+    //if (ifl+2*k-3 == 6){std::cout << "--------------  " <<  ifl << "   " << k << "   " << tsq << std::endl; }
     return;
   }
 

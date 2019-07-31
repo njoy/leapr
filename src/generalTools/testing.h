@@ -10,10 +10,20 @@ void checkVec( V y1, V y2, float tol=1e-6 ){
 
 template <typename V, typename Int>
 void checkVec( V y1, V y2, Int end, float tol=1e-6 ){
-  for (size_t i = 0; i < end; ++i){
+  for (Int i = 0; i < end; ++i){
     REQUIRE( y2[i] == Approx(y1[i]).epsilon(tol) );
   }
 }
+
+template <typename V>
+void checkPartOfVec( V y1, V y2, int offset=0, float tol=1e-6 ){
+  using std::abs;
+  for (size_t i = 0; i < y2.size(); ++i){
+    REQUIRE( y2[i] == Approx(y1[i+offset]).epsilon(tol) );
+  }
+}
+
+
 
 template <typename V>
 void restAreZero(int n, const V& vec){
