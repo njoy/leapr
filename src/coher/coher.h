@@ -135,8 +135,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      c1=4/(3*a*a);
      c2=1/(c*c);
      double volume = sqrt(3)*a*a*c/2;
-     scon *= 4/(volume*econ);
-     //scon /= (2*a*a*c*sqrt(3)*econ);
+     scon /= 4*volume*econ;
   }
   else if (iel == 4 or iel == 5) {
      c1=3/(a*a);
@@ -147,7 +146,10 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
      scon/=(8*a*a*a*econ);
   }
   wint=0;
-  t2=1e10*hbar/(2*amu*mass);
+  t2=1e4*hbar/(2*amu*mass);
+  //std::cout << std::endl;
+  //std::cout << hbar << "  " << amu << "  " << mass << std::endl;
+  //std::cout << std::endl;
   ulim=econ*emax;
   ifl=1;
   nw=maxb;
@@ -155,20 +157,31 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
 
   if ( iel < 4 ){
     // compute lattice factors for hexagonal lattices
+    phi = ulim/(4.0*M_PI*M_PI);
     int i1m = a*sqrt(phi) + 1;
+    //std::cout << "phi:    " << phi << std::endl;
+    i1m += 1;
+    //std::cout << a << "   " << tsq << "   " << c1 << std::endl;
+    //std::cout << c2 << "   " << iel << "   " << nw << std::endl;
+    //std::cout << tsqx << "   " << ifl << "   " << i << std::endl;
+    //std::cout << wint << "   " << t2 << "   " << ulim << std::endl;
+    //std::cout << c<< "   " << i1m <<  std::endl;
     imax = hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
     i, wint, t2, ulim, c, i1m );
-    std::cout << "imax  " << imax << std::endl;
+    //std::cout << "imax  " << imax << std::endl;
+    //for ( int i = 0; i < 10; ++i ){ std::cout << b[i] << "  ";}
+    //std::cout << std::endl;
     k = imax + 1;
+    std::cout << k << std::endl;
   }
 
-  if ( iel < 6 ){
+  else if ( iel < 6 ){
     // compute lattice factors for fcc lattices
     imax = fccLatticeFactors( iel, b, ifl, nw, t2, c1, wint, ulim, a );
     k = imax + 1;
   } 
 
-  if ( iel == 6 ){
+  else { // iel == 6
     // compute lattice factors for bcc lattices
     imax = bccLatticeFactors( ulim, b, ifl, wint, t2, iel, a, c1 );
     k = imax + 1;

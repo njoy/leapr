@@ -26,13 +26,22 @@ auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k,
 auto end( int ifl, std::vector<double>& b, int k, double recon, int& maxb, 
   double toler, double scon, int& nw, double ulim, int imax ){
 
+  std::cout << "NOW IN END" << std::endl;
+  std::cout << "  " << std::endl;
   sortLatticeFactors( ifl, b, k, nw, ulim, imax );
+  std::cout << "  " << std::endl;
+  //std::cout << b[0] << "  " << b[1] << "  " << b[2] << std::endl;
+  //std::cout << b[3] << "  " << b[4] << "  " << b[5] << std::endl;
+  //std::cout << b[6] << "  " << b[7] << "  " << b[8] << std::endl;
+  //std::cout << b[9] << "  " << b[10] << "  " << b[11] << std::endl;
+  //std::cout << "  " << std::endl;
 
   // convert to practical units and combine duplicate bragg edges.
 
   double bel = -1, be, bs;
   int nbe, j = 0;
 
+  std::cout << recon << "   "  << scon << std::endl;
   for ( auto i = 1; i <= k; ++i ){
     be = b[ifl+2*i-3] * recon;
     bs = b[ifl+2*i-2] * scon;
