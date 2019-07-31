@@ -15,7 +15,7 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
    * of edges, maxb and emax are also there
    */
-  int i,j,k,imax,ifl,nw,nbe;
+  int i,j,k,imax,ifl,nw;
   double amne,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
 
@@ -148,9 +148,6 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   }
   wint=0;
   t2=1e4*hbar/(2*amu*mass);
-  //std::cout << std::endl;
-  //std::cout << hbar << "  " << amu << "  " << mass << std::endl;
-  //std::cout << std::endl;
   ulim=econ*emax;
   ifl=1;
   nw=maxb;
@@ -160,23 +157,9 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     // compute lattice factors for hexagonal lattices
     phi = ulim/(4.0*M_PI*M_PI);
     int i1m = a*sqrt(phi) + 1;
-    //std::cout << "phi:   " << phi << std::endl;
-    //std::cout << "sqrt   " << sqrt(phi) << std::endl;
-    //std::cout << "a*sqrt "<< a*sqrt(phi) << std::endl;
-    //std::cout << "eh     "<< int(a*sqrt(phi)) << std::endl;
-    //std::cout << "i1m    "<< i1m << std::endl;
-    //std::cout << a << "   " << tsq << "   " << c1 << std::endl;
-    //std::cout << c2 << "   " << iel << "   " << nw << std::endl;
-    //std::cout << tsqx << "   " << ifl << "   " << i << std::endl;
-    //std::cout << wint << "   " << t2 << "   " << ulim << std::endl;
-    //std::cout << c<< "   " << i1m <<  std::endl;
     imax = hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
     i, wint, t2, ulim, c, i1m );
-    //std::cout << "imax  " << imax << std::endl;
-    //for ( int i = 0; i < 10; ++i ){ std::cout << b[i] << "  ";}
-    //std::cout << std::endl;
     k = imax + 1;
-    //std::cout << k << std::endl;
   }
 
   else if ( iel < 6 ){
@@ -190,22 +173,12 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     imax = bccLatticeFactors( ulim, b, ifl, wint, t2, iel, a, c1 );
     k = imax + 1;
   }
-  //std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
-  //std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
-  //std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
-  //std::cout << std::endl;
-  //std::cout << ifl << "   " << k << "   " << recon << "   " << scon << std::endl;
 
-  end( ifl, b, k, recon, maxb, toler, scon, nw, ulim, imax );
-
-  //std::cout << std::endl;
-  //std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
-  //std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
-  //std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
-
+  // nbe is the number of edges
+  int nbe = end( ifl, b, k, recon, maxb, toler, scon, nw, ulim, imax );
+  maxb = 2*nbe;
  
- 
-  nbe = 1;
+  //nbe = 1;
   return nbe;
 
 }

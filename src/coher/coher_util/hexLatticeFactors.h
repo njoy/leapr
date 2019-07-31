@@ -26,19 +26,12 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
   int l1, l2, l3, i2m, i3m, k = 0;
 
   for ( auto i1 = 1; i1 <= i1m; ++i1 ){
- //   std::cout << "i1  " << i1 << std::endl;
-
     l1  = i1-1;
     i2m = int((l1+sqrt(3*(a*a*phi-l1*l1)))/2);
     i2m = i2m+1;
-    //std::cout << i1 << "    " << l1 << "   " << i2m << std::endl;
-
 
     for ( auto i2 = i1; i2 <= i2m; ++i2 ){
-//    std::cout << "   i2  " << i2 << std::endl;
-
       l2=i2-1;
-
       double x = phi-c1*(l1*l1+l2*l2-l1*l2);
       i3m = 0;
       if (x > 0 ) i3m = int(c*sqrt(x));
@@ -46,9 +39,6 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
 
 
     for ( auto i3 = 1; i3 <= i3m; ++i3 ){
-  //  for ( auto i3 = 1; i3 <= 3; ++i3 ){
-   // std::cout << "     i3  " << i3 << std::endl;
-
       l3 = i3 - 1;
       w1 = 2;
       if (l1 == l2) w1=1;
@@ -82,19 +72,8 @@ int hexLatticeFactors( double a, double tsq, double c1, double c2,
 
   } // 1
 
-  /*
-  std::cout << std::endl;
-  std::cout << std::endl;
-
-  std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
-  std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
-  std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
-  */
-
-
   return k-1; // This is imax
 
-  //go to 220
 }
 
 
