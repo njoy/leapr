@@ -2,35 +2,22 @@
 #include <iostream>
 #include "catch.hpp"
 #include "coher/coher.h"
-
-void equal( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
-void equal_vec( std::vector<double> a, std::vector<double> b ){
-  REQUIRE( a.size() == b.size() );
-  for ( size_t i = 0; i < a.size(); ++i ){
-    equal( a[i], b[i] );
-  }
-}
-
+#include "generalTools/testing.h"
+#include <range/v3/all.hpp>
 
 
 TEST_CASE( "coher" ){
 
   int iel = 1, npr = 1, maxb = 60000;
-  std::vector<double> b ( 60000, 0.0 );
+  std::vector<double> b ( maxb, 0.0 );
   double emax = 5.0;
 
   GIVEN( "graphite is the requested material" ){
     iel = 1;
     WHEN( "1 principal scattering atoms in compound" ){
       THEN( "bragg edges vector is correctly output" ){
-	//coher( iel, npr, maxb, b, emax );
+	coher( iel, npr, maxb, b, emax );
+        std::cout << b[0] << "   " << b[1] << "    " << b[2] << std::endl;
 	//std::vector<double> bVals { 
         //for ( auto i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
 	//std::cout << b[0] << "    " << b[1] << "     " << b[2] << std::endl;
@@ -83,7 +70,7 @@ TEST_CASE( "coher" ){
           5.387925E-2, 4.364670E-3, 5.513226E-2, 4.314787E-3, 6.014428E-2, 
           1.377031E-3, 6.390330E-2, 8.015499E-3, 6.515631E-2, 3.969026E-3, 
           7.016833E-2, 7.649299E-3 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
     WHEN( "3 principal scattering atoms in compound" ){
@@ -99,7 +86,7 @@ TEST_CASE( "coher" ){
           5.387925E-2, 1.454890E-3, 5.513226E-2, 1.438262E-3, 6.014428E-2, 
           4.590104E-4, 6.390330E-2, 2.671833E-3, 6.515631E-2, 1.323008E-3, 
           7.016833E-2, 2.549766E-3 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
   } // GIVEN
@@ -120,7 +107,7 @@ TEST_CASE( "coher" ){
           3.603549E-2, 1.952626E-3, 3.687352E-2, 1.930309E-3, 4.022566E-2, 
           6.160436E-4, 4.273976E-2, 3.585900E-3, 4.357780E-2, 1.775626E-3, 
           4.692994E-2, 3.422073E-3 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
     WHEN( "5 principal scattering atoms in compound" ){
@@ -136,7 +123,7 @@ TEST_CASE( "coher" ){
           3.603549E-2, 3.905252E-4, 3.687352E-2, 3.860619E-4, 4.022566E-2, 
           1.232087E-4, 4.273976E-2, 7.171801E-4, 4.357780E-2, 3.551253E-4, 
           4.692994E-2, 6.844146E-4 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
   } // GIVEN
@@ -155,7 +142,7 @@ TEST_CASE( "coher" ){
           8.000806E-2, 2.177859E-2, 8.500857E-2, 8.451337E-2, 9.000907E-2, 
           5.133264E-2, 9.500958E-2, 0.119912469, 0.100010086, 3.895873E-2, 
           0.105010591, 7.603967E-2 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
     WHEN( "5 principal scattering atoms in compound" ){
@@ -171,7 +158,7 @@ TEST_CASE( "coher" ){
           8.000806E-2, 4.355719E-3, 8.500857E-2, 1.690267E-2, 9.000907E-2, 
           1.026652E-2, 9.500958E-2, 2.398249E-2, 0.100010086, 7.791747E-3, 
           0.105010591, 1.520793E-2 };
-        for ( size_t i = 0; i < bVals.size(); ++i ){ equal( b[i], bVals[i] ); }
+        checkVec(b,bVals,bVals.size());
       } // THEN
     } // WHEN
   } // GIVEN

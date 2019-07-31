@@ -157,7 +157,8 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
     // compute lattice factors for hexagonal lattices
     int i1m = a*sqrt(phi) + 1;
     imax = hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
-    i, wint, t2, ulim, imax, c, i1m );
+    i, wint, t2, ulim, c, i1m );
+    std::cout << "imax  " << imax << std::endl;
     k = imax + 1;
   }
 
