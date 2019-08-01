@@ -31,11 +31,11 @@ TEST_CASE( "taufcc" ){
 TEST_CASE( "Function to Compute FCC Lattice Factors" ){
   GIVEN( "aluminum is the requested material" ){
     THEN( "outputs" ){
-      int lat = 4, ifl = 1, nw = 60000;
+      int lat = 4, ifl = 1;
       double t2 = 3.5e-5, c1 = 1.5e15, wint = 0, ulim = 9.6e19, a = 2e-8;
       std::vector<double> b (60000, 0.0);
 
-      int imax = fccLatticeFactors( lat, b, ifl, nw, t2, c1, wint, ulim, a );
+      int imax = fccLatticeFactors( lat, b, ifl, t2, c1, wint, ulim, a );
       REQUIRE( imax ==  29789 );
 
       std::vector<double> b_0_39 { 4.885454E19, 2.289114E-9, 4.713723E19, 
@@ -85,11 +85,11 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
 
   GIVEN( "lead is the requested material" ){
     THEN( "outputs" ){
-      int lat = 5, ifl = 1, nw = 60000;
+      int lat = 5, ifl = 1;
       double t2 = 3.5e-5, c1 = 5.5e16, wint = 0, ulim = 9.6e19, a = 2e-8;
       std::vector<double> b (60000, 0.0);
 
-      int imax = fccLatticeFactors( lat, b, ifl, nw, t2, c1, wint, ulim, a );
+      int imax = fccLatticeFactors( lat, b, ifl, t2, c1, wint, ulim, a );
       REQUIRE( imax ==  1637 );
 
       std::vector<double> b_0_39 { 9.553776E19, 1.636938E-9, 9.481399E19, 

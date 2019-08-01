@@ -5,7 +5,7 @@ void swap( Float& a, Float& b ){
 }
 
 auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k, 
-  int& nw, double ulim, int imax ){
+  double ulim, int imax ){
 
   // Sort lattice factors
   for ( auto i = 1; i <= imax; ++i ){
@@ -19,15 +19,16 @@ auto sortLatticeFactors( int ifl, std::vector<double>& b, int& k,
   k++;
   b[ifl+2*k-3] = ulim;
   b[ifl+2*k-2] = b[ifl+2*k-4];
-  nw = 2 * k;
+  //nw = 2 * k;
 }
 
 
-auto end( int ifl, std::vector<double>& b, int k, double recon, int& maxb, 
-  double toler, double scon, int& nw, double ulim, int imax ){
-  sortLatticeFactors( ifl, b, k, nw, ulim, imax );
-  // convert to practical units and combine duplicate bragg edges.
+auto end( int ifl, std::vector<double>& b, int& k, double recon, 
+  double toler, double scon, double ulim, int imax ){
 
+  sortLatticeFactors( ifl, b, k, ulim, imax );
+
+  // convert to practical units and combine duplicate bragg edges.
   double bel = -1, be, bs;
   int nbe, j = 0;
 
@@ -45,7 +46,6 @@ auto end( int ifl, std::vector<double>& b, int k, double recon, int& maxb,
     }
   }
   nbe = j;
-  maxb = 2 * nbe;
   return nbe;
 }
 

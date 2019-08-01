@@ -8,8 +8,8 @@
 
 TEST_CASE( "coher" ){
 
-  int iel = 1, npr = 1, maxb = 60000;
-  std::vector<double> b ( maxb, 0.0 );
+  int iel = 1, npr = 1;
+  std::vector<double> b ( 60000, 0.0 );
   double emax = 5.0;
   std::vector<double> braggVals_0_to_99 (100);
   std::vector<double> braggVals_500_to_599 (100);
@@ -20,7 +20,10 @@ TEST_CASE( "coher" ){
     iel = 1;
     WHEN( "1 principal scattering atoms in compound" ){
       npr = 1;
-      coher( iel, npr, maxb, b, emax );
+      auto output = coher( iel, npr, b, emax );
+      int nw   = std::get<0>(output);
+      int maxb = std::get<1>(output);
+
       braggVals_0_to_99 = {4.555814E-4, 0.000000000, 1.822325E-3, 1.369340E-2, 
         4.100233E-3, 0.000000000, 4.515834E-3, 1.631010E-3, 4.971416E-3, 
         9.326892E-3, 6.338160E-3, 2.753430E-3, 7.289303E-3, 6.846702E-3, 
@@ -65,11 +68,17 @@ TEST_CASE( "coher" ){
         6.183789E-3 };
       THEN( "bragg edges vector is correctly output" ){
         checkPartOfVec(b,braggVals_500_to_599,500);
+        restAreZero(nw,b);
+        REQUIRE( nw   == 852 );
+        REQUIRE( maxb == 690 );
       } // THEN
     } // WHEN
     WHEN( "3 principal scattering atoms in compound" ){
       npr = 3;
-      coher( iel, npr, maxb, b, emax );
+      auto output = coher( iel, npr, b, emax );
+      int nw   = std::get<0>(output);
+      int maxb = std::get<1>(output);
+
       braggVals_0_to_99 = { 4.555814E-4, 0.000000000, 1.822325E-3, 4.564468E-3, 
         4.100233E-3, 0.000000000, 4.515834E-3, 5.436701E-4, 4.971416E-3, 
         3.108964E-3, 6.338160E-3, 9.178102E-4, 7.289303E-3, 2.282234E-3, 
@@ -93,6 +102,9 @@ TEST_CASE( "coher" ){
         6.669459E-4 };
       THEN( "bragg edges vector is correctly output" ){
         checkVec(b,braggVals_0_to_99,braggVals_0_to_99.size());
+        restAreZero(nw,b);
+        REQUIRE( nw   == 852 );
+        REQUIRE( maxb == 690 );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -105,7 +117,10 @@ TEST_CASE( "coher" ){
     iel = 2;
     WHEN( "1 principal scattering atom in compound" ){
       npr = 1;
-      coher( iel, npr, maxb, b, emax );
+      auto output = coher( iel, npr, b, emax );
+      int nw   = std::get<0>(output);
+      int maxb = std::get<1>(output);
+
       braggVals_0_to_99 = { 1.5928452E-3, 0.0000000000, 5.2198010E-3, 
         8.9780237E-3, 6.3713807E-3, 1.0835019E-2, 6.8126461E-3, 4.7152102E-2, 
         1.1591182E-2, 1.2049634E-2, 1.4335607E-2, 0.0000000000, 1.5659403E-2, 
@@ -152,7 +167,9 @@ TEST_CASE( "coher" ){
       THEN( "bragg edges vector is correctly output" ){
         checkPartOfVec(b,braggVals_0_to_99);
         checkPartOfVec(b,braggVals_500_to_599,500);
-        restAreZero(600,b);
+        restAreZero(nw,b);
+        REQUIRE( nw   == 592 );
+        REQUIRE( maxb == 508 );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -165,7 +182,10 @@ TEST_CASE( "coher" ){
     iel = 3;
     WHEN( "1 principal scattering atom in compound" ){
       npr = 1;
-      coher( iel, npr, maxb, b, emax );
+      auto output = coher( iel, npr, b, emax );
+      int nw   = std::get<0>(output);
+      int maxb = std::get<1>(output);
+
       braggVals_0_to_99 = { 1.0611740E-3, 0.0000000000, 3.7543682E-3, 
         1.9057139E-2, 4.2446962E-3, 1.2191662E-2, 4.8155422E-3, 1.6539555E-2, 
         7.9990644E-3, 1.3321646E-2, 9.5505664E-3, 0.0000000000, 1.1263105E-2, 
@@ -233,13 +253,19 @@ TEST_CASE( "coher" ){
         checkPartOfVec(b,braggVals_0_to_99);
         checkPartOfVec(b,braggVals_500_to_599,500);
         checkPartOfVec(b,braggVals_600_to_699,600);
-        restAreZero(740,b);
+        restAreZero(nw,b);
+        REQUIRE( nw   == 740 );
+        REQUIRE( maxb == 612 );
+
       } // THEN
     } // WHEN
 
     WHEN( "3 principal scattering atoms in compound" ){
       npr = 3;
-      coher( iel, npr, maxb, b, emax );
+      auto output = coher( iel, npr, b, emax );
+      int nw   = std::get<0>(output);
+      int maxb = std::get<1>(output);
+
       braggVals_0_to_99 = { 1.06117E-3, 0.00000000, 3.75436E-3, 6.35237E-3, 
       4.24469E-3, 4.06388E-3, 4.81554E-3, 5.51318E-3, 7.99906E-3, 4.44054E-3, 
       9.55056E-3, 0.00000000, 1.12631E-2, 1.46701E-2, 1.23242E-2, 0.00000000, 
@@ -259,6 +285,9 @@ TEST_CASE( "coher" ){
       6.70150E-2, 1.47787E-3, 6.79151E-2, 9.57251E-3, 7.13329E-2, 2.91467E-3 };
       THEN( "bragg edges vector is correctly output" ){
         checkVec(b,braggVals_0_to_99,braggVals_0_to_99.size());
+        restAreZero(nw,b);
+        REQUIRE( nw   == 740 );
+        REQUIRE( maxb == 612 );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -267,7 +296,10 @@ TEST_CASE( "coher" ){
 
   GIVEN( "aluminum is the requested material" ){
     iel = 4; npr = 1;
-    coher( iel, npr, maxb, b, emax );
+    auto output = coher( iel, npr, b, emax );
+    int nw   = std::get<0>(output);
+    int maxb = std::get<1>(output);
+
     braggVals_0_to_99 = { 3.759016E-3, 5.508122E-3, 5.012021E-3, 3.57763E-3, 
     1.00240E-2, 5.05953E-3, 1.37830E-2, 8.62956E-3, 1.50360E-2, 2.75406E-3, 
     2.00480E-2, 1.78881E-3, 2.38071E-2, 6.56611E-3, 2.50601E-2, 6.39986E-3, 
@@ -326,7 +358,9 @@ TEST_CASE( "coher" ){
       checkPartOfVec(b,braggVals_0_to_99);
       checkPartOfVec(b,braggVals_500_to_599,500);
       checkPartOfVec(b,braggVals_2000_to_2099,2000);
-
+      restAreZero(nw,b);
+      REQUIRE( nw   == 59582 );
+      REQUIRE( maxb == 1234  );
 
     } // THEN
   } // GIVEN
@@ -336,9 +370,12 @@ TEST_CASE( "coher" ){
 
   GIVEN( "lead is the requested material" ){
     iel = 5; npr = 1;
-    THEN( "bragg edges vector is correctly output" ){
-      coher( iel, npr, maxb, b, emax );
-      braggVals_0_to_99 = { 2.51410E-3, 2.46417E-3, 3.35213E-3, 1.60052E-3, 
+    auto output = coher( iel, npr, b, emax );
+    int nw   = std::get<0>(output);
+    int maxb = std::get<1>(output);
+
+
+    braggVals_0_to_99 = { 2.51410E-3, 2.46417E-3, 3.35213E-3, 1.60052E-3, 
       6.70427E-3, 2.26348E-3, 9.21837E-3, 3.86061E-3, 1.00564E-2, 1.23208E-3, 
       1.34085E-2, 8.00263E-4, 1.59226E-2, 2.93748E-3, 1.67606E-2, 2.86311E-3, 
       2.01128E-2, 2.61365E-3, 2.26269E-2, 3.28556E-3, 2.68170E-2, 1.13174E-3, 
@@ -355,7 +392,7 @@ TEST_CASE( "coher" ){
       1.03078E-1, 2.30903E-3, 1.07268E-1, 5.65871E-4, 1.09782E-1, 5.59354E-3, 
       1.10620E-1, 2.22892E-3, 1.13972E-1, 2.19590E-3, 1.16486E-1, 3.25811E-3, 
       1.17324E-1, 2.16430E-3, 1.20676E-1, 1.33377E-3, 1.23191E-1, 2.46417E-3 };
-      braggVals_500_to_599 = { 6.26011E-1, 2.34240E-3, 6.26849E-1, 3.51126E-4, 
+    braggVals_500_to_599 = { 6.26011E-1, 2.34240E-3, 6.26849E-1, 3.51126E-4, 
       6.32715E-1, 2.32996E-3, 6.33553E-1, 1.86273E-3, 6.36906E-1, 4.64457E-4, 
       6.39420E-1, 9.27087E-4, 6.46124E-1, 1.26811E-3, 6.46962E-1, 3.45625E-4, 
       6.50314E-1, 1.72366E-3, 6.52828E-1, 1.83503E-3, 6.53666E-1, 6.87696E-4, 
@@ -372,7 +409,7 @@ TEST_CASE( "coher" ){
       7.30765E-1, 8.67211E-4, 7.33279E-1, 1.29858E-3, 7.34117E-1, 6.48921E-4, 
       7.39984E-1, 6.46344E-4, 7.40822E-1, 1.07663E-3, 7.44174E-1, 1.28904E-3, 
       7.46688E-1, 1.39411E-3, 7.50878E-1, 2.13879E-4, 7.53392E-1, 1.92170E-3 };
-      braggVals_2000_to_2099 = { 1.601551E18, 1.264298E-8, 1.601551E18, 
+    braggVals_2000_to_2099 = { 1.601551E18, 1.264298E-8, 1.601551E18, 
       1.264298E-8, 1.601551E18, 1.264298E-8, 1.601551E18, 1.264298E-8, 
       1.601551E18, 1.264298E-8, 1.601551E18, 1.264298E-8, 1.601551E18, 
       1.264298E-8, 1.601551E18, 1.264298E-8, 1.601551E18, 1.264298E-8, 
@@ -394,10 +431,13 @@ TEST_CASE( "coher" ){
       1.257960E-8, 1.617729E18, 1.257960E-8, 1.617729E18, 1.257960E-8, 
       1.617729E18, 1.257960E-8 };
 
+    THEN( "bragg edges vector is correctly output" ){
       checkPartOfVec(b,braggVals_0_to_99);
       checkPartOfVec(b,braggVals_500_to_599,500);
       checkPartOfVec(b,braggVals_2000_to_2099,2000);
-
+      restAreZero(nw,b);
+      REQUIRE( nw   == 59582 );
+      REQUIRE( maxb == 1234  );
 
     } // THEN
   } // GIVEN
@@ -407,9 +447,10 @@ TEST_CASE( "coher" ){
 
   GIVEN( "iron is the requested material" ){
     iel = 6; npr = 1;
-    THEN( "bragg edges vector is correctly output" ){
-      coher( iel, npr, maxb, b, emax );
-      braggVals_0_to_99 = { 5.00050E-3, 8.71143E-2, 1.00010E-2, 3.07995E-2, 
+    auto output = coher( iel, npr, b, emax );
+    int nw   = std::get<0>(output);
+    int maxb = std::get<1>(output);
+    braggVals_0_to_99 = { 5.00050E-3, 8.71143E-2, 1.00010E-2, 3.07995E-2, 
       1.50015E-2, 1.00590E-1, 2.00020E-2, 4.35571E-2, 2.50025E-2, 7.79174E-2, 
       3.00030E-2, 2.37095E-2, 3.50035E-2, 1.31704E-1, 4.00040E-2, 1.53997E-2, 
       4.50045E-2, 8.71143E-2, 5.00050E-2, 5.50959E-2, 5.50055E-2, 5.25319E-2, 
@@ -426,7 +467,7 @@ TEST_CASE( "coher" ){
       2.20022E-1, 2.62659E-2, 2.25022E-1, 1.29862E-1, 2.35023E-1, 1.01655E-1, 
       2.40024E-1, 2.51477E-2, 2.45024E-1, 1.12004E-1, 2.50025E-1, 3.07995E-2, 
       2.55025E-1, 4.87937E-2, 2.60026E-1, 7.24835E-2, 2.65026E-1, 7.17964E-2 };
-      braggVals_500_to_599 = { 1.37013750, 1.84196E-2, 1.37513800, 1.31329E-2, 
+    braggVals_500_to_599 = { 1.37013750, 1.84196E-2, 1.37513800, 1.31329E-2, 
       1.38013850, 1.04873E-2, 1.38513900, 5.23419E-2, 1.39013951, 7.83715E-3, 
       1.39514001, 4.17231E-2, 1.40014051, 5.20607E-3, 1.40514101, 7.79520E-3, 
       1.41014151, 1.03751E-2, 1.41514201, 5.43733E-2, 1.42014252, 5.16928E-3, 
@@ -443,7 +484,7 @@ TEST_CASE( "coher" ){
       1.59516008, 3.41422E-2, 1.60516108, 3.40357E-2, 1.61016159, 1.94187E-2, 
       1.61516209, 1.45415E-2, 1.62016259, 9.67937E-3, 1.62516309, 3.86578E-2, 
       1.63516410, 1.92697E-2, 1.64016460, 7.21512E-3, 1.64516510, 4.80276E-3 };
-      braggVals_2000_to_2099 = { 2.992398E18, 2.312332E-9, 2.992398E18, 
+    braggVals_2000_to_2099 = { 2.992398E18, 2.312332E-9, 2.992398E18, 
       2.312332E-9, 2.992398E18, 2.312332E-9, 2.992398E18, 2.312332E-9, 
       2.992398E18, 2.312332E-9, 2.992398E18, 2.312332E-9, 2.992398E18, 
       2.312332E-9, 2.992398E18, 2.312332E-9, 2.992398E18, 2.312332E-9, 
@@ -465,9 +506,14 @@ TEST_CASE( "coher" ){
       2.312332E-9, 2.992398E18, 2.312332E-9, 2.992398E18, 2.312332E-9, 
       2.992398E18, 2.312332E-9 };
 
+    THEN( "bragg edges vector is correctly output" ){
       checkPartOfVec(b,braggVals_0_to_99);
       checkPartOfVec(b,braggVals_500_to_599,500);
       checkPartOfVec(b,braggVals_2000_to_2099,2000);
+
+      restAreZero(nw,b);
+      REQUIRE( nw   == 59246 );
+      REQUIRE( maxb == 1282  );
 
 
     } // THEN

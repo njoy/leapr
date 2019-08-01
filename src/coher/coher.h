@@ -5,7 +5,7 @@
 #include "coher_util/fccLatticeFactors.h"
 #include "coher_util/end.h"
 
-auto coher( int iel, int npr, int maxb, std::vector<double>& b, 
+auto coher( int iel, int npr, std::vector<double>& b, 
   double& emax ){
 
   /* Compute Bragg energies and associated structure factors
@@ -13,9 +13,9 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
    *
    * inputs :iel tells you the material composition, npr tell you the number of
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
-   * of edges, maxb and emax are also there
+   * of edges, and emax are also there
    */
-  int i,j,k,imax,ifl,nw;
+  int i,j,k,imax,ifl;
   double amne,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
     ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
 
@@ -150,21 +150,20 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   t2=1e4*hbar/(2*amu*mass);
   ulim=econ*emax;
   ifl=1;
-  nw=maxb;
 
 
   if ( iel < 4 ){
     // compute lattice factors for hexagonal lattices
     phi = ulim/(4.0*M_PI*M_PI);
     int i1m = a*sqrt(phi) + 1;
-    imax = hexLatticeFactors( a, tsq, c1, c2, iel, nw, tsqx, b, ifl,  
+    imax = hexLatticeFactors( a, tsq, c1, c2, iel, tsqx, b, ifl,  
     i, wint, t2, ulim, c, i1m );
     k = imax + 1;
   }
 
   else if ( iel < 6 ){
     // compute lattice factors for fcc lattices
-    imax = fccLatticeFactors( iel, b, ifl, nw, t2, c1, wint, ulim, a );
+    imax = fccLatticeFactors( iel, b, ifl, t2, c1, wint, ulim, a );
     k = imax + 1;
   } 
 
@@ -175,11 +174,10 @@ auto coher( int iel, int npr, int maxb, std::vector<double>& b,
   }
 
   // nbe is the number of edges
-  int nbe = end( ifl, b, k, recon, maxb, toler, scon, nw, ulim, imax );
-  maxb = 2*nbe;
- 
-  //nbe = 1;
-  return nbe;
+  int nbe = end( ifl, b, k, recon, toler, scon, ulim, imax );
+  return std::make_tuple(2*k,2*nbe);
+  // first return is the number of nonzero values in b vector
+  // second value is 2*#edges
 
 }
 
