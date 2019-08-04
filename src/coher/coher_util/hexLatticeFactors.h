@@ -38,7 +38,7 @@ int hexLatticeFactors( int lat, double a, double c, double maxTauSq,
 
       for ( auto i3 = 0; i3 < i3m; ++i3 ){
         w1 = (i1 == i2) ? 1 : 2;
-        w3 = (i3 == 0) ? 1 : 2;
+        w3 = (i3 == 0)  ? 1 : 2;
         w2 = 2;
         if (i1 == 0 or  i2 == 0) w2 = 1;
         if (i1 == 0 and i2 == 0) w2 = w2/2;

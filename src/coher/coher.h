@@ -131,6 +131,7 @@ auto coher( int iel, int npr, std::vector<double>& b,
   wint=0;                          // This makes me suspicious
   //ifl=1;                         // as does this
   t2=1e4*hbar/(2*amu*mass);
+  double massScatterer = amu*mass;
   maxTauSq = 1e-4*8*massNeutron/(hbar*hbar)*maxEnergy; 
   // max(tau^2) = 8 * m_n * E_max / hbar^2
   //            =     [kg]   [J]  / [J*s]^2
@@ -142,21 +143,21 @@ auto coher( int iel, int npr, std::vector<double>& b,
     // compute lattice factors for hexagonal lattices
     double volume = sqrt(3)*a*a*c/2; // Eq. 559
     scon /= 4*volume*econ;
-    imax = hexLatticeFactors( a, iel, b, maxTauSq, c);
+    imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
   }
 
   else if ( iel < 6 ){
     // compute lattice factors for fcc lattices
-    c1=3/(a*a);
+    //c1=3/(a*a);
     scon/=(16*a*a*a*econ);
-    imax = fccLatticeFactors( iel, b, t2, c1, wint, maxTauSq, a );
+    imax = fccLatticeFactors( iel, a, maxTauSq, massScatterer, b );
   } 
 
   else { // iel == 6
     // compute lattice factors for bcc lattices
-    c1=2/(a*a);
+    //c1=2/(a*a);
     scon/=(8*a*a*a*econ);
-    imax = bccLatticeFactors( maxTauSq, b, wint, t2, iel, a, c1 );
+    imax = bccLatticeFactors( maxTauSq, b, iel, a, massScatterer );
   }
   k = imax + 1;
 
