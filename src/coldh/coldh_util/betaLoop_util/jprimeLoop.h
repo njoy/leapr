@@ -1,17 +1,16 @@
 #include <iostream>
 #include <vector>
 #include "jprimeLoop_util/sumh.h"
-//#include "../../../discre/discre_util/sint.h"
 
-auto jPrime( double& total, int j, const double& be, const double& x, 
-  const double& sumConst, const double& pj, int jj, const std::vector<double>& bex, 
-  const std::vector<double>& rdbex, const std::vector<double>& sex, 
-  const std::vector<double>& betan, const double& al, const double& wt, 
-  const double& tbart, const double& y, int nbx, bool odd, bool free  ){
+template <typename Float, typename Range>
+auto jPrime( Float& total, int j, const Float& be, const Float& x, 
+  const Float& sumConst, const Float& pj, int jj, const Range& bex, 
+  const Range& rdbex, const Range& sex, const Range& betan, const Float& al, 
+  const Float& wt, const Float& tbart, const Float& y, int nbx, bool odd, bool free  ){
 
   //--sum over the odd or even values of j-prime
   
-  double add, snl = 0, pi = 3.14159265358979, tmp, bn, ex;
+  Float add, snl = 0, pi = 3.14159265358979, tmp, bn, ex;
   int start, end;
 
   // Select start and end values for loop. If we want odd values, 1-->9,

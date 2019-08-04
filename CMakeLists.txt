@@ -2,7 +2,7 @@
 cmake_minimum_required( VERSION 3.2 ) 
 set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Supported configuration types" FORCE )
         
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 if( NOT ROOT_DIRECTORY )
     set( ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     if ( NOT fetched_subprojects )
