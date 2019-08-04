@@ -1,7 +1,7 @@
 
 template <typename Float, typename Range>
 auto hexLatticeFactorsHelper( int& k, const Float& tsq, const Float& tsqx, 
-  Range& b, const Float& f, int& i ){
+  Range& b, const Float& f ){
  
   if (k <= 0 or tsq <= tsqx) {
     k += 1;
@@ -10,7 +10,7 @@ auto hexLatticeFactorsHelper( int& k, const Float& tsq, const Float& tsqx,
     b[2*k-1] = f;
   }
   else {
-    for ( i = 1; i < k+1; ++i ){
+    for ( int i = 1; i < k+1; ++i ){
       if ( tsq >= b[2*i-2] and tsq <= 1.05 * b[2*i-2] ) {
         b[2*i-1] += f;
 	return;

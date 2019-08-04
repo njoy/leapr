@@ -2,6 +2,7 @@
 #include <vector>
 #include "hexLatticeFactors_util/hexLatticeFactorsHelper.h"
 #include "coher/coher_util/formf.h" 
+#include "generalTools/constants.h"
 
 // HEXAGONAL
 double tausq( int i1, int i2, int i3, double c1, double c2 ){
@@ -16,23 +17,23 @@ double tausq( int i1, int i2, int i3, double c1, double c2 ){
 // because (tau/2pi)^2 = (4/3 a*a)(l1*l1 + l2*l2 + l1*l2) + l3*l3/(c*c)
 
 
-int hexLatticeFactors( double a, double c1, double c2, 
-  int lat, double tsqx, std::vector<double>& b,  
-  int i, double wint, double t2, double maxTauSq, double c, int i1m ){
+int hexLatticeFactors( int lat, double a, double c, double maxTauSq, 
+                       std::vector<double>& b ){
   using std::sqrt;
 
-  double tau, f, tsq, tsq2;
+  int i2m, i3m, k = 0;
+  double tau, f, tsq;
   // compute lattice factors for hexagonal lattices
   double phi=maxTauSq/(4*M_PI*M_PI), w, w1, w2, w3;
-  //int i1m_b = a*sqrt(phi);
-  int i2m, i3m, k = 0;
+  double c1 = 4/(3*a*a);
+  double c2 = 1/(c*c);
+  double tsqx = 1e-4*8*massNeutron/(20*hbar*hbar)*ev;
 
-  for ( auto i1 = 0; i1 < i1m; ++i1 ){
+  for ( auto i1 = 0; i1 < a*sqrt(phi); ++i1 ){
     i2m = int((i1+sqrt(3*(a*a*phi-i1*i1)))/2) + 1;
 
     for ( auto i2 = i1; i2 < i2m; ++i2 ){
       double x = phi-c1*(i1*i1+i2*i2-i1*i2);
-
       i3m = (x > 0) ? int(c*sqrt(x)) + 1 : 1;
 
       for ( auto i3 = 0; i3 < i3m; ++i3 ){
@@ -46,16 +47,18 @@ int hexLatticeFactors( double a, double c1, double c2,
 
         if (tsq > 0 and tsq <= maxTauSq) {
           tau = sqrt(tsq);   // w1 w2 w3 are weighting factors
-          f = exp(-tsq*t2*wint)*w1*w2*w3/tau * formf(lat,i1,i2,i3);
-          hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+          //f = exp(-tsq*t2*wint)*w1*w2*w3/tau * formf(lat,i1,i2,i3);
+          f =                     w1*w2*w3/tau * formf(lat,i1,i2,i3);
+          hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
         }
 
         tsq = tausq(i1,-i2,i3,c1,c2);
 
         if (tsq > 0 and tsq <= maxTauSq) {
           tau = sqrt(tsq);   // w1 w2 w3 are weighting factors
-          f = exp(-tsq*t2*wint)*w1*w2*w3/tau * formf(lat,i1,-i2,i3);
-          hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+          //f = exp(-tsq*t2*wint)*w1*w2*w3/tau * formf(lat,i1,-i2,i3);
+          f =                     w1*w2*w3/tau * formf(lat,i1,-i2,i3);
+          hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
         }
 
       } // 3

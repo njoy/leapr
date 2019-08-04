@@ -5,11 +5,11 @@
 
 
 TEST_CASE( "Function to Compute Hexagonal Lattice Factors" ){
-  int k, i;
+  int k;
   double tsq, tsqx, f;
   std::vector<double> b ( 60000, 0.0 );
 
-  k = 0, i = 0; 
+  k = 0; 
 
   GIVEN( "k is not positive or tsq <= tsqx" ){
     tsq = 0.1; tsqx = 9.6;
@@ -21,7 +21,7 @@ TEST_CASE( "Function to Compute Hexagonal Lattice Factors" ){
 
       for ( size_t j = 0; j < 3; ++j ){
         tsq = tsqVec[j]; f = fVec[j]; k = 0;
-        hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+        hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
         REQUIRE( b[0] == Approx(std::get<0>(good[j])).epsilon(1e-6) );
         REQUIRE( b[1] == Approx(std::get<1>(good[j])).epsilon(1e-6) );
         REQUIRE( k    == Approx(std::get<2>(good[j])).epsilon(1e-6) );
@@ -43,7 +43,7 @@ TEST_CASE( "Function to Compute Hexagonal Lattice Factors" ){
         for ( size_t j = 0; j < 3; ++j ){
           tsq = tsqVec[j]; tsqx = tsqxVec[j]; f = fVec[j]; k = kVec[j];
           b[0] = 10; b[1] = 20; b[2] = 30; b[3] = 40;
-          hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+          hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
 
           for ( size_t i = 0; i < 6; ++i ){ 
             REQUIRE( b[i] == Approx(bAnswer[j][i]).epsilon(1e-6) );
@@ -57,7 +57,7 @@ TEST_CASE( "Function to Compute Hexagonal Lattice Factors" ){
       THEN( "we're in the second situation" ){
         tsq = 700, tsqx = 500;
         k = 1; f = 4.5e-2;
-        hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+        hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
 
         REQUIRE( b[0] == Approx(0).epsilon(1e-6) ); 
 	REQUIRE( b[1] == Approx(0).epsilon(1e-6) ); 
@@ -69,7 +69,7 @@ TEST_CASE( "Function to Compute Hexagonal Lattice Factors" ){
         tsq = 63, tsqx = 50;
         k = 1; f = 1.5;
         b[0] = 10; b[1] = 20; b[2] = 30; b[3] = 40; b[4] = 50; b[5] = 60;
-        hexLatticeFactorsHelper( k, tsq, tsqx, b, f, i );
+        hexLatticeFactorsHelper( k, tsq, tsqx, b, f );
 
         REQUIRE( b[0] == Approx(10).epsilon(1e-6) ); 
 	REQUIRE( b[1] == Approx(20).epsilon(1e-6) ); 

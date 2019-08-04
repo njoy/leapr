@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "generalTools/constants.h"
 #include "coher_util/hexLatticeFactors.h"
 #include "coher_util/bccLatticeFactors.h"
 #include "coher_util/fccLatticeFactors.h"
@@ -15,9 +16,9 @@ auto coher( int iel, int npr, std::vector<double>& b,
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
    * of edges, and maxEnergy (emax) are also there
    */
-  int i,j,k,imax;
-  double massNeutron,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
-    maxTauSq,phi,w1,w2,w3,tau,w,f,x,bel,be,bs,
+  int j,k,imax;
+  double econ,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
+    maxTauSq,w1,w2,w3,tau,w,f,x,bel,be,bs,
 
   // Lattice Constants (a) in angstroms
   // To get these values, honestly the wikipedia page isn't a bad palce to
@@ -62,24 +63,18 @@ auto coher( int iel, int npr, std::vector<double>& b,
 
 
   toler = 1.e-6,
-  eps = .05,
-  amassn = 1.008664904,   // mass of neutron in amu
-  amu = 1.6605402e-27,
-  ev = 1.60217733e-19,    
-  hbar = 1.05457266e-34;  // [J*s]
+  eps = .05;
 
   maxEnergy *= ev; // convert this to be in Joules
   // to get rid of uninitialized warnings. don't worry i'll change it soon
-  phi = 0; i = 0; imax = 100;
+  imax = 100;
 
 
 
   // initialize.
-  massNeutron = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
-  //std::cout << massNeutron << std::endl;
   econ = 1e-4*ev*8*massNeutron/(hbar*hbar);
   recon = 1/econ;
-  tsqx = econ/20;
+  //tsqx = econ/20;
 
   // For hexagonal materials the lattice is described by two constants, a and c,
   // which are defined below. Among other things this is used to define the 
@@ -133,22 +128,9 @@ auto coher( int iel, int npr, std::vector<double>& b,
   a *= 1e-8; c *= 1e-8;
 
   scon = xsCoh*16*M_PI*M_PI;
-  if (iel < 4) {
-    double volume = sqrt(3)*a*a*c/2; // Eq. 559
-    scon /= 4*volume*econ;
-  }
-  else if (iel == 4 or iel == 5) {
-    c1=3/(a*a);
-    scon/=(16*a*a*a*econ);
-  }
-  else if (iel == 6) {
-    c1=2/(a*a);
-    scon/=(8*a*a*a*econ);
-  }
   wint=0;                          // This makes me suspicious
   //ifl=1;                         // as does this
   t2=1e4*hbar/(2*amu*mass);
-
   maxTauSq = 1e-4*8*massNeutron/(hbar*hbar)*maxEnergy; 
   // max(tau^2) = 8 * m_n * E_max / hbar^2
   //            =     [kg]   [J]  / [J*s]^2
@@ -156,24 +138,24 @@ auto coher( int iel, int npr, std::vector<double>& b,
   // The reason there is a 1e-4 here is to make sure that the max tau^2 value
   // is in units of inverse cm^2.
 
-
   if ( iel < 4 ){
     // compute lattice factors for hexagonal lattices
-    double phi = maxTauSq/(4.0*M_PI*M_PI);
-    int i1m = a*sqrt(phi);
-    c1=4/(3*a*a);
-    c2=1/(c*c);
-    imax = hexLatticeFactors( a, c1, c2, iel, tsqx, b, i, wint, t2, 
-                              maxTauSq, c, i1m );
+    double volume = sqrt(3)*a*a*c/2; // Eq. 559
+    scon /= 4*volume*econ;
+    imax = hexLatticeFactors( a, iel, b, maxTauSq, c);
   }
 
   else if ( iel < 6 ){
     // compute lattice factors for fcc lattices
+    c1=3/(a*a);
+    scon/=(16*a*a*a*econ);
     imax = fccLatticeFactors( iel, b, t2, c1, wint, maxTauSq, a );
   } 
 
   else { // iel == 6
     // compute lattice factors for bcc lattices
+    c1=2/(a*a);
+    scon/=(8*a*a*a*econ);
     imax = bccLatticeFactors( maxTauSq, b, wint, t2, iel, a, c1 );
   }
   k = imax + 1;
