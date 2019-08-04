@@ -8,17 +8,17 @@
 TEST_CASE( "sortLatticeFactors" ){
   std::vector<double> b(20), correct(20);
   GIVEN( "inputs" ){
-    int ifl = 1, k = 4, imax = 12;
-    double ulim = 9e19;
+    int k = 4, imax = 12;
+    double maxTauSq = 9e19;
     b = {19,12,15,21,41,8,13,14,17,74,21,81,53,37,39,93,42,45,57,3};
     correct = {13,14,15,21,19,12,41,8,9e19,8,21,81,53,37,39,93,42,45,57,3};
-    sortLatticeFactors( ifl, b, k, ulim, imax );
+    sortLatticeFactors( b, k, maxTauSq, imax );
     REQUIRE(ranges::equal(b,correct,equal));
     
     b = {19,12,15,21,41,8,13,14,17,74,21,81,53,37,39,93,42,45,57,3};
     correct = {13,14,15,21,41,8,19,12,9e19,12,21,81,53,37,39,93,42,45,57,3};
     imax = 2; k = 4;
-    sortLatticeFactors( ifl, b, k, ulim, imax );
+    sortLatticeFactors( b, k, maxTauSq, imax );
     REQUIRE(ranges::equal(b,correct,equal));
     
   } // GIVEN
@@ -28,12 +28,12 @@ TEST_CASE( "end" ){
   std::vector<double> b(20), correct(20);
   GIVEN( "inputs" ){
     {
-      int ifl = 1, k = 4, imax = 2, nbe, nw;
-      double toler = 1e-6, recon = 5e-20, scon = 12000, ulim = 9e19;
+      int k = 4, imax = 2, nbe, nw;
+      double toler = 1e-6, recon = 5e-20, scon = 12000, maxTauSq = 9e19;
       b = {19,12,15,21,41,8,13,14,17,74,21,81,53,37,39,93,42,45,57,3};
       correct = {6.5E-19,6.6e5,4.5,1.44e5,41,8,19,12,9e19,12,21,81,53,37,
                      39,93,42,45,57,3};
-      nbe = end( ifl, b, k, recon, toler, scon, ulim, imax );
+      nbe = end( b, k, recon, toler, scon, maxTauSq, imax );
       REQUIRE(ranges::equal(b,correct,equal));
       nw = 2*k;
       REQUIRE( nbe == 2  );
@@ -42,11 +42,11 @@ TEST_CASE( "end" ){
 
 
     {
-      int ifl = 1, k = 6, imax = 12, nbe, nw;
-      double toler = 1e-6, recon = 1e-20, scon = 123000, ulim = 9e19;
+      int k = 6, imax = 12, nbe, nw;
+      double toler = 1e-6, recon = 1e-20, scon = 123000, maxTauSq = 9e19;
       b = {19,12,15,21,41,8,13,14,17,0,0,0,0,0,0,0,0,0,0,0};
       correct = {0,6.765e6,.9,9.84e5,15,21,17,0,19,12,41,8,9E19,8,0,0,0,0,0,0};
-      nbe = end( ifl, b, k, recon, toler, scon, ulim, imax );
+      nbe = end( b, k, recon, toler, scon, maxTauSq, imax );
       REQUIRE(ranges::equal(b,correct,equal));
       nw = 2*k;
       REQUIRE( nbe == 2  );
@@ -54,8 +54,8 @@ TEST_CASE( "end" ){
     }
 
     {
-      int ifl = 1, k = 6, imax = 12, nbe, nw;
-      double toler = 1e-6, recon = 1e-20, scon = 123000, ulim = 9e19;
+      int k = 6, imax = 12, nbe, nw;
+      double toler = 1e-6, recon = 1e-20, scon = 123000, maxTauSq = 9e19;
       std::vector<double> b(200);
       for (size_t i = 0; i < b.size(); ++i){
         if (i%2 == 0){ b[i]   = i*1e-3 + 0.2;}
@@ -86,7 +86,7 @@ TEST_CASE( "end" ){
       1.832E5, 3.84E-1, 1.852E5, 3.86E-1, 1.872E5, 3.88E-1, 1.892E5, 3.9E-1, 
       1.912E5, 3.92E-1, 1.932E5, 3.94E-1, 1.952E5, 3.96E-1, 1.972E5, 3.98E-1, 
       1.992E5};
-      nbe = end( ifl, b, k, recon, toler, scon, ulim, imax );
+      nbe = end( b, k, recon, toler, scon, maxTauSq, imax );
       REQUIRE(ranges::equal(b,correct,equal));
       nw = 2*k;
       REQUIRE( nbe == 2  );

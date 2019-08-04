@@ -6,76 +6,78 @@
 #include "coher_util/end.h"
 
 auto coher( int iel, int npr, std::vector<double>& b, 
-  double& emax ){
+  double& maxEnergy ){
 
   /* Compute Bragg energies and associated structure factors
    * for coherent elastic scattering from graphite, Be, or BeO.
    *
    * inputs :iel tells you the material composition, npr tell you the number of
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
-   * of edges, and emax are also there
+   * of edges, and maxEnergy (emax) are also there
    */
-  int i,j,k,imax,ifl;
-  double amne,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
-    ulim,phi,w1,w2,w3,tsq,tau,w,f,x,bel,be,bs,
+  int i,j,k,imax;
+  double massNeutron,econ,tsqx,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
+    maxTauSq,phi,w1,w2,w3,tau,w,f,x,bel,be,bs,
 
-    // Lattice Constants (a) in angstroms
-    // To get these values, honestly the wikipedia page isn't a bad palce to
-    // start. https://en.wikipedia.org/wiki/Lattice_constant. It has all
-    // these materials except for Be and BeO. Beryllium can be found at
-    // https://www.webelements.com/beryllium/crystal_structure.html, and
-    // BeO can be found in the paper "The lattice parameter and density of 
-    // beryllium oxide determined by precise x-ray methods" by Bellamy,
-    // Baker, and Livel, publlished in Journal of Nuclear Materials in 1962
-    aGraphite = 2.4573,
-    aBe       = 2.2856,
-    aBeO      = 2.695,
-    aAl       = 4.04,
-    aPb       = 4.94,
-    aFe       = 2.86,
+  // Lattice Constants (a) in angstroms
+  // To get these values, honestly the wikipedia page isn't a bad palce to
+  // start. https://en.wikipedia.org/wiki/Lattice_constant. It has all
+  // these materials except for Be and BeO. Beryllium can be found at
+  // https://www.webelements.com/beryllium/crystal_structure.html, and
+  // BeO can be found in the paper "The lattice parameter and density of 
+  // beryllium oxide determined by precise x-ray methods" by Bellamy,
+  // Baker, and Livel, publlished in Journal of Nuclear Materials in 1962
+  aGraphite = 2.4573,
+  aBe       = 2.2856,
+  aBeO      = 2.695,
+  aAl       = 4.04,
+  aPb       = 4.94,
+  aFe       = 2.86,
 
-    // Lattice Constants (c) in angstroms
-    // See sources for lattice constants (a) for whereto get these
-    cGraphite = 6.700,
-    cBe       = 3.5832,
-    cBeO      = 4.39,
+  // Lattice Constants (c) in angstroms
+  // See sources for lattice constants (a) for whereto get these
+  cGraphite = 6.700,
+  cBe       = 3.5832,
+  cBeO      = 4.39,
 
-    // Mass of materials (amu)
-    massGraphite = 12.011,  
-    massBe       = 9.01,   
-    massAvgBeO   = 12.5,     // 1/2 BeO
-    alMass       = 26.7495,  // (a bit off?)
-    massPb       = 207.,        
-    massFe       = 55.454,   // (a bit off?)
+  // Mass of materials (amu)
+  massGraphite = 12.011,  
+  massBe       = 9.01,   
+  massAvgBeO   = 12.5,     // 1/2 BeO
+  alMass       = 26.7495,  // (a bit off?)
+  massPb       = 207.,        
+  massFe       = 55.454,   // (a bit off?)
 
-    // Effective bound coherent scattering cross section (b)
-    // To get this, check out "Neutron Scattering Lengths and Cross Sections"
-    // by Varley F. Sears, published 1992 in Neutron News.
-    // These values are all a little bit off, except for aluminum which is
-    // exactly correct, and lead which is comically wrong
-    xsCohGraphite = 5.50, 
-    xsCohBe       = 7.53,
-    xsCohBeO      = 1.0,
-    xsCohAl       = 1.495,
-    xsCohPb       = 1.,     // Right out. Should be ~10 b
-    xsCohFe       = 12.9,   
+  // Effective bound coherent scattering cross section (b)
+  // To get this, check out "Neutron Scattering Lengths and Cross Sections"
+  // by Varley F. Sears, published 1992 in Neutron News.
+  // These values are all a little bit off, except for aluminum which is
+  // exactly correct, and lead which is comically wrong
+  xsCohGraphite = 5.50, 
+  xsCohBe       = 7.53,
+  xsCohBeO      = 1.0,
+  xsCohAl       = 1.495,
+  xsCohPb       = 1.,     // Right out. Should be ~10 b
+  xsCohFe       = 12.9,   
 
 
-    toler = 1.e-6,
-    eps = .05,
-    amassn = 1.008664904,   // mass of neutron in amu
-    amu = 1.6605402e-27,
-    ev = 1.60217733e-19,
-    hbar = 1.05457266e-34;  // [J*s]
+  toler = 1.e-6,
+  eps = .05,
+  amassn = 1.008664904,   // mass of neutron in amu
+  amu = 1.6605402e-27,
+  ev = 1.60217733e-19,    
+  hbar = 1.05457266e-34;  // [J*s]
 
+  maxEnergy *= ev; // convert this to be in Joules
   // to get rid of uninitialized warnings. don't worry i'll change it soon
-  phi = 0; tsq = 0; i = 0; imax = 100;
+  phi = 0; i = 0; imax = 100;
 
 
 
   // initialize.
-  amne = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
-  econ = 1e-4*ev*8*amne/(hbar*hbar);
+  massNeutron = amassn * amu;  // Mass of neutron in kg ( 1.6749286E-27 )
+  //std::cout << massNeutron << std::endl;
+  econ = 1e-4*ev*8*massNeutron/(hbar*hbar);
   recon = 1/econ;
   tsqx = econ/20;
 
@@ -132,49 +134,52 @@ auto coher( int iel, int npr, std::vector<double>& b,
 
   scon = xsCoh*16*M_PI*M_PI;
   if (iel < 4) {
-     c1=4/(3*a*a);
-     c2=1/(c*c);
-     double volume = sqrt(3)*a*a*c/2;
-     scon /= 4*volume*econ;
-     //scon /= (2*a*a*c*sqrt(3)*econ);
+    double volume = sqrt(3)*a*a*c/2; // Eq. 559
+    scon /= 4*volume*econ;
   }
   else if (iel == 4 or iel == 5) {
-     c1=3/(a*a);
-     scon/=(16*a*a*a*econ);
+    c1=3/(a*a);
+    scon/=(16*a*a*a*econ);
   }
   else if (iel == 6) {
-     c1=2/(a*a);
-     scon/=(8*a*a*a*econ);
+    c1=2/(a*a);
+    scon/=(8*a*a*a*econ);
   }
-  wint=0;
+  wint=0;                          // This makes me suspicious
+  //ifl=1;                         // as does this
   t2=1e4*hbar/(2*amu*mass);
-  ulim=econ*emax;
-  ifl=1;
+
+  maxTauSq = 1e-4*8*massNeutron/(hbar*hbar)*maxEnergy; 
+  // max(tau^2) = 8 * m_n * E_max / hbar^2
+  //            =     [kg]   [J]  / [J*s]^2
+  //            =     [kg] / [kg m^2] = 1/[m^2]
+  // The reason there is a 1e-4 here is to make sure that the max tau^2 value
+  // is in units of inverse cm^2.
 
 
   if ( iel < 4 ){
     // compute lattice factors for hexagonal lattices
-    phi = ulim/(4.0*M_PI*M_PI);
-    int i1m = a*sqrt(phi) + 1;
-    imax = hexLatticeFactors( a, tsq, c1, c2, iel, tsqx, b, ifl,  
-    i, wint, t2, ulim, c, i1m );
-    k = imax + 1;
+    double phi = maxTauSq/(4.0*M_PI*M_PI);
+    int i1m = a*sqrt(phi);
+    c1=4/(3*a*a);
+    c2=1/(c*c);
+    imax = hexLatticeFactors( a, c1, c2, iel, tsqx, b, i, wint, t2, 
+                              maxTauSq, c, i1m );
   }
 
   else if ( iel < 6 ){
     // compute lattice factors for fcc lattices
-    imax = fccLatticeFactors( iel, b, ifl, t2, c1, wint, ulim, a );
-    k = imax + 1;
+    imax = fccLatticeFactors( iel, b, t2, c1, wint, maxTauSq, a );
   } 
 
   else { // iel == 6
     // compute lattice factors for bcc lattices
-    imax = bccLatticeFactors( ulim, b, ifl, wint, t2, iel, a, c1 );
-    k = imax + 1;
+    imax = bccLatticeFactors( maxTauSq, b, wint, t2, iel, a, c1 );
   }
+  k = imax + 1;
 
   // nbe is the number of edges
-  int nbe = end( ifl, b, k, recon, toler, scon, ulim, imax );
+  int nbe = end( b, k, recon, toler, scon, maxTauSq, imax );
   return std::make_tuple(2*k,2*nbe);
   // first return is the number of nonzero values in b vector
   // second value is 2*#edges

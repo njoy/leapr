@@ -23,18 +23,10 @@ TEST_CASE( "tausq" ){
 
 
 
-TEST_CASE( "Hex lattice factors" ){
-  REQUIRE( true );
-} // TEST CASE
-
-
-
-
-
 TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   double a = 1e-9, c1 = 1.5e15, c2 = 2.5e15, tsqx = 9.6e17,
-    t2 = 3.5e-5, ulim = 9.6e19, c = 3.58e-8, tsq = 0, wint = 0;
-  int i = 0, ifl = 1, imax = 5;
+    t2 = 3.5e-5, maxTauSq = 9.6e19, c = 3.58e-8, wint = 0;
+  int i = 0, imax = 5;
   std::vector<double> b (60000, 0.0);
   int i1m;
 
@@ -42,8 +34,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     int lat = 1;
     WHEN( "few iterations are used" ){
       i1m = 1;
-      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                    i, wint, t2, ulim, c, i1m );
+      int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                    i, wint, t2, maxTauSq, c, i1m );
       REQUIRE( imax == 41 );
       std::vector<double> bVals {9.8696047E16, 0.0000000E00, 9.8696047E16, 
         0.0000000E00, 3.9478419E17, 6.3661976E-9, 3.9478419E17, 6.3661976E-9, 
@@ -71,8 +63,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
     WHEN( "many iterations are used" ){
       i1m = 200;
-      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                    i, wint, t2, ulim, c, i1m );
+      int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                    i, wint, t2, maxTauSq, c, i1m );
       REQUIRE( imax == 51 );
       std::vector<double> bVals { 9.869604E16, 0.0000000E0, 9.869604E16, 
         0.0000000E0, 3.947841E17, 6.366197E-9, 3.947841E17, 6.366197E-9, 
@@ -99,12 +91,12 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     } // WHEN
 
     WHEN( "realistic graphite values used" ){
-      a = 2.4573E-8; tsq = 0.0; c1 = 2.2081184e15; c2 = 2.2276676e14;
-      tsqx = 9.65192813E17; ifl = 1; i = 0; wint = 0.; 
-      t2 = 2.64373487E-5; ulim = 9.65192813E19; c = 6.7E-8; 
+      a = 2.4573E-8; c1 = 2.2081184e15; c2 = 2.2276676e14;
+      tsqx = 9.65192813E17; i = 0; wint = 0.; 
+      t2 = 2.64373487E-5; maxTauSq = 9.65192813E19; c = 6.7E-8; 
       i1m = 39;
-      int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                    i, wint, t2, ulim, c, i1m );
+      int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                    i, wint, t2, maxTauSq, c, i1m );
       REQUIRE( imax == 424 );
       std::vector<double> bVals { 8.7944793E15, 0.0000000E00, 8.7944793E15, 
         0.0000000E00, 3.5177917E16, 2.1326762E-8, 3.5177917E16, 2.1326762E-8, 
@@ -144,8 +136,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
       i1m = 1;
       AND_WHEN( "input constants are large" ){
         THEN( "outputs" ){
-          int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                        i, wint, t2, ulim, c, i1m );
+          int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                        i, wint, t2, maxTauSq, c, i1m );
           REQUIRE( imax == 41 );
           std::vector<double> bVals { 98696046700994448., 0, 98696046700994448.,
             0, 3.9478418680E17, 3.749690408E-8, 3.947841868E17, 3.749690408E-8, 
@@ -166,8 +158,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
       AND_WHEN( "input constants are small" ){
         a = 1e-15; c1 = 1.5e5; c2 = 2.5e5; tsqx = 9.6e7;
         THEN( "outputs" ){
-          int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-              i, wint, t2, ulim, c, i1m );
+          int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+              i, wint, t2, maxTauSq, c, i1m );
           REQUIRE( imax == 50 );
           std::vector<double> bVals { 9869604.401089, 0, 9869604.401089, 0,
             39478417.60435,  3.7496903E-3, 39478417.604, 3.7496904E-3,
@@ -186,8 +178,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
       AND_WHEN( "the a input is really large" ){
         a = 1e-5; c1 = 1.5e5; c2 = 2.5e5; tsqx = 9.6e7;
         THEN( "many iterations are necessary" ){
-          int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                        i, wint, t2, ulim, c, i1m );
+          int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                        i, wint, t2, maxTauSq, c, i1m );
           REQUIRE( imax == 672 );
           std::vector<double> bVals { 9869604.401089, 0, 9869604.401089, 0,
             39478417.60435,  3.7496903E-3, 39478417.604, 3.7496904E-3,
@@ -209,8 +201,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     WHEN( "few iterations" ){
       i1m = 2;
       THEN( "outputs" ){
-        int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-                                      i, wint, t2, ulim, c, i1m );
+        int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+                                      i, wint, t2, maxTauSq, c, i1m );
         REQUIRE( imax == 51 );
         std::vector<double> bVals {9.86960467e16,0.00000000000,9.86960467e16,
         0.00000000000, 3.94784186e17, 3.74969040e-8, 3.94784186e17, 3.74969040e-8,
@@ -243,8 +235,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     i1m = 100;
     WHEN( "few iterations" ){
       THEN( "outputs" ){
-        int imax = hexLatticeFactors( a, tsq, c1, c2, lat, tsqx, b, ifl, 
-            i, wint, t2, ulim, c, i1m );
+        int imax = hexLatticeFactors( a, c1, c2, lat, tsqx, b, 
+            i, wint, t2, maxTauSq, c, i1m );
         REQUIRE( imax == 51 );
         std::vector<double> bVals {9.86960467e16,0.00000000000,9.86960467e16,
         0.00000000000, 3.94784186e17, 3.74969040e-8, 3.94784186e17, 3.74969040e-8,

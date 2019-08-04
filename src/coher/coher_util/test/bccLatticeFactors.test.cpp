@@ -2,15 +2,7 @@
 #include <iostream>
 #include "catch.hpp"
 #include "coher/coher_util/bccLatticeFactors.h"
-
-void equal( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( std::abs(b-a) < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
+#include "generalTools/testing.h"
 
 TEST_CASE( "taubcc" ){
   GIVEN( "inputs" ){
@@ -32,13 +24,12 @@ TEST_CASE( "taubcc" ){
 
 
 TEST_CASE( "Function to Compute BCC Lattice Factors" ){
-  double ulim = 9.6e19, wint = 0, t2 = 5.7e-6, 
-    a = 2.8e-8, c1 = 1.5e15;
-  int ifl = 1, lat = 6;
+  double maxTauSq = 9.6e19, wint = 0, t2 = 5.7e-6, a = 2.8e-8, c1 = 1.5e15;
+  int lat = 6;
   std::vector<double> b (60000, 0.0);
   GIVEN( "iron is the desired material" ){
     THEN( "output is correct" ){
-      int imax = bccLatticeFactors( ulim, b, ifl, wint, t2, lat, a, c1 );
+      int imax = bccLatticeFactors( maxTauSq, b, wint, t2, lat, a, c1 );
       REQUIRE( imax == 29789 );
 
       std::vector<double> b_0_39 { 7.994379E19, 4.473707E-10, 7.644995E19, 
@@ -51,10 +42,6 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         6.467228E-10, 3.665571E19, 6.606769E-10, 3.517527E19, 6.744368E-10, 
         3.381326E19, 6.878859E-10 };
 
-      for ( auto i = 0; i < 40; ++i ){ 
-        REQUIRE( b[i] == Approx(b_0_39[i]).epsilon(1e-6) );
-      }
-
       std::vector<double> b_1000_1039 { 2.877976E19, 7.456179E-10, 
         2.670714E19, 7.740093E-10, 2.475296E19, 8.039820E-10, 2.291722E19, 
         8.355626E-10, 2.119991E19, 8.687463E-10, 1.960103E19, 9.034840E-10, 
@@ -64,10 +51,6 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         1.202025E-9, 1.054073E19, 1.232039E-9, 1.012621E19, 1.257003E-9, 
         9.830126E18, 1.275793E-9, 9.652473E18, 1.287480E-9, 9.593255E18, 
         1.291448E-9, 9.652473E18, 1.287480E-9 }; 
-
-      for ( auto i = 0; i < 40; ++i ){
-        REQUIRE( b[1000+i] == Approx(b_1000_1039[i]).epsilon(1e-6) );
-      }
 
       std::vector<double> b_51000_51039 { 1.166587E19, 1.171119E-9, 
         1.290944E19, 1.113284E-9, 1.427144E19, 1.058829E-9, 1.575188E19, 
@@ -79,9 +62,9 @@ TEST_CASE( "Function to Compute BCC Lattice Factors" ){
         7.402203E18, 1.470210E-9, 6.928462E18, 1.519642E-9, 6.573156E18, 
         1.560173E-9, 6.336286E18, 1.589068E-9 };
 
-      for ( auto i = 0; i < 40; ++i ){ 
-        REQUIRE( b[51000+i] == Approx(b_51000_51039[i]).epsilon(1e-6) );
-      }
+      checkPartOfVec(b,b_0_39,0);
+      checkPartOfVec(b,b_1000_1039,1000);
+      checkPartOfVec(b,b_51000_51039,51000);
 
     } // THEN
   } // GIVEN

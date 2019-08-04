@@ -1,10 +1,8 @@
-
 #ifndef COHER_COHERUTIL_FORMF
 #define COHER_COHERUTIL_FORMF
 
 #include <iostream>
 #include <vector>
-
 
 inline double formf( int lat, int l1, int l2, int l3 ){
   /* Overview
@@ -41,17 +39,18 @@ inline double formf( int lat, int l1, int l2, int l3 ){
    */
 
   using std::pow;
+  using std::sin;
+  using std::cos;
 
-   int i;
-   double e1,e2,e3, c1=7.54e0, c2=4.24e0, c3=11.31e0, pi=3.14159265358979;
+  int i;
 
-   //  graphite -- HEX
-   if (lat == 1) {
-     // This follows Eq. 564. F is set to either value depending on if l3 is 
-     // even or odd. Note that the returned value differs from Eq. 564 however
-     // in that either possibility is divided by 4.
-     return l3%2 == 0 ? (6+10*cos(2*pi*(l1-l2)/3))/4 :  // even
-	                pow(sin(pi*(l1-l2)/3),2);  // odd
+  //  graphite -- HEX
+  if (lat == 1) {
+    // This follows Eq. 564. F is set to either value depending on if l3 is 
+    // even or odd. Note that the returned value differs from Eq. 564 however
+    // in that either possibility is divided by 4.
+    return l3%2 == 0 ? (6+10*cos(2*M_PI*(l1-l2)/3))/4 :  // even
+                         pow(sin(  M_PI*(l1-l2)/3),2);   // odd
    }
 
    //  beryllium -- HCP
@@ -59,14 +58,15 @@ inline double formf( int lat, int l1, int l2, int l3 ){
      // This follows Eq. 565, since this is a hexagonal close packed (hcp) 
      // structure. Notice that the returned value differs from Eq. 565 in that 
      // it is divided by 2.
-     return 1+cos(2*pi*(2*l1+4*l2+3*l3)/6);
+     return 1+cos(2*M_PI*(2*l1+4*l2+3*l3)/6);
    }
 
    //  beryllium oxide -- 2 Interpenetrating HCP
    else if (lat == 3) {
-     // This follows Eq. 566 in spirit, with the slight caveat that the 
+     // This follows Eq. 566 in sM_PIrit, with the slight caveat that the 
      // c1 = r1^2, c2 = r2^2, so c1 + c2 = r^2 and c3 = 2*r1*r2
-     return (1+cos(2*pi*(2*l1+4*l2+3*l3)/6))*(c1+c2+c3*cos(3*pi*l3/4));
+     double c1 = 7.54, c2 = 4.24, c3 = 11.31;
+     return (1+cos(2*M_PI*(2*l1+4*l2+3*l3)/6))*(c1+c2+c3*cos(3*M_PI*l3/4));
    }
 
    // fcc lattices
@@ -74,17 +74,25 @@ inline double formf( int lat, int l1, int l2, int l3 ){
      // This doesn't follow a particular equation, as it is left as an exercise
      // to the reader. But it seems as if it's stating that there are 4 atoms
      // per unit cell at (0,0,0) (1,0,0) (1,1,0) (1,0,1)
-     e1 = 2 * pi * l1;
-     e2 = 2 * pi * (l1+l2);
-     e3 = 2 * pi * (l1+l3);
+     return 16;
+     /*
+     double e1 = 2 * M_PI * l1;
+     double e2 = 2 * M_PI * (l1+l2);
+     double e3 = 2 * M_PI * (l1+l3);
      return pow( cos(e1) + cos(e2) + cos(e3) + 1, 2 ) + 
-            pow( sin(e1) + sin(e2) + sin(e3),     2 );
+            pow( sin(e1) + sin(e2) + sin(e3),     2 );   
+     */
+     // Note that this whole "sin(2*pi*int)" thing might seem a bit yikes to you.
+     // Dont worry, it does for me too. 
    }
 
    // bcc lattices
    else {
-      return pow( cos( 2*pi*(l1+l2+l3) ) + 1,2 ) +
-	     pow( sin( 2*pi*(l1+l2+l3) ),    2 );
+     return 4;
+     /*
+      return pow( cos( 2*M_PI*(l1+l2+l3) ) + 1,2 ) +
+             pow( sin( 2*M_PI*(l1+l2+l3) ),    2 );
+     */
    }
 }
 

@@ -7,23 +7,23 @@ double taufcc( int l1, int l2, int l3, double c1 ){
 	 4 * M_PI * M_PI;
 }
 
-auto fccLatticeFactors( int lat, std::vector<double>& b, int ifl,
-  double t2, double c1, double wint, double ulim, double a ){
+auto fccLatticeFactors( int lat, std::vector<double>& b, 
+  double t2, double c1, double wint, double maxTauSq, double a ){
     
   // compute lattice factors for fcc lattices
-  double phi = ulim / (4*M_PI*M_PI), tau, tsq;
+  double phi = maxTauSq / (4*M_PI*M_PI), tau, tsq;
   int i1m = a*sqrt(phi), k = 0;
   i1m = 15;
   for ( int i1 = -i1m; i1 <= i1m; ++i1 ){
     for ( int i2 = -i1m; i2 <= i1m; ++i2 ){ 
       for ( int i3 = -i1m; i3 <= i1m; ++i3 ){
         tsq = taufcc( i1, i2, i3, c1 );
-        if (tsq > 0 and tsq <= ulim) {
+        if (tsq > 0 and tsq <= maxTauSq) {
           k += 1;
           if ((2*k) > int(b.size())) std::cout << "storage exceeded" << std::endl; 
           tau = sqrt(tsq);
-          b[ifl+2*k-2-1] = tsq;
-          b[ifl+2*k-1-1] = ( exp(-tsq*t2*wint) / tau ) * formf(lat,i1,i2,i3);
+          b[2*k-2] = tsq;
+          b[2*k-1] = ( exp(-tsq*t2*wint) / tau ) * formf(lat,i1,i2,i3);
         }
       }
     }

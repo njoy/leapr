@@ -1,11 +1,7 @@
-
 #include "catch.hpp"
 #include "coher/coher_util/fccLatticeFactors.h"
-
-void equal2Fcc( std::tuple<int,int,int,double>& a, double& b ){
-  REQUIRE( b == Approx(taufcc(std::get<0>(a),std::get<1>(a),
-                              std::get<2>(a),std::get<3>(a) ) ).epsilon(1e-6) );
-}
+#include <range/v3/all.hpp>
+#include "generalTools/testing.h"
 
 TEST_CASE( "taufcc" ){
   GIVEN( "inputs" ){
@@ -17,11 +13,11 @@ TEST_CASE( "taufcc" ){
 	210.551561, 210.551561, 105.275780, 289.50839, 2105.51561, 
 	13896.403, 936.9544  };
     
-    
     for ( size_t i = 0; i < output.size(); ++i ){
-      equal2Fcc( inputs[i], output[i] );
+      REQUIRE( taufcc( std::get<0>(inputs[i]), std::get<1>(inputs[i]),
+                       std::get<2>(inputs[i]), std::get<3>(inputs[i])) ==
+               Approx(output[i]).epsilon(1e-6) );
     }
-    
   } // GIVEN
 } // TEST CASE
 
@@ -31,11 +27,11 @@ TEST_CASE( "taufcc" ){
 TEST_CASE( "Function to Compute FCC Lattice Factors" ){
   GIVEN( "aluminum is the requested material" ){
     THEN( "outputs" ){
-      int lat = 4, ifl = 1;
-      double t2 = 3.5e-5, c1 = 1.5e15, wint = 0, ulim = 9.6e19, a = 2e-8;
+      int lat = 4;
+      double t2 = 3.5e-5, c1 = 1.5e15, wint = 0, maxTauSq = 9.6e19, a = 2e-8;
       std::vector<double> b (60000, 0.0);
 
-      int imax = fccLatticeFactors( lat, b, ifl, t2, c1, wint, ulim, a );
+      int imax = fccLatticeFactors( lat, b, t2, c1, wint, maxTauSq, a );
       REQUIRE( imax ==  29789 );
 
       std::vector<double> b_0_39 { 4.885454E19, 2.289114E-9, 4.713723E19, 
@@ -85,11 +81,11 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
 
   GIVEN( "lead is the requested material" ){
     THEN( "outputs" ){
-      int lat = 5, ifl = 1;
-      double t2 = 3.5e-5, c1 = 5.5e16, wint = 0, ulim = 9.6e19, a = 2e-8;
+      int lat = 5;
+      double t2 = 3.5e-5, c1 = 5.5e16, wint = 0, maxTauSq = 9.6e19, a = 2e-8;
       std::vector<double> b (60000, 0.0);
 
-      int imax = fccLatticeFactors( lat, b, ifl, t2, c1, wint, ulim, a );
+      int imax = fccLatticeFactors( lat, b, t2, c1, wint, maxTauSq, a );
       REQUIRE( imax ==  1637 );
 
       std::vector<double> b_0_39 { 9.553776E19, 1.636938E-9, 9.481399E19, 
@@ -105,20 +101,6 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
       for ( auto i = 0; i < 40; ++i ){ 
         REQUIRE( b_0_39[i] == Approx(b[i]).epsilon(1e-6) );
       }
-      /*
-
-      std::vector<double> b_1000_1039 { };
-    
-      for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[1000+i], b_1000_1039[i] ); 
-      }
-
-      std::vector<double> b_51000_51039 { };
-
-      for ( auto i = 0; i < 40; ++i ){ 
-        equal2( b[51000+i], b_51000_51039[i] ); 
-      }
-      */
 
     } // THEN
   } // GIVEN
