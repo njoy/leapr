@@ -22,7 +22,6 @@ Float interpolate( RangeZip&& xyRange, Float& x ){
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values;
   if ( x < xVec[0] or x > xVec[len-1] ){ return 0.0; }
-
   int index = search(xVec, x, int(len*0.5), 0, len);
   Float b = yVec[index];
   Float m = (yVec[index+1]-yVec[index])/(xVec[index+1]-xVec[index]);

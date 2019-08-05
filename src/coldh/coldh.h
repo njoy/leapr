@@ -1,17 +1,15 @@
 #include <iostream>
 #include <vector>
-#include "coldh_util/terpk.h"
+#include "generalTools/interpolate.h"
 #include "coldh_util/betaLoop.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <range/v3/all.hpp>
 
-
-auto coldh( int itemp, const double& temp, double tev, int ncold,
-    double trans_weight, double tbeta, const std::vector<double>& tempf,
-    double scaling, 
-    const std::vector<double>& alpha, const std::vector<double>& beta, 
-    double& dka, std::vector<double>& ska, int lat, bool free, 
-    Eigen::Tensor<double,3>& sym_sab,
-    Eigen::Tensor<double,3>& sym_sab_2 ){
+template <typename Float, typename Range>
+auto coldh( int itemp, const Float& temp, Float tev, int ncold,
+  Float trans_weight, Float tbeta, const Range& tempf, Float scaling, 
+  const Range& alpha, const Range& beta, Float& dka, Range& ska, int lat, 
+  bool free, Eigen::Tensor<Float,3>& sym_sab,Eigen::Tensor<Float,3>& sym_sab_2){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -21,7 +19,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
    * symmetric in beta
    */
 
-  double angst  = 1.0e-10,
+  Float angst  = 1.0e-10,
          eV     = 1.60217733e-19,  // elementary charge [J] 
          mass_H = 1.6726231E-27,   // Mass of H in grams
          mass_D = 3.343568E-27,    // Mass of D in grams
@@ -30,7 +28,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
   int nbx, maxbb = 2 * beta.size() + 1;
 
 
-  std::vector<double> exb(maxbb, 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
+  Range exb(maxbb, 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
     rdbex(maxbb, 0.0);
  
 
@@ -59,19 +57,22 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
   tbart = tempf[itemp] / temp; // Effective temperature
 
 
+  auto xVals = ranges::view::iota(0,int(ska.size()))
+             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);});
+  auto xyZipped = ranges::view::zip(xVals,ska);
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
-    double al = alpha[a]*scaling;
-    double waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
-    double y = bp * waven;
+    Float al = alpha[a]*scaling;
+    Float waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
+    Float y = bp * waven;
 
     // We interpolate S(kappa) to get the corresponding value that we will use
     // for the Vineyard approximation. 
     // We will replace a_c^2 with S(kappa)*a_c^2, as is stated on pg. 663.
-    double sk = terpk( ska, dka, waven );
+    Float sk = interpolate( xyZipped, waven );
 
     // spin-correlation factors
-    double evenSumConst, oddSumConst;
+    Float evenSumConst, oddSumConst;
     // -----------------------------------------------------------------------
     // This is meant to recreate the table on pg. 662 of the manual, where we
     // get the A (even) and B (odd) terms for the summation in Eq. 567.
@@ -126,7 +127,7 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     
    if (a == 0){ 
       for ( int b = 0; b < int(beta.size()); ++b ){
-          double be=beta[b];
+          Float be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
           exb[b] = exp(-be);
           betan[b] = be;
@@ -136,11 +137,8 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
       for ( size_t i = 0; i < bex.size(); ++i ){
         bex[i] = std::get<1>(output)[i];
       }
-
-
-
     }
-    std::vector<double> input ( beta.size(), 0.0 ); 
+    Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab(a,b,itemp);
     }
@@ -149,7 +147,6 @@ auto coldh( int itemp, const double& temp, double tev, int ncold,
     betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSumConst, 
       oddSumConst, itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
 
-   
   }
  
 }   

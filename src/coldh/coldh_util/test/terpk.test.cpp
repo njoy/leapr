@@ -1,5 +1,7 @@
 #include "catch.hpp"
 #include "coldh/coldh_util/terpk.h"
+#include "generalTools/interpolate.h"
+#include <range/v3/all.hpp>
 
 
 TEST_CASE( "terpk" ){
@@ -14,6 +16,9 @@ TEST_CASE( "terpk" ){
       THEN( "interpolation is correctly performed" ){
         REQUIRE( terpk( ska, delta, be1 ) == Approx(5.5).epsilon(1e-6) );
         REQUIRE( terpk( ska, delta, be2 ) == Approx(1.155).epsilon(1e-6) );
+        //auto xVector = ranges::view::iota(0,int(ska.size())) | ranges::view::transform([delta](auto x){return x*delta;});;
+        //std::cout << xVector << std::endl;
+        //std::cout << interpolate( ranges::view::zip(xVector,ska), be1 ) << std::endl;
       } // THEN
     } // WHEN
 
