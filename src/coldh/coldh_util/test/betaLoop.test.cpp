@@ -24,7 +24,6 @@ TEST_CASE( "beta loop helper function" ){
   std::vector<double> sym_sab_2 (25,0.0);
 
 
-  /*
   GIVEN( "molecular translations are assumed to not be free" ){
     free = false;
 
@@ -105,8 +104,8 @@ TEST_CASE( "beta loop helper function" ){
       REQUIRE( ranges::equal(sym_sab_2,goodSymSab2,equal) );
     } // THEN
   } // GIVEN
-  */
 
+    /*
 
   GIVEN( "test" ){
     bool free = false;
@@ -124,6 +123,7 @@ TEST_CASE( "beta loop helper function" ){
       //REQUIRE( ranges::equal(sym_sab_2,goodSymSab2,equal) );
     } // THEN
   } // GIVEN
+  */
 
 
 } // TEST CASE

@@ -6,10 +6,9 @@
 #include <range/v3/all.hpp>
 
 template <typename Float, typename Range>
-auto coldh( int itemp, const Float& temp, Float tev, int ncold,
-  Float trans_weight, Float tbeta, const Range& tempf, Float scaling, 
-  const Range& alpha, const Range& beta, Float& dka, Range& ska, int lat, 
-  bool free, Range& sym_sab_1, Range& sym_sab_2){
+auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta, 
+  Float scaling, const Range& alpha, const Range& beta, Float& dka, Range& ska, 
+  int lat,  bool free, Range& sym_sab_1, Range& sym_sab_2, const Float& tbart ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -24,13 +23,11 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
          mass_H = 1.6726231E-27,   // Mass of H in grams
          mass_D = 3.343568E-27,    // Mass of D in grams
          hbar   = 1.05457266e-34,  // planck constant [J*s]
-         de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, tbart, therm = 0.0253;
+         de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, therm = 0.0253;
   int nbx, maxbb = 2 * beta.size() + 1;
-
 
   Range exb(maxbb, 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
     rdbex(maxbb, 0.0);
- 
 
   // Either Ortho Deuterium or Para Deuterium 
   if ( ncold > 2 ){
@@ -54,9 +51,6 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
 
   x = de / tev;
   wt = trans_weight + tbeta;   // Translational weight
-  tbart = tempf[itemp] / temp; // Effective temperature
-  //std::cout << wt << "    " << trans_weight << "    " << tbeta << std::endl;
-
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
              | ranges::view::transform([delta=dka](auto x){return Float(delta*x);});
@@ -70,7 +64,7 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
     // We interpolate S(kappa) to get the corresponding value that we will use
     // for the Vineyard approximation. 
     // We will replace a_c^2 with S(kappa)*a_c^2, as is stated on pg. 663.
-    Float sk = interpolate( xyZipped, waven );
+    Float sk = interpolate( xyZipped, waven, 1.0 );
 
     // spin-correlation factors
     Float evenSumConst, oddSumConst;
@@ -144,20 +138,19 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
     }
     auto sex = exts( input, exb, betan );
 
+    //std::cout << (bex|ranges::view::all) << std::endl;
     //std::cout << (betan|ranges::view::all) << std::endl;
     //std::cout << (rdbex|ranges::view::all) << std::endl;
-    //std::cout << (bex|ranges::view::all) << std::endl;
     //std::cout << (sex|ranges::view::all) << std::endl;
     //std::cout << al << "   " << wt << "   " << tbart << "   " << x << "   " << y << std::endl;
+    //std::cout << evenSumConst<< "   " << oddSumConst << "   " << nbx << "   " << a << "   " << ncold << std::endl;
 //    break;
     betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
       oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
     //std::cout << sym_sab_1[0] << "   " <<  a << std::endl;
-
     //break;
 
   }
   return;
-  std::cout << itemp << std::endl;
  
 }   

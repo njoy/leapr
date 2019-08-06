@@ -17,11 +17,11 @@ auto search( Range xRange, Float x, int i, int left, int right ){
 
 
 template <typename RangeZip, typename Float>
-Float interpolate( RangeZip&& xyRange, Float& x ){
+Float interpolate( RangeZip&& xyRange, Float& x, Float&& defaultVal=0.0 ){
   int len = xyRange.size();
   auto xVec = xyRange | ranges::view::keys;
   auto yVec = xyRange | ranges::view::values;
-  if ( x < xVec[0] or x > xVec[len-1] ){ return 0.0; }
+  if ( x < xVec[0] or x > xVec[len-1] ){ return defaultVal; }
   int index = search(xVec, x, int(len*0.5), 0, len);
   Float b = yVec[index];
   Float m = (yVec[index+1]-yVec[index])/(xVec[index+1]-xVec[index]);

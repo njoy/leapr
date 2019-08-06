@@ -4,14 +4,15 @@
 #include "discre/discre_util/bfill.h"
 #include "discre/discre_util/exts.h"
 #include "coldh/coldh.h"
-#include "generalTools/testing.h"
+//#include "generalTools/testing.h"
 #include <range/v3/all.hpp>
 
+auto equal = [](auto x, auto y, double tol = 5e-5){return x == Approx(y).epsilon(tol);};
 
 TEST_CASE( "coldh" ){
   std::vector<double> tempf, alpha, beta, ska, goodSymSab1(25), goodSymSab2(25);
   double temp, tev, tbeta, trans_weight, scaling, dka;
-  int itemp, ncold, lat;
+  int ncold, lat;
   bool free;
 
   tempf = {193093.99765}; 
@@ -21,7 +22,8 @@ TEST_CASE( "coldh" ){
 
   temp = 200.0, tev = 1.723477e-2, tbeta = 0.7, trans_weight = 0.3, scaling = 1.4679720;
 
-  itemp = 0, ncold = 1, lat = 1;
+  double tbart = 193093.99765/200.0; // tempf[t]/temp
+  ncold = 1, lat = 1;
 
   std::vector<double> sym_sab_1 = ranges::view::iota(1,26);
   std::vector<double> sym_sab_2 (25,0.0);
@@ -33,33 +35,18 @@ TEST_CASE( "coldh" ){
     WHEN( "step size is moderate" ){
       dka = 0.2;
 
-      goodSymSab1 = { 1.7113874, 3.3919859, 5.0714083, 6.7348452, 8.4218850, 
-        7.6149802, 8.8664244, 10.115396, 11.306691, 12.613772, 13.088162, 
-        14.251586, 15.410194, 16.408195, 17.759561, 16.788298, 17.794618, 
-        18.792099, 19.406237, 20.903111, 17.308492, 18.066429, 18.809744, 
-        18.777265, 20.590641 };
-      goodSymSab2 = { 1.7113874, 2.9207714, 3.7584709, 3.7033133, 2.5437978,
-        7.6149802, 7.6447762, 7.5170871, 6.2697456, 3.8402507, 13.088162, 
-        12.312841, 11.499779, 9.2237236, 5.4789194, 16.788298, 15.438241, 
-        14.144248, 11.221266, 6.6252107, 17.308492, 15.813446, 14.417152, 
-        11.526322, 6.8941688 };
+      goodSymSab1 = { 1.3128915, 2.6161065, 3.8944838, 5.1822009, 6.3797508, 7.3943677, 8.7074119, 9.9341884, 11.201248, 12.274077, 12.335954, 13.711573, 14.854413, 16.114445, 16.974988, 14.953697, 16.501654, 17.519930, 18.815264, 19.354112, 14.017557, 15.863013, 16.723230, 18.110806, 18.289056 };
+      goodSymSab2 = { 1.31289152, 2.07962959, 2.48837118, 2.12146162, 1.11262081, 7.39436776, 6.93041470, 6.35831320, 4.62133510, 2.15201904, 12.3359546, 10.8621090, 9.49207633, 6.69496596, 3.01823563, 14.9536974, 12.9365335, 11.1521639, 7.92191386, 3.53787026, 14.0175573, 12.1748247, 10.5633416, 7.82626375, 3.50696577 };
 
       THEN( "output scattering law vectors are correct" ){
-        for ( size_t i = 0; i < 5; ++i ){
-          //std::cout << sym_sab_1[i] << std::endl;
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          //REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(5e-5) );
+          //REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(5e-5) );
         }
-        std::cout << std::endl;
-
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
-        for ( size_t i = 0; i < 5; ++i ){
-          //std::cout << sym_sab_1[i] << std::endl;
-        }
-        //std::cout << sym_sab_1[0] << std::endl;
-        //std::cout << sym_sab_1[1] << std::endl;
-        //std::cout << sym_sab_1[2] << std::endl;
-//        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
-//        REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
+        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
+        REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
       } // THEN
     } // WHEN
 
@@ -81,7 +68,7 @@ TEST_CASE( "coldh" ){
         11.526322, 6.8941688 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
  //       REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -91,7 +78,7 @@ TEST_CASE( "coldh" ){
         ska = { 0.1, 0.2, 0.3, 0.5, 0.8, 1.13 };
 
         THEN( "output scattering law vectors are correct" ){
-          coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+          coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
             alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
   //          REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
    //         REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -115,7 +102,7 @@ TEST_CASE( "coldh" ){
         19.39806, 45.48792, 41.22266, 37.28116, 29.20083, 16.998312 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
  //       REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -142,7 +129,7 @@ TEST_CASE( "coldh" ){
         4.847128E-2, 4.104705E-2, 2.843402E-2 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
   //      REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
    //     REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -167,7 +154,7 @@ TEST_CASE( "coldh" ){
         1.866112E-2 };
     
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
  //       REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -192,7 +179,7 @@ TEST_CASE( "coldh" ){
       
     
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+        coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
  //       REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
@@ -216,7 +203,7 @@ TEST_CASE( "coldh" ){
         8.676988E-2, 6.013533E-2 };
       
     
-      coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
+      coldh( temp, tev, ncold, trans_weight, tbeta, tempf, scaling,
           alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
  //       REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
