@@ -55,6 +55,7 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
   x = de / tev;
   wt = trans_weight + tbeta;   // Translational weight
   tbart = tempf[itemp] / temp; // Effective temperature
+  //std::cout << wt << "    " << trans_weight << "    " << tbeta << std::endl;
 
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
@@ -136,18 +137,24 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
       for ( size_t i = 0; i < bex.size(); ++i ){
         bex[i] = std::get<1>(output)[i];
       }
-      //std::cout << bex[0] << "  " << bex[1] << "   " << bex[5] << std::endl;
     }
     Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab_1[b+a*betan.size()];
     }
     auto sex = exts( input, exb, betan );
-    //std::cout << (betan|ranges::view::all) << std::endl;
 
+    //std::cout << (betan|ranges::view::all) << std::endl;
+    //std::cout << (rdbex|ranges::view::all) << std::endl;
+    //std::cout << (bex|ranges::view::all) << std::endl;
+    //std::cout << (sex|ranges::view::all) << std::endl;
+    //std::cout << al << "   " << wt << "   " << tbart << "   " << x << "   " << y << std::endl;
+//    break;
     betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
       oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
+    //std::cout << sym_sab_1[0] << "   " <<  a << std::endl;
 
+    //break;
 
   }
   return;

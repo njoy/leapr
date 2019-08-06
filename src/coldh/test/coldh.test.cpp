@@ -45,14 +45,19 @@ TEST_CASE( "coldh" ){
         11.526322, 6.8941688 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
-        //std::cout << sym_sab_1[0] << std::endl;
-        //for ( size_t i = 0; i < goodSymSab1.size(); ++i ){
         for ( size_t i = 0; i < 5; ++i ){
-          //std::cout << (goodSymSab1[i] - sym_sab_1[i])/goodSymSab1[i] << std::endl;
           //std::cout << sym_sab_1[i] << std::endl;
         }
+        std::cout << std::endl;
+
+        coldh( itemp, temp, tev, ncold, trans_weight, tbeta, tempf, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2 );
+        for ( size_t i = 0; i < 5; ++i ){
+          //std::cout << sym_sab_1[i] << std::endl;
+        }
+        //std::cout << sym_sab_1[0] << std::endl;
+        //std::cout << sym_sab_1[1] << std::endl;
+        //std::cout << sym_sab_1[2] << std::endl;
 //        REQUIRE(ranges::equal(sym_sab_1,goodSymSab1,equal));
 //        REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
       } // THEN
