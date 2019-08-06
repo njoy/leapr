@@ -9,7 +9,7 @@ template <typename Float, typename Range>
 auto coldh( int itemp, const Float& temp, Float tev, int ncold,
   Float trans_weight, Float tbeta, const Range& tempf, Float scaling, 
   const Range& alpha, const Range& beta, Float& dka, Range& ska, int lat, 
-  bool free, Eigen::Tensor<Float,3>& sym_sab,Eigen::Tensor<Float,3>& sym_sab_2){
+  bool free, Range& sym_sab_1, Range& sym_sab_2){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -124,7 +124,6 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
     oddSumConst  /= scatLenI * scatLenI + scatLenC * scatLenC;
 
     // prepare arrays for sint
-    
    if (a == 0){ 
       for ( int b = 0; b < int(beta.size()); ++b ){
           Float be=beta[b];
@@ -132,21 +131,26 @@ auto coldh( int itemp, const Float& temp, Float tev, int ncold,
           exb[b] = exp(-be);
           betan[b] = be;
       } 
-      auto output = bfill(bex,rdbex,betan);
+      auto output = bfill(maxbb,rdbex,betan);
       nbx = std::get<0>(output);
       for ( size_t i = 0; i < bex.size(); ++i ){
         bex[i] = std::get<1>(output)[i];
       }
+      //std::cout << bex[0] << "  " << bex[1] << "   " << bex[5] << std::endl;
     }
     Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab(a,b,itemp);
+      input[b] = sym_sab_1[b+a*betan.size()];
     }
     auto sex = exts( input, exb, betan );
+    //std::cout << (betan|ranges::view::all) << std::endl;
 
-    betaLoop( betan, rdbex, bex, sex, al, wt, tbart, x, y, evenSumConst, 
-      oddSumConst, itemp, nbx, a, ncold, free, sym_sab, sym_sab_2 );
+    betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
+      oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
+
 
   }
+  return;
+  std::cout << itemp << std::endl;
  
 }   

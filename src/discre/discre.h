@@ -42,7 +42,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
    */
 
   Range rdbex( maxbb );
-  auto output = bfill_new(maxbb, rdbex, betan);
+  auto output = bfill(maxbb, rdbex, betan);
   int nbx = std::get<0>(output);
   Range bex = std::get<1>(output);
 

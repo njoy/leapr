@@ -1,7 +1,5 @@
 
-add_executable( coldh.coldh_util.test
-                terpk.test.cpp
-                betaLoop.test.cpp )
+add_executable( coldh.coldh_util.test betaLoop.test.cpp )
 target_compile_options( coldh.coldh_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

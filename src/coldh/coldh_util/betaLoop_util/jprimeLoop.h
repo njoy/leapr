@@ -3,14 +3,14 @@
 #include "jprimeLoop_util/sumh.h"
 
 template <typename Float, typename Range>
-auto jPrime( Float& total, int j, const Float& be, const Float& x, 
-  const Float& sumConst, const Float& pj, int jj, const Range& bex, 
-  const Range& rdbex, const Range& sex, const Range& betan, const Float& al, 
-  const Float& wt, const Float& tbart, const Float& y, int nbx, bool odd, bool free  ){
+auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst, 
+  const Float& pj, const Range& bex, const Range& rdbex, const Range& sex, 
+  const Range& betan, const Float& alphaWgt, const Float& tbart, const Float& y, 
+  int nbx, bool odd, bool free  ){
 
   //--sum over the odd or even values of j-prime
   
-  Float add, snl = 0, pi = 3.14159265358979, tmp, bn, ex;
+  Float add, snl = 0, tmp, bn, ex;
   int start, end;
 
   // Select start and end values for loop. If we want odd values, 1-->9,
@@ -31,25 +31,20 @@ auto jPrime( Float& total, int j, const Float& be, const Float& x,
     // which includes the j_l^2(y) term that is the spherical Bessel function
     // of order l
 
-    if (jj == 0 and tmp >= 1.0e-6) { total += tmp; }
-
     if ( free ) {
       // If molecular translations are assumed to be free, we calculate the 
-      // S_f(a,b) by using Eq. 569-570. This will be subsequently used in 
-      // Eq. 567-568.
-      ex = -std::pow(al*wt-std::abs(bn),2)/(4*al*wt);
+      // S_f(a,b) by using Eq. 569-570. This'll be used in Eq. 567-568.
+      ex = -std::pow(alphaWgt-std::abs(bn),2)/(4*alphaWgt);
       if ( bn > 0.0 ){ ex -= bn; }
-      add = exp(ex)/sqrt(4*pi*al*wt);
+      add = exp(ex)/sqrt(4*M_PI*alphaWgt);
     }
     else{
       // If the molecular translations are not assumed to be free, we have to
       // calculate S_f(a,b) ourselves, which brings us to use the sint
       // interpolation function we used for discre. 
-      add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,al,wt,tbart,nbx);
+      add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,alphaWgt,1.0,tbart,nbx);
     }
-
     snl += tmp * add;
-
   }
   return snl;
 

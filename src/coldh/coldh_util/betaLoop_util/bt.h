@@ -1,8 +1,7 @@
-#include <iostream>
-#include <vector>
 #include <range/v3/all.hpp>
 
-auto bt ( int j, const double& x ){
+template <typename Float>
+auto bt ( int j, const Float& x ){
   /* Inputs
    * ------------------------------------------------------------------------
    * j  : This calculates the jth statistical weight factor
