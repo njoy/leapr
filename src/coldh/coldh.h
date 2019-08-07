@@ -5,6 +5,7 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
+auto equal2 = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
 template <typename Float, typename Range>
 auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta, 
   Float scaling, const Range& alpha, const Range& beta, Float& dka, Range& ska, 
@@ -126,29 +127,44 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
           exb[b] = exp(-be);
           betan[b] = be;
       } 
+    std::cout << (betan|ranges::view::all) << std::endl;
+    //std::cout << lat << "   " << therm << "    " << tev << std::endl;
       auto output = bfill(maxbb,rdbex,betan);
       nbx = std::get<0>(output);
       for ( size_t i = 0; i < bex.size(); ++i ){
         bex[i] = std::get<1>(output)[i];
       }
     }
+    //std::cout << (betan|ranges::view::all) << std::endl;
     Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab_1[b+a*betan.size()];
     }
     auto sex = exts( input, exb, betan );
 
-    //std::cout << (bex|ranges::view::all) << std::endl;
-    //std::cout << (betan|ranges::view::all) << std::endl;
-    //std::cout << (rdbex|ranges::view::all) << std::endl;
-    //std::cout << (sex|ranges::view::all) << std::endl;
-    //std::cout << al << "   " << wt << "   " << tbart << "   " << x << "   " << y << std::endl;
-    //std::cout << evenSumConst<< "   " << oddSumConst << "   " << nbx << "   " << a << "   " << ncold << std::endl;
-//    break;
+    std::vector<double> goodbetan  {1.4679720E-01, 2.2019581E-01, 4.4039161E-01, 8.8078323E-01, 1.7615665E+00},
+      goodrdbex {1.1353531E+00, 2.2707063E+00, 4.5414125E+00, 1.3624238E+01, 3.4060594E+00, 1.3624238E+01, 4.5414125E+00, 2.2707063E+00, 1.1353531E+00, 0.0000000E+00, 0.0000000E+00},
+      goodbex {-1.7615665E+00,-8.8078323E-01,-4.4039161E-01,-2.2019581E-01,-1.4679720E-01, 1.4679720E-01, 2.2019581E-01, 4.4039161E-01, 8.8078323E-01, 1.7615665E+00, 0.0000000E+00},
+      goodsex { 5.0000000E+00, 4.0000000E+00, 3.0000000E+00, 2.0000000E+00, 1.0000000E+00, 1.0000000E+00, 1.6047233E+00, 1.9313528E+00, 1.6578327E+00, 8.5887787E-01, 0.0000000E+00};
+    //if (not ranges::equal(goodbetan,betan,equal2)){ std::cout << "BAD betan" << std::endl; }
+    //if (not ranges::equal(goodrdbex,rdbex,equal2)){ std::cout << "BAD rdbex" << std::endl; }
+    //if (not ranges::equal(goodbex,bex,equal2)){ std::cout << "BAD bex" << std::endl; }
+    //if (not ranges::equal(goodsex,sex,equal2)){ std::cout << "BAD sex" << std::endl; }
+    //std::cout << ranges::equal(goodbetan,betan,equal2) << std::endl;
+  //  std::cout << (betan|ranges::view::all) << std::endl;
+  //  std::cout << (rdbex|ranges::view::all) << std::endl;
+  //  std::cout << (bex|ranges::view::all) << std::endl;
+    std::cout << (sex|ranges::view::all) << std::endl;
+  //  std::cout << al << "   " << wt << "   " << tbart << "   " << x << "   " << y << std::endl;
+  //  std::cout << evenSumConst<< "   " << oddSumConst << "   " << nbx << "   " << a << "   " << ncold << std::endl;
     betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
       oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
-    //std::cout << sym_sab_1[0] << "   " <<  a << std::endl;
+    std::cout << sym_sab_1[0] << "   " << sym_sab_1[1] << "   " << sym_sab_1[2] << std::endl;
+    std::cout << sym_sab_1[3] << "   " << sym_sab_1[4] << "   " << sym_sab_1[5] << std::endl;
+    //std::cout << sym_sab_1[1] << std::endl;
+    //std::cout << sym_sab_1[2] << std::endl;
     //break;
+    break;
 
   }
   return;

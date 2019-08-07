@@ -81,4 +81,129 @@ where :math:`\hbar\boldsymbol{\kappa}` is the change in neutron momentum, :math:
 where :math:`\langle...\rangle` denotes the average (CITE sturm1993dynamic). These definitions assume that the spins of adjacent nuclei are randomly oriented. For reactor purposes this is a very good approximation, since the spins of neighboring nuclei are typically uncorrelated except at very low temperatures.
 
 
+Incoherent Scattering (Elastic and Inelastic)
+==============================================
+LEAPR describes incoherent scattering by starting with a continuous (solid-type) distribution and considering additional feautres (e.g. the existence of very sharp peaks or diffusive behavior) if necessary. The continuous calculation *must always be performed*, and additional features that can also be considered include the existence of discrete oscillators (Einstein oscillators), translative/diffusive behavior, cold Hydrogen/Deuterium, and intermolecular interference. 
+
+The continuous calculation will now be discussed, followed by each of the aforementioned features.
+
+
+Continuous Treatment 
+-------------------------
+
+To calculate the incoherent contribution to the scattering law, the following equations must be solved,
+
+.. math::
+    S_{n.sym}(\alpha, \beta)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t
+
+.. math::
+    \gamma(t)=\alpha\lambda_s -\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'
+
+.. math:: 
+  P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)}
+
+
+where :math:`\rho(\beta)` is the phonon distribution (also called a vibrational frequency or phonon density of states, DOS ). The DOS is provided by the user on an equally-spaced :math:`\beta` grid, where :math:`\beta` corresponds to unitless energy transfer.
+
+The definition of :math:`\gamma(t)` also makes use of the *Debye-Waller factor* :math:`\lambda_s`, which is defined as 
+
+.. math:: 
+  \lambda_s=\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~d\beta'
+
+For a more involved discussion on the phonon frequency spectrum and the Debye-Waller factor, please see [SECTION ON STUFF].
+
+
+To facilitate calculation of the scattering law, the latter :math:`\gamma` exponential is expanded as a Taylor series,
+
+.. math:: 
+  \begin{align*}
+    \mathrm{e}^{-\gamma(t)} &= \mathrm{e}^{-\alpha\lambda_s} \mathrm{exp}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]\\
+                            &= \mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty\frac{1}{n!}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n
+   \end{align*}
+
+
+This brings the scattering law to
+
+.. math::
+   \begin{align*} 
+    S_{n.sym}(\alpha, \beta)&=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t\\
+    &=\frac{1}{2 \pi} \int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left(\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty\frac{1}{n!}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n\right) d t\\
+    &=\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty \frac{\alpha^n}{n!} \frac{1}{2\pi}\int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left[\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^nd t.
+   \end{align*} 
+
+By defining
+
+.. math::
+    W_n(\beta)=\frac{1}{2\pi}\int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left[\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n
+
+the scattering law is simplified to 
+
+.. math:: 
+    S(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
+
+where we see that 
+
+.. math::
+  \begin{align*}
+    W_0(\beta) &= \frac{1}{2\pi}\int_{-\infty}^\infty\mathrm{e}^{i\beta t}~dt = \delta(\beta)\\
+    W_1(\beta) &= \int_{-\infty}^\infty P(\beta')\mathrm{e}^{-\beta'/2}\left[\frac{1}{2\pi}\int_{-\infty}^\infty\mathrm{e}^{i(\beta-\beta')t}~dt\right]~d\beta' = P(\beta)~\mathrm{e}^{-\beta/2}
+  \end{align*}
+
+and it can even be shown that generation of successive :math:`W_n(\beta)` terms are obtained by convolving the previous term with the first term,
+
+.. math::
+  \begin{align*}
+    W_n(\beta) &= \int_{-\infty}^\infty W_1(\beta')~W_{n-1}(\beta-\beta')~d\beta'.
+  \end{align*}
+
+
+These are the equations that LEAPR solves for while representing the scattering system with a continuous, solid-type frequency distribution. 
+
+
+To summarize, the equations solved by leapr are 
+.. math:: 
+    S(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
+.. math:: 
+    W_1(\beta) = \int_{-\infty}^\infty P(\beta')\mathrm{e}^{-\beta'/2}\left[\frac{1}{2\pi}\int_{-\infty}^\infty\mathrm{e}^{i(\beta-\beta')t}~dt\right]~d\beta' = P(\beta)~\mathrm{e}^{-\beta/2}
+.. math::
+    W_n(\beta) = \int_{-\infty}^\infty W_1(\beta')~W_{n-1}(\beta-\beta')~d\beta'.
+
+where the most important user-provided input is the phonon frequency distribution :math:`\rho(\beta)`. 
+
+
+
+Discrete Oscillators
+-------------------------
+
+Translational and Diffusive Behavior
+--------------------------------------
+
+Free Gas
+-----------
+
+Cold Hydrogen and Deuterium
+---------------------------
+
+
+
+Coherent Scattering (Elastic Only)
+==============================================
+
+Hexagonal Lattices
+-------------------------
+
+Hexagonal Close Packed
+-------------------------
+
+Face Centered Cubic
+--------------------------------------
+
+Body Centered Cubic
+---------------------
+
+
+
+
+
+
 
