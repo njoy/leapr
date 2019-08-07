@@ -15,6 +15,7 @@ Welcome to cats's documentation!
    usersGuide
    codingDetails 
    examples
+   misc
 
 
 
