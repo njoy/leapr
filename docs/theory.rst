@@ -100,6 +100,66 @@ To calculate the incoherent contribution to the scattering law, the following eq
     \gamma(t)=\alpha\lambda_s -\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'
 
 .. math:: 
+  P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)},
+
+where :math:`\rho(\beta)` is the phonon frequency distribution, and :math:`\lambda_s` is the Debye-Waller coefficient. By Taylor expanding :math:`\gamma(t)`, the above can be simplified to 
+
+.. math:: 
+    S(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
+.. math:: 
+    W_1(\beta) = P(\beta)~\mathrm{e}^{-\beta/2}
+.. math::
+    W_n(\beta) = \int_{-\infty}^\infty W_1(\beta')~W_{n-1}(\beta-\beta')~d\beta'.
+
+
+.. note::
+  **What approximations are made?**
+  In describing the scattering behavior with a continuous, solid-type spectrum, a number of approximations are made, which are summarized below.
+
+  +-------------------+---------------------------------------------------+-----------------------------------+
+  | Approximation     | Description                                       | Comments                          |
+  |                   |                                                   |                                   |
+  +===================+===================================================+===================================+
+  | | Gaussian        | | In the definition of :math:`S(\alpha,\beta)`,   | | See Parks [REFERENCE] for more  | 
+  | | approximation   | | :math:`\mathrm{exp}\Big(-\alpha\gamma(t)        | | discussion. Not typically       |
+  |                   |   +\alpha^2\gamma_2(t)+\dots\Big)`                | | considered a significant source |
+  |                   | | is approximated as :math:`\mathrm{exp}          | | of error                        | 
+  |                   |   \big(-\alpha\gamma(t)\big)`.                    |                                   | 
+  +-------------------+---------------------------------------------------+-----------------------------------+
+  | | Incoherent      | | While this is not an approximation made         | | This is typically valid practice|
+  | | approximation   | | in the above equations, it is important         | | for materials with either low   |
+  |                   | | to note that LEAPR uses the incoherent          | | coherent cross sections or      |
+  |                   | | equations to desribe both coherent and          | | randomly-oriented crystallites. |
+  |                   | | incoherent scattering.                          |                                   |
+  +-------------------+---------------------------------------------------+-----------------------------------+
+  | | Validity of     | | The continuous calculation requires an          | | Before using a published phonon |
+  | | phonon DOS      | | an input phonon spectrum, which are             | | spectrum, ensure that it        |
+  |                   | | specific to material composition,               | | corresponds to the correct      |
+  |                   | | crystalline structure, and temperature.         | | material, structure, and temp.  |
+  +-------------------+---------------------------------------------------+-----------------------------------+
+
+  ================================= =============
+   Approximation                    Description 
+  ================================= =============
+  Gaussian approximation             We 
+  Representation of coherence        False
+  Validity of phonon distribution    A word of caution is to be said regarding phonon spectra use. 
+  ================================= =============
+
+
+
+Continuous Treatment 
+-------------------------
+
+To calculate the incoherent contribution to the scattering law, the following equations must be solved,
+
+.. math::
+    S_{n.sym}(\alpha, \beta)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\alpha\gamma(t)} d t
+
+.. math::
+    \gamma(t)=\lambda_s -\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'
+
+.. math:: 
   P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)}
 
 
@@ -117,7 +177,7 @@ To facilitate calculation of the scattering law, the latter :math:`\gamma` expon
 
 .. math:: 
   \begin{align*}
-    \mathrm{e}^{-\gamma(t)} &= \mathrm{e}^{-\alpha\lambda_s} \mathrm{exp}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]\\
+    \mathrm{e}^{-\alpha\gamma(t)} &= \mathrm{e}^{-\alpha\lambda_s} \mathrm{exp}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]\\
                             &= \mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty\frac{1}{n!}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n
    \end{align*}
 
@@ -126,7 +186,7 @@ This brings the scattering law to
 
 .. math::
    \begin{align*} 
-    S_{n.sym}(\alpha, \beta)&=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t\\
+    S_{n.sym}(\alpha, \beta)&=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\alpha\gamma(t)} d t\\
     &=\frac{1}{2 \pi} \int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left(\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty\frac{1}{n!}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n\right) d t\\
     &=\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty \frac{\alpha^n}{n!} \frac{1}{2\pi}\int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left[\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^nd t.
    \end{align*} 
@@ -161,10 +221,11 @@ These are the equations that LEAPR solves for while representing the scattering 
 
 
 To summarize, the equations solved by leapr are 
+
 .. math:: 
     S(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
 .. math:: 
-    W_1(\beta) = \int_{-\infty}^\infty P(\beta')\mathrm{e}^{-\beta'/2}\left[\frac{1}{2\pi}\int_{-\infty}^\infty\mathrm{e}^{i(\beta-\beta')t}~dt\right]~d\beta' = P(\beta)~\mathrm{e}^{-\beta/2}
+    W_1(\beta) = P(\beta)~\mathrm{e}^{-\beta/2}
 .. math::
     W_n(\beta) = \int_{-\infty}^\infty W_1(\beta')~W_{n-1}(\beta-\beta')~d\beta'.
 
@@ -172,8 +233,31 @@ where the most important user-provided input is the phonon frequency distributio
 
 
 
+
 Discrete Oscillators
 -------------------------
+Note that :math:`P(\beta)` is an even function, meaning that the definition of the Debye-Waller coefficient can be restated using hyperbolic cosine, 
+
+.. math:: 
+ \begin{align*}
+  \lambda_s&=\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~d\beta'\\
+           &=\int_{0}^\infty P(\beta')~2\cosh(\beta'/2)~d\beta.
+ \end{align*}
+
+Furthermore, when 
+
+
+.. math::
+   \begin{align*} 
+   S_{n.sym}(\alpha, \beta)
+    &=\frac{1}{2 \pi} \int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left(\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty\frac{1}{n!}\left[\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^n\right) d t\\
+    &=\mathrm{e}^{-\alpha\lambda_s} \sum_{n=0}^\infty \frac{\alpha^n}{n!} \frac{1}{2\pi}\int_{-\infty}^{\infty}  \mathrm{e}^{i \beta t} \left[\int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\right]^nd t.
+   \end{align*} 
+..
+   &=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t\\
+
+
+
 
 Translational and Diffusive Behavior
 --------------------------------------
