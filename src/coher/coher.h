@@ -17,7 +17,15 @@ auto coher( int iel, int npr, std::vector<double>& b,
    * of edges, and maxEnergy (emax) are also there
    */
   int j,k,imax;
-  double econ,a=0,c=0,mass,xsCoh,c1,c2,recon,scon,wint,t2,
+  //                        Graphite Be      BeO    Al       Pb    Fe  
+  //std::vector<double> aVals {2.4573, 2.2856, 2.695, 4.04,    4.94, 2.86};
+  //std::vector<double> cVals {6.700,  3.5832, 4.39};
+  //std::vector<double> mass  {12.011, 9.01,   12.5,  26.7495, 207., 55.454};
+  //std::vector<double> cohXs {5.50,   7.53,   1.0,   1.495,   1.,   12.9};
+
+
+
+  double econ,a=0,c=0,mass,xsCoh,c1,c2,scon,wint,t2,
     maxTauSq,w1,w2,w3,tau,w,f,x,bel,be,bs,
 
   // Lattice Constants (a) in angstroms
@@ -73,7 +81,7 @@ auto coher( int iel, int npr, std::vector<double>& b,
 
   // initialize.
   econ = 1e-4*ev*8*massNeutron/(hbar*hbar);
-  recon = 1/econ;
+  // recon = 1/econ;
   //tsqx = econ/20;
 
   // For hexagonal materials the lattice is described by two constants, a and c,
@@ -139,30 +147,26 @@ auto coher( int iel, int npr, std::vector<double>& b,
   // The reason there is a 1e-4 here is to make sure that the max tau^2 value
   // is in units of inverse cm^2.
 
-  if ( iel < 4 ){
-    // compute lattice factors for hexagonal lattices
+  if ( iel < 4 ){ // compute lattice factors for hexagonal lattices
     double volume = sqrt(3)*a*a*c/2; // Eq. 559
     scon /= 4*volume*econ;
     imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
   }
 
-  else if ( iel < 6 ){
-    // compute lattice factors for fcc lattices
-    //c1=3/(a*a);
+  else if ( iel < 6 ){ // compute lattice factors for fcc lattices
     scon/=(16*a*a*a*econ);
     imax = fccLatticeFactors( iel, a, maxTauSq, massScatterer, b );
   } 
 
   else { // iel == 6
     // compute lattice factors for bcc lattices
-    //c1=2/(a*a);
     scon/=(8*a*a*a*econ);
     imax = bccLatticeFactors( maxTauSq, b, iel, a, massScatterer );
   }
   k = imax + 1;
 
   // nbe is the number of edges
-  int nbe = end( b, k, recon, toler, scon, maxTauSq, imax );
+  int nbe = end( b, k, econ, toler, scon, maxTauSq, imax );
   return std::make_tuple(2*k,2*nbe);
   // first return is the number of nonzero values in b vector
   // second value is 2*#edges

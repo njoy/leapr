@@ -18,7 +18,7 @@ auto sortLatticeFactors(std::vector<double>& b, int& k, double maxTauSq, int ima
 }
 
 
-auto end( std::vector<double>& b, int& k, double recon, 
+auto end( std::vector<double>& b, int& k, double econ, 
   double toler, double scon, double maxTauSq, int imax ){
 
   sortLatticeFactors( b, k, maxTauSq, imax );
@@ -26,6 +26,7 @@ auto end( std::vector<double>& b, int& k, double recon,
   // convert to practical units and combine duplicate bragg edges.
   double bel = -1, be, bs;
   int nbe, j = 0;
+  double recon = 1.0/econ;
 
   for ( auto i = 1; i <= k; ++i ){
     be = b[2*i-2] * recon;

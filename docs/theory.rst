@@ -88,12 +88,15 @@ To calculate the incoherent contribution to the scattering law, the following eq
 
 .. math::
     S^{(s)}_{n.sym}(\alpha, \beta)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t
+   :label: continuousSAB
 
 .. math::
     \gamma(t)=\alpha\lambda_s -\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'
+   :label: gammaDefinition
 
 .. math:: 
   P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)},
+  :label: PDefinition
 
 where :math:`S^{(s)}_{n.sym}` is the non-symmetric scattering law for solids, :math:`\rho(\beta)` is the phonon frequency distribution, and :math:`\lambda_s` is the Debye-Waller coefficient. For a introductory discussion on the phonon frequency spectrum and the Debye-Waller coefficient, please see [SECTION]. 
 
@@ -112,39 +115,40 @@ where
   **What approximations are made?**
   In describing the scattering behavior with a continuous, solid-type spectrum, a number of approximations are made, which are summarized below.
 
-  +------------------+-------------------------------------------------+-----------------------------------+
-  | Approximation    | Description                                     | Comments                          |
-  |                  |                                                 |                                   |
-  +==================+=================================================+===================================+
-  | | Gaussian       | | In the definition of :math:`S(\alpha,\beta)`, | | See Parks [REFERENCE] for more  | 
-  | | approximation  | | :math:`\mathrm{exp}\Big(-\alpha\gamma(t)      | | discussion. Not typically       |
-  |                  |   +\alpha^2\gamma_2(t)+\dots\Big)`              | | considered a significant source |
-  |                  | | is approximated as :math:`\mathrm{exp}        | | of error                        | 
-  |                  |   \big(-\alpha\gamma(t)\big)`.                  |                                   | 
-  +------------------+-------------------------------------------------+-----------------------------------+
-  | | Incoherent     | | While this is not an approximation made       | | This is typically valid practice|
-  | | approximation  | | in the above equations, it is important       | | for materials with either low   |
-  |                  | | to note that LEAPR uses the incoherent        | | coherent cross sections or      |
-  |                  | | equations to desribe both coherent and        | | randomly-oriented crystallites. |
-  |                  | | incoherent scattering.                        |                                   |
-  +------------------+-------------------------------------------------+-----------------------------------+
-  | | Validity of    | | The continuous calculation requires an        | | Before using a published phonon |
-  | | phonon DOS     | | an input phonon spectrum, which are           | | spectrum, ensure that it        |
-  |                  | | specific to material composition,             | | corresponds to the correct      |
-  |                  | | crystalline structure, and temperature.       | | material, structure, and temp.  |
-  +------------------+-------------------------------------------------+-----------------------------------+
-  | | Randomly       | | In order to separate scattering into          | | Spin-correlation is important   |
-  | | oriented spins | | coherent and incoherent components, we        | | while considering materials like|
-  |                  | | spin-correlation effects are ignored.         | | liquid hydrogen/deuterium, which|
-  |                  | |                                               | | are considered separately later.|
-  +------------------+-------------------------------------------------+-----------------------------------+
-  | | Edge effects   | | Edge effects are not considered, meaning      | | Ignoring edge effects is a      |
-  | | are ignored    | | that the scatterer is considered to be        | | standard approximations that is | 
-  |                  | | infinitely large.                             | | is not typically considered to  |
-  |                  |                                                 | | cause significant error.        |
-  +------------------+-------------------------------------------------+-----------------------------------+
+  +------------------+--------------------------------------------+-----------------------------------+
+  | Approximation    | Description                                | Comments                          |
+  |                  |                                            |                                   |
+  +==================+============================================+===================================+
+  | | Gaussian       | | In the definition of                     | | See Parks [REFERENCE] for more  | 
+  | | approximation  |   :math:`S(\alpha,\beta)`,                 | | discussion. Not typically       |
+  |                  | | :math:`\mathrm{exp}\Big(-\alpha\gamma(t) | | considered a significant source |
+  |                  |   +\alpha^2\gamma_2(t)+\dots\Big)`         | | of error                        |
+  |                  | | is approximated as :math:`\mathrm{exp}   |                                   | 
+  |                  |   \big(-\alpha\gamma(t)\big)`.             |                                   | 
+  +------------------+--------------------------------------------+-----------------------------------+
+  | | Incoherent     | | While this is not an approximation made  | | This is typically valid practice|
+  | | approximation  | | in the above equations, it is important  | | for materials with either low   |
+  |                  | | to note that LEAPR uses the incoherent   | | coherent cross sections or      |
+  |                  | | equations to desribe both coherent and   | | randomly-oriented crystallites. |
+  |                  | | incoherent scattering.                   |                                   |
+  +------------------+--------------------------------------------+-----------------------------------+
+  | | Validity of    | | The continuous calculation requires an   | | Before using a published phonon |
+  | | phonon DOS     | | an input phonon spectrum, which are      | | spectrum, ensure that it        |
+  |                  | | specific to material composition,        | | corresponds to the correct      |
+  |                  | | crystalline structure, and temperature.  | | material, structure, and temp.  |
+  +------------------+--------------------------------------------+-----------------------------------+
+  | | Randomly       | | In order to separate scattering into     | | Spin-correlation is important   |
+  | | oriented spins | | coherent and incoherent components,      | | while considering materials like|
+  |                  | | spin-correlation effects are ignored.    | | liquid hydrogen/deuterium, which|
+  |                  | |                                          | | are considered separately later.|
+  +------------------+--------------------------------------------+-----------------------------------+
+  | | Edge effects   | | Edge effects are not considered, meaning | | Ignoring edge effects is a      |
+  | | are ignored    | | that the scatterer is considered to be   | | standard approximations that is | 
+  |                  | | infinitely large.                        | | is not typically considered to  |
+  |                  |                                            | | cause significant error.        |
+  +------------------+--------------------------------------------+-----------------------------------+
 
-.. note::
+.. seealso::
   **Want more information?**
 
   +-------------------+---------------------------------------------+-----------------------------------+
@@ -208,7 +212,7 @@ To process the scattering law for a material described by discrete oscillators, 
   |                   | | all vibrate with the same frequency.       |                                   | 
   +-------------------+----------------------------------------------+-----------------------------------+
 
-.. note::
+.. seealso::
   **Want more information?**
 
   +-----------------------+---------------------------------------------+-----------------------------------+
@@ -278,14 +282,59 @@ Coherent scattering is when periodic constructive growth or destructive cancella
 
 
 The differential coherent scattering cross section is
+
 .. math:: 
   \sigma_{coh}(E,\mu)=\frac{\sigma_c}{E}\sum_{E_i<E}f_i~\mathrm{e}^{-4W~E_i}~\delta(\mu-\mu_i)
 
 where :math:`W` is the effevtive Debye-Waller coefficient, :math:`\sigma_c` is the bound coherent scattering cross section. :math:`E_i` are Bragg Edges, defined in term
 
 
+  +-------------------+-----------------------+------------------------------------+
+  | Symbol            | Name                  |  Other Definition                  |
+  +===================+=======================+====================================+
+  | :math:`W`         | | Effective Debye     |                                    |
+  |                   | | Waller coefficient  |                                    |
+  +-------------------+-----------------------+------------------------------------+
+  | :math:`\sigma_c`  | | Bound coherent      |                                    |
+  |                   | | scattering cross    |                                    |
+  |                   | | section             |                                    |
+  +-------------------+-----------------------+------------------------------------+
+  | :math:`E_i`       | | Bragg Edges         | :math:`E_i=                        |
+  |                   |                       | \frac{\hbar^2\tau_i^2}{8m}`        |
+  +-------------------+-----------------------+------------------------------------+
+  | :math:`\tau_i`    | | Length of the       |                                    |
+  |                   | | :math:`i^{th}`      |                                    |
+  |                   |   reciprocal          |                                    |
+  |                   | | lattice vector      |                                    |
+  +-------------------+-----------------------+------------------------------------+
+  | :math:`f_i`       |                       | :math:`f_i=                        |
+  |                   |                       | \frac{2\pi\hbar^2}{4mNV}           |
+  |                   |                       | \sum_{\tau_i}\Big|F(\tau)          |
+  |                   |                       | \Big|^2`                           |
+  +-------------------+-----------------------+------------------------------------+
+  | | :math:`\Big|    | | Crystallographic    | :math:`|F(\tau)|^2                 |
+  |   F(\tau)\Big|^2` | | structure           | = \left|\sum_{j=1}^N               |
+  |                   | | factor              | \mathrm{e}^{2\pi\phi_ji}\right|^2` |
+  +-------------------+-----------------------+------------------------------------+
+
+
+
 .. math::
-  E_i = \frac{\hbar^2\tau_i^2}{8m}
+  \sigma_l=\frac{\sigma_{coh}\lambda^2}{2\sqrt{3}a^2c}\sum_{\tau}^{\tau\leq4\pi/\lambda}\frac{m_{\tau}}{\tau}\mathrm{exp}\left[-\frac{\hbar^2\tau^2}{2M}\int_0^{\omega_{\max}}\frac{\rho(\omega)}{\omega}\mathrm{coth}\left(\frac{\omega}{k_bT}\right)\right]\frac{\left|F\right|^2}{N}
+
+.. math::
+  \tau^2=4\pi\left[\frac{4}{3}a^2\big(l_1^2+l_2^2+l_1l_2\big)+\frac{l_3^2}{c}\right] 
+
+where :math:`N` is the number of atoms per unit cell, :math:`\sigma_{coh}` is the coherent scattering cross section, :math:`m_\tau` is the number of :math:`l_1,l_2,l_3` combinations that give a reciprocal lattice vector :math:`\tau` of equal magnitude.of equal magnitude.
+:math:`|F|^2` is the form factor of the crystal, and :math:`a,c` are the magnitudes of the lattice vectors. 
+
+
+
+For hexagonal lattices,
+
+.. math::
+  \left(\frac{\tau}{2\pi}\right)^2 = \left(\frac{4}{3}~a^2\right)~\Big(l_1^2+l_2^2+l_1l_2\Big) + \frac{l_3^2}{c^2}
+  
 
 :math:`f_i` are defined in terms of the crystallographic structure factors :math:`F`.
 
@@ -313,6 +362,105 @@ Special Cases and Misc. Functions
 
 Cold Hydrogen and Deuterium 
 -----------------------------
+The continuous treatment equations defined in Eq. :eq:`continuousSAB`- :eq:`PDefinition` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
+
+For the remainder of this discussion, "hydrogen" will refer to the element, i.e. both :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`. 
+
+For describing the spin-spin correlation for hydrogen, two cases are considered: *ortho* and *para*. Ortho hydrogen indicates that the spins of the nuclei are in the same direction, whereas para hydrogen indicates that the spins are in opposite direction.
+
+
+.. figure:: _images/orthoVsPara.png
+    :width: 40%
+    :align: center
+
+    Ortho and para describe the alignment of the spins that can occur in a pair of hydrogens. Ortho corresponds to the spins going in the same direction, whereas para corresponds to them going in the opposite direction. 
+
+
+There are two different scattering law equations that describe cold hydrogen scattering, depending on the relative spin directions (ortho and para).
+
+
+.. math::
+  S_{n.sym}^{ortho}(\alpha,\beta)=\sum_{J~odd} \frac{P_J4\pi}{\sigma_b}\Big[ A_{ortho}\sum_{J'~even}F(J,J') + B_{ortho}\sum_{J'~odd} F(J,J') \Big]
+
+.. math::
+  S_{n.sym}^{para}(\alpha,\beta)=\sum_{J~even} \frac{P_J4\pi}{\sigma_b}\Big[ A_{para}\sum_{J'~even}F(J,J') + B_{para}\sum_{J'~odd} F(J,J') \Big]
+
+.. math::
+  F(J,J')=\big(2J'+1\big)~S_f(\omega\alpha,\beta+\beta_{JJ'})\sum_{l=\left|J'-J\right|}^{J'+J}4j_l^2(y)C^2(JJ'l;00)
+
+Here you go
+
+  +-------------------+---------------------------+------------------------------------+
+  | Symbol            | Name                      |  Other Definition                  |
+  +===================+===========================+====================================+
+  | | :math:`A        | | Summation               | | Defined in the table below as    |
+  |   _{ortho,para}`  |   coefficients            | | a function of :math:`a_c`        |
+  | | :math:`B        |                           |   and :math:`a_i`                  |
+  |   _{ortho,para}`  |                           |                                    |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`a_c` and   | | Coherent and incoherent | | Related to the coherent,         |
+  | :math:`a_i`       | | scattering lengths      | | incoherent, and total bound      |
+  |                   |                           | | scattering cross sections via    |
+  |                   |                           | | :math:`\sigma_c=4\pi a_c^2\quad` |
+  |                   |                           |   :math:`\sigma_i=4\pi a_i^2`      |
+  |                   |                           | | :math:`\sigma_b=\sigma_c+\sigma_i|
+  |                   |                           |   =4\pi\big(a_c^2+a_i^2\big)`      |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`P_J`       | | Statistical weight      |                                    |
+  |                   | | factor                  |                                    |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`\beta      | | Energy transfer for a   | | :math:`\beta_{JJ'}=              |
+  | _{JJ'}`           | | rotational transition   |  (E_{J'}-E_J)/k_bT`                |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`j_l(x)`    | | Spherical Bessel        |                                    |
+  |                   | | function of order       |                                    |
+  |                   |   :math:`l`               |                                    |
+  |                   |                           |                                    |
+  +-------------------+---------------------------+------------------------------------+
+  | | :math:`C(       | | Clebsch-Gordan          |                                    |
+  |   JJ';00)`        | | coefficient factor      |                                    |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`y`         |                           | | :math:`y=\kappa a/2`             |
+  |                   |                           | | :math:`y=a                       |
+  |                   |                           |   \sqrt{4Mk_bT\alpha/8}`           |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`a`         | | Interatomic distance    |                                    |
+  |                   | | in the molecule         |                                    | 
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`\omega_t`  | | Translational weight    | | :math:`1/2` for                  |
+  |                   |                           |   :math:`^1\mathrm{H}` and         |
+  |                   |                           |   :math:`1/4` for                  |
+  |                   |                           |   :math:`^2\mathrm{D}`             |
+  +-------------------+---------------------------+------------------------------------+
+  | :math:`S_f        | | Free gas scattering law | | :math:`S_f(\alpha,\beta)=\frac{1}|
+  | (\alpha,\beta)`   |                           |   {\sqrt{4\pi\omega_t\alpha}}      |
+  |                   |                           |   \mathrm{exp}\left[-\frac{        |
+  |                   |                           |   (\omega_t\alpha+\beta)^2}        |
+  |                   |                           |   {4\omega_t\alpha}\right]`        |
+  +-------------------+---------------------------+------------------------------------+
+
+
+
+
+.. note::
+  The summation coefficients :math:`A_{ortho,para}` and :math:`B_{ortho,para}` are provided for the relative materials in the table below. Here, :math:`a_c` and :math:`a_i` are the coherent and incoherent scattering lengths [#f1]_ .
+
+  +--------------------+-------------------+------------------------+-------------------+-------------------+
+  | **Spin Alignment** | :math:`^1\mathrm{H}`                       | :math:`^2\mathrm{D}`                  |
+  +====================+===================+========================+===================+===================+
+  |                    | :math:`A` (even)  | :math:`B` (odd)        | :math:`A` (even)  | :math:`B` (odd)   |
+  +--------------------+-------------------+------------------------+-------------------+-------------------+
+  | **Ortho**          | :math:`a_c^2/3`   | :math:`a_c^2+2a_i^2/3` | :math:`a_c^2      | :math:`3a_i^2/8`  |
+  |                    |                   |                        | +5a_i^2/8`        |                   |
+  +--------------------+-------------------+------------------------+-------------------+-------------------+
+  | **Para**           | :math:`a_c^2`     | :math:`a_i^2`          | :math:`3a_i^2/4`  | :math:`a_c^2      |
+  |                    |                   |                        |                   | a_i^2/4`          |
+  +--------------------+-------------------+------------------------+-------------------+-------------------+
+
+  .. [#f1] Scattering lengths are related to bound cross sections by the surface are of a sphere. For example, if the coherent scattering length is :math:`a_c`, then the bound coherent scattering cross section is :math:`\sigma_{c}=4\pi a_c^2`. Furthermore, the total bound cross section :math:`\sigma_b=\sigma_c+\sigma_i` would be equal to :math:`4\pi(a_c^2+a_i^2)`.
+
+
+
 
 
 Short-time collision approximation 
