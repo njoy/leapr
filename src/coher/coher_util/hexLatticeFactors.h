@@ -27,7 +27,7 @@ int hexLatticeFactors( int lat, double a, double c, double maxTauSq,
   double phi=maxTauSq/(4*M_PI*M_PI), w, w1, w2, w3;
   double c1 = 4/(3*a*a);
   double c2 = 1/(c*c);
-  double tsqx = 1e-4*8*massNeutron/(20*hbar*hbar)*ev;
+  double tsqx = 8*massNeutron/(20*1e4*hbar*hbar)*ev;
 
   for ( auto i1 = 0; i1 < a*sqrt(phi); ++i1 ){
     i2m = int((i1+sqrt(3*(a*a*phi-i1*i1)))/2) + 1;

@@ -49,8 +49,8 @@ inline double formf( int lat, int l1, int l2, int l3 ){
     // This follows Eq. 564. F is set to either value depending on if l3 is 
     // even or odd. Note that the returned value differs from Eq. 564 however
     // in that either possibility is divided by 4.
-    return l3%2 == 0 ? (6+10*cos(2*M_PI*(l1-l2)/3))/4 :  // even
-                         pow(sin(  M_PI*(l1-l2)/3),2);   // odd
+    return l3%2 == 0 ? (6+10*cos(2*M_PI*(l1-l2)/3)) :  // even
+                       4*pow(sin(  M_PI*(l1-l2)/3),2);   // odd
    }
 
    //  beryllium -- HCP
@@ -58,8 +58,16 @@ inline double formf( int lat, int l1, int l2, int l3 ){
      // This follows Eq. 565, since this is a hexagonal close packed (hcp) 
      // structure. Notice that the returned value differs from Eq. 565 in that 
      // it is divided by 2.
-     return 1+cos(2*M_PI*(2*l1+4*l2+3*l3)/6);
+     return 2+2*cos(2*M_PI*(2*l1+4*l2+3*l3)/6);
    }
+   else if (lat == 7) {
+     // This follows Eq. 565, since this is a hexagonal close packed (hcp) 
+     // structure. Notice that the returned value differs from Eq. 565 in that 
+     // it is divided by 2.
+     return 2+2*cos(2*M_PI*(2*l1+4*l2+3*l3)/6);
+   }
+
+
 
    //  beryllium oxide -- 2 Interpenetrating HCP
    else if (lat == 3) {
