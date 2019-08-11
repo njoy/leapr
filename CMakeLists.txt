@@ -260,7 +260,6 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/values.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/print.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/skold/skold.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/skold/skold_util/terp1.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop.h"
@@ -333,7 +332,6 @@ if( NOT is_subproject )
         add_subdirectory( src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/test )
         add_subdirectory( src/simple/generalTools/test )
         add_subdirectory( src/skold/test )
-        add_subdirectory( src/skold/skold_util/test )
         add_subdirectory( src/trans/test )
         add_subdirectory( src/trans/trans_util/test )
     endif() 

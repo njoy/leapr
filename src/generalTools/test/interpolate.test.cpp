@@ -72,6 +72,40 @@ TEST_CASE( "interpolation (not ranges version)" ){
       } // THEN
     } // WHEN
   } // GIVEN
-}
+} // TEST CASE
+
+TEST_CASE( "terp1" ){
+  GIVEN( "rule 1 --> y is constant" ){
+    double x1 = 2.0, y1 = 4.0, x2 = 14.0, y2 = 9.0, x = 3.0, y = 7;
+    y = terp1( x1, y1, x2, y2, x, 1 );
+    REQUIRE( 4.0  == Approx(y).epsilon(1e-6) );
+
+  } // GIVEN
+  GIVEN( "rule 2 --> y is linear in x" ){
+    double x1 = 2.0, y1 = 4.0, x2 = 14.0, y2 = 9.0, x = 3.0, y = 7;
+    y = terp1( x1, y1, x2, y2, x, 2 );
+    REQUIRE( 4.416666667  == Approx(y).epsilon(1e-6) );
+
+  } // GIVEN
+  GIVEN( "rule 3 --> y linear in ln(x)" ){
+    double x1 = 2.0, y1 = 4.0, x2 = 14.0, y2 = 9.0, x = 3.0, y = 7;
+    y = terp1( x1, y1, x2, y2, x, 3 );
+    REQUIRE( 5.04183923 == Approx(y).epsilon(1e-6) );
+
+  } // GIVEN
+  GIVEN( "rule 4 --> ln(y) linear in x" ){
+    double x1 = 2.0, y1 = 4.0, x2 = 14.0, y2 = 9.0, x = 3.0, y = 7;
+    y = terp1( x1, y1, x2, y2, x, 4 );
+    REQUIRE( 4.27965277 == Approx(y).epsilon(1e-6) );
+
+  } // GIVEN
+  GIVEN( "rule 5 --> ln(y) linear in ln(x)" ){
+    double x1 = 2.0, y1 = 4.0, x2 = 14.0, y2 = 9.0, x = 3.0, y = 7;
+    y = terp1( x1, y1, x2, y2, x, 5 );
+    REQUIRE( 4.73634690 == Approx(y).epsilon(1e-6) );
+
+  } // GIVEN
+} // TEST CASE
+
 
 

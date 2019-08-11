@@ -1,14 +1,18 @@
 #include <iostream>
 #include <vector>
-#include "../coldh/coldh_util/terpk.h"
-#include "skold_util/terp1.h"
+#include "generalTools/interpolate.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+
 
 auto skold( double cfrac, int itemp, double tev,
   const std::vector<double>& alpha, const std::vector<double>& beta, 
   const std::vector<double>& skappa, double awr, 
   double dka, double scaling, 
   Eigen::Tensor<double,3>& symSab ){
+  std::vector<double> kappaGrid (skappa.size());
+  for ( size_t i = 0; i < skappa.size(); ++i ){
+    kappaGrid[i] = i*dka;
+  }
   /* Overview 
    * ------------------------------------------------------------------------
    * The purpose of this is to apply the Skold approximation to add in the 
@@ -71,7 +75,7 @@ auto skold( double cfrac, int itemp, double tev,
       // amassn*amu = neutron mass in kg
 
       // Interpolate to find the waven value in the skappa input 
-      sk = terpk(skappa,dka,waven);
+      sk = interpolate( skappa, waven, kappaGrid, 1.0 );
       ap = alpha[a] / sk;
       for ( size_t a2 = 0; a2 < alpha.size(); ++a2 ){
         i = a2;
@@ -80,8 +84,8 @@ auto skold( double cfrac, int itemp, double tev,
       if (i == 0) i = 1;
 
       // Interpolate to calculate S(a',b) where a' = a/S(k)
-      terp1( alpha[i-1], symSab(i-1,b,itemp), alpha[i], 
-             symSab(i,b,itemp), ap, scoh[a], 5 );
+      scoh[a] = terp1( alpha[i-1], symSab(i-1,b,itemp), alpha[i], 
+             symSab(i,b,itemp), ap, 5 );
       scoh[a] *= sk;
     }
     // Amend the existing scattering law by combining a piece of it with a 

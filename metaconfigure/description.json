@@ -412,7 +412,6 @@
     "src/simple/generalTools/values.h",
     "src/simple/generalTools/print.h",
     "src/skold/skold.h",
-    "src/skold/skold_util/terp1.h",
     "src/coldh/coldh.h",
     "src/coldh/coldh_util/betaLoop.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop.h",
@@ -548,9 +547,6 @@
     ],
     "skold": [
       "src/skold/test/skold.test.cpp"
-    ],
-    "skold.skold_util": [
-      "src/skold/skold_util/test/terp1.test.cpp"
     ],
     "trans": [
       "src/trans/test/trans.test.cpp"
