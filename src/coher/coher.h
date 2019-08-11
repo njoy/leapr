@@ -19,11 +19,11 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   //       Graphite   Be         BeO       Al       Pb       Fe  
     aVals {2.4573e-8, 2.2856e-8, 2.695e-8, 4.04e-8, 4.94e-8, 2.8600e-8 },
     cVals {6.7000e-8, 3.5832e-8, 4.39e-8},
-    mass  {12.011,    9.0100,    12.50,    26.7495, 207.,    55.454   },
-    xsCoh {5.5000,    7.5300,    1.000,    1.49500, 1.00,    12.900   };
+    mass  {12.011,    9.0100,    12.50,    26.7495, 207.,    55.454    },
+    xsCoh {5.5000,    7.5300,    1.000,    1.49500, 1.00,    12.900    };
 
-  double econ,a=0,c=0,sigmaC,c1,c2,scon,wint,
-    maxTauSq,tau,f,x,bel,be,bs,massScatterer,
+  double econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6,eps=.05;
+
 
   // Lattice Constants (a) in angstroms
   // To get these values, honestly the wikipedia page isn't a bad palce to
@@ -47,9 +47,6 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // exactly correct, and lead which is comically wrong
   // Lead is way off. Should be like 10 b
 
-  toler = 1.e-6,
-  eps = .05;
-
   maxEnergy *= ev; // convert this to be in Joules
 
   econ = ev*8*massNeutron/(1e4*hbar*hbar); // the 1e4 is to make hbar have cm units
@@ -59,19 +56,12 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // reciprocal lattice vector lengths, which is done using tausq. The other
   // reciprocal lattice vector lengths require only one constant.
   // Convert lattice factors from angstroms to cm
-  if (iel == 7){ 
-    a = aVals[1];
-    sigmaC = xsCoh[1]/npr; 
-    massScatterer = amu*mass[1];
-  }
-  else {
-    a = aVals[iel-1]; 
-    sigmaC = xsCoh[iel-1]/npr;
-    massScatterer = amu*mass[iel-1];
-  }
-
+  a = aVals[iel-1]; 
+  sigmaC = xsCoh[iel-1]/npr;
+  massScatterer = amu*mass[iel-1];
   scon = sigmaC*16*M_PI*M_PI;
-  wint=0;                          // This makes me suspicious
+
+  //wint=0;                        // This makes me suspicious
   //ifl=1;                         // as does this
   
   maxTauSq = 1e-4*8*massNeutron/(hbar*hbar)*maxEnergy; 
@@ -81,22 +71,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // The reason there is a 1e-4 here is to make sure that the max tau^2 value
   // is in units of inverse cm^2.
 
-  if (iel == 1 ){
-    c = cVals[iel-1];
-    double volume = sqrt(3)*a*a*c/2; // Eq. 559
-    scon /= 16*volume*econ;
-    imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
-  }
-
-  else if (iel == 2 or iel == 7){
-    //c = cVals[iel-1];
-    c = cVals[1];
-    double volume = sqrt(3)*a*a*c/2; // Eq. 559
-    scon /= 4*volume*econ;
-    imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
-  }
-
-  else if ( iel < 4 ){ // compute lattice factors for hexagonal lattices
+  if ( iel < 4 ){ // compute lattice factors for hexagonal lattices
     c = cVals[iel-1];
     double volume = sqrt(3)*a*a*c/2; // Eq. 559
     scon /= 4*volume*econ;
@@ -108,8 +83,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
     imax = fccLatticeFactors( iel, a, maxTauSq, massScatterer, b );
   } 
 
-  else { // iel == 6
-    // compute lattice factors for bcc lattices
+  else { // iel == 6  // compute lattice factors for bcc lattices
     scon/=(8*a*a*a*econ);
     imax = bccLatticeFactors( maxTauSq, b, iel, a, massScatterer );
   }
@@ -117,9 +91,6 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
 
   // nbe is the number of edges
   int nbe = end( b, k, econ, toler, scon, maxTauSq, imax );
-  if ( iel == 2 ){
-    for ( size_t i = 1; i < b.size(); i += 2) {b[i] *= 0.5; }
-  }
   return std::make_tuple(2*k,2*nbe);
   // first return is the number of nonzero values in b vector
   // second value is 2*#edges

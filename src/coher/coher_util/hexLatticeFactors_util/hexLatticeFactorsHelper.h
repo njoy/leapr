@@ -1,3 +1,4 @@
+#include "generalTools/constants.h"
 
 template <typename Float, typename Range>
 auto hexLatticeFactorsHelper( int& k, const Float& tsq, const Float& tsqx, 

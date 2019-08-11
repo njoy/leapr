@@ -466,8 +466,11 @@ Here you go
 Short-time collision approximation 
 ------------------------------------
 
+
 Skold and Vineyard
 -----------------------------
+The incoherent approximation, which is made while using the continuous, translational, and discrete oscillator methods, ignores coherent effects. For some materials, however, the neutron waves scattered from different molecules can interfere with each other in meaningful ways. This inter-molecular coherence occurs when there is some correlation between the positions of nearby molecules, and spatial correlation of molecules is described by the *static structure factor* :math:`S(\kappa)`.
+
 
 
 
