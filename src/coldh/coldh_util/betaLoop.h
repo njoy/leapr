@@ -8,12 +8,10 @@ template <typename Float, typename Range>
 auto betaLoop( const Range& betan, const Range& rdbex, const Range& bex, 
   const Range& sex, const Float& alphaWgt, const Float& tbart, 
   const Float& x, const Float& y, const Float& evenSumConst, 
-  const Float& oddSumConst, int nbx, int a, int ncold, bool free, 
-  Range& sym_sab_1, Range& sym_sab_2 ){
+  const Float& oddSumConst, int nbx, int a, int ncold, bool free, Range& sym_sab_1, Range& sym_sab_2 ){
   
   //--loop over all beta values
-  //    results for positive beta go into ssp
-  //    results for negative beta go into sym_sab
+  //    results for positive beta go into ssp results for negative beta go into sym_sab
   unsigned int jjmax = 2 * betan.size() - 1; 
   int k;
   Float pj, be, snlg, snlk, sn;
@@ -58,22 +56,32 @@ auto betaLoop( const Range& betan, const Range& rdbex, const Range& bex,
 
       // Perform inner sum over even values (inner sum in Eq. 567-568 that is
       // multiplied by A)
+      
       snlg = jPrime( j, be, x, evenSumConst, pj, bex, rdbex, sex, betan, 
         alphaWgt, tbart, y, nbx, false, free );
 
       // Perform inner sum over odd values (inner sum in Eq. 567-568 that is
       // multiplied by B)
+
       snlk = jPrime( j, be, x, oddSumConst, pj, bex, rdbex, sex, betan, 
         alphaWgt, tbart, y, nbx, true,  free );
 
       //--continue the j loop
       sn = sn + snlg + snlk;
+
     }
+    std::cout << snlg << "    " << snlk << "     " << sn <<  std::endl;
 
     //--continue the beta loop
       if (jj <  betan.size())   sym_sab_1[(k-1)+a*betan.size()] = sn;
       if (jj >= betan.size()-1) sym_sab_2[(k-1)+a*betan.size()] = sn;
-  //std::cout << "----  " << sym_sab_1[0] << "   " << a << "   " << k << std::endl;
   } // end for 
 
+  std::cout << sym_sab_1[0+0*betan.size()] << std::endl;
+  std::cout << sym_sab_1[1+0*betan.size()] << std::endl;
+  std::cout << sym_sab_1[2+0*betan.size()] << std::endl;
+  std::cout << sym_sab_1[3+0*betan.size()] << std::endl;
+  std::cout << sym_sab_1[4+0*betan.size()] << std::endl;
+  std::cout << sym_sab_1[0+1*betan.size()] << std::endl;
+  std::cout << sym_sab_1[1+1*betan.size()] << std::endl;
 }

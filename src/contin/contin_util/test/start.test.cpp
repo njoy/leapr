@@ -2,9 +2,7 @@
 #include "contin/contin_util/start.h"
 #include "generalTools/testing.h"
 
-
-
-
+/*
 TEST_CASE( "start2 function" ){
 
   std::vector<double> p, correct;
@@ -28,7 +26,6 @@ TEST_CASE( "start2 function" ){
     } // THEN
 
   } // GIVEN
-  /*
 
   GIVEN( "more frequency distribution values" ){
 
@@ -86,8 +83,8 @@ TEST_CASE( "start2 function" ){
       } // THEN
     } // WHEN
   } // GIVEN
-  */
 } // TEST_CASE
+  */
 
 
 

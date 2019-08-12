@@ -124,7 +124,7 @@ TEST_CASE( "oscillator loop" ){
 
   GIVEN( "inputs" ){
     int maxdd = 500, numOscillators = 2, a = 0;
-    double scaling = 1.0, wt = 2.0, tbart = 405.894676, temp = 200.0;
+    double wt = 2.0, tbart = 405.894676, temp = 200.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
       dbw(50, 0.0), ar(50, 0.0), dist(50,0.0);
@@ -137,7 +137,7 @@ TEST_CASE( "oscillator loop" ){
     alpha  = {0.1, 0.2, 0.4, 0.8, 1.6};
     std::vector<std::tuple<double,double>> energiesWgts {{0.1,0.2},{0.3,0.8}};
 
-    oscillatorLoop( alpha, dbw, ar, scaling, wts, bes, energyNorm, 
+    oscillatorLoop( alpha, dbw, ar, wts, bes, energyNorm, 
       a, maxdd, numOscillators, wt, tbart, energiesWgts, dist, temp );
 
     THEN( "ouput is correct" ){

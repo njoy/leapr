@@ -3,41 +3,39 @@
 #include "trans_util/terps.h"
 #include "range/v3/all.hpp"
 
-
-template <typename Range, typename Float, typename Range2>
-auto trans( const Range& alpha, const Range& beta, const Float& trans_weight, 
+template <typename Range, typename Float>
+auto trans( Range alpha, Range beta, const Float& transWeight, 
   Float delta, const Float& diffusion, const Float& sc, const Float& scaling, 
-  const int& itemp, const Float& lambda_s, const Float& tbeta, Range& t_eff_vec, 
-  const Range& temp_vec, Range2& sym_sab ){
-  using std::exp; 
+  const Float& lambda_s, const Float& tbeta, Float& t_eff, 
+  const Float& temp, Range& sym_sab ){
+  using std::exp, std::min; 
 
-  Float deltaInitial = delta;
+  for (auto& a : alpha ){ a *= scaling; }
+  for (auto& b : beta  ){ b *= sc;      }
+
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
-  Range sabTrans(ndmax), ap(ndmax), sab(ndmax), betan(beta.size());
+  Range sabTrans(ndmax), ap(ndmax), sab(ndmax);
 
-  Float nsd, alpha_sc, ded;
+  Float nsd, ded, st;
   for ( size_t a = 0; a < alpha.size(); ++a ){
-    alpha_sc = alpha[a] * scaling;
-
     ded = diffusion == 0 ? 
-      0.2 * sqrt( trans_weight * alpha_sc ) :
-      0.4 * trans_weight * diffusion * alpha_sc / 
-        sqrt( 1.0 + 1.42*trans_weight*diffusion*diffusion*alpha_sc );
+      0.2 * sqrt( transWeight * alpha[a] ) :
+      0.4 * transWeight * diffusion * alpha[a] / 
+        sqrt( 1.0 + 1.42*transWeight*diffusion*diffusion*alpha[a] );
 
-    delta = std::min( ded, 10.0 * alpha_sc * deltaInitial );
-    nsd = diffusion == 0 ? getFreeGas ( trans_weight, alpha_sc, ndmax, 
-                                             delta, sabTrans ) : 
-                           getDiffusion( trans_weight, alpha_sc, ndmax, 
-                                             delta, sabTrans, diffusion );
+    delta = min( ded, 10.0 * alpha[a] * delta );
+    nsd = diffusion == 0 ? 
+      getFreeGas  ( transWeight, alpha[a], ndmax, delta, sabTrans ) : 
+      getDiffusion( transWeight, alpha[a], ndmax, delta, sabTrans, diffusion );
+
     if ( nsd > 1 ){
       for ( size_t b = 0; b < beta.size(); ++b ){
-        betan[b] = beta[b] * sc;
         ap[b] = sym_sab[beta.size()*a + b];
       }
 
       for ( size_t b = 0; b < beta.size(); ++b ){
-        Float be = betan[b];
-        sbfill( sab, nsd, delta, be, ap, betan, ndmax );
+        Float be = beta[b];
+        sbfill( sab, nsd, delta, be, ap, beta, ndmax );
         Float s = 0;
         for ( int i = 0; i < nsd; ++i ){
           Float f = 2*(i%2)+2;
@@ -49,17 +47,17 @@ auto trans( const Range& alpha, const Range& beta, const Float& trans_weight,
         }
         s = (s < 1e-30) ? 0 : s*delta*0.33333333;
 
-        Float st = terps(sabTrans,delta,be);
+        st = terps(sabTrans,delta,be);
+        if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
 
-        if ( st > 0.0 ){ s += exp(-alpha_sc*lambda_s)*st; }
         sym_sab[beta.size()*a + b] = s;
 
       } // for beta
     } // if nsd > 0
   } // for alpha
   
-  t_eff_vec[itemp] = (tbeta*t_eff_vec[itemp] + trans_weight*temp_vec[itemp]) /
-                     ( tbeta + trans_weight );
+  t_eff = (tbeta*t_eff + transWeight*temp) /
+                     ( tbeta + transWeight );
 
 }
 

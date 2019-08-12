@@ -1,18 +1,11 @@
-#include <iostream>
-#include <vector>
 #include "generalTools/interpolate.h"
-#include <unsupported/Eigen/CXX11/Tensor>
+#include "generalTools/constants.h"
+#include <range/v3/all.hpp>
 
+template <typename Float, typename Range>
+auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta, 
+  const Range& skappa, Float awr, Float dka, Float scaling, Range& symSab ){
 
-auto skold( double cfrac, int itemp, double tev,
-  const std::vector<double>& alpha, const std::vector<double>& beta, 
-  const std::vector<double>& skappa, double awr, 
-  double dka, double scaling, 
-  Eigen::Tensor<double,3>& symSab ){
-  std::vector<double> kappaGrid (skappa.size());
-  for ( size_t i = 0; i < skappa.size(); ++i ){
-    kappaGrid[i] = i*dka;
-  }
   /* Overview 
    * ------------------------------------------------------------------------
    * The purpose of this is to apply the Skold approximation to add in the 
@@ -54,45 +47,38 @@ auto skold( double cfrac, int itemp, double tev,
    *   the Skold Approximation. 
    */
 
-
-  /* use skold approximation to add in the effects
-   * of intermolecular coherence.
-   */
-  int i;
-  double sk, ap, waven, amassn = 1.008664904, 
-         amu = 1.6605402e-27, bk = 8.617385e-5, hbar = 1.05457266e-34, 
-         ev  = 1.60217733e-19;
-
-  std::vector<double> scoh( alpha.size() );
+  int a2;
+  Float sk, ap, waven;
+  Range scoh( alpha.size() );
+  Range kappa2Grid = ranges::view::iota(0,int(skappa.size()));
+  Range kappaGrid = kappa2Grid | ranges::view::transform([delta=dka](auto& x){return delta*x;});
+  Float tempJoules = tev*ev;
   // apply the skold approximation
-  for ( size_t b = 0; b < beta.size(); ++b ){
+  for ( size_t b = 0; b < beta.size(); ++b ){    
     for ( size_t a = 0; a < alpha.size(); ++a ){
 
-      // Getting a value in units of inverse angstroms so that we can happily
-      // interpolate it in our skappa table
-      waven = 1.0e-10 * sqrt(2*awr*amassn*amu*tev*ev*alpha[a]*scaling)/hbar;
-      // tev*ev = temperature in Joules
-      // amassn*amu = neutron mass in kg
+      // wave number [inverse angstroms]
+      waven = 1.0e-10 * sqrt(2*awr*massNeutron*tempJoules*alpha[a]*scaling)/hbar;
 
       // Interpolate to find the waven value in the skappa input 
       sk = interpolate( skappa, waven, kappaGrid, 1.0 );
       ap = alpha[a] / sk;
-      for ( size_t a2 = 0; a2 < alpha.size(); ++a2 ){
-        i = a2;
+      for ( a2 = 0; a2 < int(alpha.size()); a2++ ){
         if (ap < alpha[a2]){ break; }
       }
-      if (i == 0) i = 1;
+      if (a2 == int(alpha.size())){ a2 -= 1; }
+      if (a2 == 0) { a2 = 1; }
 
       // Interpolate to calculate S(a',b) where a' = a/S(k)
-      scoh[a] = terp1( alpha[i-1], symSab(i-1,b,itemp), alpha[i], 
-             symSab(i,b,itemp), ap, 5 );
-      scoh[a] *= sk;
-    }
+      scoh[a] = terp1( alpha[a2-1], symSab[b+(a2-1)*beta.size()], alpha[a2], 
+             symSab[b+a2*beta.size()], ap, 5 ) * sk;
+    } // alpha loop
+
     // Amend the existing scattering law by combining a piece of it with a 
     // piece of the coherent scattering interactions. 
     for ( size_t a = 0; a < alpha.size(); ++a ){
-      symSab(a,b,itemp) = (1-cfrac)*symSab(a,b,itemp)+cfrac*scoh[a];
-    }
-  }
+      symSab[b+a*beta.size()] = (1-cfrac)*symSab[b+a*beta.size()]+cfrac*scoh[a];
+    } // alpha loop
+  } // beta loop
 }
 

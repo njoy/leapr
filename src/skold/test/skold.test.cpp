@@ -1,64 +1,23 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp" 
 #include "skold/skold.h"
-
-void equal( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-5 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-5 );
-}
-
-
-void checkSab( const Eigen::Tensor<double,3>& sab,
-  const std::vector<double>& correctSab ){
-
-  REQUIRE( sab.dimension(0)*sab.dimension(1)*sab.dimension(2) == correctSab.size() );
-
-  int l = 0;
-  for ( int i = 0; i < sab.dimension(0); ++i ){
-    for ( int j = 0; j < sab.dimension(1); ++j ){
-      for ( int k = 0; k < sab.dimension(2); ++k ){
-        REQUIRE( sab(i,j,k) == Approx(correctSab[l]).epsilon(1e-5) );
-	l += 1;
-      }
-    }
-  }
-}
-
-
-
-auto populateSymSab( int a1, int b1 ){
-  Eigen::Tensor<double,3> sab(a1,b1,1);
-  int k = 1;
-  for ( int i = 0; i < sab.dimension(0); ++i ){
-    for ( int j = 0; j < sab.dimension(1); ++j ){
-      sab(i,j,0) = k; 
-      k += 1;
-    }
-  }
-  return sab;
-}
-
-
+#include "generalTools/testing.h"
 
 TEST_CASE( "skold" ){
   double cfrac = 0.3, tev = 0.0172348, awr = 8.9, dka = 2.3, scaling = 1.0;
   int nalpha = 5, nbeta = 5, itev = 0;
-  auto symsab = populateSymSab( 5, 5 );
   std::vector<double> alpha { 0.10, 0.20, 0.40, 0.80, 1.60 }, 
     beta { 0.1, 0.15, 0.3, 0.6, 1.2 }, skappa { 1.1, 2.2, 3.3, 4.4, 5.5 }, 
     rightSymSab { 0.7748423, 1.695805, 2.725674, 3.834036, 5, 4.525767, 
     5.779165, 7.133967, 8.547886, 10, 9.056398, 10.95454, 12.81736, 14.66346,
     16.5, 16.62805, 19.17417, 21.51546, 23.77780, 26, 21, 22, 23, 24, 25 };
+  std::vector<double> symSab = ranges::view::iota(1,26);
 
   GIVEN( "medium sized skappa values" ){
     WHEN( "dka is a bit large" ){
       THEN( "the scattering law is correctly changed" ){
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
       } // THEN
     } // WHEN
     WHEN( "dka is really big" ){
@@ -68,9 +27,8 @@ TEST_CASE( "skold" ){
           5.406339, 7.019986, 8.535378, 10, 11.53434, 13.04755, 14.54618, 
           16.03430, 17.51459, 19.78249, 21.38301, 22.97954, 24.57282, 26.16343,
           29.73225, 31.50051, 33.26723, 35.03263, 36.79689 };
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
       } // THEN
     } // WHEN
   } // GIVEN
@@ -81,13 +39,11 @@ TEST_CASE( "skold" ){
       THEN( "no change to scattering law" ){
         for ( size_t i = 0; i < rightSymSab.size(); ++i ){ rightSymSab[i] = i+1; }
         dka = 0.03;
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
         dka = 1.03;
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
       } // THEN
     } // WHEN
 
@@ -98,19 +54,16 @@ TEST_CASE( "skold" ){
         rightSymSab = { 0.7362570, 1.435067, 2.134116, 2.833354, 3.532743, 
           4.248877, 4.946653, 5.644851, 6.343379, 7.042169, 11, 12, 13, 14, 15, 
           16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
-        
-        symsab = populateSymSab( 5, 5 );
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
+
+        symSab = ranges::view::iota(1,26);
         cfrac = 1.3;
         rightSymSab = { -0.1428862, -0.4480389, -0.7521607, -1.055464, 
           -1.358109, -1.588199, -1.897833, -2.205644, -2.512024, -2.817265, 11,
           12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
-
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
       } // THEN
     } // WHEN
     WHEN( "value of dka is large" ){
@@ -121,10 +74,8 @@ TEST_CASE( "skold" ){
           -1.368090, -1.602126, -1.911557, -2.219208, -2.525467, -2.830620, 
           -3.032806, -3.348865, -3.661900, -3.972597, -4.281455, -4.441460, 
           -4.767483, -5.088515, -5.405735, -5.719990, 21, 22, 23, 24, 25 };
-        skold( cfrac, itev, tev, alpha, beta, skappa, awr, 
-          dka, scaling, symsab );
-        checkSab( symsab, rightSymSab );
-
+        skold( cfrac, tev, alpha, beta, skappa, awr, dka, scaling, symSab );
+        REQUIRE( ranges::equal(symSab, rightSymSab, equal) );
       } // THEN
     } // WHEN
   } // GIVEN

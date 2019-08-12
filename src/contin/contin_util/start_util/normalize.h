@@ -5,7 +5,7 @@ template <typename Float, typename Range>
 auto normalize( Range beta_P, const Float& continWgt ){
 
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
-   * equation that is being normalized to integrate to tbeta. 
+   * equation that is being normalized to integrate to continWgt. 
    *
    *             rho(beta) = P(beta) * 2 * beta * sinh( beta / 2 )
    *
@@ -20,7 +20,7 @@ auto normalize( Range beta_P, const Float& continWgt ){
    * Operations
    * ------------------------------------------------------------------------
    * * Integrate (using fsum) the above equation from 0 to infty.
-   * * Scale each P(beta) value so that it is normlized to tbeta
+   * * Scale each P(beta) value so that it is normlized to continWgt
    *
    * Outputs
    * ------------------------------------------------------------------------

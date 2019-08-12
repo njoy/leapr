@@ -8,7 +8,7 @@
  * whether a is greater than or less than 1.0e-9 (respectively).
  */
 template <typename Range>
-auto bfill( int& bexSize, Range& rdbex, const Range& betan ){
+auto bfill( int bexSize, Range& rdbex, const Range& betan ){
   using std::begin; using std::end;
   // betan : [a,b,c,d,e] --> bex : [-e,-d,-c,-b,-a,0,0,0,0,0,0]
   Range bex(bexSize,0.0);

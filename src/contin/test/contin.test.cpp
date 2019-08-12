@@ -17,9 +17,6 @@ TEST_CASE( "contin eigen" ){
     alpha = { 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1.28};
     beta  = { 0.00, 0.15, 0.30, 0.60, 1.20 };
     rho   = { 0.002, 0.004, 0.02, 0.04, 0.2, 0.4 };
-    //std::vector<double> energyGrid(rho.size());
-    //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
-
 
     WHEN( "3rd order expansion, with alpha & beta vals scaled by 0.0253/tev" ){
 
@@ -52,8 +49,6 @@ TEST_CASE( "contin eigen" ){
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
-      //std::vector<double> energyGrid(rho.size());
-      //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
           alpha, beta, symSab );
@@ -77,9 +72,6 @@ TEST_CASE( "contin eigen" ){
     WHEN( "6th order exp, user-defined normalizationand large grid space" ){
       delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };
-
-      //std::vector<double> energyGrid(rho.size());
-      //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
 
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
 
@@ -139,9 +131,6 @@ TEST_CASE( "contin eigen" ){
       0.0618, 0.06022, 0.05866, 0.0571, 0.05586, 0.05462, 0.0535, 0.0525,
       0.0515, 0.05042, 0.04934, 0.04822, 0.04706, 0.0459, 0.04478, 0.04366,
       0.04288, 0.04244, 0.042, 0.0 };
-    //std::vector<double> energyGrid(rho.size());
-    //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
-
 
     WHEN( "  " ){
 
@@ -207,9 +196,6 @@ TEST_CASE( "contin eigen" ){
     std::vector<double> alpha { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756 };
     std::vector<double> beta { 0.0, 0.006375, 0.01275, 0.0255, 0.03825, 0.051, 0.06575 };
     std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 0.0165 };
-    //std::vector<double> energyGrid(rho.size());
-    //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
-
 
     WHEN( "  " ){
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );
@@ -247,9 +233,6 @@ TEST_CASE( "contin eigen" ){
     std::vector<double> alpha { 0.01008, 0.015, 0.0252 },
       beta { 0.000000, 0.006375, 0.012750, 0.025500 },
       rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005 };
-    //std::vector<double> energyGrid(rho.size());
-    //for ( size_t i = 0; i < rho.size(); ++i ){ energyGrid[i] = i * delta; }
-
 
     WHEN( "  " ){
       std::vector<double> symSab( alpha.size()*beta.size()*ntempr, 0.0 );

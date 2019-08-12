@@ -27,7 +27,10 @@ This example serves as a *very* simplified input that would allow a user to prep
   COMMENT: .. contents:: Table of Contents
    :emphasize-lines: 1
 
+
 |
+
+
 .. literalinclude:: exampleInputs/simple_H_H2O
    :language: html
    :lineno-start: 0
@@ -35,7 +38,8 @@ This example serves as a *very* simplified input that would allow a user to prep
 
 The first line defines the module, which is LEAPR. Many modules are designed to follow another module, but LEAPR can be called alone. Typically, the first tape is used to specify input and output files. LEAPR does not read in any auxiliary files, so the first tape only specifies the output file, which in this case will be located in the (unless otherwise specified) bin directory as "tape24".
 
-|
+-------------------------------------------------------------------------------
+
 .. literalinclude:: exampleInputs/simple_H_H2O
    :language: html
    :lineno-start: 0
@@ -43,7 +47,8 @@ The first line defines the module, which is LEAPR. Many modules are designed to 
 
 Tape 2 contains the descriptive title that will be used in the final LEAPR output. 
 
-|
+-------------------------------------------------------------------------------
+
 .. literalinclude:: exampleInputs/simple_H_H2O
    :language: html
    :lineno-start: 0
@@ -51,8 +56,15 @@ Tape 2 contains the descriptive title that will be used in the final LEAPR outpu
 
 Here, we want to process the material at a single temperature, so the number of temperatures is set to 1. In addition to the output file (for us, tape24), NJOY also returns a summary output file, which is traditionally labeled "output". To control the amount of detail used when preparing this document, the second input of tape 3 is the print control option. This value can be (0,1,2) which indicate increasing level of detail. The final input value is the phonon expansion number, which indicates the number of terms that should be computed when approximating the sum in [EQUATION SECTION ETC]. 
 
+.. math:: 
+    S^{(s)}_{n.sym}(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
 
-|
+
+
+
+
+-------------------------------------------------------------------------------
+
 .. literalinclude:: exampleInputs/simple_H_H2O
    :language: html
    :lineno-start: 0

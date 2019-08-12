@@ -5,7 +5,6 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
 
-auto equal2 = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
 template <typename Float, typename Range>
 auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta, 
   Float scaling, const Range& alpha, const Range& beta, Float& dka, Range& ska, 
@@ -27,7 +26,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
          de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, therm = 0.0253;
   int nbx, maxbb = 2 * beta.size() + 1;
 
-  Range exb(maxbb, 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
+  Range exb(beta.size(), 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
     rdbex(maxbb, 0.0);
 
   // Either Ortho Deuterium or Para Deuterium 
@@ -42,7 +41,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   // Either Ortho Hydrogen or Para Hydrogen
   else {
     de = 0.0147;
-    mass_H2_D2 = 3.3465E-27;  // Mass of H2 in kg
+    mass_H2_D2 = 3.3464E-27;  // Mass of H2 in kg
     // It seems like this is trying to be a/2, as defined on pg. 662, but when
     // I plug in values it seems to be 2 orders of magnitude off.
     bp = hbar / ( angst * sqrt( 2*de*eV*mass_H ) );
@@ -54,8 +53,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   wt = trans_weight + tbeta;   // Translational weight
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
-             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);});
-  auto xyZipped = ranges::view::zip(xVals,ska);
+             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); auto xyZipped = ranges::view::zip(xVals,ska);
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
     Float al = alpha[a]*scaling;
@@ -124,47 +122,37 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
       for ( int b = 0; b < int(beta.size()); ++b ){
           Float be=beta[b];
           if (lat == 1){ be = be * therm / tev; }
-          exb[b] = exp(-be);
+          exb[b] = exp(-be*0.5);
           betan[b] = be;
       } 
-    std::cout << (betan|ranges::view::all) << std::endl;
-    //std::cout << lat << "   " << therm << "    " << tev << std::endl;
       auto output = bfill(maxbb,rdbex,betan);
+
       nbx = std::get<0>(output);
       for ( size_t i = 0; i < bex.size(); ++i ){
         bex[i] = std::get<1>(output)[i];
       }
     }
-    //std::cout << (betan|ranges::view::all) << std::endl;
     Range input ( beta.size(), 0.0 ); 
+    //Range input ( alpha.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab_1[b+a*betan.size()];
     }
-    auto sex = exts( input, exb, betan );
+    //for ( size_t a1 = 0; a1 < alpha.size(); ++a1 ){
+    //  input[a1] = sym_sab_1[a1*betan.size()];
+   // }
 
-    std::vector<double> goodbetan  {1.4679720E-01, 2.2019581E-01, 4.4039161E-01, 8.8078323E-01, 1.7615665E+00},
-      goodrdbex {1.1353531E+00, 2.2707063E+00, 4.5414125E+00, 1.3624238E+01, 3.4060594E+00, 1.3624238E+01, 4.5414125E+00, 2.2707063E+00, 1.1353531E+00, 0.0000000E+00, 0.0000000E+00},
-      goodbex {-1.7615665E+00,-8.8078323E-01,-4.4039161E-01,-2.2019581E-01,-1.4679720E-01, 1.4679720E-01, 2.2019581E-01, 4.4039161E-01, 8.8078323E-01, 1.7615665E+00, 0.0000000E+00},
-      goodsex { 5.0000000E+00, 4.0000000E+00, 3.0000000E+00, 2.0000000E+00, 1.0000000E+00, 1.0000000E+00, 1.6047233E+00, 1.9313528E+00, 1.6578327E+00, 8.5887787E-01, 0.0000000E+00};
-    //if (not ranges::equal(goodbetan,betan,equal2)){ std::cout << "BAD betan" << std::endl; }
-    //if (not ranges::equal(goodrdbex,rdbex,equal2)){ std::cout << "BAD rdbex" << std::endl; }
-    //if (not ranges::equal(goodbex,bex,equal2)){ std::cout << "BAD bex" << std::endl; }
-    //if (not ranges::equal(goodsex,sex,equal2)){ std::cout << "BAD sex" << std::endl; }
-    //std::cout << ranges::equal(goodbetan,betan,equal2) << std::endl;
-  //  std::cout << (betan|ranges::view::all) << std::endl;
-  //  std::cout << (rdbex|ranges::view::all) << std::endl;
-  //  std::cout << (bex|ranges::view::all) << std::endl;
-    std::cout << (sex|ranges::view::all) << std::endl;
-  //  std::cout << al << "   " << wt << "   " << tbart << "   " << x << "   " << y << std::endl;
-  //  std::cout << evenSumConst<< "   " << oddSumConst << "   " << nbx << "   " << a << "   " << ncold << std::endl;
+    //std::cout << (input|ranges::view::all) << std::endl;
+    //std::cout << (exb|ranges::view::all) << std::endl;
+    //std::cout << maxbb<< std::endl;
+    //std::cout << std::endl;
+    auto sex = extsCOLDH( input, exb, betan );
+    std::cout << (betan|ranges::view::all) << std::endl << std::endl;
+    std::cout << (rdbex|ranges::view::all) << std::endl << std::endl;
+    std::cout << (bex|ranges::view::all) << std::endl << std::endl;
+    std::cout << (sex|ranges::view::all) << std::endl << std::endl;
+
     betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
       oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
-    std::cout << sym_sab_1[0] << "   " << sym_sab_1[1] << "   " << sym_sab_1[2] << std::endl;
-    std::cout << sym_sab_1[3] << "   " << sym_sab_1[4] << "   " << sym_sab_1[5] << std::endl;
-    //std::cout << sym_sab_1[1] << std::endl;
-    //std::cout << sym_sab_1[2] << std::endl;
-    //break;
-    break;
 
   }
   return;

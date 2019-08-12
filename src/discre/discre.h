@@ -9,13 +9,15 @@
 template <typename Float>
 void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
-
 template <typename Float, typename Range>
 auto discre_new( const Float& sc, const Float& scaling, const Float& tev, 
   const Float& lambda_s, const Float& twt, const Float& tbeta, 
-  const Range& alpha, const Range& beta, const Float& temp, 
+  Range alpha, Range beta, const Float& temp, 
   std::vector<std::tuple<Float,Float>>& oscEnergiesWeights, Float& t_eff, 
   Range& sym_sab ){
+
+  for ( auto& a : alpha ){ a *= scaling; }
+  for ( auto& b : beta  ){ b *= sc; }
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
   Float bk = 8.617385E-5;
@@ -25,10 +27,11 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
   Float weight, tsave;
 
   Range ar(50), t_eff_consts(50), lambda_i(50), 
-    betaVals(50), exb(beta.size()), betan(beta.size());
+    betaVals(50), exb(beta.size());//, beta(beta.size());
+
 
   prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, bk, exb, betan, beta, sc );
+    lambda_i, bk, exb, beta );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
    * --> betaVals = [ energy / tev ]
@@ -42,7 +45,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
    */
 
   Range rdbex( maxbb );
-  auto output = bfill(maxbb, rdbex, betan);
+  auto output = bfill(maxbb, rdbex, beta);
   int nbx = std::get<0>(output);
   Range bex = std::get<1>(output);
 
@@ -61,7 +64,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     // input = sym_sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
     //         order to go between S(a,b) and S(a,-b) 
-    Range sex = exts( input, exb, betan );
+    Range sex = exts( input, exb, beta );
     // sex is populated with sym_sab entries, such that 
     //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
     //                             or 
@@ -73,7 +76,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     // Initialize delta loop
     Range bes(maxdd,0.0), wts(maxdd,0.0);
     
-    unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, scaling, wts, bes,  
+    unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, wts, bes,  
       betaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, oscEnergiesWeights, 
       t_eff_consts, 
       temp );
@@ -119,22 +122,22 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     //std::cout << wts[0] << std::endl;
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
-        auto beta_val = -betan[b] - bes[m];
+        auto beta_val = -beta[b] - bes[m];
         // This is explicitly evaluating Eq. 542, where wts is W_k(alpha), and
         // bes is a vector populated with beta_k values. sint is used to 
         // interpolate for the beta - beta_k piece of the equation.
-        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, betan, b, 
+        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, beta, b, 
             alpha[a], tbeta + twt, tbart, nbx);
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }
 
     // Add the delta functions to the scattering law
-    Float dwf = exp( -alpha[a]*scaling*lambda_s );
-    addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n ); 
+    Float dwf = exp( -alpha[a]*lambda_s );
+    addDeltaFuncs( twt, dwf, bes, beta, wts, sexpb, n ); 
 
     // Record the results
-    for ( size_t b = 0; b < betan.size(); ++b ){
+    for ( size_t b = 0; b < beta.size(); ++b ){
       sym_sab[b+a*beta.size()] = sexpb[b];
     }
   }

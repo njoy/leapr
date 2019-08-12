@@ -43,7 +43,7 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
 
 template <typename Float, typename Range>
 auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar, 
-  const Float& scaling, Range& wts, Range& bes, Range& betaVals, int a, 
+  Range& wts, Range& bes, Range& betaVals, int a, 
   int maxdd, int numOscillators, Float& wt, Float& tbart, 
   const std::vector<std::tuple<Float,Float>>& oscEnergiesWeights, 
   Range& t_eff_consts, const Float& temp ){
@@ -52,7 +52,6 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
    *                    --defined in Eq. 538, evaluated in prepareParams.h
    * ar             --> weight / ( sinh( 0.5 * energy / tev ) * energy / tev )
    *                    --bessel arg from Eq. 537, evaluated in prepareParams.h
-   * scaling        --> sc / arat
    *                    --input into discre, will be sent in from leapr
    * wts            --> blank vector with maxdd = 500 entries
    * bes            --> blank vector with maxdd = 500 entries
@@ -77,12 +76,12 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
   for ( auto i = 0; i < numOscillators; ++i ){
     nn = n + 1;
 
-    alpha_lambda_i = alpha[a]*scaling*lambda_i[i];
-    //             = alpha*scaling*weight / (tanh(0.5*energy/tev) * energy/tev)
+    alpha_lambda_i = alpha[a]*lambda_i[i];
+    //             = alpha*weight / (tanh(0.5*energy/tev) * energy/tev)
     //             = scaled alpha * lambda_i (lambda_i defined in Eq. 538)
     
-    x              = alpha[a]*scaling*ar[i];
-    //             = alpha*scaling*weight / (sinh(0.5*energy/tev) * energy/tev)
+    x              = alpha[a]*ar[i];
+    //             = alpha*weight / (sinh(0.5*energy/tev) * energy/tev)
     //             = argument for bessel function in Eq. 537
 
     /* bfact populates bplus and bminus with A_in terms from Eq. 537.

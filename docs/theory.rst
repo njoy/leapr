@@ -73,6 +73,11 @@ Incoherent scattering is significantly easier to model, and LEAPR has the abilit
 
 
 
+Overview of Objectives
+--------------------------
+Scattering law gets us sigma, tell them what alpha and beta are, what restrictions there are, etc.
+
+
 
 Incoherent Scattering (Elastic and Inelastic)
 ==============================================
@@ -357,11 +362,9 @@ Body Centered Cubic
 
 
 
-Special Cases and Misc. Functions
-==============================================
 
 Cold Hydrogen and Deuterium 
------------------------------
+==============================================
 The continuous treatment equations defined in Eq. :eq:`continuousSAB`- :eq:`PDefinition` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
 
 For the remainder of this discussion, "hydrogen" will refer to the element, i.e. both :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`. 
@@ -463,15 +466,51 @@ Here you go
 
 
 
-Short-time collision approximation 
-------------------------------------
-
 
 Skold and Vineyard
 -----------------------------
-The incoherent approximation, which is made while using the continuous, translational, and discrete oscillator methods, ignores coherent effects. For some materials, however, the neutron waves scattered from different molecules can interfere with each other in meaningful ways. This inter-molecular coherence occurs when there is some correlation between the positions of nearby molecules, and spatial correlation of molecules is described by the *static structure factor* :math:`S(\kappa)`.
+The incoherent approximation, which is made while using the continuous, translational, and discrete oscillator methods, ignores coherent effects. For materials like cold :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`, however, the neutron waves scattered from different molecules can interfere with each other in meaningful ways. This inter-molecular coherence occurs when there is some correlation between the positions of nearby molecules, and can be accounted for by using the **Vineyard** or **Skold** approximations. 
+
+In these methods, the scattering law is separated into a coherent and an incoherent contribution, which are weighted using a *coherent fraction* :math:`c`. The incoherent contribution to the scattering law can be obtained using the aforementioned methods (continuous, discrete, and translational), but the coherent contribution must be approximated.
+
+.. math:: 
+  S(\alpha,\beta)=\big(1-c\big)S_{inc}(\alpha,\beta)+c~S_{coh}(\alpha,\beta)
+
+
+The Skold approximation approximates the coherent scattering law by using the *static structure factor* :math:`S(\kappa)` to modify the incoherent scattering law.
+
+.. math:: 
+  S_{coh}(\alpha,\beta)=S_{inc}\left(\frac{\alpha}{S(\kappa)},\beta\right)\times S(\kappa)
+
+The static structure factor :math:`S(\kappa)` is a user-provided input that describes correlation in molecular positions, where :math:`\kappa` is wave number, defined as 
+
+.. math:: 
+  \kappa = \frac{\sqrt{2Mk_bT\alpha}}{\hbar}
+
+
+where :math:`M` is the mass of the scatterer. Using these relations, the coherent-corrected scattering can be obtained by solving the above three equations for all :math:`\alpha,\beta` values.
+
+
+.. .. code-block:: python
+   :emphasize-lines: 3,5
+   # user-provided values
+   S(k)      = [ s0, s1, s2, ... ] # static structure factor S(k)
+   kappaGrid = [ k0, k1, k2, ... ] # kappa grid that S(k) is on 
+   for b in betas:
+     for a in alphas:
+       kappa    = k(a) # from alpha calculate wave number 
+       S(kappa)        # interpolate on S(k) grid for the given kappa value
+       reducedAlpha = a / S(kappa)
+       S_coh = S(
+       
+       
 
 
 
+Special Cases and Misc. Functions
+==============================================
+
+Short-time collision approximation 
+------------------------------------
 
 

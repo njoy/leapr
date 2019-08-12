@@ -6,7 +6,7 @@
 
 
 template <typename Range, typename Float>
-auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
+auto start( Range& rho, const Float& continWgt, Range& betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 
@@ -14,8 +14,8 @@ auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
    * delta : desired spacing for the continuous spectrum. This amends beta
    *         values and is originally provided via Card11
    * tev   : temperature in eV. Calculated as T * k_b in leapr.cpp
-   * tbeta : normalization for the continuous frequency spectrum. Note that 
-   *         the freq. spectrum rho should integrate to 1 (Eq. 508). Well tbeta
+   * continWgt : normalization for the continuous frequency spectrum. Note that 
+   *         the freq. spectrum rho should integrate to 1 (Eq. 508). Well continWgt
    *         is the scaling away from 1, if the user wants. Provided in Card13
    * 
    * Operations
@@ -56,10 +56,10 @@ auto start( Range& rho, const Float& tbeta, Range& betaGrid ){
                               | ranges::view::drop(1));
   auto betaPZipped_unnormalized = ranges::view::zip(betaGrid, P);
   auto betaPZipped = ranges::view::zip(
-                       betaGrid, normalize(betaPZipped_unnormalized, tbeta) );
+                       betaGrid, normalize(betaPZipped_unnormalized, continWgt) );
 
   Float lambda_s = getDebyeWaller( betaPZipped );
-  Float t_eff = getEffectiveTemp(betaPZipped)/(2.0*tbeta);
+  Float t_eff = getEffectiveTemp(betaPZipped)/(2.0*continWgt);
 
   auto T1 = betaPZipped 
           | ranges::view::transform( [lambda_s](auto pair){

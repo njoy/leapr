@@ -46,6 +46,24 @@ TEST_CASE( "bfill" ){
       } // THEN
     } // WHEN
   } // GIVEN
+
+
+
+
+  /*
+  GIVEN( "test" ){
+      int maxbb = 11;
+      std::vector<double> betan {0.14679720469807223   ,   0.22019580704710831   ,   0.44039161409421662    ,  0.88078322818843324    ,   1.7615664563768665},
+        rdbex (11, 0.0),
+        beta {0.0,0.15,0.3,0.6,1.2};
+        auto output = bfill(maxbb, rdbex, beta);
+      std::cout << (rdbex|ranges::view::all) << std::endl;
+ } // WHEN
+
+ */
+
+
+
 } // TEST CASE
 
 
