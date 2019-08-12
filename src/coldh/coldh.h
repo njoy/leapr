@@ -50,10 +50,25 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   }
 
   x = de / tev;
-  wt = trans_weight + tbeta;   // Translational weight
+  wt = trans_weight + tbeta;  
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
-             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); auto xyZipped = ranges::view::zip(xVals,ska);
+             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); 
+  auto xyZipped = ranges::view::zip(xVals,ska);
+
+  for ( int b = 0; b < int(beta.size()); ++b ){
+      Float be=beta[b];
+      if (lat == 1){ be = be * therm / tev; }
+      exb[b] = exp(-be*0.5);
+      betan[b] = be;
+  } 
+  auto output = bfill(maxbb,rdbex,betan);
+
+  nbx = std::get<0>(output);
+  for ( size_t i = 0; i < bex.size(); ++i ){
+    bex[i] = std::get<1>(output)[i];
+  }
+
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
     Float al = alpha[a]*scaling;
@@ -86,7 +101,8 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
     // we're using this (and applying Vineyard) means that we are not able to
     // use Skold later. Which is good, because we wouldn't want to do it twice.
 
-    
+
+   
     // Ortho Hydrogen
     if (ncold == 1){ 
       evenSumConst =      scatLenI * scatLenI / 3;
@@ -117,44 +133,17 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
     evenSumConst /= scatLenI * scatLenI + scatLenC * scatLenC;
     oddSumConst  /= scatLenI * scatLenI + scatLenC * scatLenC;
 
-    // prepare arrays for sint
-   if (a == 0){ 
-      for ( int b = 0; b < int(beta.size()); ++b ){
-          Float be=beta[b];
-          if (lat == 1){ be = be * therm / tev; }
-          exb[b] = exp(-be*0.5);
-          betan[b] = be;
-      } 
-      auto output = bfill(maxbb,rdbex,betan);
 
-      nbx = std::get<0>(output);
-      for ( size_t i = 0; i < bex.size(); ++i ){
-        bex[i] = std::get<1>(output)[i];
-      }
-    }
     Range input ( beta.size(), 0.0 ); 
-    //Range input ( alpha.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab_1[b+a*betan.size()];
     }
-    //for ( size_t a1 = 0; a1 < alpha.size(); ++a1 ){
-    //  input[a1] = sym_sab_1[a1*betan.size()];
-   // }
-
-    //std::cout << (input|ranges::view::all) << std::endl;
-    //std::cout << (exb|ranges::view::all) << std::endl;
-    //std::cout << maxbb<< std::endl;
-    //std::cout << std::endl;
     auto sex = extsCOLDH( input, exb, betan );
-    std::cout << (betan|ranges::view::all) << std::endl << std::endl;
-    std::cout << (rdbex|ranges::view::all) << std::endl << std::endl;
-    std::cout << (bex|ranges::view::all) << std::endl << std::endl;
-    std::cout << (sex|ranges::view::all) << std::endl << std::endl;
 
     betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
       oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
 
   }
-  return;
  
-}   
+}
+    

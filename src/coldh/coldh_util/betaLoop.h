@@ -70,18 +70,10 @@ auto betaLoop( const Range& betan, const Range& rdbex, const Range& bex,
       sn = sn + snlg + snlk;
 
     }
-    std::cout << snlg << "    " << snlk << "     " << sn <<  std::endl;
 
     //--continue the beta loop
-      if (jj <  betan.size())   sym_sab_1[(k-1)+a*betan.size()] = sn;
-      if (jj >= betan.size()-1) sym_sab_2[(k-1)+a*betan.size()] = sn;
+    if (jj <  betan.size())   sym_sab_1[(k-1)+a*betan.size()] = sn;
+    if (jj >= betan.size()-1) sym_sab_2[(k-1)+a*betan.size()] = sn;
   } // end for 
 
-  std::cout << sym_sab_1[0+0*betan.size()] << std::endl;
-  std::cout << sym_sab_1[1+0*betan.size()] << std::endl;
-  std::cout << sym_sab_1[2+0*betan.size()] << std::endl;
-  std::cout << sym_sab_1[3+0*betan.size()] << std::endl;
-  std::cout << sym_sab_1[4+0*betan.size()] << std::endl;
-  std::cout << sym_sab_1[0+1*betan.size()] << std::endl;
-  std::cout << sym_sab_1[1+1*betan.size()] << std::endl;
 }
