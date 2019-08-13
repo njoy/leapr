@@ -124,7 +124,7 @@ TEST_CASE( "oscillator loop" ){
 
   GIVEN( "inputs" ){
     int maxdd = 500, numOscillators = 2, a = 0;
-    double wt = 2.0, tbart = 405.894676, temp = 200.0;
+    double tbart = 405.894676, temp = 200.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
       dbw(50, 0.0), ar(50, 0.0), dist(50,0.0);
@@ -138,7 +138,7 @@ TEST_CASE( "oscillator loop" ){
     std::vector<std::tuple<double,double>> energiesWgts {{0.1,0.2},{0.3,0.8}};
 
     oscillatorLoop( alpha, dbw, ar, wts, bes, energyNorm, 
-      a, maxdd, numOscillators, wt, tbart, energiesWgts, dist, temp );
+      a, maxdd, numOscillators, tbart, dist, temp );
 
     THEN( "ouput is correct" ){
       wtsCorrect = { 0.9573911, 1.085300E-2, 6.151529E-5, 2.324478E-7, 
@@ -165,7 +165,6 @@ TEST_CASE( "oscillator loop" ){
         else { REQUIRE( 0.0 == Approx(wts[i]).epsilon(1e-6) ); }
       }
  
-      REQUIRE( 3.0 == Approx(wt).epsilon(1e-6) );
       REQUIRE( 407.4545311 == Approx(tbart).epsilon(1e-6) );
 
     } // THEN

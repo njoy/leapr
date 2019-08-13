@@ -9,32 +9,28 @@
 template <typename Float>
 void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
-template <typename Float, typename Range>
+template <typename Float, typename Range, typename RangeZipped>
 auto discre_new( const Float& sc, const Float& scaling, const Float& tev, 
   const Float& lambda_s, const Float& twt, const Float& tbeta, 
   Range alpha, Range beta, const Float& temp, 
-  std::vector<std::tuple<Float,Float>>& oscEnergiesWeights, Float& t_eff, 
+  RangeZipped& oscEnergiesWeights, Float& t_eff, 
   Range& sym_sab ){
 
-  for ( auto& a : alpha ){ a *= scaling; }
-  for ( auto& b : beta  ){ b *= sc; }
+  for ( auto& a : alpha     ){ a *= scaling; }
+  for ( auto& b : beta      ){ b *= sc; }
 
   int maxbb = 2 * beta.size() + 1, maxdd = 500;
-  Float bk = 8.617385E-5;
 
   // Set up oscillator parameters
   // Prepare functions of beta
-  Float weight, tsave;
+  Range ar(50), t_eff_consts(50), lambda_i(50), oscBetas(50), exb(beta.size());
 
-  Range ar(50), t_eff_consts(50), lambda_i(50), 
-    betaVals(50), exb(beta.size());//, beta(beta.size());
+  prepareParams(oscEnergiesWeights, tev, oscBetas, ar, t_eff_consts,
+    lambda_i, exb, beta );
 
-
-  prepareParams(oscEnergiesWeights, tev, betaVals, weight, tsave, ar, t_eff_consts,
-    lambda_i, bk, exb, beta );
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
-   * --> betaVals = [ energy / tev ]
+   * --> oscBetas = [ energy / tev ]
    * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / tev ) ]
    *             This is used to calculate the effective temperature Eq. 544
    * --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
@@ -50,6 +46,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
   Range bex = std::get<1>(output);
 
   Float wt = tbeta, tbart = t_eff/temp;
+  for ( auto x : oscEnergiesWeights ){ wt += std::get<1>(x); }
      
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
@@ -77,7 +74,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     Range bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, wts, bes,  
-      betaVals, a, maxdd, oscEnergiesWeights.size(), wt, tbart, oscEnergiesWeights, 
+      oscBetas, a, maxdd, oscEnergiesWeights.size(), tbart, 
       t_eff_consts, 
       temp );
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
@@ -100,34 +97,22 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
       }
     }
 
-    /*
-    n = 0;
-    while ( n < nn ){
-      n += 1;
-      if ( wts[n-1] < 1e-6 and n > 5 ){ break; }
+    for (int i = 0; i << nn; ++i){
+      n = i;
+      if (wts[i-1] < 1e-6 and i > 5) { break; }
     }
-    */
-    int i=0;
-    int idone=0;
-    while (i << nn and idone == 0){
-       i=i+1;
-       n=i;
-       if (wts[i-1] < 1e-6 and i > 5) idone=1;
-    }
-
-
 
     // Add the continuous part to the scattering law
     Range sexpb(beta.size(),0.0);
-    //std::cout << wts[0] << std::endl;
+
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
-        auto beta_val = -beta[b] - bes[m];
+        //auto beta_val = -beta[b] - bes[m];
         // This is explicitly evaluating Eq. 542, where wts is W_k(alpha), and
         // bes is a vector populated with beta_k values. sint is used to 
         // interpolate for the beta - beta_k piece of the equation.
-        auto add = wts[m] * sint(beta_val, bex, rdbex, sex, beta, b, 
-            alpha[a], tbeta + twt, tbart, nbx);
+        auto add = wts[m] * sint(-beta[b] - bes[m], bex, rdbex, sex, beta, b, 
+            alpha[a]*(tbeta + twt), tbart, nbx);
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }

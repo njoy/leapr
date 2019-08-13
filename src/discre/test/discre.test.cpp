@@ -21,10 +21,7 @@ TEST_CASE( "discre again" ){
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, tev = 1.723477E-2,
              tbeta = 2.0, twt = 0.3;
 
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
@@ -52,12 +49,8 @@ TEST_CASE( "discre again" ){
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
-      //int itemp = 0;
 
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
@@ -83,13 +76,8 @@ TEST_CASE( "discre again" ){
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
-      //int itemp = 0;
 
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
-
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
@@ -115,13 +103,8 @@ TEST_CASE( "discre again" ){
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
-      //int itemp = 0;
 
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
-
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
@@ -149,12 +132,8 @@ TEST_CASE( "discre again" ){
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
-      //int itemp = 0;
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
 
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
@@ -180,13 +159,8 @@ TEST_CASE( "discre again" ){
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
              tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
-      //int itemp = 0;
 
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(osc_energies.size());
-    for ( size_t i = 0; i < osc_energies.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(osc_energies[i],osc_weights[i]);
-    }
-
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
       discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 

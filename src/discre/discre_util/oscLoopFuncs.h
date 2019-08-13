@@ -43,10 +43,8 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
 
 template <typename Float, typename Range>
 auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar, 
-  Range& wts, Range& bes, Range& betaVals, int a, 
-  int maxdd, int numOscillators, Float& wt, Float& tbart, 
-  const std::vector<std::tuple<Float,Float>>& oscEnergiesWeights, 
-  Range& t_eff_consts, const Float& temp ){
+  Range& wts, Range& bes, Range& betaVals, int a, int maxdd, int numOscillators, 
+  Float& tbart, Range& t_eff_consts, const Float& temp ){
   /* alpha          --> yup
    * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
    *                    --defined in Eq. 538, evaluated in prepareParams.h
@@ -128,7 +126,8 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
       wtn[m] = wts[m];
     }
     //n = 0;  // Comment this to pass discre and oscloopFuncs test cases
-    wt += std::get<1>(oscEnergiesWeights[i]);
+    //wt += std::get<1>(oscEnergiesWeights[i]);
+    //wt -= std::get<1>(oscEnergiesWeights[i]);
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( bk * temp );
 

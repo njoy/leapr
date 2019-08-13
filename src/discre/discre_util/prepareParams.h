@@ -1,28 +1,31 @@
 #include <range/v3/all.hpp>
+#include <iostream>
 
-template <typename Float, typename Range>
-auto prepareParams( const std::vector<std::tuple<Float,Float>>& oscEnergiesWeights,
-  const Float& tev, Range& betaVals, Float& weight, Float& tsave, Range& ar, 
-  Range& dist, Range& dbw, const Float& bk, Range& exb, Range& betan ){
-  // Set up oscillator parameters
-  using std::exp;
-  weight = 0.0;
-  tsave = 0.0;
-  for ( size_t i = 0; i < oscEnergiesWeights.size(); ++i ){
-    Float E = std::get<0>(oscEnergiesWeights[i]);
-    Float w = std::get<1>(oscEnergiesWeights[i]);
+template <typename Float, typename Range,  typename RangeZipped>
+auto prepareParams( const RangeZipped& oscEnergiesWeights, const Float& tev, 
+  Range& oscBetas, Range& ar, Range& dist, Range& dbw, Range& exb, Range& betan ){
 
-    betaVals[i] = E / tev;
-    weight += w;
+  using std::exp; using std::get;
+  Float invTev = 1.0/tev;
 
-    ar[i]   = w / ( sinh(0.5*betaVals[i]) * betaVals[i] );
-    dist[i] = 0.5 * w * E / tanh(0.5*betaVals[i]);
-    dbw[i]  = w / ( tanh(0.5*betaVals[i]) * betaVals[i] );
-    tsave  += dist[i] / bk;
-  }
+  auto oscEnergies = oscEnergiesWeights | ranges::view::keys;
+  auto oscWeights  = oscEnergiesWeights | ranges::view::values;
 
-  //betan = ranges::view::iota(0,int(betan.size()))
-  //     | ranges::view::transform([sc,beta](auto b){return beta[b]*sc;});
+  oscBetas = oscEnergies | ranges::view::transform([invTev](auto E){return E*invTev;});
+
+  auto oscBetasWeights = ranges::view::zip(oscBetas,oscWeights);
+
+  ar  = oscBetasWeights | ranges::view::transform([](auto pair){
+              auto beta = get<0>(pair); auto weight = get<1>(pair);
+              return weight/(sinh(0.5*beta)*beta); });
+
+  dbw = oscBetasWeights | ranges::view::transform([](auto pair){
+              auto beta = get<0>(pair); auto weight = get<1>(pair);
+              return weight/(tanh(0.5*beta)*beta); });
+
+  dist = oscEnergiesWeights | ranges::view::transform([invTev](auto pair){
+         auto E = get<0>(pair); auto weight = get<1>(pair);
+         return 0.5 * weight * E / tanh(0.5*E*invTev); });
 
   exb = ranges::view::iota(0,int(betan.size()))
       | ranges::view::transform([betan](auto b){return exp(-betan[b]);});
