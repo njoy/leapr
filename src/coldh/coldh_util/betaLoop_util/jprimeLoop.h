@@ -41,7 +41,7 @@ auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst,
       // If the molecular translations are not assumed to be free, we have to
       // calculate S_f(a,b) ourselves, which brings us to use the sint
       // interpolation function we used for discre. 
-      add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,alphaWgt,1.0,tbart,nbx);
+      add = sint(bn,bex,rdbex,sex,betan,betan.size()-1,alphaWgt,tbart,nbx);
     }
     snl += tmp * add;
   }

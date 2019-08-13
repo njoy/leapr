@@ -19,7 +19,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
   for ( auto& a : alpha     ){ a *= scaling; }
   for ( auto& b : beta      ){ b *= sc; }
 
-  int maxbb = 2 * beta.size() + 1, maxdd = 500;
+  int maxdd = 500;
 
   // Set up oscillator parameters
   // Prepare functions of beta
@@ -40,8 +40,8 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
-  Range rdbex( maxbb );
-  auto output = bfill(maxbb, rdbex, beta);
+  Range rdbex( 2 * beta.size() + 1 );
+  auto output = bfill(rdbex, beta);
   int nbx = std::get<0>(output);
   Range bex = std::get<1>(output);
 
@@ -74,9 +74,7 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     Range bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, wts, bes,  
-      oscBetas, a, maxdd, oscEnergiesWeights.size(), tbart, 
-      t_eff_consts, 
-      temp );
+      oscBetas, a, tbart, t_eff_consts, temp );
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
     // populate bes with entries of beta_k again for various k.

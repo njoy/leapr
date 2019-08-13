@@ -86,7 +86,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
       exb[b] = exp(-be*0.5);
       betan[b] = be;
   } 
-  auto output = bfill(maxbb,rdbex,betan);
+  auto output = bfill(rdbex,betan);
 
   nbx = std::get<0>(output);
   for ( size_t i = 0; i < bex.size(); ++i ){

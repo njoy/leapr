@@ -14,7 +14,7 @@ TEST_CASE( "bfill" ){
         correct_rdbex {1.6666667,3.3333333,6.6666667,6.6666667,6.6666667,
                        6.6666667,3.3333333,1.6666667,0.0,0.0,0.0};
       THEN( "the vectors returned are correct" ){
-        auto output = bfill(maxbb, rdbex, beta);
+        auto output = bfill(rdbex, beta);
         REQUIRE( std::get<0>(output) == 9 );
         REQUIRE( ranges::equal(std::get<1>(output),correct_bex,equal) );
         REQUIRE( ranges::equal(rdbex,correct_rdbex,equal) );
@@ -24,7 +24,7 @@ TEST_CASE( "bfill" ){
       beta[0] = 1e-9;
 
       THEN( "the vectors returned are correct" ){
-        auto output = bfill(maxbb, rdbex, beta);
+        auto output = bfill(rdbex, beta);
         REQUIRE( std::get<0>(output) == 9 );
         REQUIRE( ranges::equal(std::get<1>(output),correct_bex,equal) );
         REQUIRE( ranges::equal(rdbex,correct_rdbex,equal) );
@@ -38,7 +38,7 @@ TEST_CASE( "bfill" ){
         correct_bex {-1.2,-0.6,-0.3,-0.15,-1.1e-9,1.1e-9,0.15,0.3,0.6,1.2,0.0},
         correct_rdbex {1.6666666,3.3333333,6.666666,6.6666666,4.545455e8, 
                        6.6666666,6.66666666,3.3333333,1.6666666,0.0,0.0 };
-      auto output = bfill(maxbb, rdbex, beta);
+      auto output = bfill(rdbex, beta);
       REQUIRE( std::get<0>(output) == 10 );
       THEN( "the vectors returned are correct" ){
         REQUIRE( ranges::equal(std::get<1>(output),correct_bex,equal) );
@@ -46,23 +46,6 @@ TEST_CASE( "bfill" ){
       } // THEN
     } // WHEN
   } // GIVEN
-
-
-
-
-  /*
-  GIVEN( "test" ){
-      int maxbb = 11;
-      std::vector<double> betan {0.14679720469807223   ,   0.22019580704710831   ,   0.44039161409421662    ,  0.88078322818843324    ,   1.7615664563768665},
-        rdbex (11, 0.0),
-        beta {0.0,0.15,0.3,0.6,1.2};
-        auto output = bfill(maxbb, rdbex, beta);
-      std::cout << (rdbex|ranges::view::all) << std::endl;
- } // WHEN
-
- */
-
-
 
 } // TEST CASE
 

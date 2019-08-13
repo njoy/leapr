@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include <range/v3/all.hpp>
 
 template <typename Float>
 auto cutoff( Float a ){ return a < 1.0e-30 ? 0.0 : a; }
@@ -9,7 +8,7 @@ auto bfact( const Float& x, const Float& dwc, const Float& beta_i,
   Range& bplus, Range& bminus ){
   using std::exp;
    
-  Float I0, I1, expVal, y = x / 3.75;
+  Float I0, I1, expVal = -dwc, y = x / 3.75;
 
   if ( y <= 1.0 ){
 
@@ -23,7 +22,6 @@ auto bfact( const Float& x, const Float& dwc, const Float& beta_i,
 
     I1 = I1 * x; 
 
-    expVal = -dwc;
   } 
   if ( y > 1.0 ) {
 
@@ -41,7 +39,7 @@ auto bfact( const Float& x, const Float& dwc, const Float& beta_i,
     I0 /= sqrt(x);
     I1 /= sqrt(x);
 
-    expVal = -dwc + x;
+    expVal += x;
   }
 
   Range In ( 50, 0.0 );
@@ -56,8 +54,10 @@ auto bfact( const Float& x, const Float& dwc, const Float& beta_i,
     }  
   } 
 
-  for ( auto i = 1; i < nmax; ++i ){ In[i] = cutoff( In[i] * I1 / In[0] ); }
-  In[0] = cutoff( I1 );
+  Float fraction = I1/In[0];
+  for ( auto i = 0; i < nmax; ++i ){ 
+    In[i] = cutoff( In[i] * fraction ); 
+  }
 
   for ( auto n = 0; n < nmax; ++n ){
     bplus[n]  = cutoff( exp(expVal - (n+1) * beta_i * 0.5) * In[n] );

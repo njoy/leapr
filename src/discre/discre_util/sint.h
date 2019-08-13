@@ -20,18 +20,19 @@ auto doSCT( const Float& alpha, const Float& tbart, const Float& x){
 template <typename Float, typename Range>
 auto sint(const Float& x, const Range& bex, const Range& rdbex, 
   const Range& sex, const Range& betan, int b, const Float& alpha, 
-  const Float& tbart, int nbx ){
+  const Float& tbart, int numNonzeroEntries ){
   // Interpolates in scattering function, using SCT approximation to 
   // extrapolate outside the range in memory. For discre, the point of this 
   // function is to help evaluate the S(a,b-b_k) part of Eq. 542. Note that 
   // (b-b_k) is given as input "x". If we can use SCT we will, else we'll have
   // to interpolate on log(S) (Note that tbart is proz \bar{T_s}/T in Eq. 530)
   using std::abs; 
+  using std::log;
   
   // Short Collision Time approximation
   if (abs(x) > betan[betan.size()-1]){ return doSCT(alpha, tbart, x); }
   
-  int xLeft = 1, xMid = b+1, xRight = nbx;
+  int xLeft = 1, xMid = b+1, xRight = numNonzeroEntries;
 
   while ( xRight-xLeft > 1.0 ){
     if      (x == bex[xMid-1]){ // If desired point is in the middle of our two

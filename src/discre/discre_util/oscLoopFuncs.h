@@ -1,5 +1,7 @@
 #include "oscLoopFuncs_util/bfact.h"
 #include <range/v3/all.hpp>
+#include <iostream>
+#include "generalTools/constants.h"
 
 template <typename Float, typename Range>
 void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus, 
@@ -29,7 +31,6 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
     // It doesn't really make sense for b_minus_or_plus[k] to be negative
     // right? That's definitely wrong, right? It can be 0 just not < 0
     if ( b_minus_or_plus[k] <= 0 ){ return; } 
-
     for ( auto m = 0; m < nn; ++m ){
       if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < int(bes.size()) ){
         n += 1;
@@ -43,7 +44,7 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
 
 template <typename Float, typename Range>
 auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar, 
-  Range& wts, Range& bes, Range& betaVals, int a, int maxdd, int numOscillators, 
+  Range& wts, Range& bes, Range& betaVals, int a, 
   Float& tbart, Range& t_eff_consts, const Float& temp ){
   /* alpha          --> yup
    * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
@@ -55,8 +56,6 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
    * bes            --> blank vector with maxdd = 500 entries
    * betaVals       --> energy / tev
    * a              --> alpha index
-   * maxdd          --> 500
-   * numOscillators --> yes
    * wt             --> tbeta
    * tbart          --> T_eff / temp  ( t_eff_vec[itemp] / temp_vec[itemp] )
    * oscEnergiesWeights --> vector of delta function energies/weights in tuples
@@ -65,13 +64,13 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
    *                    --in leapr.f90, this is called dist
    */
 
-  Range ben(maxdd, 0), wtn(maxdd, 0); wtn[0] = 1.0;
+  Range ben(wts.size(), 0), wtn(wts.size(), 0); wtn[0] = 1.0;
 
-  Float bk = 8.617385E-5, alpha_lambda_i, x, bzero;
+  Float alpha_lambda_i, x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators
-  for ( auto i = 0; i < numOscillators; ++i ){
+  for ( auto i = 0; i < int(betaVals.size()); ++i ){
     nn = n + 1;
 
     alpha_lambda_i = alpha[a]*lambda_i[i];
@@ -96,7 +95,7 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
     // do convolution for delta function
     n = 0;
     for ( auto m = 0; m < nn; ++m ){
-      if ( (ben[m] <= 0 or wtn[m]*bzero >= 1e-8) and n < maxdd ){
+      if ( (ben[m] <= 0 or wtn[m]*bzero >= 1e-8) and n < int(wts.size())){
         bes[n] = ben[m];
         wts[n] = wtn[m]*bzero;
         // Why are we multiplying by bzero? Because that's the A_(i,n) term for
@@ -108,28 +107,22 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
         n += 1;
       }
     }
-    n -= 1;    // Uncomment this to pass discre and oscloopFuncs test cases
+    n -= 1;
 
     // Read the description for posNegTerms to get a better feel for this.
     // Basically we're going to be populating wts with A_i,n terms muliplied
     // by each other, for many different i and n. 
-    // negative n terms
-    posNegTerms(n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1);
+    posNegTerms(n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1);// negative
+    posNegTerms(n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1 );// positive
 
-    // positive n terms
-    posNegTerms(n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1 );
-
-    // continue loop
     // Copy first n entries of permanent array into our temporary arrays
     for ( auto m = 0; m <= n; ++m ){
       ben[m] = bes[m];
       wtn[m] = wts[m];
     }
-    //n = 0;  // Comment this to pass discre and oscloopFuncs test cases
-    //wt += std::get<1>(oscEnergiesWeights[i]);
-    //wt -= std::get<1>(oscEnergiesWeights[i]);
+
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
-    tbart += t_eff_consts[i] / ( bk * temp );
+    tbart += t_eff_consts[i] / ( kb * temp );
 
   }   
   return n; // Change nn --> n to pass discre and oscLoopFuncs test cases 
