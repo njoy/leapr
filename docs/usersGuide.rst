@@ -35,34 +35,6 @@ Below is a flowchart illustrating options available for data processing in LEAPR
     Flowchart showing options available for users. 
 
 
-Incoherent Elastic
---------------------
-The incoherent elastic component is 
-
-
-Incoherent Elastic & Inelastic
-===============================
-
-
-
-Free Gas Approximation
--------------------------
-
-
-
-Vibrational Spectrum Calculation
----------------------------------
-
-LEAPR requires many input values to calculate the scattering law, perhaps the most important of which is the vibrational frequency spectrum :math:`\rho(\epsilon)` (also known as the phonon distribution and the vibrational density of states). For an introduction on the frequency spectrum, please look at [SECTION]. 
-
-To facilitate calculation, the frequency spectrum is decomposed into a sum of individual spectra,
-
-.. math::
-     \rho(\epsilon)=\rho_{c}(\epsilon)+\rho_{t}(\epsilon)+\sum_{i=1}^N\rho_{d}(\epsilon).
-
-The total frequency spectrum is comprised of a continuous component, a translational component, and a sum of :math:`N` discrete oscillators (denoted as :math:`c,t,` and :math:`d`, respectively).
-
-
 
 
 
