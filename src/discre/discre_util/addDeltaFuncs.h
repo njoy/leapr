@@ -2,12 +2,12 @@
 #include <vector>
 
 template <typename Float, typename Range>
-auto addDeltaFuncs( const Float twt, const Float& dwf, const Range& bes, 
+auto addDeltaFuncs( const Float twt, const Float& debyeWallerExp, const Range& bes, 
   const Range& betan, const Range& wts, Range& sexpb, const int n ) {
   // Add the delta functions to the scattering law 
   // delta(0.0) is saved for the incoherent elastic scattering
   
-  if ( twt > 0.0  or dwf < 1.0e-10 ){ return; }
+  if ( twt > 0.0  or debyeWallerExp < 1.0e-10 ){ return; }
 
   unsigned int j; 
   int jj, m = 0;
@@ -30,8 +30,8 @@ auto addDeltaFuncs( const Float twt, const Float& dwf, const Range& bes,
         }
         jj = j;
 
-        add = j > 2 ? 2 * dwf * wts[m-1]/(betan[jj-1]-betan[jj-3]) :
-                          dwf * wts[m-1]/betan[jj-1];
+        add = j > 2 ? 2 * debyeWallerExp * wts[m-1]/(betan[jj-1]-betan[jj-3]) :
+                          debyeWallerExp * wts[m-1]/betan[jj-1];
 
         if ( add >= 1.0e-20 ){ sexpb[jj-2] += add; }
         if ( done ){ return; }

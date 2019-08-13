@@ -6,8 +6,8 @@
 
 TEST_CASE( "negative n terms loop" ){
   int maxdd = 500;
-  std::vector<double> bminus (50, 0.0), bes (maxdd, 0.0), wts (maxdd, 0.0),
-                      wtn (maxdd, 0.0), ben (maxdd, 0.0);
+  std::vector<double> bminus (50, 0), bes (maxdd, 0), wts (maxdd,0),
+                      wtn (maxdd, 0), ben (maxdd, 0);
  GIVEN( "inputs" ){
     int n = 0, nn = 1;
     double normEnergy = 2.03077847;
@@ -21,7 +21,8 @@ TEST_CASE( "negative n terms loop" ){
     posNegTerms( n, normEnergy, bminus, wts, wtn, bes, ben, nn, -1 );
     
     THEN( "values are correct" ){
-      std::vector<double> besCorrect{0.0, -2.030778, -4.061556, -6.092335},
+      std::vector<double> 
+        besCorrect{0.0, -2.030778, -4.061556, -6.092335},
         wtsCorrect{0.9872747, 1.11917E-2, 6.34354E-5, 2.39703E-7};
       checkVec(bes,besCorrect,besCorrect.size());
       checkVec(wts,wtsCorrect,wtsCorrect.size());
@@ -111,12 +112,11 @@ TEST_CASE( "positive terms" ){
 
 
 TEST_CASE( "oscillator loop" ){
-  std::vector<double> wtsCorrect(24), besCorrect(24), wts(24), bes(24),
-    alpha(5);
-  /*
+  std::vector<double> wtsCorrect(24), besCorrect(24), wts(24), bes(24);
+  double alpha; 
 
   GIVEN( "inputs" ){
-    int maxdd = 500, a = 0;
+    int maxdd = 500;
     double tbart = 405.894676, temp = 200.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
@@ -127,11 +127,11 @@ TEST_CASE( "oscillator loop" ){
     dbw[0]        = 0.128237;    dbw[1]        = 0.307831;
     ar[0]         = 8.213274E-2; ar[1]         = 0.1368162;
 
-    alpha  = {0.1, 0.2, 0.4, 0.8, 1.6};
+    alpha  = 0.1;
     std::vector<std::tuple<double,double>> energiesWgts {{0.1,0.2},{0.3,0.8}};
 
     oscillatorLoop( alpha, dbw, ar, wts, bes, energyNorm, 
-      a, tbart, dist, temp );
+      tbart, dist, temp );
 
     THEN( "ouput is correct" ){
       wtsCorrect = { 0.9573911, 1.085300E-2, 6.151529E-5, 2.324478E-7, 
@@ -154,10 +154,8 @@ TEST_CASE( "oscillator loop" ){
     } // THEN
   } // GIVEN
 
-  */
-
   GIVEN( "inputs2" ){
-    int maxdd = 500, a = 0;
+    int maxdd = 500;
     double tbart = 1.8, temp = 296.0;
 
     std::vector<double> wts (maxdd, 0.0), bes(maxdd, 0.0), energyNorm(50, 0.0), 
@@ -168,10 +166,10 @@ TEST_CASE( "oscillator loop" ){
     dbw[0]        = 0.021;  dbw[1]        = 0.017;
     ar[0]         = 7e-4;   ar[1]         = 2e-6;
 
-    alpha  = {0.01, 0.02, 0.04, 0.06, 0.08, 0.20, 0.40, 0.60, 0.80, 2.00, 4.00};
+    alpha  = 0.01;
 
     oscillatorLoop( alpha, dbw, ar, wts, bes, energyNorm, 
-      a, tbart, dist, temp );
+      tbart, dist, temp );
 
     THEN( "ouput is correct" ){
       wtsCorrect = { 0.99962007, 1.9102091E-4, 1.8251428E-8, 6.408037E-8, 
@@ -187,8 +185,6 @@ TEST_CASE( "oscillator loop" ){
 
     } // THEN
   } // GIVEN
-
-
 } // TEST CASE
 
 

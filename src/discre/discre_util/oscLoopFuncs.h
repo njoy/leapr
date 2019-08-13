@@ -43,11 +43,11 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
 
 
 template <typename Float, typename Range>
-auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar, 
-  Range& wts, Range& bes, Range& betaVals, int a, 
+auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar, 
+  Range& wts, Range& bes, Range& betaVals, 
   Float& tbart, Range& t_eff_consts, const Float& temp ){
   /* alpha          --> yup
-   * lambda_i       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
+   * debyeWaller       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
    *                    --defined in Eq. 538, evaluated in prepareParams.h
    * ar             --> weight / ( sinh( 0.5 * energy / tev ) * energy / tev )
    *                    --bessel arg from Eq. 537, evaluated in prepareParams.h
@@ -66,31 +66,26 @@ auto oscillatorLoop( const Range& alpha, Range& lambda_i, Range& ar,
 
   Range ben(wts.size(), 0), wtn(wts.size(), 0); wtn[0] = 1.0;
 
-  Float alpha_lambda_i, x, bzero;
+  Float alpha_debyeWaller, x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators
   for ( auto i = 0; i < int(betaVals.size()); ++i ){
     nn = n + 1;
-
-    alpha_lambda_i = alpha[a]*lambda_i[i];
-    //             = alpha*weight / (tanh(0.5*energy/tev) * energy/tev)
-    //             = scaled alpha * lambda_i (lambda_i defined in Eq. 538)
-    
-    x              = alpha[a]*ar[i];
+    x              = alpha*ar[i];
     //             = alpha*weight / (sinh(0.5*energy/tev) * energy/tev)
     //             = argument for bessel function in Eq. 537
 
     /* bfact populates bplus and bminus with A_in terms from Eq. 537.
      * The nth entry of bplus or bminus corresponds to a specific alpha and 
      * i value. The bzero output is either 
-     *                 I0(x)*e^(-alpha*lambda_i)
+     *                 I0(x)*e^(-alpha*debyeWaller)
      * or 
-     *                I0(x)*e^(-alpha*lambda_i+x)
+     *                I0(x)*e^(-alpha*debyeWaller+x)
      * depending on the size of x.
      */
     Range bminus (50,0), bplus(50,0);
-    bzero = bfact( x, alpha_lambda_i, betaVals[i], bplus, bminus );
+    bzero = bfact( x, alpha*debyeWaller[i], betaVals[i], bplus, bminus );
     
     // do convolution for delta function
     n = 0;

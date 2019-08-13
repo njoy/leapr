@@ -1,29 +1,27 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp" 
 #include "discre/discre.h"
-
+#include <iostream>
 
 auto equal = [](auto x, auto y, double tol = 1e-5){return x == Approx(y).epsilon(tol);};
 
-
-
-TEST_CASE( "discre again" ){
+TEST_CASE( "Discrete oscillator treatment" ){
+  //std::cout << std::setprecision(18);
+  double temp  = 200.0012;
   GIVEN( "two oscillators" ){
     WHEN( "alpha and beta values are slightly small" ){
       std::vector<double> osc_energies{0.035, 0.05}, osc_weights{0.2, 0.8},
         alpha{0.1, 0.2, 0.4, 0.8, 1.6}, beta{0.10, 0.15, 0.30, 0.60, 1.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, tev = 1.723477E-2,
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, sc = 1, scaling = 1, tbeta = 2, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.9575582, 1.914953, 2.872356, 
@@ -41,18 +39,17 @@ TEST_CASE( "discre again" ){
       std::vector<double> osc_energies{0.035, 0.05}, osc_weights{0.2, 0.8},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
+             tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.7125247, 1.321226, 1.681776, 2.414681,
@@ -69,17 +66,16 @@ TEST_CASE( "discre again" ){
       std::vector<double> osc_energies{0.1, 0.5}, osc_weights{0.4, 0.6},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
+             tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.8323044, 1.665653, 2.505608, 
@@ -96,16 +92,15 @@ TEST_CASE( "discre again" ){
       std::vector<double> osc_energies{0.1, 0.5}, osc_weights{0.4, 0.5},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
+             tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.83835105, 1.6777545, 2.5238118, 
@@ -125,16 +120,15 @@ TEST_CASE( "discre again" ){
       std::vector<double> osc_energies{0.1, 0.2, 0.3}, osc_weights{0.2, 0.3, 0.5},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
+             tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.8313648, 1.663253, 2.498450, 
@@ -152,16 +146,15 @@ TEST_CASE( "discre again" ){
       std::vector<double> osc_energies{1,2,3,4,5}, osc_weights{0.5,0.4,0.3,0.2,0.1},
         alpha{2.1, 4.2, 6.4, 8.8, 10.6}, beta{1.10, 2.15, 3.30, 4.60, 5.20};
       double t_eff = 81178.935219;
-      double temp  = 200.0;
 
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
       double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tev = 1.723477E-2, tbeta = 2.0, twt = 0.3;
+             tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre_new( sc, scaling, tev, lambda_s, twt, tbeta, alpha, beta, 
+      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.9690026, 1.938005, 2.907007, 
@@ -175,6 +168,67 @@ TEST_CASE( "discre again" ){
       } // THEN
     } // WHEN
   } // GIVEN
+
+
+  GIVEN( "simplifid water input" ){
+    double sc = 0.99187300471670414, scaling = 0.99187300471670414,
+    lambda_s = 0.23520419, temp = 296.0,
+    twt = 5.5556e-2, tbeta = 0.444444, effectiveTemp = 541.87556285322705;
+    std::vector<double> 
+      alpha = {0.10, 0.04, 0.08, 0.10, 0.40, 0.80, 1.00, 4.00, 8.00, 10.0},
+      beta  = {0.00, 1.00, 2.00, 3.00, 4.00},
+      oscEnergies { 0.205,    0.48     },
+      oscWeights  { 0.166667, 0.666666 },
+      sab { 11.98804915, 3.610205E-4, 4.864924E-4, 4.535244E-4, 1.156846E-4, 5.951624125, 1.451989E-3, 1.926084E-3, 1.791418E-3, 4.772776E-4, 4.169703384, 2.909939E-3, 3.809574E-3, 3.539618E-3, 9.786056E-4, 3.712543196, 3.638115E-3, 4.737517E-3, 4.401010E-3, 1.235316E-3, 1.739126443, 1.435423E-2, 1.771050E-2, 1.652928E-2, 5.379703E-3, 1.133534359, 3.434249E-2, 3.264296E-2, 3.082858E-2, 1.137667E-2, 0.974899977, 5.136561E-2, 3.922902E-2, 3.728513E-2, 1.447020E-2, 0.289595362, 0.203273979, 9.854002E-2, 9.147211E-2, 5.420127E-2, 0.114055698, 0.133646508, 0.109956581, 9.825605E-2, 7.232408E-2, 7.821841E-2, 0.101069704, 9.734660E-2, 8.954631E-2, 7.085870E-2 },
+      correctSAB { 11.9834763629, 3.60882816E-4, 4.86306841E-4, 4.53351406E-4, 1.15640497E-4, 5.94254842792, 1.44977504E-3, 1.92314734E-3, 1.78868636E-3, 4.76549837E-4, 4.15699622913, 2.90107127E-3, 3.79796452E-3, 3.52883189E-3, 9.75625188E-4, 3.69840613633, 3.62426163E-3, 4.71947768E-3, 4.38425293E-3, 1.23064037E-3, 1.71278759424, 1.41368548E-2, 1.74423270E-2, 1.62791889E-2, 5.29930548E-3, 1.09945995083, 3.33101949E-2, 3.16618467E-2, 2.99023380E-2, 1.10362578E-2, 0.93840644484, 4.94428903E-2, 3.77607212E-2, 3.58899321E-2, 1.39300603E-2, 0.24860853768, 0.17450439559, 8.45937177E-2, 7.85264800E-2, 4.65315819E-2, 8.40558237E-2, 9.84937256E-2, 8.10350275E-2, 7.24123401E-2, 5.33019471E-2, 5.34101406E-2, 6.90137869E-2, 6.64716132E-2, 6.11455485E-2, 4.83856381E-2 };
+
+
+    //auto oscEnergies = ranges::view::iota(1,5); 
+    //auto oscWeights  = ranges::view::iota(2,6); 
+    auto oscEnergiesWeights = ranges::view::zip(oscEnergies,oscWeights);
+//    std::cout << std::endl;
+
+    discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
+ //   std::cout << std::endl;
+      THEN( "scattering law matrix is correctly changed" ){
+        //REQUIRE(ranges::equal(sab,correctSAB,equal));
+      } // THEN
+
+    //std::cout << (sab | ranges::view::all) << std::endl;
+    /*
+      std::vector<double> osc_energies{0.205, 0.48}, osc_weights{0.166667, 0.666666},
+      alpha = {0.10, 0.04, 0.08, 0.10, 0.40, 0.80, 1.00, 4.00, 8.00, 10.0},
+      beta  = {0.00, 1.00, 2.00, 3.00, 4.00};
+      double t_eff = 81178.935219;
+
+      //std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
+      //for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
+
+      std::vector<double> sym_sab  =  { 11.98804915, 3.610205E-4, 4.864924E-4, 4.535244E-4, 1.156846E-4, 5.951624125, 1.451989E-3, 1.926084E-3, 1.791418E-3, 4.772776E-4, 4.169703384, 2.909939E-3, 3.809574E-3, 3.539618E-3, 9.786056E-4, 3.712543196, 3.638115E-3, 4.737517E-3, 4.401010E-3, 1.235316E-3, 1.739126443, 1.435423E-2, 1.771050E-2, 1.652928E-2, 5.379703E-3, 1.133534359, 3.434249E-2, 3.264296E-2, 3.082858E-2, 1.137667E-2, 0.974899977, 5.136561E-2, 3.922902E-2, 3.728513E-2, 1.447020E-2, 0.289595362, 0.203273979, 9.854002E-2, 9.147211E-2, 5.420127E-2, 0.114055698, 0.133646508, 0.109956581, 9.825605E-2, 7.232408E-2, 7.821841E-2, 0.101069704, 9.734660E-2, 8.954631E-2, 7.085870E-2 };
+
+      std::cout << sym_sab.size() << std::endl;
+      double lambda_s = 2.2941534E-3, sc = 1, scaling = 1, tbeta = 2, twt = 0.3;
+
+    auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
+
+      //discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+       //       temp, oscEnergiesWeights, t_eff, sym_sab );
+
+      std::vector<double> correctSymSab {0.9575582, 1.914953, 2.872356, 
+        3.829659, 4.807700, 5.501617, 6.418366, 7.335187, 8.251386, 9.253313, 
+        9.256188, 10.09717, 10.93859, 11.77685, 12.85839, 11.36789, 12.07716, 
+        12.78842, 13.48618, 14.74575, 10.74546, 11.25461, 11.77105, 12.24116, 
+        13.75305};
+
+      THEN( "scattering law matrix is correctly changed" ){
+        //REQUIRE(ranges::equal(sym_sab,correctSymSab,equal));
+      } // THEN
+
+      */
+
+  } // GIVEN
+
+
 } // TEST CASE
 
 

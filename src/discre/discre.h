@@ -4,36 +4,35 @@
 #include "discre_util/oscLoopFuncs.h"
 #include "discre_util/sint.h"
 #include "discre_util/addDeltaFuncs.h"
+#include "generalTools/constants.h"
 #include <range/v3/all.hpp>
 
 template <typename Float>
 void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
 template <typename Float, typename Range, typename RangeZipped>
-auto discre_new( const Float& sc, const Float& scaling, const Float& tev, 
-  const Float& lambda_s, const Float& twt, const Float& tbeta, 
-  Range alpha, Range beta, const Float& temp, 
-  RangeZipped& oscEnergiesWeights, Float& t_eff, 
-  Range& sym_sab ){
+auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s, 
+  const Float& twt, const Float& tbeta, Range alpha, Range beta, 
+  const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sym_sab ){
 
-  for ( auto& a : alpha     ){ a *= scaling; }
-  for ( auto& b : beta      ){ b *= sc; }
+  for ( auto& a : alpha ){ a *= scaling; }
+  for ( auto& b : beta  ){ b *= sc; }
 
   int maxdd = 500;
 
   // Set up oscillator parameters
   // Prepare functions of beta
-  Range ar(50), t_eff_consts(50), lambda_i(50), oscBetas(50), exb(beta.size());
+  Range ar(50), t_eff_consts(50), debyeWaller(50), oscBetas(50), exb(beta.size());
+  Float tev = temp*kb;
 
   prepareParams(oscEnergiesWeights, tev, oscBetas, ar, t_eff_consts,
-    lambda_i, exb, beta );
+    debyeWaller, exb, beta );
 
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
-   * --> oscBetas = [ energy / tev ]
    * --> t_eff_consts = [ 0.5 * weight * energy / tanh( 0.5 * energy / tev ) ]
    *             This is used to calculate the effective temperature Eq. 544
-   * --> lambda_i = [ weight / ( tanh( 0.5 * energy / tev ) * energy / tev ) ]
+   * --> debyeWaller = [ weight / ( tanh(0.5 * energy / tev) * energy / tev ) ]
    *             This is lambda_i, defined in Eq. 538. Used for Eq. 537.
    * --> exb = [ exp( -beta * sc / 2 ) ]
    *          This is used in calculating the sex vector, since to go from 
@@ -69,12 +68,13 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     //                (dependinng on first beta value)
     // The exp(-beta) values are explained above, because of Eq. 509
 
-
     // Initialize delta loop
     Range bes(maxdd,0.0), wts(maxdd,0.0);
     
-    unsigned int nn = oscillatorLoop( alpha, lambda_i, ar, wts, bes,  
-      oscBetas, a, tbart, t_eff_consts, temp );
+    unsigned int nn = oscillatorLoop( alpha[a], debyeWaller, ar, wts, bes,  
+      oscBetas, tbart, t_eff_consts, temp );
+
+
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
     // populate bes with entries of beta_k again for various k.
@@ -116,8 +116,8 @@ auto discre_new( const Float& sc, const Float& scaling, const Float& tev,
     }
 
     // Add the delta functions to the scattering law
-    Float dwf = exp( -alpha[a]*lambda_s );
-    addDeltaFuncs( twt, dwf, bes, beta, wts, sexpb, n ); 
+    Float debyeWallerExponential = exp( -alpha[a]*lambda_s );
+    addDeltaFuncs( twt, debyeWallerExponential, bes, beta, wts, sexpb, n ); 
 
     // Record the results
     for ( size_t b = 0; b < beta.size(); ++b ){
