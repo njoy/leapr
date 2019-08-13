@@ -2,8 +2,37 @@
 #include <vector>
 #include "generalTools/interpolate.h"
 #include "coldh_util/betaLoop.h"
-#include <unsupported/Eigen/CXX11/Tensor>
 #include <range/v3/all.hpp>
+#include "generalTools/constants.h"
+#include <tuple>
+
+
+template <typename Float>
+auto getSumConstants( int ncold, Float& scatLenI, Float& scatLenC, Float& sk ){
+  using std::make_tuple; using std::pow;
+  // Ortho Hydrogen
+  if (ncold == 1){ 
+    return make_tuple(                     pow(scatLenI,2)*0.333333,   // EVEN
+                      pow(scatLenC,2)*sk + pow(scatLenI,2)*0.666667); }// ODD 
+
+  // Para Hydrogen
+  else if ( ncold == 2 ){
+    return make_tuple(sk*pow(scatLenC,2),                              // EVEN
+                         pow(scatLenI,2) ); }                          // ODD
+
+  // Ortho Deuterium
+  else if ( ncold == 3 ){
+    return make_tuple(pow(scatLenC,2)*sk + pow(scatLenI,2)*0.625,     // EVEN
+                                           pow(scatLenI,2)*0.375); }  // ODD
+
+  // Para Deuterium
+  else {   // ncold == 4{ 
+    return make_tuple(                     pow(scatLenI,2)*0.75,      // EVEN
+                      pow(scatLenC,2)*sk + pow(scatLenI,2)*0.25); }   // ODD
+}
+
+
+
 
 template <typename Float, typename Range>
 auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta, 
@@ -18,12 +47,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
    * symmetric in beta
    */
 
-  Float angst  = 1.0e-10,
-         eV     = 1.60217733e-19,  // elementary charge [J] 
-         mass_H = 1.6726231E-27,   // Mass of H in grams
-         mass_D = 3.343568E-27,    // Mass of D in grams
-         hbar   = 1.05457266e-34,  // planck constant [J*s]
-         de, x, mass_H2_D2, bp, scatLenC, scatLenI, wt, therm = 0.0253;
+  Float de, x, massMolecule, bp, scatLenC, scatLenI, wt, therm = 0.0253;
   int nbx, maxbb = 2 * beta.size() + 1;
 
   Range exb(beta.size(), 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
@@ -32,8 +56,8 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   // Either Ortho Deuterium or Para Deuterium 
   if ( ncold > 2 ){
     de = 0.0074;
-    mass_H2_D2 = 6.69E-27;    // Mass of D2 in kg
-    bp = hbar / ( angst * sqrt( 2*de*eV*mass_D ) ); 
+    massMolecule = massD2;
+    bp = hbar / ( 1e-10 * sqrt( 2*de*ev*massDeuterium ) ); 
     scatLenC = 0.668; // If you want to see where these values probably come
     scatLenI = 0.403; // from, consider looking at 
     // https://www.ncnr.nist.gov/resources/n-lengths/elements/h.html
@@ -41,10 +65,10 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   // Either Ortho Hydrogen or Para Hydrogen
   else {
     de = 0.0147;
-    mass_H2_D2 = 3.3464E-27;  // Mass of H2 in kg
+    massMolecule = massH2;  
     // It seems like this is trying to be a/2, as defined on pg. 662, but when
     // I plug in values it seems to be 2 orders of magnitude off.
-    bp = hbar / ( angst * sqrt( 2*de*eV*mass_H ) );
+    bp = hbar / ( 1e-10 * sqrt( 2*de*ev*massHydrogen ) );
     scatLenC = 0.356;
     scatLenI = 2.526;
   }
@@ -72,7 +96,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
     Float al = alpha[a]*scaling;
-    Float waven = angst * sqrt( mass_H2_D2 * tev * eV * al ) / hbar;
+    Float waven = 1e-10 * sqrt( massMolecule * tev * ev * al ) / hbar;
     Float y = bp * waven;
 
     // We interpolate S(kappa) to get the corresponding value that we will use
@@ -81,7 +105,9 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
     Float sk = interpolate( xyZipped, waven, 1.0 );
 
     // spin-correlation factors
-    Float evenSumConst, oddSumConst;
+    auto output = getSumConstants( ncold, scatLenI, scatLenC, sk );
+    Float evenSumConst = std::get<0>(output), 
+          oddSumConst  = std::get<1>(output);
     // -----------------------------------------------------------------------
     // This is meant to recreate the table on pg. 662 of the manual, where we
     // get the A (even) and B (odd) terms for the summation in Eq. 567.
@@ -102,28 +128,6 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
     // use Skold later. Which is good, because we wouldn't want to do it twice.
 
 
-   
-    // Ortho Hydrogen
-    if (ncold == 1){ 
-      evenSumConst =      scatLenI * scatLenI / 3;
-      oddSumConst  = sk * scatLenC * scatLenC + 2 * scatLenI * scatLenI / 3;
-    } 
-    // Para Hydrogen
-    else if ( ncold == 2 ){
-      evenSumConst = sk * scatLenC * scatLenC;
-      oddSumConst  =      scatLenI * scatLenI;
-    } 
-    // Ortho Deuterium
-    else if ( ncold == 3 ){
-      evenSumConst = sk * scatLenC * scatLenC + 5 * scatLenI * scatLenI / 8;
-      oddSumConst  = 3  * scatLenI * scatLenI / 8;
-    } 
-    // Para Deuterium
-    else {// if ( ncold == 4){ 
-      evenSumConst = 3  * scatLenI * scatLenI / 4;
-      oddSumConst  = sk * scatLenC * scatLenC + scatLenI * scatLenI / 4;
-    }
-
     // Both the ortho and para scattering laws (Eq. 567-568) are multiplied by
     // a (4*pi/sigma_b) term (where sigma_b is the characteristic bound cross
     // section, 
@@ -132,7 +136,6 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
     //          Incoh Scattering Len^2 + Coh Scattering Len^2
     evenSumConst /= scatLenI * scatLenI + scatLenC * scatLenC;
     oddSumConst  /= scatLenI * scatLenI + scatLenC * scatLenC;
-
 
     Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){

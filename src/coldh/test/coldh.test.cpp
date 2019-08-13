@@ -7,9 +7,9 @@
 #include <range/v3/all.hpp>
 #include "generalTools/testing.h"
 
-//auto equal = [](auto x, auto y, double tol = 5e-5){return x == Approx(y).epsilon(tol);};
-
+//  std::cout << std::setprecision(15) << std::endl;
 TEST_CASE( "coldh" ){
+
   std::vector<double> tempf, alpha, beta, ska, goodSymSab1(25), goodSymSab2(25);
   double temp, tev, tbeta, trans_weight, scaling, dka;
   int ncold, lat;
@@ -147,10 +147,187 @@ TEST_CASE( "coldh" ){
         REQUIRE(ranges::equal(sym_sab_2,goodSymSab2,equal));
       } // THEN
     } // WHEN
+  } // GIVEN
 
 
+  GIVEN( "Ortho deuterium"){
+    ncold = 3;
+    WHEN( "molecular translations are assumed to not be free" ){
+      free = false;
+      AND_WHEN( "spacing (dka) is large" ){
+        dka = 0.5;
+        goodSymSab1 = { 1.04353549, 2.04283175, 3.04085742, 4.05944260, 
+        5.05816298, 8.84191503, 10.3099118, 11.7696367, 13.2531960, 14.6990222, 
+        27.5936205, 30.1836804, 32.7366103, 35.2069241, 37.9531925, 83.3216594, 
+        89.4448115, 95.2689283, 99.3272795, 109.644553, 9.60975989, 10.6819098, 
+        11.5852639, 11.7592124, 14.5146525 };
+
+        goodSymSab2 = { 1.04353549, 1.64568291, 1.96673598, 1.67310377, 
+        0.86654914, 8.84191503, 8.28251716, 7.58909537, 5.47516649, 2.51711392, 
+        27.5936205, 24.2327449, 21.0875700, 14.5605371, 6.49983990, 83.3216594, 
+        71.7845333, 61.3390811, 41.1194875, 18.7962242, 9.60975989, 8.58987526, 
+        7.45990382, 4.82240089, 2.44514882 };
+
+        THEN( "output scattering law vectors are correct" ){
+          coldh( tev, ncold, trans_weight, tbeta, scaling, 
+            alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+          for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+            REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+            REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+          }
+        } // THEN
+      } // AND WHEN
+      AND_WHEN( "spacing (dka) is small" ){
+        dka = 0.05;
+        goodSymSab1 ={ 1.6500137, 3.2545702, 4.8577548, 6.4805106, 8.0855785, 
+        8.7834631, 10.241709, 11.691696, 13.165612, 14.601514, 13.070063, 
+        14.315901, 15.534962, 16.747588, 17.980823, 12.852588, 13.891063, 
+        14.855712, 15.636925, 16.977023, 9.6097598, 10.681909, 11.585263, 
+        11.759212, 14.514652 };
+
+        goodSymSab2 = { 1.6500137, 2.6179354, 3.1364259, 2.6765351, 1.3865851, 
+        8.7834631, 8.2277943, 7.5389184, 5.4388668, 2.5003644, 13.070063, 
+        11.501047, 10.013420, 6.9099146, 3.0690751, 12.852588, 11.163102, 
+        9.5703208, 6.4333398, 2.8782114, 9.6097598, 8.5898752, 7.4599038, 
+        4.8224008, 2.4451488 };
+
+        THEN( "output scattering law vectors are correct" ){
+          coldh( tev, ncold, trans_weight, tbeta, scaling, 
+            alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+          for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+            REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+            REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+          }
+        } // THEN
+      } // AND WHEN
+    } // WHEN
+    WHEN( "molecular translations are assumed to be free" ){
+      free = true;
+      goodSymSab1 = { 0.639563665, 0.734847980, 0.642397321, 0.302707858, 
+      1.452858E-2, 0.643890258, 0.756447167, 0.747722527, 0.573559847, 
+      0.133577570, 0.731407289, 0.868992262, 0.913435993, 0.895184617, 
+      0.537398952, 0.953382930, 1.139377425, 1.236241575, 1.375153242, 
+      1.362943305, 5.380648E-2, 6.450705E-2, 7.117163E-2, 8.461831E-2, 
+      0.108930287 };
+      goodSymSab2 = { 0.6395636651, 0.5890740537, 0.4129826275, 0.1255578293, 
+      2.4609421E-3, 0.6438902587, 0.6068176750, 0.4812008042, 0.2376524961, 
+      2.2963400E-2, 0.7314072890, 0.6972235366, 0.5880200309, 0.3709822926, 
+      9.2306067E-2, 0.9533829308, 0.9141851653, 0.7958588829, 0.5699187102, 
+      0.2340743029, 5.3806485E-2, 5.1753352E-2, 4.5810754E-2, 3.5056533E-2, 
+      1.8690471E-2 };
+
+      THEN( "output scattering law vectors are correct" ){
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+          REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+        }
+      } // THEN
+    } // WHEN
+  } // GIVEN
 
 
+  GIVEN( "Ortho deuterium"){
+    ncold = 3;
 
+    WHEN( "molecular translations are assumed to not be free" ){
+      free = false;
+      goodSymSab1 = { 1.04353549, 2.04283175, 3.04085742, 4.05944260, 
+      5.05816298, 8.84191503, 10.3099118, 11.7696367, 13.2531960, 14.6990222, 
+      27.5936205, 30.1836804, 32.7366103, 35.2069241, 37.9531925, 83.3216594, 
+      89.4448115, 95.2689283, 99.3272795, 109.644553, 9.60975989, 10.6819098, 
+      11.5852639, 11.7592124, 14.5146525 };
+
+      goodSymSab2 = { 1.04353549, 1.64568291, 1.96673598, 1.67310377, 
+      0.86654914, 8.84191503, 8.28251716, 7.58909537, 5.47516649, 2.51711392, 
+      27.5936205, 24.2327449, 21.0875700, 14.5605371, 6.49983990, 83.3216594, 
+      71.7845333, 61.3390811, 41.1194875, 18.7962242, 9.60975989, 8.58987526, 
+      7.45990382, 4.82240089, 2.44514882 };
+
+      THEN( "output scattering law vectors are correct" ){
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+          REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+        }
+      } // THEN
+    } // WHEN
+    WHEN( "molecular translations are assumed to be free" ){
+      free = true;
+      goodSymSab1 = { 0.639563665, 0.734847980, 0.642397321, 0.302707858, 
+      1.452858E-2, 0.643890258, 0.756447167, 0.747722527, 0.573559847, 
+      0.133577570, 0.731407289, 0.868992262, 0.913435993, 0.895184617, 
+      0.537398952, 0.953382930, 1.139377425, 1.236241575, 1.375153242, 
+      1.362943305, 5.380648E-2, 6.450705E-2, 7.117163E-2, 8.461831E-2, 
+      0.108930287 };
+      goodSymSab2 = { 0.6395636651, 0.5890740537, 0.4129826275, 0.1255578293, 
+      2.4609421E-3, 0.6438902587, 0.6068176750, 0.4812008042, 0.2376524961, 
+      2.2963400E-2, 0.7314072890, 0.6972235366, 0.5880200309, 0.3709822926, 
+      9.2306067E-2, 0.9533829308, 0.9141851653, 0.7958588829, 0.5699187102, 
+      0.2340743029, 5.3806485E-2, 5.1753352E-2, 4.5810754E-2, 3.5056533E-2, 
+      1.8690471E-2 };
+
+      THEN( "output scattering law vectors are correct" ){
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+          REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+        }
+      } // THEN
+    } // WHEN
+  } // GIVEN
+
+  ska = { 0.001, 0.002, 0.005, 0.008, 0.01, 0.02, 0.05, 0.08, 0.1, 0.2, 0.5, 0.8, 1.0, 2.0, 5.0, 8.0, 5.0, 2.0, 1.0, 0.8, 0.5, 0.2, 0.1, 0.08, 0.05, 0.02, 0.01, 0.008, 0.005, 0.002, 0.001 };
+
+  dka = 0.001;
+  GIVEN( "Para deuterium"){
+    ncold = 4;
+    WHEN( "molecular translations are assumed to not be free" ){
+      free = false;
+      goodSymSab1 = { 1.501838, 2.955473, 4.393971, 5.790311, 7.232537, 
+      7.989183, 9.355920, 10.68840, 11.95064, 13.19231, 12.11719, 13.37025, 
+      14.58463, 15.67633, 16.58969, 12.40180, 13.52899, 14.75769, 15.74051, 
+      16.42520, 9.698859, 10.68897, 12.42041, 13.60366, 15.10939 };
+
+      goodSymSab2 = { 1.501838, 2.357724, 2.810726, 2.418721, 1.247006, 
+      7.989183, 7.483196, 6.858405, 4.990571, 2.282003, 12.11719, 10.68925, 
+      9.369173, 6.566440, 2.889771, 12.40180, 10.80009, 9.497284, 6.633682, 
+      2.899509, 9.698859, 8.510247, 8.006278, 5.762811, 2.694623 };
+
+      THEN( "output scattering law vectors are correct" ){
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
+          REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
+        }
+      } // THEN
+    } // WHEN
+    WHEN( "molecular translations are assumed to be free" ){
+      free = true;
+      goodSymSab1 = { 0.91727408, 1.0521462, 0.92011933, 0.43721466, 0.02316939,
+      0.57958513, 0.68071185, 0.67378866, 0.52086685, 0.12924799, 0.32304386, 
+      0.38388029, 0.40419732, 0.39909385, 0.24906591, 0.14814365, 0.17707755, 
+      0.19234509, 0.21492490, 0.21699345, 0.05786461, 0.06936676, 0.07651663, 
+      0.09089733, 0.11663430 };
+
+      goodSymSab2 = { 0.91727408, 0.84528166, 0.59352393, 0.18101081, 
+      0.00404511, 0.57958513, 0.54642996, 0.43411633, 0.21600343, 0.02215599, 
+      0.32304386, 0.30805349, 0.26028263, 0.16546748, 0.04277909, 0.14814365, 
+      0.14208293, 0.12383331, 0.08908330, 0.03727785, 0.05786461, 0.05565516, 
+      0.04925662, 0.03766815, 0.02003144 };
+
+      THEN( "output scattering law vectors are correct" ){
+        coldh( tev, ncold, trans_weight, tbeta, scaling, 
+          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
+          REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
+          REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );
+        }
+      } // THEN
+    } // WHEN
   } // GIVEN
 } // TEST CASE
