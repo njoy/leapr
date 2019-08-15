@@ -15,7 +15,6 @@ template <typename Float, typename Range, typename RangeZipped>
 auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s, 
   const Float& twt, const Float& tbeta, Range alpha, Range beta, 
   const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sym_sab ){
-//std::cout << std::setprecision(15);
 
   for ( auto& a : alpha ){ a *= scaling; }
   for ( auto& b : beta  ){ b *= sc; }
@@ -63,16 +62,12 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
     //         sex = [ s3 s2 s1 s2*exp(-beta) s3*exp(-beta) 0 0 ]
     //                (dependinng on first beta value)
     // The exp(-beta) values are explained above, because of Eq. 509
-    //std::cout << (sex|ranges::view::all) << std::endl;
 
     // Initialize delta loop
     Range bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha[a], debyeWaller, ar, wts, bes,  
       oscBetas, tbart, t_eff_consts, temp );
-
-    //std::cout << nn << std::endl;
-    //return;
 
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
@@ -84,11 +79,10 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
     unsigned int n = nn; 
-    nn -= 1;
-    std::cout << nn << std::endl;
+
     for ( size_t i = 1; i < nn; ++i ){
-      for ( size_t j = i+1; j < n; ++j ){
-        if ( wts[j] > wts[i] ){
+      for ( size_t j = i+1; j <= n; ++j ){
+        if ( wts[j] >= wts[i] ){
           swap( wts[j], wts[i] );
           swap( bes[j], bes[i] );
         } 
@@ -96,7 +90,7 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
     }
     for (size_t i = 1; i <= nn; ++i){
       n = i;
-      if (wts[i-1] < 1e-6 and i > 5) { break; }
+      if (wts[i-1] < 1e-6 and i > 5) break; 
     }
 
     // Add the continuous part to the scattering law
