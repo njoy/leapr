@@ -32,7 +32,7 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
     // right? That's definitely wrong, right? It can be 0 just not < 0
     if ( b_minus_or_plus[k] <= 0 ){ return; } 
     for ( auto m = 0; m < nn; ++m ){
-      if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < int(bes.size()) ){
+      if ( wtn[m] * b_minus_or_plus[k] >= 1e-8 and n < int(bes.size())-1 ){
         n += 1;
         bes[n] = ben[m] + pos_or_neg * (k+1) * beta_i;
         wts[n] = wtn[m] * b_minus_or_plus[k];
@@ -120,7 +120,8 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
     tbart += t_eff_consts[i] / ( kb * temp );
 
   }   
-  return n; // Change nn --> n to pass discre and oscLoopFuncs test cases 
+  return n; 
+
 }
 
 
