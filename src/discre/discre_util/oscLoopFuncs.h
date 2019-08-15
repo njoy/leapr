@@ -71,6 +71,8 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
 
   // Loop over all oscillators
   for ( auto i = 0; i < int(betaVals.size()); ++i ){
+    //std::cout << std::endl;
+    //std::cout << "nn at beginning:    " << nn  << std::endl;
     nn = n + 1;
     x              = alpha*ar[i];
     //             = alpha*weight / (sinh(0.5*energy/tev) * energy/tev)
@@ -109,6 +111,8 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
     // by each other, for many different i and n. 
     posNegTerms(n, betaVals[i], bminus, wts, wtn, bes, ben, nn, -1);// negative
     posNegTerms(n, betaVals[i], bplus,  wts, wtn, bes, ben, nn, 1 );// positive
+    //std::cout << "nn at end:          " << nn  << std::endl;
+    //std::cout << "n  at end:          " << n  << std::endl;
 
     // Copy first n entries of permanent array into our temporary arrays
     for ( auto m = 0; m <= n; ++m ){
@@ -118,6 +122,7 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
 
     // Effective temperature is amended, this ( kind of ) follows Eq. 544.
     tbart += t_eff_consts[i] / ( kb * temp );
+
 
   }   
   return n; 
