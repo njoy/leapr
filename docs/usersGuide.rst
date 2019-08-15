@@ -13,13 +13,6 @@ User's Guide
 ..
   COMMENT: .. contents:: Table of Contents
 
-Overview of LEAPR
-=====================
-LEAPR is an NJOY module that prepares the thermal neutron scattering law :math:`S(\alpha,\beta)`. The scattering law is used to calculate the scattering cross sections, where :math:`\alpha` and :math:`\beta` are unitless momentum and energy change, respectively.
-
-LEAPR is able to calculate the coherent elastic, incoherent elastic, and incoherent inelastic contributions to the scattering law. The incoherent contributions are either approximated using the free gas approximation [INTRODUCED IN THIS SECIONT] or calculated using equations from [THIS SECTION]. Coherent elastic contributions are calculated using equations from [THIS SECTION]. 
-
-
 
 What choices does a user have?
 ===============================

@@ -13,13 +13,22 @@ Overview
 ..
   COMMENT: .. contents:: Table of Contents
 
+What is LEAPR?
+=====================
+LEAPR is one of 24 modules that comprise the NJOY nuclear data preaparation code. Two modules (LEAPR and THERMR) handle data corresponding the thermal (low energy) neutron scattering. It was originally written and is currently maintained at Los ALamos National Laboratory. For more information regarding the NJOY code, please visit https://www.njoy21.io/NJOY2016/.
+
+.. LEAPR prepares the **scattering law** :math:`S(\alpha,\beta)`, and THERMR writes the scattering law in a convenient way for use in simulations, etc. The scattering law can be used to calculate the scattering cross sections, where :math:`\alpha` and :math:`\beta` are unitless momentum and energy change, respectively.
+
+
+
+
 Thermal Neutrons
 =====================
 
-This project aims to describe the ways in which low energy neutrons (with energy on the order of 1 eV or less) interact with material. Accurately describing these interactions is crucial for adequate modeling of thermal nuclear systems. A neutron at room temperature has an energy of approximately 0.025 eV, meaning that its de Broglie wavelength is about 1 angstrom which is close to typical interatomic spacing in materials. This can complicate neutron-target interactions and the wave-like behavior of neutrons must be carefully accounted for.
+LEAPR aims to describe the ways in which low energy neutrons (with energy on the order of 1 eV or less) interact with material. Accurately describing these interactions is crucial for adequate modeling of thermal nuclear systems. A neutron at room temperature has an energy of approximately 0.025 eV, meaning that its de Broglie wavelength is about 1 angstrom which is close to typical interatomic spacing in materials. This can complicate neutron-target interactions, and thus describing thermal scattering must account for the wave-like behavior of neutrons. 
 
 
-Overview of Scattering
+Types of Scattering
 =========================
 
 The probability of a neutron with initial energy and solid angle :math:`(E,\Omega)` scattering to have some final energy and solid angle :math:`(E',\Omega')` is described using the double differential scattering cross section :math:`\sigma(E\rightarrow E', \Omega\rightarrow\Omega')`. This cross section describes both elastic and inelastic scattering, both of which have a coherent and incoherent contribution.
@@ -29,7 +38,7 @@ The probability of a neutron with initial energy and solid angle :math:`(E,\Omeg
 In elastic scattering, total kinetic energy (i.e. sum of neutron and target kinetic energy) is conserved, which is not the case for inelastic scattering. Inelastic scattering thus requires for some excitation of the target to occur, which accounts for the difference between initial and final kinetic energy. 
 
 
-Elastic vs. Inelastic Scattering
+Elastic vs. Inelastic 
 ---------------------------------
 Elastic scattering means that the total kinetic energy of the system (neutron plus target) is the same before and after the scattering collision. This is contrasted with inelastic scattering, where kinetic energy is not conserved. This change in energy is due to some excitation (or de-excitation) occurred. 
 

@@ -6,6 +6,7 @@
 #include "discre_util/addDeltaFuncs.h"
 #include "generalTools/constants.h"
 #include <range/v3/all.hpp>
+#include <iostream>
 
 template <typename Float>
 void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
@@ -14,6 +15,7 @@ template <typename Float, typename Range, typename RangeZipped>
 auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s, 
   const Float& twt, const Float& tbeta, Range alpha, Range beta, 
   const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sym_sab ){
+std::cout << std::setprecision(15);
 
   for ( auto& a : alpha ){ a *= scaling; }
   for ( auto& b : beta  ){ b *= sc; }
@@ -44,8 +46,9 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
   int nbx = std::get<0>(output);
   Range bex = std::get<1>(output);
 
-  Float wt = tbeta, tbart = t_eff/temp;
-  for ( auto x : oscEnergiesWeights ){ wt += std::get<1>(x); }
+  Float /*wt = tbeta,*/ tbart = t_eff/temp;
+  //for ( auto x : oscEnergiesWeights ){ wt += std::get<1>(x); }
+  //std::cout << wt << std::endl;
      
   // Main alpha loop
   for ( size_t a = 0; a < alpha.size(); ++a ){
@@ -56,6 +59,7 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sym_sab[b+a*beta.size()];
     }
+    //std::cout << (input|ranges::view::all) << std::endl;
 
     // input = sym_sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
@@ -70,10 +74,13 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
 
     // Initialize delta loop
     Range bes(maxdd,0.0), wts(maxdd,0.0);
+    //std::cout << (sex|ranges::view::all) << std::endl;
     
     unsigned int nn = oscillatorLoop( alpha[a], debyeWaller, ar, wts, bes,  
       oscBetas, tbart, t_eff_consts, temp );
 
+    //std::cout << (wts|ranges::view::all) << std::endl;
+    //return ;
 
     // oscillator loop is mean to, for a given alpha and beta, populate the wts
     // vector with entries of W_k(alpha) for various k (see Eq. 542) and to
@@ -94,12 +101,24 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
         } 
       }
     }
+    //std::cout << bes[0] << "   " << bes[1] << "   " << bes[2] << "   " << bes[3] << std::endl;
+    //std::cout << bes[4] << "   " << bes[5] << "   " << bes[6] << "   " << bes[7] << std::endl;
+    //std::cout << std::endl;
+    //std::cout << wts[0] << "   " << wts[1] << "   " << wts[2] << "   " << wts[3] << std::endl;
+    //std::cout << wts[4] << "   " << wts[5] << "   " << wts[6] << "   " << wts[7] << std::endl;
+    //std::cout << std::endl;
 
-    for (int i = 0; i << nn; ++i){
+
+
+    //std::cout << nn << std::endl;
+    for (size_t i = 1; i <= nn; ++i){
       n = i;
+      //std::cout << "----------  " << i+1 << "   " << wts[i-1] << std::endl;
       if (wts[i-1] < 1e-6 and i > 5) { break; }
     }
 
+    //std::cout << n << std::endl;
+    //return;
     // Add the continuous part to the scattering law
     Range sexpb(beta.size(),0.0);
 
@@ -111,18 +130,27 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
         // interpolate for the beta - beta_k piece of the equation.
         auto add = wts[m] * sint(-beta[b] - bes[m], bex, rdbex, sex, beta, b, 
             alpha[a]*(tbeta + twt), tbart, nbx);
+        //std::cout << "    " << add << std::endl;
         if ( add >= 1.0e-20 ){ sexpb[b] += add; }
       } 
     }
+    //std::cout << "sexpb" << std::endl;
+    //std::cout << (sexpb|ranges::view::all) << std::endl;
+    //std::cout << std::endl;
+    //return;
+
 
     // Add the delta functions to the scattering law
     Float debyeWallerExponential = exp( -alpha[a]*lambda_s );
     addDeltaFuncs( twt, debyeWallerExponential, bes, beta, wts, sexpb, n ); 
 
+    //std::cout << (sexpb|ranges::view::all) << std::endl;
     // Record the results
     for ( size_t b = 0; b < beta.size(); ++b ){
       sym_sab[b+a*beta.size()] = sexpb[b];
     }
+    //std::cout << (sexpb|ranges::view::all) << std::endl;
+    //std::cout << std::endl;
   }
 }
 

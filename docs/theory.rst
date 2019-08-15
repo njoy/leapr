@@ -87,6 +87,22 @@ where
   |                  | | infinitely large.                        | | is not typically considered to  |
   |                  |                                            | | cause significant error.        |
   +------------------+--------------------------------------------+-----------------------------------+
+  | | Atoms of only  | | Atoms of only one kind are considered.   | | In a material like              |
+  | | one kind are   | | Treatment for mixed moderators  will be  |   :math:`\mbox{H}_2\mbox{O}`,     | 
+  | | present        | | discussed later.                         | | scattering from hydrogen is     |
+  |                  |                                            | | significantly more important    |
+  |                  |                                            | | than that from oxygen, so       |
+  |                  |                                            | | that only hydrogen exists is a  |
+  |                  |                                            | | valid simplification. This is   |
+  |                  |                                            | | not the case for materials like |
+  |                  |                                            | | beryllium oxide, however.       | 
+  +------------------+--------------------------------------------+-----------------------------------+
+  | | Simplified     | | Atoms are assumed to be bound  by        | | This approach is applied to     | 
+  | | crystal        | | isotropic, harmonic forces in a crystal  | | many materials that do not      |
+  | | structure      | | with cubic symmetry and one atom per     | | display these characteristics,  |
+  |                  | | unit cell.                               | | and is believed to be an        |
+  |                  |                                            | | adequate approximation.         |
+  +------------------+--------------------------------------------+-----------------------------------+
 
 .. seealso::
   **Want more information?**
@@ -149,8 +165,12 @@ To process the scattering law for a material described by discrete oscillators, 
   | | crystal approx. | | is the analytic solution for the           | | discussion. This has historical |
   |                   | | scattering law, when considering a         | | significance but is not         |
   |                   | | perfect cubic structure of atoms that      | | recommended for modern problems | 
-  |                   | | all vibrate with the same frequency.       |                                   | 
+  |                   | | all vibrate with the same frequency,       |                                   | 
+  |                   | | thus meaning that any invoked vibrational  |                                   |
+  |                   | | frequencies must be multiples of some      |                                   |
+  |                   |   :math:`\omega`.                            |                                   | 
   +-------------------+----------------------------------------------+-----------------------------------+
+
 
 .. seealso::
   **Want more information?**
@@ -298,6 +318,43 @@ Body Centered Cubic
 
 
 
+
+
+Coherent Scattering (Inelastic) Approximations
+================================================
+
+Skold and Vineyard
+------------------------
+
+The incoherent approximation, which is made while using the continuous, translational, and discrete oscillator methods, ignores coherent effects. There are some material, however, in which scattered neutron waves can interfere with each other in meaningful ways. This inter-molecular coherence occurs when there is both a significant bound coherent scattering cross section (property of the atoms) as well as some correlation between the positions of nearby molecules (property of the lattice). If these requirements are met, coherent scattering may become non-negligible, at which point its effect can be accounted for by using the **Vineyard** or **Skold** approximations. 
+
+In these methods, the scattering law is separated into a coherent and an incoherent contribution, which are weighted using a *coherent fraction* :math:`c`. The incoherent contribution to the scattering law can be obtained using the aforementioned methods (continuous, discrete, and translational), but the coherent contribution must be approximated.
+
+.. math:: 
+  S(\alpha,\beta)=\big(1-c\big)S_{inc}(\alpha,\beta)+c~S_{coh}(\alpha,\beta)
+
+
+The Skold approximation approximates the coherent scattering law by using the *static structure factor* :math:`S(\kappa)` to modify the incoherent scattering law.
+
+.. math:: 
+  S_{coh}(\alpha,\beta)=S_{inc}\left(\frac{\alpha}{S(\kappa)},\beta\right)\times S(\kappa)
+
+The static structure factor :math:`S(\kappa)` is a user-provided input that describes correlation in molecular positions, where :math:`\kappa` is wave number, defined as 
+
+.. math:: 
+  \kappa = \frac{\sqrt{2Mk_bT\alpha}}{\hbar}
+
+
+where :math:`M` is the mass of the scatterer. Using these relations, the coherent-corrected scattering can be obtained by solving the above three equations for all :math:`\alpha,\beta` values.
+
+
+
+
+
+
+
+
+
 Cold Hydrogen and Deuterium 
 ==============================================
 The continuous treatment equations defined in Eq. :eq:`continuousSAB`- :eq:`PDefinition` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
@@ -402,32 +459,6 @@ Here you go
 
 
 
-Coherent Scattering (Inelastic) Approximations
--------------------------------------------------
-
-**Skold and Vineyard**
-
-The incoherent approximation, which is made while using the continuous, translational, and discrete oscillator methods, ignores coherent effects. For materials like cold :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`, however, the neutron waves scattered from different molecules can interfere with each other in meaningful ways. This inter-molecular coherence occurs when there is some correlation between the positions of nearby molecules, and can be accounted for by using the **Vineyard** or **Skold** approximations. 
-
-In these methods, the scattering law is separated into a coherent and an incoherent contribution, which are weighted using a *coherent fraction* :math:`c`. The incoherent contribution to the scattering law can be obtained using the aforementioned methods (continuous, discrete, and translational), but the coherent contribution must be approximated.
-
-.. math:: 
-  S(\alpha,\beta)=\big(1-c\big)S_{inc}(\alpha,\beta)+c~S_{coh}(\alpha,\beta)
-
-
-The Skold approximation approximates the coherent scattering law by using the *static structure factor* :math:`S(\kappa)` to modify the incoherent scattering law.
-
-.. math:: 
-  S_{coh}(\alpha,\beta)=S_{inc}\left(\frac{\alpha}{S(\kappa)},\beta\right)\times S(\kappa)
-
-The static structure factor :math:`S(\kappa)` is a user-provided input that describes correlation in molecular positions, where :math:`\kappa` is wave number, defined as 
-
-.. math:: 
-  \kappa = \frac{\sqrt{2Mk_bT\alpha}}{\hbar}
-
-
-where :math:`M` is the mass of the scatterer. Using these relations, the coherent-corrected scattering can be obtained by solving the above three equations for all :math:`\alpha,\beta` values.
-
 
 .. .. code-block:: python
    :emphasize-lines: 3,5
@@ -448,7 +479,12 @@ where :math:`M` is the mass of the scatterer. Using these relations, the coheren
 Special Cases and Misc. Functions
 ==============================================
 
-Short-time collision approximation 
+Short-collision time approximation 
 ------------------------------------
+When calculating the contribution of incoherent scattering via use of the *phonon expansion*, values corresponding to significant change in momentum (i.e. large :math:`\alpha` values) can become costly to calculate. To avoid prohibitively costly calculations, LEAPR employs the **short-collision time approximation (SCT)** to describe scattering in a solid. 
+
+The SCT approximation is found to work "well for large incident neutron energies when the duration of a collision is short compared with the natural periods of atomic motion" [https://digital.library.unt.edu/ark:/67531/metadc1089525/m2/1/high_res_d/5508404.pdf] [THE SHORT COLLISION TIME APPROXIMATION FOR NEUTRON SCATTERING USING DISCRETE FREQUENCY DISTRIBUTION by Ryskamp] 
+"For large incident neutron energies the duration of a collison is short
+compared with the natural periods of atomic motion."
 
 
