@@ -17,10 +17,10 @@ auto contin(int nphon, Float& delta, const Float& continWgt,
   Range betaGrid = ranges::view::iota(0,int(rho.size())) 
                  | ranges::view::transform([delta](auto x){return x*delta;});
     
-  auto lambda_s_t_eff = start( rho, continWgt, betaGrid );
-  Float lambda_s = std::get<0>(lambda_s_t_eff),
-        t_eff    = std::get<1>(lambda_s_t_eff);
-  Range t1       = std::get<2>(lambda_s_t_eff);
+  auto lambda_s_t_bar = start( rho, continWgt, betaGrid );
+  Float lambda_s = std::get<0>(lambda_s_t_bar),
+        t_bar    = std::get<1>(lambda_s_t_bar);
+  Range t1       = std::get<2>(lambda_s_t_bar);
   
   Range xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
   std::copy( t1.begin(), t1.begin() + t1.size(), tlast.begin() );
@@ -36,26 +36,29 @@ auto contin(int nphon, Float& delta, const Float& continWgt,
                            });
 
   for( int n = 0; n < nphon; ++n ){
-    if ( n > 0 ){ tnow = convol(t1, tlast, delta, npl, npn); }
+    if ( n > 0 ){ 
+      npn = t1.size()+npl-1;
+      tnow = convol2(t1, tlast, delta, npl, npn); 
+    }
 
     for( size_t a = 0; a < alpha.size(); ++a ){
       xa[a] *= lambda_s * alpha[a] / ( n + 1 );
       exx    = exp_lambda_alpha[a]*xa[a];
+      Range betaGrid2 = ranges::view::iota(0,int(tnow.size())) 
+                      | ranges::view::transform([delta](auto x){return x*delta;});
+ 
       for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate(tnow, beta[b], betaGrid);
+        add = exx * interpolate(tnow, beta[b], betaGrid2);
         symSab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
       } 
     } 
 
-    npl = npn;
-
-    npn += t1.size() - 1;
     if ( n == 0 ){ continue; }
-    if ( npn >= tnow.size() ){ break; }
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
+    npl = npn;
   } 
 
-  return std::make_tuple(lambda_s,t_eff);
+  return std::make_tuple(lambda_s,t_bar);
 }
 
 

@@ -52,7 +52,6 @@ Float interpolate( const Range& y, const Float& x, const Range& betaGrid, Float 
       break;
     }
   }
-  if ( abs(x - x_L) < 1e-8 ){ return y[i]; }
   Float delta = betaGrid[i+1]-betaGrid[i];
   return y[i] + (x-x_L) * (y[i+1]-y[i]) / delta;
 }
