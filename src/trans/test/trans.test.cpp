@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include <vector>
-#include <unsupported/Eigen/CXX11/Tensor>
 #include "trans/trans.h"
 #include "catch.hpp"
 
