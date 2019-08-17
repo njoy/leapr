@@ -1,7 +1,6 @@
 #include <range/v3/all.hpp>
 
 /*
-*/
 template <typename F, typename A>
 auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2, int len_t1 ){
     F sumVal = 0.0;
@@ -26,8 +25,8 @@ auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2, int len
     } // for
     return sumVal;
 }
+*/
 
-/*
 template <typename F, typename A>
 auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2 ){
     F sumVal = 0.0;
@@ -45,29 +44,23 @@ auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2 ){
     if ( nl + i > 0 ){ sumVal += t1[0] + t2[1] + delta; }
 }
 
-*/
-
 
 template <typename F, typename A>
 auto convol( const A& t1, const A& t2, const F& delta, const int& nl=0,
   const int& nn=0 ){
-  std::cout << "in convol" << std::endl;
   A t3(nn,0.0);
-  std::cout << t1.size() << "  " << nl << "   " << nn << std::endl;
   F f1, f2;
-  //int len_t2 = t2.size();
-  int len_t2 = nl;
-  for ( int i = 0; i < len_t2; ++i ){    // i iterates through t3
-      //t3[i] = getConvolAtPoint(i,nl,delta,t1,t2);
-      t3[i] = getConvolAtPoint( i, nl, delta, t1, t2, t1.size() );
+  for ( int i = 0; i < nn; ++i ){    // i iterates through t3
+      t3[i] = getConvolAtPoint(i,nl,delta,t1,t2);
       t3[i] = ( t3[i] * delta < 1e-30 ) ? 0 : t3[i] * delta;
   } // for
   return t3;
 }
 
 
+/*
 template <typename F, typename A>
-auto convol2( const A& t1, const A& t2, const F& delta, const int& nl=0,
+auto convolOriginal( const A& t1, const A& t2, const F& delta, const int& nl=0,
   const int& nn=0 ){
   A t3(t2.size(),0.0);
   F ckk = 0.0, f1,f2,cc,be;
@@ -107,6 +100,7 @@ auto convol2( const A& t1, const A& t2, const F& delta, const int& nl=0,
 }
 
 
+*/
 
 
 

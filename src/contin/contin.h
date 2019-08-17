@@ -38,7 +38,7 @@ auto contin(int nphon, Float& delta, const Float& continWgt,
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ 
       npn = t1.size()+npl-1;
-      tnow = convol2(t1, tlast, delta, npl, npn); 
+      tnow = convol(t1, tlast, delta, npl, npn); 
     }
 
     for( size_t a = 0; a < alpha.size(); ++a ){
