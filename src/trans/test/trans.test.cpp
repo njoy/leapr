@@ -4,6 +4,10 @@
 #include "trans/trans.h"
 #include "catch.hpp"
 #include "generalTools/testing.h"
+#include <range/v3/all.hpp>
+
+
+
 
 TEST_CASE( "trans" ){
 
@@ -15,12 +19,13 @@ TEST_CASE( "trans" ){
   trans_weight = 0.5;
   tbeta = 0.5;
 
-  std::vector<double> sab {1e-3,2e-3,3e-3,4e-3,5e-3,6e-3,7e-3,8e-3,9e-3,1e-2,1.1e-2,1.2e-2};
+  //std::vector<double> sab {1e-3,2e-3,3e-3,4e-3,5e-3,6e-3,7e-3,8e-3,9e-3,1e-2,1.1e-2,1.2e-2};
+  std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
+                          | ranges::view::transform([](auto x){return 1e-3*x;});
 
   GIVEN( "no diffusion" ){
     c = 0.0;
-    /*
-    */
+
     WHEN( "translational weight is small" ){
       trans_weight = 0.05; 
       tbeta = 0.95;
@@ -55,7 +60,60 @@ TEST_CASE( "trans" ){
         REQUIRE( 556.3 == Approx(t_eff).epsilon(1e-6) );
       } // THEN
     } // WHEN
+
+    WHEN( "translational weight is small" ){
+      alpha = {0.001,0.002,0.004,0.005};
+      beta = {0.0015,0.0018,0.0022};
+      std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
+                              | ranges::view::transform([](auto x){return 1e-3*x;});
+
+
+      trans_weight = 0.05; 
+      tbeta = 0.95;
+      trans( alpha, beta, trans_weight, delta, c, sc, scaling, lambda_s, tbeta, t_eff, temp,  sab );
+      correct = {  3.9432568E+01,  3.9279083E+01,  3.8934953E+01,  2.8027566E+01,  2.7993941E+01,
+ 2.7848775E+01,  1.9837990E+01,  1.9819911E+01,  1.9795829E+01,  1.7749763E+01,
+ 1.7735559E+01,  1.7716637E+01};
+      THEN( "S(a,b) and effective temperature outputs are correct" ){
+        REQUIRE(ranges::equal(sab,correct,equal));
+        REQUIRE( 556.3 == Approx(t_eff).epsilon(1e-6) );
+      } // THEN
+    } // WHEN
+
+    WHEN( "translational weight is small" ){
+      alpha =      {1e-5,1e-2,1e-1};
+      beta  = {0.00,1e-5,1e-4,1e-3,1e-2,1e-1,1.0};
+      std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
+                              | ranges::view::transform([](auto x){return 1e-3*x;});
+
+      trans_weight = 0.2; 
+      tbeta = 0.8;
+      trans( alpha, beta, trans_weight, delta, c, sc, scaling, lambda_s, tbeta, t_eff, temp,  sab );
+      correct = {  1.9947441E+02,  1.9947271E+02,  1.9923499E+02,  1.7612391E+02,  5.6591365E-03,
+ 5.9911337E-03,  3.5227793E-03,  6.3021259E+00,  6.3021247E+00,  6.3018129E+00,
+ 6.2983582E+00,  6.2487787E+00,  1.9044969E+00,  7.4095938E-03,  1.9577538E+00,
+ 1.9577942E+00,  1.9578580E+00,  1.9581590E+00,  1.9608343E+00,  1.8140779E+00,
+ 1.1639286E-02 };
+      THEN( "S(a,b) and effective temperature outputs are correct" ){
+        //REQUIRE(ranges::equal(sab,correct,equal));
+        for ( size_t i = 0; i < correct.size(); ++i ){ std::cout << correct[i] << "    " << sab[i] << std::endl; }
+        REQUIRE( 515.2 == Approx(t_eff).epsilon(1e-6) );
+        std::cout << std::endl;
+        //std::cout << sab.size() << std::endl;
+        //std::cout << correct.size() << std::endl;
+        //std::cout << 1+2*beta.size() << std::endl;
+        std::cout << sab[1+2*beta.size()] << std::endl;
+        std::cout << correct[1+2*beta.size()] << std::endl;
+      } // THEN
+    } // WHEN
+
+
+
+
+
   } // GIVEN
+  /*
+*/
 } // TEST CASE
 
 
