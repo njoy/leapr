@@ -14,7 +14,7 @@ void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 template <typename Float, typename Range, typename RangeZipped>
 auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s, 
   const Float& twt, const Float& tbeta, Range alpha, Range beta, 
-  const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sym_sab ){
+  const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sab ){
 
   for ( auto& a : alpha ){ a *= scaling; }
   for ( auto& b : beta  ){ b *= sc; }
@@ -47,16 +47,16 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
   Float tbart = t_eff/temp;
      
   for ( size_t a = 0; a < alpha.size(); ++a ){
-    // Get all sym_sab entries for a given alpha and temperature (vary beta)
+    // Get all sab entries for a given alpha and temperature (vary beta)
     Range input ( beta.size() );
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab[b+a*beta.size()];
+      input[b] = sab[b+a*beta.size()];
     }
-    // input = sym_sab values for constant temp and alpha. 
+    // input = sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
     //         order to go between S(a,b) and S(a,-b) 
     Range sex = exts( input, exb, beta );
-    // sex is populated with sym_sab entries, such that 
+    // sex is populated with sab entries, such that 
     //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
     //                             or 
     //         sex = [ s3 s2 s1 s2*exp(-beta) s3*exp(-beta) 0 0 ]
@@ -114,7 +114,7 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
 
     // Record the results
     for ( size_t b = 0; b < beta.size(); ++b ){
-      sym_sab[b+a*beta.size()] = sexpb[b];
+      sab[b+a*beta.size()] = sexpb[b];
     }
   }
 }

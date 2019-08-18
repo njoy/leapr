@@ -3,10 +3,67 @@
 #include <vector>
 #include "trans/trans.h"
 #include "catch.hpp"
-
-auto equal = [](auto x, auto y){return x == Approx(y).epsilon(1e-4);};
+#include "generalTools/testing.h"
 
 TEST_CASE( "trans" ){
+
+  std::vector<double> alpha {0.10, 0.20, 0.40, 0.50}, beta {0.15, 0.18, 0.22}, correct;
+
+  double trans_weight = 0.05, delta = 9e-2, c, temp = 296, 
+    sc = 1.0, scaling = 1.0, lambda_s = 0.23, tbeta = 0.95, correct_t_eff_val,
+    t_eff = 570;
+  trans_weight = 0.5;
+  tbeta = 0.5;
+
+  std::vector<double> sab {1e-3,2e-3,3e-3,4e-3,5e-3,6e-3,7e-3,8e-3,9e-3,1e-2,1.1e-2,1.2e-2};
+
+  GIVEN( "no diffusion" ){
+    c = 0.0;
+    /*
+    */
+    WHEN( "translational weight is small" ){
+      trans_weight = 0.05; 
+      tbeta = 0.95;
+      trans( alpha, beta, trans_weight, delta, c, sc, scaling, lambda_s, tbeta, t_eff, temp,  sab );
+      correct = { 1.3599403E+00,  8.4210039E-01,  3.8625375E-01,  1.6486076E+00,  1.3102589E+00, 8.9648052E-01,  1.4734088E+00,  1.3216285E+00,  1.1048539E+00,  1.3628487E+00, 1.2530725E+00,  1.0914529E+00 };
+      THEN( "S(a,b) and effective temperature outputs are correct" ){
+        REQUIRE(ranges::equal(sab,correct,equal));
+        REQUIRE( 556.3 == Approx(t_eff).epsilon(1e-6) );
+      } // THEN
+    } // WHEN
+    WHEN( "translational weight is large" ){
+      trans_weight = 0.5; 
+      tbeta = 0.5;
+      trans( alpha, beta, trans_weight, delta, c, sc, scaling, lambda_s, tbeta, t_eff, temp,  sab );
+      correct = {1.1704493E+00,  1.1329332E+00,  1.0666042E+00,  8.4594660E-01,  8.3836002E-01, 8.2087238E-01,  5.7370164E-01,  5.7640806E-01,  5.7511395E-01,  4.9844664E-01, 5.0182128E-01,  5.0387717E-01 };
+      THEN( "S(a,b) and effective temperature outputs are correct" ){
+        REQUIRE(ranges::equal(sab,correct,equal));
+        REQUIRE( 433 == Approx(t_eff).epsilon(1e-6) );
+      } // THEN
+    } // WHEN
+    WHEN( "alpha and beta values are very small" ){
+      alpha = {0.001, 0.002, 0.004, 0.005};
+      beta  = {0.0015,0.0018,0.0022};
+      trans_weight = 0.05; 
+      tbeta = 0.95;
+      trans( alpha, beta, trans_weight, delta, c, sc, scaling, lambda_s, tbeta, t_eff, temp,  sab );
+      correct = {  3.9432568E+01,  3.9279083E+01,  3.8934953E+01,  2.8027566E+01,  2.7993941E+01,
+ 2.7848775E+01,  1.9837990E+01,  1.9819911E+01,  1.9795829E+01,  1.7749763E+01,
+ 1.7735559E+01,  1.7716637E+01 }; 
+      THEN( "S(a,b) and effective temperature outputs are correct" ){
+        REQUIRE(ranges::equal(sab,correct,equal));
+        REQUIRE( 556.3 == Approx(t_eff).epsilon(1e-6) );
+      } // THEN
+    } // WHEN
+  } // GIVEN
+} // TEST CASE
+
+
+
+
+/*
+
+TEST_CASE( "trans (old tests)" ){
 
   std::vector<double> alpha {0.10, 0.20, 0.40, 0.50}, 
     beta {0.15, 0.18, 0.22}, correct;
@@ -29,7 +86,7 @@ TEST_CASE( "trans" ){
 
       THEN( "S(a,b) and effective temperature outputs are correct" ){
         REQUIRE(ranges::equal(sab,correct,equal));
-	REQUIRE( correct_t_eff_val == Approx(t_eff).epsilon(1e-4) );
+	REQUIRE( correct_t_eff_val == Approx(t_eff).epsilon(1e-6) );
       } // THEN
     } // WHEN
 
@@ -105,5 +162,5 @@ TEST_CASE( "trans" ){
     } // WHEN
   } // GIVEN
 } // TEST CASE
-
+*/
 

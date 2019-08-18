@@ -6,7 +6,7 @@
 template <typename Range, typename Float>
 auto contin(int nphon, Float& delta, const Float& continWgt, 
   const Float& scaling, const Float& tev, const Float& sc, Range rho, 
-  Range& alpha, Range& beta, Range& symSab ){
+  Range& alpha, Range& beta, Range& sab ){
   using std::exp;
 
   for ( auto& a : alpha ){ a *= scaling; }
@@ -49,7 +49,7 @@ auto contin(int nphon, Float& delta, const Float& continWgt,
  
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, beta[b], betaGrid2);
-        symSab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
+        sab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
       } 
     } 
 

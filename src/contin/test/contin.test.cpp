@@ -29,9 +29,9 @@ TEST_CASE( "continuous treatment" ){
     WHEN( "alpha and beta grid is relatively small" ){
       alpha = {0.01, 0.08, 4.00, 6.00, 20, 50};
       beta = {0.0, 0.4, 1.0, 5.0, 9.0, 20};
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, symSab );
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, sab );
       THEN( "contin output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
         sabCorrect = {5.6553448E-4, 2.9998239E-4, 3.5728611E-4, 1.3283598E-4, 
@@ -42,7 +42,7 @@ TEST_CASE( "continuous treatment" ){
         2.6874094E-2, 2.4511956E-2, 3.1123242E-2, 6.6847691E-2, 6.6284139E-2, 
         1.1948925E-2, 1.0067245E-3, 1.2017244E-3, 1.5855351E-3, 6.8388574E-3, 
         1.7465674E-2, 4.3725435E-2};
-        REQUIRE(ranges::equal(sabCorrect, symSab, equal));
+        REQUIRE(ranges::equal(sabCorrect, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
       } // THEN
@@ -182,12 +182,12 @@ TEST_CASE( "continuous treatment" ){
       0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 4, 6, 8, 10, 15, 20, 25 };
 
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, symSab );
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, sab );
       THEN( "contin output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
-        REQUIRE(ranges::equal(sabCorrect, symSab, equal));
+        REQUIRE(ranges::equal(sabCorrect, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
       } // THEN
@@ -299,15 +299,15 @@ std::vector<double>
     tbeta = 1.0; tev = 2.5507297688E-2; 
     sc = 0.0253/tev; scaling = sc;
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, symSab );
+      output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, sab );
 
 
     THEN( "contin output matches expected value" ){
       lambda_s = 0.60333890798030132; t_bar = 1.4641327610045163;
       for (size_t i = 0; i < everyFifthValue.size(); ++i ){ 
-        REQUIRE( symSab[5*i] == Approx(everyFifthValue[i]).epsilon(1e-6) );
+        REQUIRE( sab[5*i] == Approx(everyFifthValue[i]).epsilon(1e-6) );
       }
       REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
       REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
@@ -320,7 +320,7 @@ std::vector<double>
   GIVEN( "arbitrary phonon distribution" ){
     alpha = {0.01, 0.1,  1,   5, 10};
     beta  = {0.0,  0.05, 0.5, 5, 10, 20};
-    std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+    std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
     rho = {0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 0.0165, 
     0.02, 0.0245, 0.029, 0.034, 0.0395, 0.045, 0.0506, 0.0562, 0.0622, 0.0686, 
     0.075, 0.083, 0.091, 0.09126, 0.0871, 0.0839, 0.0807, 0.07798, 0.07574, 
@@ -333,7 +333,7 @@ std::vector<double>
       AND_WHEN( "temperature is very low" ){
         tev = 100*8.6173303e-5;   
         sc = 0.0253/tev; scaling = sc;
-        output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, symSab );
+        output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, sab );
         THEN( "contin output matches expected value" ){
           lambda_s = 7.6444701E-2; t_bar = 6.2888965;
           sabCorrect = {4.1395658E-5, 4.4726194E-5, 3.7025816E-5, 1.5765995E-4, 
@@ -343,7 +343,7 @@ std::vector<double>
           7.4993342E-3, 6.3573122E-3, 3.3430808E-2, 1.0643445E-2, 3.7753740E-4, 
           4.6516788E-3, 5.0220262E-3, 4.3586613E-3, 2.7573268E-2, 1.9902691E-2, 
           3.3329649E-3 };
-          REQUIRE(ranges::equal(sabCorrect, symSab, equal));
+          REQUIRE(ranges::equal(sabCorrect, sab, equal));
           REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
           REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
         } // THEN
@@ -351,7 +351,7 @@ std::vector<double>
       AND_WHEN( "temperature is very high" ){
         tev = 900*8.6173303e-5;   
         sc = 0.0253/tev; scaling = sc;
-        output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, symSab );
+        output = contin( nphon, delta, tbeta, scaling, tev, sc, rho, alpha, beta, sab );
         THEN( "contin output matches expected value" ){
           lambda_s =  1.729454237; t_bar = 1.16861142;
           sabCorrect = {3.3452442E-3, 3.3727931E-3, 1.7063857E-3, 1.7623769E-3, 
@@ -361,7 +361,7 @@ std::vector<double>
           2.2675945E-1, 1.8153698E-1, 2.2861657E-1, 1.0322905E-1, 6.8448510E-3, 
           1.0895402E-1, 1.0974843E-1, 1.0983673E-1, 1.6582818E-1, 1.4975245E-1, 
           4.2614699E-2};
-          REQUIRE(ranges::equal(sabCorrect, symSab, equal));
+          REQUIRE(ranges::equal(sabCorrect, sab, equal));
           REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
           REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
         } // THEN
@@ -396,10 +396,10 @@ TEST_CASE( "contin old" ){
 
     WHEN( "3rd order expansion, with alpha & beta vals scaled by 0.0253/tev" ){
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-          alpha, beta, symSab );
+          alpha, beta, sab );
 
       THEN( "contin output matches expected value" ){
         lambda_s = 4.38473153E-2, t_eff = 12.279863466;
@@ -414,7 +414,7 @@ TEST_CASE( "contin old" ){
           4.707463949E-5, 5.435449694E-5, 6.891421183E-5, 9.803364162E-5,
           7.638863877E-5, 9.036457859E-5, 1.043405184E-4, 1.322923980E-4,
           1.881961573E-4};
-        REQUIRE(ranges::equal(expected, symSab, equal));
+        REQUIRE(ranges::equal(expected, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
       } // THEN
@@ -424,10 +424,10 @@ TEST_CASE( "contin old" ){
       nphon = 6; delta = 0.04; sc = 1.0; scaling = 1.0;
       alpha =  { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-          alpha, beta, symSab );
+          alpha, beta, sab );
 
       THEN( "contin output matches expected value" ){
         lambda_s = 0.11157823, t_eff = 4.91699518;
@@ -438,7 +438,7 @@ TEST_CASE( "contin old" ){
           5.57045626E-4, 6.08491333E-4, 7.11382748E-4, 9.17165579E-4,
           9.26780041E-4, 1.02112863E-3, 1.11547723E-3, 1.30417442E-3,
           1.68156881E-3};
-        REQUIRE(ranges::equal(expected, symSab, equal));
+        REQUIRE(ranges::equal(expected, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
 
@@ -449,10 +449,10 @@ TEST_CASE( "contin old" ){
       delta = 4.; tbeta = 2.0; sc = 1.0; scaling = 1.0;
       alpha = { 0.1, 0.2, 0.4, 0.8, 1.6 };
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-        alpha, beta, symSab );
+        alpha, beta, sab );
 
       THEN( "contin output matches expected value" ){
 
@@ -464,7 +464,7 @@ TEST_CASE( "contin old" ){
           1.10139053E-09, 1.26588730E-09, 1.43038407E-09, 1.75937760E-09,
           2.41736468E-09, 2.19894405E-09, 2.52736456E-09, 2.85578506E-09,
           3.51262608E-09, 4.82630810E-09};
-        REQUIRE(ranges::equal(expected, symSab, equal));
+        REQUIRE(ranges::equal(expected, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
 
@@ -510,10 +510,10 @@ TEST_CASE( "contin old" ){
 
     WHEN( "  " ){
 
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-          alpha, beta, symSab );
+          alpha, beta, sab );
       std::vector<double> correct_beta_0_to_49_alpha_0 { 5.70056684e-4,
       5.71888708e-4, 5.73720731e-4, 5.77384778e-4, 5.81048825e-4, 5.84712872e-4,
       5.88951672e-4, 5.93233434e-4, 5.42056424e-4, 4.28244768e-4, 3.06057223e-4,
@@ -548,14 +548,14 @@ TEST_CASE( "contin old" ){
         REQUIRE( lambda_s == Approx(std::get<0>(output)).epsilon(1e-6) );
         REQUIRE( t_eff    == Approx(std::get<1>(output)).epsilon(1e-6) );
         for ( size_t b = 0; b < correct_beta_0_to_49_alpha_0.size(); ++b ){
-          REQUIRE( correct_beta_0_to_49_alpha_0[b] == Approx(symSab[b]).epsilon(1e-6) );
+          REQUIRE( correct_beta_0_to_49_alpha_0[b] == Approx(sab[b]).epsilon(1e-6) );
         }
         for ( size_t b = 0; b < correct_beta_0_to_49_alpha_29.size(); ++b ){
-          REQUIRE( correct_beta_0_to_49_alpha_29[b] == Approx(symSab[b+29.0*beta.size()]).epsilon(1e-6) );
+          REQUIRE( correct_beta_0_to_49_alpha_29[b] == Approx(sab[b+29.0*beta.size()]).epsilon(1e-6) );
         }
-        //std::cout << symSab[64+64*beta.size()] << std::endl;
+        //std::cout << sab[64+64*beta.size()] << std::endl;
         //for ( size_t i = 0; i < correct_beta_49_to_74_alpha_64.size(); ++i ){
-        //  REQUIRE( correct_beta_49_to_74_alpha_64[i] == Approx(symSab[49+i+64*beta.size()]).epsilon(1e-6) );
+        //  REQUIRE( correct_beta_49_to_74_alpha_64[i] == Approx(sab[49+i+64*beta.size()]).epsilon(1e-6) );
         //}
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
@@ -574,10 +574,10 @@ TEST_CASE( "contin old" ){
     std::vector<double> rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 0.0165 };
 
     WHEN( "  " ){
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-          alpha, beta, symSab );
+          alpha, beta, sab );
 
       std::vector<double> expected { 4.2543261427413936e-2, 4.2677975670624702e-2,
         4.2812689913835460e-2, 4.3082118400256997e-2, 4.3351546886678527e-2,
@@ -596,7 +596,7 @@ TEST_CASE( "contin old" ){
         0.27194207077720473 };
       THEN( "contin output matches expected value" ){
         lambda_s = 4.2065831071822970; t_eff = 1.0400408284374374;
-        REQUIRE(ranges::equal(expected, symSab, equal));
+        REQUIRE(ranges::equal(expected, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
       } // THEN
@@ -611,10 +611,10 @@ TEST_CASE( "contin old" ){
       rho { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005 };
 
     WHEN( "  " ){
-      std::vector<double> symSab( alpha.size()*beta.size(), 0.0 );
+      std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, scaling, tev, sc, rho,
-          alpha, beta, symSab );
+          alpha, beta, sab );
 
       std::vector<double> expected { 0.21338252777792166, 0.21401421222255254,
         0.21464589666718339, 0.21590926555644518, 0.30365460687728840,
@@ -624,7 +624,7 @@ TEST_CASE( "contin old" ){
 
       THEN( "contin output matches expected value" ){
         lambda_s = 14.500767787022335; t_eff = 1.0123228701111786;
-        REQUIRE(ranges::equal(expected, symSab, equal));
+        REQUIRE(ranges::equal(expected, sab, equal));
         REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
         REQUIRE(t_eff    == Approx(std::get<1>(output)).epsilon(1e-6));
 

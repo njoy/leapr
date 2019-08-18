@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "trans/trans_util/sbfill.h"
 
-
 TEST_CASE( "sbfill" ){
   GIVEN( "invalid inputs" ){
     int ndmax = 5100, nbt = 2545;
