@@ -7,8 +7,7 @@ auto equal = [](auto x, auto y, double tol = 1e-5){return x == Approx(y).epsilon
 
 TEST_CASE( "Discrete oscillator treatment" ){
   GIVEN( "Test material" ){
-    double sc = 1.0, scaling = 1.0,
-    lambda_s = 0.26460498561058793, temp = 296.0,
+    double lambda_s = 0.26460498561058793, temp = 296.0,
     twt = 0.0, tbeta = 0.5, effectiveTemp = 572.61028482016525;
 
     WHEN( "Single oscillator is present" ){
@@ -22,7 +21,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
           4.7449E-20, 7.01340E-2, 8.69301E-2, 8.7082E-10}, 
           correct { 6.25390E-3, 1.47793E-3, 0.00000000, 4.89179E-2, 1.45936E-2, 
           3.1085E-11, 4.58457E-2, 5.68386E-2, 8.52874E-5 };
-          discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+          discre( lambda_s, twt, tbeta, alpha, beta, temp, 
                   oscEnergiesWeights, effectiveTemp, sab );
         THEN( "scattering law matrix is correctly changed" ){
            REQUIRE(ranges::equal(sab,correct,equal));
@@ -54,7 +53,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
         3.29091E-4, 6.40995E-4, 6.41154E-4, 6.41024E-4, 6.41154E-4, 6.41317E-4, 
         6.42620E-4, 6.44249E-4, 6.57280E-4, 3.17006E-3, 3.17085E-3, 3.17020E-3, 
         3.17085E-3, 3.17165E-3, 3.17809E-3, 3.18614E-3, 3.25055E-3 };
-        discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+        discre( lambda_s, twt, tbeta, alpha, beta, temp, 
                 oscEnergiesWeights, effectiveTemp, sab );
         THEN( "scattering law matrix is correctly changed" ){
           REQUIRE(ranges::equal(sab,correct,equal));
@@ -74,7 +73,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
           correct  { 1.43400E-2, 1.49937E-3, 0.00000E+00, 6.46197E-2,
                      1.71145E-2, 1.05458E-19, 9.47556E-3, 4.65210E-2,
                      2.20689E-8 };
-          discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+          discre( lambda_s, twt, tbeta, alpha, beta, temp, 
                   oscEnergiesWeights, effectiveTemp, sab );
         THEN( "scattering law matrix is correctly changed" ){
           REQUIRE(ranges::equal(sab,correct,equal));
@@ -106,7 +105,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
         3.28138E-4, 7.14086E-4, 7.14265E-4, 7.14119E-4, 7.14265E-4, 7.14451E-4, 
         7.16049E-4, 7.18329E-4, 7.48380E-4, 7.16740E-3, 7.16917E-3, 7.16773E-3, 
         7.16917E-3, 7.17098E-3, 7.18566E-3, 7.20446E-3, 7.37363E-3 };
-        discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+        discre( lambda_s, twt, tbeta, alpha, beta, temp, 
                 oscEnergiesWeights, effectiveTemp, sab );
         THEN( "scattering law matrix is correctly changed" ){
           REQUIRE(ranges::equal(sab,correct,equal));
@@ -145,11 +144,11 @@ TEST_CASE( "Discrete oscillator treatment" ){
         6.32648E-5, 4.70616E-6, 8.7052E-19, 2.06917E-9, 4.03784E-5, 4.21806E-5, 
         2.22134E-5};
 
-        discre( sc, scaling, lambda_s, twt, tbeta, alpha1, beta1, temp, 
+        discre( lambda_s, twt, tbeta, alpha1, beta1, temp, 
                 oscEnergiesWeights, effectiveTemp, sab1 );
-        discre( sc, scaling, lambda_s, twt, tbeta, alpha2, beta2, temp, 
+        discre( lambda_s, twt, tbeta, alpha2, beta2, temp, 
                 oscEnergiesWeights, effectiveTemp, sab2 );
-        discre( sc, scaling, lambda_s, twt, tbeta, alpha3, beta3, temp, 
+        discre( lambda_s, twt, tbeta, alpha3, beta3, temp, 
                 oscEnergiesWeights, effectiveTemp, sab3 );
 
         THEN( "scattering law matrix is correctly changed" ){
@@ -214,11 +213,11 @@ TEST_CASE( "Discrete oscillator treatment" ){
       correct3 { 4.83392E-2, 1.66713E-2, 2.26650E-3, 3.18367E-2, 2.06018E-2, 
       7.00440E-3, 1.71694E-2, 1.53809E-2, 9.62749E-3};
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha1, beta1, temp, 
+      discre( lambda_s, twt, tbeta, alpha1, beta1, temp, 
                 oscEnergiesWeights, effectiveTemp, sab1 );
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha2, beta2, temp, 
+      discre( lambda_s, twt, tbeta, alpha2, beta2, temp, 
                 oscEnergiesWeights, effectiveTemp, sab2 );
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha3, beta3, temp, 
+      discre( lambda_s, twt, tbeta, alpha3, beta3, temp, 
                 oscEnergiesWeights, effectiveTemp, sab3 );
 
 
@@ -231,8 +230,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
   } // GIVEN
 
   GIVEN( "Simple water example" ){
-    double sc = 1.0, scaling = 1.0, temp = 400.0, 
-    lambda_s = 0.38283816, effectiveTemp = 600.970054,
+    double temp = 400.0, lambda_s = 0.38283816, effectiveTemp = 600.970054,
     twt = 0.055556, tbeta = 0.444444;
     std::vector<double> oscEnergies {0.205,0.48}, oscWeights {0.166667,0.333333};
     auto oscEnergiesWeights = ranges::view::zip(oscEnergies,oscWeights);
@@ -453,14 +451,13 @@ TEST_CASE( "Discrete oscillator treatment" ){
       3.06685E-5, 3.21720E-5, 3.37478E-5, 5.35591E-5, 1.24939E-4, 2.64715E-4, 
       5.12970E-4, 9.11703E-4, 2.78109E-3, 5.96512E-3, 9.66009E-3 };
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+      discre( lambda_s, twt, tbeta, alpha, beta, temp, 
                   oscEnergiesWeights, effectiveTemp, sab );
       THEN( "scattering law matrix is correctly changed" ){
          REQUIRE(ranges::equal(sab,correct,equal));
       } // THEN
     } // WHEN
     WHEN( "alpha and beta values are scaled (lat=1)" ){
-      sc = 0.73398602349036102, scaling = 0.73398602349036102;
       std::vector<double>
       alpha {0.01, 0.08, 0.40, 0.80, 4.0, 6.0, 20., 30, 40.0, 50},
       beta  {0.00, 0.04, 0.06, 0.08, 0.1, 0.3, 0.5, 0.9, 2.0, 6.0, 10, 20},
@@ -506,8 +503,12 @@ TEST_CASE( "Discrete oscillator treatment" ){
         1.79316E-2, 2.03062E-4, 2.06066E-4, 2.07581E-4, 2.09096E-4, 2.10622E-4, 
         2.26451E-4, 2.43303E-4, 2.80205E-4, 4.06179E-4, 1.28286E-3, 3.08555E-3, 
         9.46688E-3};
+      double sc = 0.7339860234, scaling = 0.7339860234;
+      for (auto& a : alpha){ a*= scaling; }
+      for (auto& b : beta ){ b*= sc;      }
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, 
+
+      discre( lambda_s, twt, tbeta, alpha, beta, temp, 
               oscEnergiesWeights, effectiveTemp, sab );
 
       THEN( "scattering law matrix is correctly changed" ){
@@ -555,11 +556,11 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1, scaling = 1, tbeta = 2, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.9575582, 1.914953, 2.872356, 
@@ -582,12 +583,11 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.7125247, 1.321226, 1.681776, 2.414681,
@@ -608,12 +608,11 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.8323044, 1.665653, 2.505608, 
@@ -634,11 +633,10 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.83835105, 1.6777545, 2.5238118, 
@@ -662,11 +660,10 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.8313648, 1.663253, 2.498450, 
@@ -688,11 +685,10 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
       std::vector<double> sym_sab (alpha.size()*beta.size(),0.0);
       for ( size_t i = 0; i < sym_sab.size(); ++i ){ sym_sab[i] = i+1; }
 
-      double lambda_s = 2.2941534E-3, sc = 1.0, scaling = 1.0, 
-             tbeta = 2.0, twt = 0.3;
+      double lambda_s = 2.2941534E-3, tbeta = 2.0, twt = 0.3;
 
     auto oscEnergiesWeights = ranges::view::zip(osc_energies,osc_weights);
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, 
+      discre( lambda_s, twt, tbeta, alpha, beta, 
               temp, oscEnergiesWeights, t_eff, sym_sab );
 
       std::vector<double> correctSymSab {0.9690026, 1.938005, 2.907007, 
@@ -709,8 +705,7 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
 
 
   GIVEN( "dummy test" ){
-    double sc = 1.0, scaling = 1.0,
-    lambda_s = 0.26460498561058793, temp = 296.0,
+    double lambda_s = 0.26460498561058793, temp = 296.0,
     twt = 0.0, tbeta = 0.5, effectiveTemp = 572.61028482016525;
     std::vector<double> 
       alpha = {0.1, 1.0, 10},
@@ -726,7 +721,7 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
 
     auto oscEnergiesWeights = ranges::view::zip(oscEnergies,oscWeights);
 
-    discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
+    discre( lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
     THEN( "scattering law matrix is correctly changed" ){
       REQUIRE(ranges::equal(sab,sabCorrect,equal));
     } // THEN
@@ -735,8 +730,7 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
 
 
   GIVEN( "simple water example" ){
-    double sc = 1.0, scaling = 1.0,
-    lambda_s = 0.23520419644942447, temp = 296.0,
+    double lambda_s = 0.23520419644942447, temp = 296.0,
     twt = 0.055556, tbeta = 0.444444, effectiveTemp = 541.87556285322705;
     std::vector<double> oscEnergies { 0.205, 0.48 }, 
                         oscWeights  { 0.166667, 0.333333 };
@@ -767,7 +761,7 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
         7.190342E-2, 5.288448E-2, 5.249625E-2, 6.807050E-2, 6.575628E-2, 
         6.061882E-2, 4.798440E-2};
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
+      discre( lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
 
       THEN( "scattering law matrix is correctly changed" ){
         REQUIRE(ranges::equal(sab,sabCorrect,equal));
@@ -829,7 +823,7 @@ TEST_CASE( "Discrete oscillator treatment (old tests)" ){
         3.990205E-08, 4.865977E-08, 6.209764E-08, 3.764874E-07, 2.441230E-06, 
         8.235741E-04, 3.394048E-03};
 
-      discre( sc, scaling, lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
+      discre( lambda_s, twt, tbeta, alpha, beta, temp, oscEnergiesWeights, effectiveTemp, sab );
 
       THEN( "scattering law matrix is correctly changed" ){
         REQUIRE(ranges::equal(sab,sabCorrect,equal));

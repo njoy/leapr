@@ -5,14 +5,12 @@
 
 template <typename Range, typename Float>
 auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta, 
-  const Float& diffusion, const Float& sc, const Float& scaling, 
+  const Float& diffusion, 
   const Float& lambda_s, const Float& tbeta, Float& t_eff, const Float& temp, 
   Range& existingSAB ){
 
   using std::exp, std::min; 
 
-  for (auto& a : alpha ){ a *= scaling; }
-  for (auto& b : beta  ){ b *= sc;      }
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
   Range sabTrans(ndmax), ap(ndmax), sab(ndmax);
@@ -28,15 +26,10 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
     nsd = diffusion == 0 ? 
       getFreeGas  ( transWeight, alpha[a], ndmax, delta, sabTrans ) : 
       getDiffusion( transWeight, alpha[a], ndmax, delta, sabTrans, diffusion );
-    //std::cout << a+1 << "    " << "nsd   " << nsd << std::endl;
-    //std::cout << a+1 << "    " << sabTrans[0] << "   " << sabTrans[1] << "   " << sabTrans[2] << std::endl;
-
     if ( nsd > 1 ){
       for ( size_t b = 0; b < beta.size(); ++b ){
         ap[b] = existingSAB[beta.size()*a + b];
       }
-    //std::cout << a+1 << "    " << ap[0] << "   " << ap[1] << "   " << ap[2] << std::endl;
-
       for ( size_t b = 0; b < beta.size(); ++b ){
         Float be = beta[b];
         sbfill( sab, nsd, delta, be, ap, beta, ndmax );
@@ -49,7 +42,6 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
                f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
 
         }
-        //std::cout << a+1 << "    " << b+1 << "     " << s << std::endl;
         s = (s < 1e-30) ? 0 : s*delta*0.33333333;
 
         st = terps(sabTrans,delta,be,nsd);
@@ -61,8 +53,7 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
     }
   } // for alpha
   
-  t_eff = (tbeta*t_eff + transWeight*temp) /
-                     ( tbeta + transWeight );
+  t_eff = (tbeta*t_eff + transWeight*temp) / ( tbeta + transWeight );
 
 }
 

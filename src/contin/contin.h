@@ -5,12 +5,9 @@
 
 template <typename Range, typename Float>
 auto contin(int nphon, Float& delta, const Float& continWgt, 
-  const Float& scaling, const Float& tev, const Float& sc, Range rho, 
-  Range& alpha, Range& beta, Range& sab ){
+  const Float& tev, Range rho, 
+  Range alpha, Range beta, Range& sab ){
   using std::exp;
-
-  for ( auto& a : alpha ){ a *= scaling; }
-  for ( auto& b : beta  ){ b *= sc;      }
 
   delta /= tev;
 

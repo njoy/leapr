@@ -12,12 +12,14 @@ template <typename Float>
 void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
 template <typename Float, typename Range, typename RangeZipped>
-auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s, 
+auto discre( const Float& lambda_s, 
   const Float& twt, const Float& tbeta, Range alpha, Range beta, 
   const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sab ){
 
-  for ( auto& a : alpha ){ a *= scaling; }
-  for ( auto& b : beta  ){ b *= sc; }
+  //for ( auto& a : alpha ){ a *= scaling; }
+  //for ( auto& b : beta  ){ b *= sc;      }
+
+
 
   int maxdd = 500;
 
@@ -117,6 +119,12 @@ auto discre( const Float& sc, const Float& scaling,  const Float& lambda_s,
       sab[b+a*beta.size()] = sexpb[b];
     }
   }
+  double tsave = 0.0;
+  for ( size_t n = 0; n < t_eff_consts.size(); ++n){
+    tsave += t_eff_consts[n]/kb;
+  }
+
+  t_eff = (tbeta+twt)*t_eff + tsave;
 }
 
 

@@ -219,10 +219,11 @@ So to model a diffusive material, the solid-type solution obtained from the vibr
 
 
 
-Coherent Scattering (Elastic Only)
+Coherent Scattering (Elastic)
 ==============================================
 
 Coherent scattering is when periodic constructive growth or destructive cancellation of the scattered waves occur. This is a difficult phenomena to model, and thus LEAPR is currently limited to describing elastic coherent scattering for the following materials:
+
   +-----------------+------------------------------+
   | Materials       | Crystalline Structure        |
   +=================+==============================+
@@ -250,7 +251,7 @@ where :math:`W` is the effevtive Debye-Waller coefficient, :math:`\sigma_c` is t
 
 
   +-------------------+-----------------------+------------------------------------+
-  | Symbol            | Name                  |  Other Definition                  |
+  | Symbol            | Name                  |  Formula                           |
   +===================+=======================+====================================+
   | :math:`W`         | | Effective Debye     |                                    |
   |                   | | Waller coefficient  |                                    |

@@ -16,6 +16,8 @@ TEST_CASE( "trans" ){
     effectiveTemp = 570;
   transWgt = 0.5;
   tbeta = 0.5;
+  for ( auto& a : alpha ){ a*= scaling; }
+  for ( auto& b : beta  ){ b*= sc;      }
 
   std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
                           | ranges::view::transform([](auto x){return 1e-3*x;});
@@ -26,7 +28,7 @@ TEST_CASE( "trans" ){
     WHEN( "translational weight is small" ){
       transWgt = 0.05; 
       tbeta = 0.95;
-      trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+      trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
              effectiveTemp, temp,  sab );
       correct = { 1.359940, 8.42100E-1, 3.86253E-1, 1.648607, 1.310258, 
       8.96480E-1, 1.473408, 1.321628, 1.104853, 1.362848, 1.253072, 1.091452 };
@@ -38,7 +40,7 @@ TEST_CASE( "trans" ){
     WHEN( "translational weight is large" ){
       transWgt = 0.5; 
       tbeta = 0.5;
-      trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+      trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
              effectiveTemp, temp,  sab );
       correct = {1.170449, 1.132933, 1.066604, 8.459466E-1, 8.383600E-1, 
       8.20872E-1, 5.737014E-1, 5.764080E-1, 5.751139E-1, 4.984466E-1, 
@@ -51,9 +53,13 @@ TEST_CASE( "trans" ){
     WHEN( "alpha and beta values are very small" ){
       alpha = {0.001, 0.002, 0.004, 0.005};
       beta  = {0.0015,0.0018,0.0022};
+      for ( auto& a : alpha ){ a*= scaling; }
+      for ( auto& b : beta  ){ b*= sc;      }
+
+
       transWgt = 0.05; 
       tbeta = 0.95;
-      trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+      trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
              effectiveTemp, temp,  sab );
       correct = { 39.43256, 39.27908, 38.93495, 28.02756, 27.99394, 27.84877, 
                   19.83799, 19.81991, 19.79582, 17.74976, 17.73555, 17.71663 }; 
@@ -66,13 +72,17 @@ TEST_CASE( "trans" ){
     WHEN( "translational weight is small" ){
       alpha = {0.001,0.002,0.004,0.005};
       beta = {0.0015,0.0018,0.0022};
+      for ( auto& a : alpha ){ a*= scaling; }
+      for ( auto& b : beta  ){ b*= sc;      }
+
+
       std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
                               | ranges::view::transform([](auto x){return 1e-3*x;});
 
 
       transWgt = 0.05; 
       tbeta = 0.95;
-      trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+      trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
              effectiveTemp, temp,  sab );
       correct = { 39.43256, 39.27908, 38.93495, 28.02756, 27.99394,  27.84877, 
                   19.83799, 19.81991, 19.79582, 17.74976,  17.73555, 17.71663};
@@ -85,6 +95,10 @@ TEST_CASE( "trans" ){
     WHEN( "translational weight is larger and more alpha,beta values" ){
       alpha =      {1e-5,1e-4,1e-3,1e-2,1e-1,1.0,10,20,50};
       beta  = {0.00,1e-5,1e-4,1e-3,1e-2,1e-1,1.0,10,20,50};
+      for ( auto& a : alpha ){ a*= scaling; }
+      for ( auto& b : beta  ){ b*= sc;      }
+
+
       std::vector<double> sab = ranges::view::iota(1,int(alpha.size()*beta.size()+1))
                               | ranges::view::transform([](auto x){return 1e-3*x;});
  
@@ -94,7 +108,7 @@ TEST_CASE( "trans" ){
       temp = 596.0;
       AND_WHEN( "alpha and beta value are not scaled (lat=0)" ){
 
-        trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+        trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
                effectiveTemp, temp,  sab );
         correct = {  1.994744E2, 1.994727E2, 1.992349E2, 1.761239E2, 5.65913E-3, 
         5.99113E-3, 6.99912E-3, 7.99998E-3, 8.99994E-3, 5.99283E-3, 6.309085E1, 
@@ -119,7 +133,11 @@ TEST_CASE( "trans" ){
       } // AND WHEN
       AND_WHEN( "alpha and beta value are not scaled (lat=1)" ){
         sc = 0.492608069; scaling = 0.492608069;
-        trans( alpha, beta, transWgt, delta, c, sc, scaling, lambda_s, tbeta, 
+      for ( auto& a : alpha ){ a*= scaling; }
+      for ( auto& b : beta  ){ b*= sc;      }
+
+
+        trans( alpha, beta, transWgt, delta, c, lambda_s, tbeta, 
                effectiveTemp, temp,  sab );
         correct = { 2.842070E2, 2.842058E2, 2.840389E2, 2.673005E2, 6.08110E-1, 
         5.98738E-3, 6.99875E-3, 7.99997E-3, 8.99991E-3, 5.70052E-3, 8.988626E1, 
@@ -150,106 +168,4 @@ TEST_CASE( "trans" ){
 } // TEST CASE
 
 
-
-
-
-/*
-TEST_CASE( "trans (old tests)" ){
-
-  std::vector<double> alpha {0.10, 0.20, 0.40, 0.50}, 
-    beta {0.15, 0.18, 0.22}, correct;
-
-  double transWgt = 0.03, delta = 220.0, diffusion_const = 1.5, temp = 200, 
-    sc = 1.0, scaling = 1.0, lambda_s = 0.002, tbeta = 2.1, 
-    effectiveTemp = 13.5; ;
-
-  std::vector<double> sab {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2};
-
-
-  GIVEN( "that the translational motion is diffusive" ){
-    WHEN( "temperature is relatively low" ){
-      trans( alpha, beta, transWgt, delta, diffusion_const, sc, scaling, 
-        lambda_s, tbeta, effectiveTemp, temp,  sab );
-      correct = { 0.23049978, 0.25982880, 0.19141505, 0.62197701, 0.58781315, 
-        0.39163902, 1.08210491, 0.92354902, 0.64343974, 1.41011128, 1.18123544, 
-        0.84745080};
-      
-      THEN( "S(a,b) and effective temperature outputs are correct" ){
-        REQUIRE(ranges::equal(sab,correct,equal));
-	REQUIRE( 16.12676056 == Approx(effectiveTemp).epsilon(1e-6) );
-      } // THEN
-    } // WHEN
-  }}
-
-    WHEN( "temperature is relatively high" ){
-
-      alpha = {0.8, 1.0, 1.4, 1.5};
-      beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
-      temp = 800.0;
-      effectiveTemp = 117.2;
-      std::vector<double> sab { 0.001, 0.002, 0.003, 0.004, 0.006, 0.01, 0.02, 0.03, 0.04, 0.06, 
-            0.1, 0.2, 0.3, 0.4, 0.6, 1.1, 1.2, 1.3, 1.4, 1.6 };
-      lambda_s = 2.5236078E-3;
-      tbeta = 5.1;
-
-      trans( alpha, beta, transWgt, delta, diffusion_const, sc, scaling, 
-        lambda_s, tbeta, effectiveTemp, temp, sab );
-      correct = { 0.92601235894, 0.61808459249, 0.4026621598, 0.2607989292, 
-        0.2444620547, 1.0791262271, 0.7478653475, 0.5053651418, 0.3344515293, 
-        0.3160592329, 1.3359968514, 1.0435211230, 0.7531824364, 0.5472561336, 
-        0.5385673429, 2.0990244422, 1.7440234835, 1.4013032062, 1.0787827232, 
-        1.0696952350 };
-      
-      THEN( "S(a,b) and effective temperature outputs are correct" ){
-        REQUIRE(ranges::equal(sab,correct,equal));
-	REQUIRE( 121.1929824 == Approx(effectiveTemp).epsilon(1e-4) );
-      } // THEN
-    } // WHEN
-  } // GIVEN
-
-  GIVEN( "that the translational motion is a free gas" ){
-    diffusion_const = 0;
-
-    WHEN( "temperature is relatively low" ){
-
-      trans( alpha, beta, transWgt, delta, diffusion_const, sc, scaling, 
-        lambda_s, tbeta, effectiveTemp, temp,  sab );
-      correct = { 0.92779395, 0.462578, 0.18376845, 1.771662, 1.2519220,
-        0.74812670, 2.146880, 1.78983859, 1.384712, 2.2401082, 1.99146590, 
-        1.630380 };
-      
-
-      THEN( "S(a,b) and effective temperature outputs are correct" ){
-        REQUIRE(ranges::equal(sab,correct,equal));
-	REQUIRE( 16.12676056 == Approx(effectiveTemp).epsilon(1e-4) );
-      } // THEN
-    } // WHEN
-
-    WHEN( "temperature is relatively high" ){
-
-      alpha = {0.8, 1.0, 1.4, 1.5};
-      beta = {0.15, 0.19, 0.24, 0.30, 0.31 };
-      temp = 800.0;
-      effectiveTemp = 117.2;
-      std::vector<double> sab { 0.001, 0.002, 0.003, 0.004, 0.006, 0.01, 0.02, 
-        0.03, 0.04, 0.06, 0.1, 0.2, 0.3, 0.4, 0.6, 1.1, 1.2, 1.3, 1.4, 1.6 };
-
-      lambda_s = 2.5236078E-3;
-      tbeta = 5.1;
-
-      trans( alpha, beta, transWgt, delta, diffusion_const, sc, scaling, 
-        lambda_s, tbeta, effectiveTemp, temp, sab );
-      correct = { 1.539329, 1.363224, 1.116673, 0.8210472, 0.7761662, 
-        1.446650, 1.318804, 1.1343993, 0.8915002, 0.8546271, 1.362848, 
-        1.276393, 1.168248, 0.9998096, 0.9865463, 1.9122958, 1.806748, 
-        1.693513, 1.505287, 1.4913750 };
-      
-      THEN( "S(a,b) and effective temperature outputs are correct" ){
-        REQUIRE(ranges::equal(sab,correct,equal));
-	REQUIRE( 121.192979 == Approx(effectiveTemp).epsilon(1e-4) );
-      } // THEN
-    } // WHEN
-  } // GIVEN
-} // TEST CASE
-*/
 
