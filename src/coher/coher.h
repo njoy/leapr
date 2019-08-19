@@ -14,7 +14,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
    * of edges, and maxEnergy (emax) are also there
    */
-  int j,k,imax;
+  int k,imax;
   std::vector<double> 
   //       Graphite   Be         BeO       Al       Pb       Fe  
     aVals {2.4573e-8, 2.2856e-8, 2.695e-8, 4.04e-8, 4.94e-8, 2.8600e-8 },
@@ -22,7 +22,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
     mass  {12.011,    9.0100,    12.50,    26.7495, 207.,    55.454    },
     xsCoh {5.5000,    7.5300,    1.000,    1.49500, 1.00,    12.900    };
 
-  double econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6,eps=.05;
+  double econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6;
 
 
   // Lattice Constants (a) in angstroms

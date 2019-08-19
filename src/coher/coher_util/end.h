@@ -1,6 +1,5 @@
+#include "generalTools/swap.h"
 
-template <typename Float>
-void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
 auto sortLatticeFactors(std::vector<double>& b, int& k, double maxTauSq, int imax){
   for ( auto i = 0; i < imax; ++i ){

@@ -4,17 +4,19 @@
 #include "trans/trans.h"
 #include "discre/discre.h"
 #include "coldh/coldh.h"
+#include "coher/coher.h"
 #include "skold/skold.h"
 #include "generalTools/constants.h"
 #include <range/v3/all.hpp>
 
 template<typename Range, typename Float, typename RangeZipped>
-auto leapr( int nphon, Float awr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac ){
+auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac ){
 
   Float lambda_s, tBar, arat=1.0, effectiveTemp, temp, tev, sc, scaling;
   std::vector<Float> sab( alpha.size()*beta.size(),0.0),
                      sab2(alpha.size()*beta.size(),0.0);
   Range effectiveTemps(temps.size());
+  Range bragg ( 60000, 0.0 );
 
   for ( size_t itemp = 0; itemp < temps.size(); ++itemp ){ 
     temp = temps[itemp];
@@ -40,28 +42,31 @@ auto leapr( int nphon, Float awr, int ncold, Float aws, int lat, Range alpha, Ra
     if (transWgt > 0){
       trans( alpha, beta, transWgt, delta, diffusion_const,
         lambda_s, continWgt, effectiveTemp, temp,  sab );
-      //std::cout << "Finished trans!" << std::endl;
+      std::cout << "Finished trans!" << std::endl;
     }
 
     if (oscEnergiesWgts.size() > 0){
       discre( lambda_s, transWgt, continWgt, alpha, beta, temp, 
               oscEnergiesWgts, effectiveTemp, sab );
-      //std::cout << "Finished discre!" << std::endl;
+      std::cout << "Finished discre!" << std::endl;
     }
 
     if (ncold > 0){ 
       bool free = false;
       coldh( tev, ncold, transWgt, continWgt, scaling, alpha, beta, dka, 
              kappaVals, lat, free, sab, sab2, tBar );
-      //std::cout << "Finished coldh!" << std::endl;
+      std::cout << "Finished coldh!" << std::endl;
     }
     else if (kappaVals.size() > 0){
       skold( cfrac, tev, alpha, beta, kappaVals, awr, dka, scaling, sab );
-      //std::cout << "Finished skold!" << std::endl;
+      std::cout << "Finished skold!" << std::endl;
 
     }
 
-
+    if (iel > 0){
+      double emax = 5.0;
+      coher( iel, npr, bragg, emax );
+    }
 
     effectiveTemps[itemp] = effectiveTemp;
 
@@ -69,9 +74,9 @@ auto leapr( int nphon, Float awr, int ncold, Float aws, int lat, Range alpha, Ra
 
   }
 
-  return std::make_tuple(sab,effectiveTemps,lambda_s);
+  return std::make_tuple(sab,effectiveTemps,lambda_s,bragg);
   std::cout << (sab|ranges::view::all) << std::endl;
 
-  std::cout << nphon << awr << ncold << aws << lat << alpha[0] << beta[0] << temps[0] << delta << rho[0] << transWgt << diffusion_const << continWgt << std::get<0>(oscEnergiesWgts[0]) << dka << kappaVals[0] << std::endl;
+  std::cout << nphon << awr << ncold << aws << lat << alpha[0] << beta[0] << temps[0] << delta << rho[0] << transWgt << diffusion_const << continWgt << std::get<0>(oscEnergiesWgts[0]) << dka << kappaVals[0] << iel << std::endl;
 
 }

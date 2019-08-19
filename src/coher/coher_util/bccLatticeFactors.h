@@ -10,7 +10,7 @@ double taubcc( int l1, int l2, int l3, double c1 ){
 auto bccLatticeFactors( const double& maxTauSq, std::vector<double>& b, 
   const int& lat, const double& a, const double& massScatterer ){
 
-  double t2 = 1e4*hbar/(2*massScatterer), c1 = 2.0/(a*a), tsq;
+  double c1 = 2.0/(a*a), tsq;
   // compute lattice factors for bcc lattices
   int im;
   unsigned int k = 0;
@@ -32,5 +32,6 @@ auto bccLatticeFactors( const double& maxTauSq, std::vector<double>& b,
   } // i1
 
   return k-1; // this is imax
+  std::cout << massScatterer << std::endl;
 }
 

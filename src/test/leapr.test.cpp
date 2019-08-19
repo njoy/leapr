@@ -5,14 +5,14 @@
 #include "generalTools/testing.h"
 
 TEST_CASE( "leapr" ){
-  int nphon, ncold, lat;
+  int nphon, ncold, lat, iel, npr;
   double sps, awr, aws, delta, twt, c, tbeta, dka, cfrac;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, kappa;
 
   GIVEN( "coarse alpha, beta grids (for quick testing)" ) {
     WHEN( "continuous, translational, and discrete oscillator options used" ) {
       nphon = 100;
-      awr   = 0.99917;  ncold = 0; 
+      awr   = 0.99917;  iel = 0; npr = 2.0; ncold = 0; 
       aws   = 15.85316; sps = 3.8883; 
       lat   = 0;
       alpha = {.01008,   .033,     0.050406, 0.504060, 0.554466, 1.873790, 
@@ -38,7 +38,7 @@ TEST_CASE( "leapr" ){
 
       AND_WHEN ( "alpha and beta scaling not needed (lat = 0)" ){
         lat   = 0;            
-        auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+        auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                           rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
   
         std::vector<double> sabCorrect { 1.188670E+1, 1.168376E+1, 6.300891E+0, 
@@ -78,7 +78,7 @@ TEST_CASE( "leapr" ){
       } // AND WHEN
       AND_WHEN ( "alpha and beta scaling is requested (lat = 1)" ){
         lat   = 1;            
-        auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+        auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                           rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
         std::vector<double> sabCorrect { 1.193557E+1, 1.173342E+1, 6.361294E+0, 
           1.816275E+0, 3.124950E-4, 4.639237E-4, 3.122224E-4, 7.882191E-5, 
@@ -116,7 +116,7 @@ TEST_CASE( "leapr" ){
       } // AND WHEN
       AND_WHEN( "material is cold" ){
         temp  = { 100.0 };                                          
-        auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+        auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                           rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
 
         std::vector<double> sabCorrect { 1.191059E+1, 1.170723E+1, 6.313288E+0, 
@@ -155,7 +155,7 @@ TEST_CASE( "leapr" ){
       } // AND WHEN
       AND_WHEN( "material is hot" ){
         temp  = { 600.0 };                                          
-        auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+        auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                           rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
 
         std::vector<double> sabCorrect { 1.182050E+1, 1.161877E+1, 6.267602E+0, 
@@ -242,7 +242,7 @@ TEST_CASE( "leapr" ){
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
 
 
-      auto out = leapr( nphon, awr, ncold, aws, lat, alpha, beta, temp, delta, 
+      auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                         rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
       std::vector<double> sab = std::get<0>(out),
       sab_0_99 { 1.193557E+1, 1.173342E+1, 1.115293E+1, 9.042512E+0, 6.361295E+0, 
@@ -315,7 +315,93 @@ TEST_CASE( "leapr" ){
 
 
     } // WHEN
- } // GIVEN
+  } // GIVEN
+
+  GIVEN( "Beryllium metal" ) {
+    WHEN( "continuous and coherent elastic options used" ) {
+      nphon = 100;
+      awr   = 8.93478;  iel = 2; npr = 1; ncold = 0; 
+      aws   = 0; sps = 0; 
+      lat   = 1;
+      alpha = { 3.504421E-3, 4.022632E-3, 6.983712E-3, 8.016418E-3, 1.391734E-2, 
+        1.597535E-2, 2.773489E-2, 3.183614E-2, 5.527088E-2, 6.344398E-2, 
+        1.101454E-1, 1.264330E-1, 2.195010E-1, 2.519593E-1, 4.374279E-1, 
+        5.021119E-1, 8.717190E-1, 1.000623E+0, 1.737187E+0, 1.994071E+0, 
+        3.461916E+0, 3.973842E+0, 6.899007E+0, 7.919187E+0, 1.374854E+1, 
+        1.578158E+1, 2.739849E+1, 3.145000E+1, 5.460050E+1, 6.267447E+1, 
+        7.707822E+1, 8.847604E+1 };
+
+      beta = { 0.000000E+0, 1.091104E-1, 4.091640E-1, 5.182744E-1, 8.183280E-1, 
+               9.274384E-1, 1.227492E+0, 1.336602E+0, 1.636656E+0, 1.745766E+0, 
+               2.045820E+0, 2.154930E+0, 2.454984E+0, 2.564094E+0, 2.864148E+0, 
+               2.973259E+0, 3.273312E+0, 3.382423E+0, 5.663993E+0, 7.072014E+0, 
+               1.302265E+1, 1.625997E+1, 2.994166E+1, 3.738491E+1, 6.884185E+1, 
+               8.595535E+1, 1.582811E+2, 1.976285E+2 };
+
+      temp  = { 296.0 };                                          
+      delta = 0.00069552;
+      rho = {0.0000E+0, 7.2477E-4, 3.7084E-3, 8.0087E-3, 1.0642E-2, 1.5897E-2, 
+             2.7372E-2, 4.1843E-2, 5.0214E-2, 6.5036E-2, 8.3674E-2, 9.9329E-2, 
+             1.1977E-1, 1.4296E-1, 1.6484E-1, 1.8945E-1, 2.1887E-1, 2.3537E-1, 
+             2.6166E-1, 3.0003E-1, 3.4054E-1, 3.8728E-1, 4.2481E-1, 4.7598E-1, 
+             5.1890E-1, 5.7400E-1, 6.2970E-1, 6.5754E-1, 7.2042E-1, 7.9118E-1, 
+             8.6756E-1, 9.2948E-1, 1.0030E+0, 1.1163E+0, 1.2048E+0, 1.2870E+0, 
+             1.4139E+0, 1.5249E+0, 1.6221E+0, 1.7638E+0, 1.8924E+0, 2.0388E+0, 
+             2.2056E+0, 2.3709E+0, 2.5558E+0, 2.7595E+0, 3.0108E+0, 3.2603E+0, 
+             3.5066E+0, 3.7442E+0, 4.0067E+0, 4.3677E+0, 4.7164E+0, 5.0820E+0, 
+             5.5881E+0, 6.0898E+0, 6.5510E+0, 7.0877E+0, 7.5931E+0, 8.0736E+0, 
+             8.6232E+0, 9.2283E+0, 9.9334E+0, 1.0613E+1, 1.1278E+1, 1.1973E+1, 
+             1.2784E+1, 1.3744E+1, 1.4739E+1, 1.5918E+1, 1.7654E+1, 1.9834E+1, 
+             2.1455E+1, 2.2574E+1, 2.3744E+1, 2.4900E+1, 2.6227E+1, 2.7931E+1, 
+             2.9747E+1, 2.9884E+1, 2.7358E+1, 2.4817E+1, 2.3690E+1, 2.3242E+1, 
+             2.3624E+1, 2.3473E+1, 2.2368E+1, 2.1447E+1, 2.0724E+1, 2.1121E+1, 
+             2.4240E+1, 2.7607E+1, 2.7643E+1, 2.5431E+1, 2.3755E+1, 2.3377E+1, 
+             2.3410E+1, 2.3504E+1, 2.3647E+1, 2.3681E+1, 2.3805E+1, 2.3714E+1, 
+             2.3385E+1, 2.3050E+1, 2.2244E+1, 2.1008E+1, 1.9536E+1, 1.8341E+1, 
+             1.8075E+1, 1.8606E+1, 1.9599E+1, 2.1037E+1, 2.3193E+1, 2.4016E+1, 
+             2.3573E+1, 2.5664E+1, 3.0187E+1, 3.1256E+1, 2.7257E+1, 2.2765E+1, 
+             1.4893E+1, 6.8192E+0, 3.8444E+0, 2.4718E+0, 1.3358E+0, 3.5968E-1,0};
+      twt    = 0.0;   c = 0.0;   tbeta = 1.0;
+      oscE   = { };                                 
+      oscW   = {  };                            
+      dka    = 0.0;
+      cfrac  = 0.0;
+ 
+      auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
+
+
+      auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
+                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
+
+      std::vector<double> sab_0_49 {  8.64142E-5, 8.45470E-5, 1.22065E-4, 
+      1.26150E-4, 1.66740E-4, 1.89049E-4, 2.77557E-4, 3.32110E-4, 5.68091E-4, 
+      6.79697E-4, 1.21621E-3, 1.39873E-3, 8.78432E-4, 9.43453E-4, 7.28456E-4, 
+      5.75077E-4, 6.30556E-4, 6.67230E-5, 3.01255E-7, 3.22515E-10, 5.89579E-17, 
+      3.16696E-21, 0, 0, 0, 0, 0, 0, 9.91904E-5, 9.70488E-5, 1.40103E-4, 
+      1.44791E-4, 1.91367E-4, 2.16967E-4, 3.18530E-4, 3.81129E-4, 6.51920E-4, 
+      7.79990E-4, 1.39565E-3, 1.60510E-3, 1.00804E-3, 1.08266E-3, 8.35956E-4, 
+      6.59953E-4, 7.23628E-4, 7.66242E-5, 3.96861E-7, 4.87658E-10, 1.06910E-16, 
+      6.86348E-21},
+      bragg_0_49 { 1.59285E-3, 0.00000E+0, 5.21980E-3, 8.97802E-3, 6.37138E-3, 
+      1.08350E-2, 6.81265E-3, 4.71521E-2, 1.15912E-2, 1.20496E-2, 1.43356E-2, 
+      0.00000E+0, 1.56594E-2, 2.07339E-2, 1.72522E-2, 0.00000E+0, 1.95554E-2, 
+      2.78308E-2, 2.08792E-2, 4.48901E-3, 2.20308E-2, 3.49609E-2, 2.24720E-2, 
+      2.59620E-2, 2.54855E-2, 5.41751E-3, 2.72506E-2, 7.85868E-3, 2.99950E-2, 
+      0.00000E+0, 3.07053E-2, 7.40339E-3, 3.52148E-2, 2.07394E-2, 3.65386E-2, 
+      6.78675E-3, 3.81315E-2, 3.98609E-2, 3.98211E-2, 0.00000E+0, 4.11449E-2, 
+      2.55823E-2, 4.29100E-2, 1.25253E-2, 4.50409E-2, 1.83381E-2, 4.63647E-2, 
+      6.02482E-3, 4.69782E-2, 1.19707E-2};
+
+      checkPartOfVec( std::get<0>(out), sab_0_49,         0 );
+      REQUIRE( ranges::equal(std::get<1>(out),{433.38329725733684},equal) );
+      REQUIRE( 0.60333890798030132 == Approx(std::get<2>(out)) );
+      checkPartOfVec( std::get<3>(out), bragg_0_49,         0 );
+
+
+
+
+    } // WHEN
+  } // GIVEN
 } // TEST CASE
 
 

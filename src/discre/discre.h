@@ -5,11 +5,10 @@
 #include "discre_util/sint.h"
 #include "discre_util/addDeltaFuncs.h"
 #include "generalTools/constants.h"
+#include "generalTools/swap.h"
 #include <range/v3/all.hpp>
 #include <iostream>
 
-template <typename Float>
-void swap( Float& a, Float& b ){ Float c = a; a = b; b = c; }
 
 template <typename Float, typename Range, typename RangeZipped>
 auto discre( const Float& lambda_s, 

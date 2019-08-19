@@ -25,7 +25,7 @@ int hexLatticeFactors( int lat, Float a, Float c, Float maxTauSq,
   int i2m, i3m, k = 0;
   Float tau, f, tsq;
   // compute lattice factors for hexagonal lattices
-  Float phi = maxTauSq/(4*M_PI*M_PI), w, w1, w2, w3, 
+  Float phi = maxTauSq/(4*M_PI*M_PI), w1, w2, w3, 
               c1 = 4/(3*a*a), c2 = 1/(c*c), 
               tsqx = 8*massNeutron/(20*1e4*hbar*hbar)*ev;
 

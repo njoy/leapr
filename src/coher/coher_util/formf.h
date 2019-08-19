@@ -42,8 +42,6 @@ inline double formf( int lat, int l1, int l2, int l3 ){
   using std::sin;
   using std::cos;
 
-  int i;
-
   //  graphite -- HEX
   if (lat == 1) {
     // This follows Eq. 564. F is set to either value depending on if l3 is 

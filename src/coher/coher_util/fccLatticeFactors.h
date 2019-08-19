@@ -7,10 +7,9 @@ double taufcc( int l1, int l2, int l3, double c1 ){
 	 4 * M_PI * M_PI;
 }
 
-auto fccLatticeFactors( int lat, double a, double maxTauSq, double massScatterer, 
+auto fccLatticeFactors( int lat, double a, double maxTauSq, double massScatterer,
                         std::vector<double>& b  ){
   double c1=3/(a*a);
-  double t2=1e4*hbar/(2*massScatterer);
     
   // compute lattice factors for fcc lattices
   double phi = maxTauSq / (4*M_PI*M_PI), tau, tsq;
@@ -32,6 +31,7 @@ auto fccLatticeFactors( int lat, double a, double maxTauSq, double massScatterer
     }
   }
   return k - 1;
+  std::cout << massScatterer << std::endl;
 }
 
 
