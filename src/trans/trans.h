@@ -1,16 +1,14 @@
 #include "trans_util/s_table_generation.h"
 #include "trans_util/sbfill.h"
-#include "trans_util/terps.h"
 #include "range/v3/all.hpp"
+#include "generalTools/interpolate.h"
 
 template <typename Range, typename Float>
 auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta, 
-  const Float& diffusion, 
-  const Float& lambda_s, const Float& tbeta, Float& t_eff, const Float& temp, 
-  Range& existingSAB ){
+  const Float& diffusion, const Float& lambda_s, const Float& tbeta, 
+  Float& t_eff, const Float& temp, Range& existingSAB ){
 
   using std::exp, std::min; 
-
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
   Range sabTrans(ndmax), ap(ndmax), sab(ndmax);
@@ -26,31 +24,38 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
     nsd = diffusion == 0 ? 
       getFreeGas  ( transWeight, alpha[a], ndmax, delta, sabTrans ) : 
       getDiffusion( transWeight, alpha[a], ndmax, delta, sabTrans, diffusion );
-    if ( nsd > 1 ){
-      for ( size_t b = 0; b < beta.size(); ++b ){
-        ap[b] = existingSAB[beta.size()*a + b];
-      }
-      for ( size_t b = 0; b < beta.size(); ++b ){
-        Float be = beta[b];
-        sbfill( sab, nsd, delta, be, ap, beta, ndmax );
-        Float s = 0;
-        for ( int i = 0; i < nsd; ++i ){
-          Float f = 2*(i%2)+2;
-          if ( i == 0 or i == nsd - 1 ){ f = 1; }
-                    
-          s += f * sabTrans[i] * sab[nsd+i-1] + 
-               f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
 
-        }
-        s = (s < 1e-30) ? 0 : s*delta*0.33333333;
+    if (nsd <= 1){ continue; }
 
-        st = terps(sabTrans,delta,be,nsd);
-        if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
-
-        existingSAB[beta.size()*a + b] = s;
-
-      } // for beta
+    for ( size_t b = 0; b < beta.size(); ++b ){
+      ap[b] = existingSAB[beta.size()*a + b];
     }
+    for ( size_t b = 0; b < beta.size(); ++b ){
+      Float be = beta[b];
+      sbfill( sab, nsd, delta, be, ap, beta, ndmax );
+      Float s = 0;
+      for ( int i = 0; i < nsd; ++i ){
+        Float f = 2*(i%2)+2;
+        if ( i == 0 or i == nsd - 1 ){ f = 1; }
+                  
+        s += f * sabTrans[i] * sab[nsd+i-1] + 
+             f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
+
+      }
+      s = (s < 1e-30) ? 0 : s*delta*0.33333333;
+
+      if (be > nsd*delta){ 
+        existingSAB[b+a*beta.size()] = s; 
+        continue;
+      }
+      auto xVals = ranges::view::iota(0,int(sabTrans.size()))
+                 | ranges::view::transform([delta](auto x){return delta*x;});
+      st = interpolateLog(ranges::view::zip(xVals,sabTrans),be);
+
+      if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
+      existingSAB[beta.size()*a + b] = s;
+
+    } // for beta
   } // for alpha
   
   t_eff = (tbeta*t_eff + transWeight*temp) / ( tbeta + transWeight );

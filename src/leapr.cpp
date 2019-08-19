@@ -25,10 +25,11 @@ auto leapr( int nphon, Float awr, int ncold, Float aws, int lat, Range alpha, Ra
     for ( auto& a : alpha ){ a *= scaling; }
     for ( auto& b : beta  ){ b *= sc;      }
     
+    delta /= tev;
 
     //std::cout << "Starting!" << std::endl;
     auto continOutput = 
-    contin(nphon, delta, continWgt, tev, rho, alpha, beta, sab);
+    contin(nphon, delta, continWgt, rho, alpha, beta, sab);
     //std::cout << "Finished contin!" << std::endl;
 
     lambda_s = std::get<0>(continOutput);

@@ -267,7 +267,6 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/terps.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/sbfill.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/s_table_generation.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/bessel_K1.h"

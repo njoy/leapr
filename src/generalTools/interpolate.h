@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <tuple>
 
+
 template <typename Range, typename Float>
 auto search( Range xRange, Float x, int i, int left, int right ){
   if ( xRange[i] <= x and x <= xRange[i+1] ){ return i; }
@@ -37,7 +38,6 @@ Float interpolateLog( RangeZip&& xyRange, Float& x ){
   return exp(interpolate( ranges::view::zip(xVec,yVec), x ));
 }
 
-
 template <typename Float, typename Range>
 Float interpolate( const Range& y, const Float& x, const Range& betaGrid, Float defaultVal = 0.0 ){
   if ( x >= betaGrid[betaGrid.size()-1] ){ return defaultVal; }
@@ -52,8 +52,32 @@ Float interpolate( const Range& y, const Float& x, const Range& betaGrid, Float 
       break;
     }
   }
+
   Float delta = betaGrid[i+1]-betaGrid[i];
   return y[i] + (x-x_L) * (y[i+1]-y[i]) / delta;
+}
+
+
+
+template <typename Float, typename Range>
+Float interpolate( const Range& y, const Float& x, const Float& delta, 
+                   Float defaultVal = 0.0 ){
+  if ( x >= (y.size()-1)*delta or x < 0 ){ return defaultVal; }
+ 
+  unsigned int i = 0;
+  /*
+  Float x_L = 0.0;
+  for ( size_t j = 0; j < y.size(); ++j ){
+    if ( x < delta*(j+1) ){ 
+      i = j;
+      x_L = delta*j;
+      break;
+    }
+  }*/
+  auto xGrid = ranges::view::iota(0,int(y.size())) 
+             | ranges::view::transform([delta](int i){return delta*i;});
+  i = search(xGrid, x, int(y.size()*0.5), 0, y.size());
+  return y[i] + (x-delta*i) * (y[i+1]-y[i]) / delta;
 }
 
 

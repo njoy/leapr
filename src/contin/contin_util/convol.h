@@ -1,5 +1,33 @@
 #include <range/v3/all.hpp>
 
+template <typename Float, typename Range>
+auto getConvolAtPoint( int i, const Float& delta, const Range& t1, 
+  const Range& t2 ){
+  Float sumVal = 0.0, toAdd, expVal;
+  int len_t1 = t1.size();
+  for ( int j = -len_t1+1; j < len_t1; ++j ){  // j iterates through t1, t2
+    if ( i - j >= int(t2.size()) ){ return sumVal; }
+    expVal = j < 0 ? exp(j*delta) :
+        ( i < j ? exp((i-j)*delta) :
+          1.0 );
+    toAdd = t1[abs(j)]*t2[abs(i-j)]*expVal;
+    sumVal += ( j == -len_t1+1 or j == len_t1-1 ) ? 0.5*toAdd : toAdd;
+  } 
+  return sumVal;
+}
+
+
+template <typename Float, typename Range>
+auto convol( const Range& t1, const Range& t2, const Float& delta, const int nn){
+  Range t3(nn,0.0);
+  for ( int i = 0; i < nn; ++i ){   
+    t3[i] = getConvolAtPoint(i,delta,t1,t2) * delta;
+    t3[i] = ( t3[i] < 1e-30 ) ? 0 : t3[i];
+  } 
+  return t3;
+}
+
+
 /*
 template <typename F, typename A>
 auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2, int len_t1 ){
@@ -26,36 +54,6 @@ auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2, int len
     return sumVal;
 }
 */
-
-template <typename F, typename A>
-auto getConvolAtPoint( int i, int nl, F delta, const A& t1, const A& t2 ){
-    F sumVal = 0.0;
-    int len_t1 = t1.size();
-    for ( int j = -len_t1+1; j < len_t1; ++j ){  // j iterates through t1, t2
-      if ( i - j >= int(t2.size()) ){ return sumVal; }
-      F val = 1.0;
-      if (j   < 0){ val *= exp(j*delta);}
-      if (i-j < 0){ val *= exp((i-j)*delta); }
-
-      F toAdd = t1[abs(j)]*t2[abs(i-j)]*val;
-      sumVal += ( j == -len_t1+1 or j == len_t1-1 ) ? 0.5*toAdd : toAdd;
-    } // for
-    return sumVal;
-    if ( nl + i > 0 ){ sumVal += t1[0] + t2[1] + delta; }
-}
-
-
-template <typename F, typename A>
-auto convol( const A& t1, const A& t2, const F& delta, const int& nl=0,
-  const int& nn=0 ){
-  A t3(nn,0.0);
-  F f1, f2;
-  for ( int i = 0; i < nn; ++i ){    // i iterates through t3
-      t3[i] = getConvolAtPoint(i,nl,delta,t1,t2);
-      t3[i] = ( t3[i] * delta < 1e-30 ) ? 0 : t3[i] * delta;
-  } // for
-  return t3;
-}
 
 
 /*

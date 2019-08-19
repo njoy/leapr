@@ -4,12 +4,9 @@
 #include <range/v3/all.hpp>
 
 template <typename Range, typename Float>
-auto contin(int nphon, Float& delta, const Float& continWgt, 
-  const Float& tev, Range rho, 
-  Range alpha, Range beta, Range& sab ){
+auto contin(int nphon, const Float& delta, const Float& continWgt, 
+            const Range& rho, const Range& alpha, const Range& beta, Range& sab ){
   using std::exp;
-
-  delta /= tev;
 
   Range betaGrid = ranges::view::iota(0,int(rho.size())) 
                  | ranges::view::transform([delta](auto x){return x*delta;});
@@ -27,25 +24,27 @@ auto contin(int nphon, Float& delta, const Float& continWgt,
   
   size_t npn = t1.size(), npl = t1.size();
 
-  Range exp_lambda_alpha = ranges::view::iota(0,int(alpha.size()))
-                         | ranges::view::transform([&](auto i){ 
-                             return exp(-lambda_s*alpha[i]);
-                           });
+
+  auto lambda_alpha     = ranges::view::iota(0,int(alpha.size()))
+                        | ranges::view::transform([&](auto i){ 
+                            return lambda_s*alpha[i]; });
+  auto exp_lambda_alpha = lambda_alpha 
+                        | ranges::view::transform([](auto lambda_alpha){
+                            return exp(-lambda_alpha); });
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ 
       npn = t1.size()+npl-1;
-      tnow = convol(t1, tlast, delta, npl, npn); 
+      tnow = convol(t1, tlast, delta, npn); 
     }
+    double inv_n = 1.0/(n+1);
 
     for( size_t a = 0; a < alpha.size(); ++a ){
-      xa[a] *= lambda_s * alpha[a] / ( n + 1 );
+      xa[a] *= lambda_alpha[a] * inv_n;
       exx    = exp_lambda_alpha[a]*xa[a];
-      Range betaGrid2 = ranges::view::iota(0,int(tnow.size())) 
-                      | ranges::view::transform([delta](auto x){return x*delta;});
  
       for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate(tnow, beta[b], betaGrid2);
+        add = exx * interpolate(tnow, beta[b], delta);
         sab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
       } 
     } 

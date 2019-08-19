@@ -1,6 +1,5 @@
 
 add_executable( trans.trans_util.test
-                terps.test.cpp
                 sbfill.test.cpp
                 s_table_generation.test.cpp
                 bessel_K1.test.cpp )

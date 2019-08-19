@@ -419,7 +419,6 @@
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h",
     "src/trans/trans.h",
-    "src/trans/trans_util/terps.h",
     "src/trans/trans_util/sbfill.h",
     "src/trans/trans_util/s_table_generation.h",
     "src/trans/trans_util/bessel_K1.h",
@@ -552,7 +551,6 @@
       "src/trans/test/trans.test.cpp"
     ],
     "trans.trans_util": [
-      "src/trans/trans_util/test/terps.test.cpp",
       "src/trans/trans_util/test/sbfill.test.cpp",
       "src/trans/trans_util/test/s_table_generation.test.cpp",
       "src/trans/trans_util/test/bessel_K1.test.cpp"

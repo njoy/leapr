@@ -6,7 +6,7 @@
 
 
 template <typename Range, typename Float>
-auto start( Range& rho, const Float& continWgt, Range& betaGrid ){
+auto start( const Range& rho, const Float& continWgt, const Range& betaGrid ){
   /* Inputs
    * ------------------------------------------------------------------------
    * p     : excitation frequency spectrum, a function of beta. Originally 

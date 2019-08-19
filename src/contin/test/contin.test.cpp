@@ -13,7 +13,8 @@ TEST_CASE( "continuous treatment" ){
 
   GIVEN( "simplified water example" ){
     nphon = 100; 
-    delta = 0.00255; tbeta = 0.444444; tev = 2.5507297688E-2; 
+    tbeta = 0.444444; tev = 2.5507297688E-2; 
+    delta = 0.00255/tev; 
     sc = 0.0253/tev; scaling = sc;
 
     rho   = { 0.0, 0.0005, 0.001, 0.002, 0.0035, 0.005, 0.0075, 0.01, 0.013, 
@@ -33,7 +34,7 @@ TEST_CASE( "continuous treatment" ){
       for ( auto& b : beta  ){ b *= sc;      }
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, tev, rho, alpha, beta, sab );
+      output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
       THEN( "contin output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
         sabCorrect = {5.6553448E-4, 2.9998239E-4, 3.5728611E-4, 1.3283598E-4, 
@@ -189,7 +190,7 @@ TEST_CASE( "continuous treatment" ){
 
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, tev, rho, alpha, beta, sab );
+      output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
       THEN( "contin output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
         REQUIRE(ranges::equal(sabCorrect, sab, equal));
@@ -221,7 +222,6 @@ TEST_CASE( "continuous treatment" ){
     4.934258E+1, 7.277088E+1, 8.595535E+1, 1.267677E+2, 1.497352E+2, 1.673147E2, 
     1.976285E+2 }; 
 
-    delta = 0.00069552; 
 
     rho = { 0.0000E+0, 7.2477E-4, 3.7084E-3, 8.0087E-3, 1.0642E-2, 1.5897E-2, 
     2.7372E-2, 4.1843E-2, 5.0214E-2, 6.5036E-2, 8.3674E-2, 9.9329E-2, 1.1977E-1, 
@@ -302,6 +302,7 @@ std::vector<double>
 
     nphon = 100; 
     tbeta = 1.0; tev = 2.5507297688E-2; 
+    delta = 0.00069552/tev; 
     sc = 0.0253/tev; scaling = sc;
     for ( auto& a : alpha ){ a *= scaling; }
     for ( auto& b : beta  ){ b *= sc;      }
@@ -310,7 +311,7 @@ std::vector<double>
 
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = contin( nphon, delta, tbeta, tev, rho, alpha, beta, sab );
+      output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
 
 
     THEN( "contin output matches expected value" ){
@@ -334,7 +335,6 @@ std::vector<double>
     0.02, 0.0245, 0.029, 0.034, 0.0395, 0.045, 0.0506, 0.0562, 0.0622, 0.0686, 
     0.075, 0.083, 0.091, 0.09126, 0.0871, 0.0839, 0.0807, 0.07798, 0.07574, 
     0.0735, 0.07162, 0.06974, 0.0 };
-    delta = 0.005;
     tbeta = 0.8;
 
     WHEN( "large number of phonon expansion terms" ){
@@ -342,12 +342,13 @@ std::vector<double>
       AND_WHEN( "temperature is very low" ){
         tev = 100*8.6173303e-5;   
         sc = 0.0253/tev; scaling = sc;
+        delta = 0.005/tev;
         for ( auto& a : alpha ){ a *= scaling; }
         for ( auto& b : beta  ){ b *= sc;      }
 
 
  
-        output = contin( nphon, delta, tbeta, tev, rho, alpha, beta, sab );
+        output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
         THEN( "contin output matches expected value" ){
           lambda_s = 7.6444701E-2; t_bar = 6.2888965;
           sabCorrect = {4.1395658E-5, 4.4726194E-5, 3.7025816E-5, 1.5765995E-4, 
@@ -365,11 +366,12 @@ std::vector<double>
       AND_WHEN( "temperature is very high" ){
         tev = 900*8.6173303e-5;   
         sc = 0.0253/tev; scaling = sc;
+        delta = 0.005/tev;
         for ( auto& a : alpha ){ a *= scaling; }
         for ( auto& b : beta  ){ b *= sc;      }
 
 
-        output = contin( nphon, delta, tbeta, tev, rho, alpha, beta, sab );
+        output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
         THEN( "contin output matches expected value" ){
           lambda_s =  1.729454237; t_bar = 1.16861142;
           sabCorrect = {3.3452442E-3, 3.3727931E-3, 1.7063857E-3, 1.7623769E-3, 
