@@ -48,7 +48,7 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
         }
         s = (s < 1e-30) ? 0 : s*delta*0.33333333;
 
-        st = terps(sabTrans,delta,be);
+        st = terps(sabTrans,delta,be,nsd);
         if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
 
         existingSAB[beta.size()*a + b] = s;
