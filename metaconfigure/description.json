@@ -367,7 +367,6 @@
     ]
   },
   "header files": [
-    "src/testFuncs.h",
     "src/contin/contin.h",
     "src/contin/contin_util/convol.h",
     "src/contin/contin_util/checkMoments.h",
@@ -394,23 +393,6 @@
     "src/coher/coher_util/hexLatticeFactors.h",
     "src/coher/coher_util/formf.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
-    "src/simple/simpleLEAPR.h",
-    "src/simple/discreteOsc/discreteOsc.h",
-    "src/simple/discreteOsc/discreteOscTools/prepareParams.h",
-    "src/simple/discreteOsc/discreteOscTools/oscillatorLoop.h",
-    "src/simple/discreteOsc/discreteOscTools/addDeltaFuncs.h",
-    "src/simple/discreteOsc/discreteOscTools/exts.h",
-    "src/simple/discreteOsc/discreteOscTools/bfill.h",
-    "src/simple/discreteOsc/discreteOscTools/sint.h",
-    "src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/bfact.h",
-    "src/simple/continuous/continuous.h",
-    "src/simple/continuous/continuousTools/sumOverTn.h",
-    "src/simple/continuous/continuousTools/convolution.h",
-    "src/simple/generalTools/testing.h",
-    "src/simple/generalTools/integrate.h",
-    "src/simple/generalTools/interpolate.h",
-    "src/simple/generalTools/values.h",
-    "src/simple/generalTools/print.h",
     "src/skold/skold.h",
     "src/coldh/coldh.h",
     "src/coldh/coldh_util/betaLoop.h",
@@ -423,6 +405,7 @@
     "src/trans/trans_util/s_table_generation.h",
     "src/trans/trans_util/bessel_K1.h",
     "src/generalTools/testing.h",
+    "src/generalTools/swap.h",
     "src/generalTools/interpolate.h",
     "src/generalTools/constants.h",
     "src/generalTools/trapezoidIntegral.h",
@@ -515,34 +498,6 @@
     ],
     "leapr": [
       "src/test/leapr.test.cpp"
-    ],
-    "simple": [
-      "src/simple/test/simpleLEAPR.test.cpp"
-    ],
-    "simple.continuous": [
-      "src/simple/continuous/test/continuous.test.cpp"
-    ],
-    "simple.continuous.continuousTools": [
-      "src/simple/continuous/continuousTools/test/convolution.test.cpp",
-      "src/simple/continuous/continuousTools/test/sumOverTn.test.cpp"
-    ],
-    "simple.discreteOsc": [
-      "src/simple/discreteOsc/test/discreteOsc.test.cpp"
-    ],
-    "simple.discreteOsc.discreteOscTools": [
-      "src/simple/discreteOsc/discreteOscTools/test/exts.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/bfill.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/oscillatorLoop.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/prepareParams.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/addDeltaFuncs.test.cpp",
-      "src/simple/discreteOsc/discreteOscTools/test/sint.test.cpp"
-    ],
-    "simple.discreteOsc.discreteOscTools.oscillatorLoopTools": [
-      "src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/test/bfact.test.cpp"
-    ],
-    "simple.generalTools": [
-      "src/simple/generalTools/test/integrate.test.cpp",
-      "src/simple/generalTools/test/interpolate.test.cpp"
     ],
     "skold": [
       "src/skold/test/skold.test.cpp"

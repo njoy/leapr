@@ -215,7 +215,6 @@ message( STATUS "" )
 message( STATUS "-----------------------------------------------------------" )
 
 add_library( leapr ${leapr_library_linkage} 
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/testFuncs.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/convol.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/contin/contin_util/checkMoments.h"
@@ -242,23 +241,6 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/hexLatticeFactors.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/formf.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/simpleLEAPR.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOsc.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/prepareParams.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/oscillatorLoop.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/addDeltaFuncs.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/exts.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/bfill.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/sint.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/bfact.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/continuous/continuous.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/continuous/continuousTools/sumOverTn.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/continuous/continuousTools/convolution.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/testing.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/integrate.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/interpolate.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/values.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/simple/generalTools/print.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/skold/skold.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/coldh/coldh_util/betaLoop.h"
@@ -271,6 +253,7 @@ add_library( leapr ${leapr_library_linkage}
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/s_table_generation.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/trans/trans_util/bessel_K1.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/testing.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/swap.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/interpolate.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/constants.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/trapezoidIntegral.h"
@@ -323,13 +306,6 @@ if( NOT is_subproject )
         add_subdirectory( src/endout/endout_util/test )
         add_subdirectory( src/generalTools/test )
         add_subdirectory( src/test )
-        add_subdirectory( src/simple/test )
-        add_subdirectory( src/simple/continuous/test )
-        add_subdirectory( src/simple/continuous/continuousTools/test )
-        add_subdirectory( src/simple/discreteOsc/test )
-        add_subdirectory( src/simple/discreteOsc/discreteOscTools/test )
-        add_subdirectory( src/simple/discreteOsc/discreteOscTools/oscillatorLoopTools/test )
-        add_subdirectory( src/simple/generalTools/test )
         add_subdirectory( src/skold/test )
         add_subdirectory( src/trans/test )
         add_subdirectory( src/trans/trans_util/test )
