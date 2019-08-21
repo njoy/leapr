@@ -1,5 +1,6 @@
 #include "contin/contin_util/start.h"
 #include "contin/contin_util/convol.h"
+#include "contin/contin_util/checkMoments.h"
 #include "generalTools/interpolate.h"
 #include <range/v3/all.hpp>
 
@@ -31,6 +32,14 @@ auto contin(int nphon, const Float& delta, const Float& continWgt,
   auto exp_lambda_alpha = lambda_alpha 
                         | ranges::view::transform([](auto lambda_alpha){
                             return exp(-lambda_alpha); });
+  std::vector<double> maxt(1000,0.0);
+  for (size_t b = 0; b < beta.size(); ++b ){
+    maxt[b] = alpha.size()+1;
+  }
+  //std::cout << maxt[0] << "   " << maxt[1] << "   " << maxt[2] << std::endl;
+  //std::cout << maxt[3] << "   " << maxt[4] << "   " << maxt[5] << std::endl;
+
+
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ 
@@ -46,6 +55,7 @@ auto contin(int nphon, const Float& delta, const Float& continWgt,
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, beta[b], delta);
         sab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
+        if (n > 0 and sab[b+a*beta.size()] > 0.0 and n >= nphon-1 and add > sab[b+a*beta.size()]/1000 and a < maxt[b]){ maxt[b] = a+1; }
       } 
     } 
 
@@ -53,7 +63,12 @@ auto contin(int nphon, const Float& delta, const Float& continWgt,
     for( size_t i = 0; i < npn; ++i ){ tlast[i] = tnow[i]; }
     npl = npn;
   } 
+  //std::cout << sab[0] << "    " << sab[1] << std::endl;
+  //std::cout << maxt[0] << "   " << maxt[1] << "   " << maxt[2] << std::endl;
+  //std::cout << maxt[3] << "   " << maxt[4] << "   " << maxt[5] << std::endl;
 
+  checkMoments(alpha,beta,maxt,lambda_s,continWgt,t_bar,sab);
+  //std::cout << sab[0] << "    " << sab[1] << std::endl;
   return std::make_tuple(lambda_s,t_bar);
 }
 

@@ -13,6 +13,7 @@
 template<typename Range, typename Float, typename RangeZipped>
 auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac ){
 
+  std::cout << std::setprecision(15);
   Float lambda_s, tBar, arat=1.0, effectiveTemp, temp, tev, sc, scaling;
   std::vector<Float> sab( alpha.size()*beta.size(),0.0),
                      sab2(alpha.size()*beta.size(),0.0);
@@ -31,37 +32,29 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
     
     delta /= tev;
 
-    //std::cout << "Starting!" << std::endl;
-    auto continOutput = 
-    contin(nphon, delta, continWgt, rho, alpha, beta, sab);
-    //std::cout << "Finished contin!" << std::endl;
+    auto continOutput = contin(nphon, delta, continWgt, rho, alpha, beta, sab);
 
     lambda_s = std::get<0>(continOutput);
     tBar     = std::get<1>(continOutput);
     effectiveTemp = temp*tBar;
-    //std::cout << (sab|ranges::view::all) << std::endl;
     
     if (transWgt > 0){
-      trans( alpha, beta, transWgt, delta, diffusion_const,
-        lambda_s, continWgt, effectiveTemp, temp,  sab );
-      //std::cout << "Finished trans!" << std::endl;
+      trans( alpha, beta, transWgt, delta, diffusion_const, lambda_s, continWgt, 
+             effectiveTemp, temp,  sab );
     }
 
     if (oscEnergiesWgts.size() > 0){
-      discre( lambda_s, transWgt, continWgt, alpha, beta, temp, 
-              oscEnergiesWgts, effectiveTemp, sab );
-      //std::cout << "Finished discre!" << std::endl;
+      discre( lambda_s, transWgt, continWgt, alpha, beta, temp, oscEnergiesWgts, 
+              effectiveTemp, sab );
     }
 
     if (ncold > 0){ 
       bool free = false;
       coldh( tev, ncold, transWgt, continWgt, scaling, alpha, beta, dka, 
              kappaVals, lat, free, sab, sab2, tBar );
-      //std::cout << "Finished coldh!" << std::endl;
     }
     else if (kappaVals.size() > 0){
-      skold( cfrac, tev, alpha, beta, kappaVals, awr, dka, scaling, sab );
-      //std::cout << "Finished skold!" << std::endl;
+      skold( cfrac, tev, alpha, beta, kappaVals, awr, dka, sab );
 
     }
 
@@ -76,12 +69,9 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
     else {
       braggOutput = false;
     }
-
     effectiveTemps[itemp] = effectiveTemp;
-
-
-
   }
+
 
   return std::make_tuple(sab,effectiveTemps,lambda_s,braggOutput);
   std::cout << (sab|ranges::view::all) << std::endl;

@@ -6,12 +6,12 @@
 template <typename Range, typename Float>
 auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta, 
   const Float& diffusion, const Float& lambda_s, const Float& tbeta, 
-  Float& t_eff, const Float& temp, Range& existingSAB ){
+  Float& t_eff, const Float& temp, Range& sab ){
 
   using std::exp, std::min; 
 
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
-  Range sabTrans(ndmax), ap(ndmax), sab(ndmax);
+  Range sabTrans(ndmax), ap(ndmax), sb(ndmax,0.0);
 
   Float nsd, ded, st, delta;
   for ( size_t a = 0; a < alpha.size(); ++a ){
@@ -28,24 +28,23 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
     if (nsd <= 1){ continue; }
 
     for ( size_t b = 0; b < beta.size(); ++b ){
-      ap[b] = existingSAB[beta.size()*a + b];
+      ap[b] = sab[beta.size()*a + b];
     }
     for ( size_t b = 0; b < beta.size(); ++b ){
       Float be = beta[b];
-      sbfill( sab, nsd, delta, be, ap, beta, ndmax );
+      sbfill( sb, nsd, delta, be, ap, beta, ndmax );
       Float s = 0;
       for ( int i = 0; i < nsd; ++i ){
         Float f = 2*(i%2)+2;
         if ( i == 0 or i == nsd - 1 ){ f = 1; }
                   
-        s += f * sabTrans[i] * sab[nsd+i-1] + 
-             f * sabTrans[i] * sab[nsd-i-1] * exp(-i*delta);
-
+        s += f * sabTrans[i] * sb[nsd+i-1] + 
+             f * sabTrans[i] * sb[nsd-i-1] * exp(-i*delta);
       }
       s = (s < 1e-30) ? 0 : s*delta*0.33333333;
 
       if (be > nsd*delta){ 
-        existingSAB[b+a*beta.size()] = s; 
+        sab[b+a*beta.size()] = s; 
         continue;
       }
       auto xVals = ranges::view::iota(0,int(sabTrans.size()))
@@ -53,7 +52,7 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
       st = interpolateLog(ranges::view::zip(xVals,sabTrans),be);
 
       if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
-      existingSAB[beta.size()*a + b] = s;
+      sab[beta.size()*a + b] = s;
 
     } // for beta
   } // for alpha

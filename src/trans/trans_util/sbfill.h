@@ -43,8 +43,8 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
     if ( indexInRange ){
 
       // Don't take the log of a negative number
-      current = s[j]   < 0 ? -225 : log( s[j]   );
-      toLeft  = s[j-1] < 0 ? -225 : log( s[j-1] );
+      current = s[j]   <= 0 ? -225 : log( s[j]   );
+      toLeft  = s[j-1] <= 0 ? -225 : log( s[j-1] );
 
       sb[i] = current + (b-betan[j])*(toLeft-current)/(betan[j-1]-betan[j]);
 
@@ -60,6 +60,7 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
 }
 
 
+    //if ( i == 15849 ){ std::cout << "in sbfill  " << sb[i] << "   " << current << "   " << s[j] << std::endl; }
 
 
 

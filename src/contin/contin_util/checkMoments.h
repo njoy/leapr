@@ -1,10 +1,9 @@
 #include <iostream>
-#include <unsupported/Eigen/CXX11/Tensor>
 
 template <typename F, typename A, typename A_of_ints>
-auto checkMoments( const F& sc, const A& alpha, const A& beta, 
+auto checkMoments( const A& alpha, const A& beta, 
   const A_of_ints& maxt, const F& f0, const F& tbeta, 
-  const F& arat, F tbar, A& ssm ){
+  F tbar, A& ssm ){
 
   F ff1, ff2, be, ssct, ex, al, alw;
 
@@ -15,17 +14,18 @@ auto checkMoments( const F& sc, const A& alpha, const A& beta,
   // check the moments of s(alpha,beta)
   for ( int a = 0; a < int(alpha.size()); ++a ){
     if ( ( a % naint == 0 ) or ( a == int(alpha.size()) - 1) ){
-      al = alpha[a]*sc/arat;
+      al = alpha[a];//sc/arat;
       alw = al*tbeta;
       F bel = 0, ff1l = 0, ff2l = 0, sum0 = 0, sum1 = 0;
 
       for ( int b = 0; b < int(beta.size()); ++b ){
         //int jprt=(b)%nbint+1;               // This doesn't seem to do
         //if (b == beta.size()-1) jprt=1;     // anything
-        be = beta[b]*sc;
+        be = beta[b];//*sc;
 
         ex = -(alw-be)*(alw-be)/(4*alw*tbar);
         ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
+        //if ( a==0 and b==0){ std::cout << "--  " <<  ssct << std::endl; }
         if (a+1 >= maxt[b]) {
           ssm[b+a*beta.size()] = ssct;
         }

@@ -4,7 +4,7 @@
 
 template <typename Float, typename Range>
 auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta, 
-  const Range& skappa, Float awr, Float dka, Float scaling, Range& symSab ){
+  const Range& skappa, Float awr, Float dka, Range& sab ){
 
   /* Overview 
    * ------------------------------------------------------------------------
@@ -38,7 +38,7 @@ auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta,
    * awr     : atomic weight ratio, calculated in leapr.cpp
    * dka     : spacing for the S(kappa) vector
    * scaling : value at which the alpha values should be scaled
-   * symSab  : S(a,b) that we've processed so far. Should only have incoherent
+   * sab  : S(a,b) that we've processed so far. Should only have incoherent
    *           contributions at this point I think.
    * 
    * Outputs
@@ -51,14 +51,16 @@ auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta,
   Float sk, ap, waven;
   Range scoh( alpha.size() );
   Range kappa2Grid = ranges::view::iota(0,int(skappa.size()));
-  Range kappaGrid = kappa2Grid | ranges::view::transform([delta=dka](auto& x){return delta*x;});
+  Range kappaGrid = kappa2Grid 
+                  | ranges::view::transform([delta=dka](auto& x){return delta*x;});
   Float tempJoules = tev*ev;
   // apply the skold approximation
+  //  std::cout << sab[7] << "   " << sab[8] << "   " << sab[9] << std::endl;
   for ( size_t b = 0; b < beta.size(); ++b ){    
     for ( size_t a = 0; a < alpha.size(); ++a ){
 
       // wave number [inverse angstroms]
-      waven = 1.0e-10 * sqrt(2*awr*massNeutron*tempJoules*alpha[a]*scaling)/hbar;
+      waven = 1.0e-10 * sqrt(2*awr*massNeutron*tempJoules*alpha[a])/hbar;
 
       // Interpolate to find the waven value in the skappa input 
       sk = interpolate( skappa, waven, kappaGrid, 1.0 );
@@ -70,14 +72,16 @@ auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta,
       if (a2 == 0) { a2 = 1; }
 
       // Interpolate to calculate S(a',b) where a' = a/S(k)
-      scoh[a] = terp1( alpha[a2-1], symSab[b+(a2-1)*beta.size()], alpha[a2], 
-             symSab[b+a2*beta.size()], ap, 5 ) * sk;
+      scoh[a] = terp1( alpha[a2-1], sab[b+(a2-1)*beta.size()], alpha[a2], 
+             sab[b+a2*beta.size()], ap, 5 ) * sk;
     } // alpha loop
+   // std::cout << sab[7] << "   " << sab[8] << "   " << sab[9] << std::endl;
+   // return;
 
     // Amend the existing scattering law by combining a piece of it with a 
     // piece of the coherent scattering interactions. 
     for ( size_t a = 0; a < alpha.size(); ++a ){
-      symSab[b+a*beta.size()] = (1-cfrac)*symSab[b+a*beta.size()]+cfrac*scoh[a];
+      sab[b+a*beta.size()] = (1-cfrac)*sab[b+a*beta.size()]+cfrac*scoh[a];
     } // alpha loop
   } // beta loop
 }
