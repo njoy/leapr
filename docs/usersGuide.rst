@@ -251,6 +251,30 @@ Cold Hyrogen and Deuterium
 |                 |           +-----------+ Deuterium   +--------------+              |       |
 |                 |           |    4      |             |  Para        |              |       |
 +-----------------+-----------+-----------+-------------+--------------+--------------+-------+
+| | Number of     |           | | The coherent inelastic calculation   |              |       |
+|   :math:`\kappa`| ``nka``   | | requires that a *static structure*   |              |       |
+| | values        |           |   *factor*                             | :math:`\geq0`| 17.a  |
+|                 |           | | :math:`S(\kappa)`                    |              |       |
+|                 |           |   be given. ``nka`` is the number of   |              |       |
+|                 |           | | :math:`S(\kappa)` values that will   |              |       |
+|                 |           |   be provided. If                      |              |       |
+|                 |           | | ``nka = 0`` then cards 17.b and 18   |              |       |
+|                 |           | | (``dka`` and ``ska``) are omitted    |              |       |
++-----------------+-----------+----------------------------------------+--------------+-------+
+| | Spacing of    |           | | The structure factor                 |              |       |
+|   :math:`\kappa`| ``dka``   |   :math:`S(\kappa)` is provided on a   | :math:`>0`   | 17.b  |
+| | values        |           | | uniform :math:`\kappa` grid with     |              |       |
+|                 |           | | spacing ``dka``                      |              |       | 
++-----------------+-----------+----------------------------------------+--------------+-------+
+| | Pair          |           | | This is the *static structure*       |              |       |
+|   Correlation   | ``ska``   |   *factor*. There                      | | All values |       |
+| | Function      |           | | should be ``nka`` values given       | | must be    | 18    |
+|                 |           |   which lie on                         | | :math:`>0` |       |
+|                 |           | | a :math:`\kappa` grid of spacing     |              |       |
+|                 |           |   ``dka``                              |              |       |
++-----------------+-----------+----------------------------------------+--------------+-------+
+
+
 
 
 
@@ -261,6 +285,42 @@ Cold Hyrogen and Deuterium
 
 Skold Approximation
 ---------------------------
+
++-----------------+-----------+----------------------------------------+--------------+-------+
+| Parameter Name  | Symbol    |  Description                           | Restriction  | Card  |
++=================+===========+========================================+==============+=======+
+| | Coherent      | ``nsk``   | | If ``nsk = 0``, then coherent        |              |       |
+| | inelastic     |           |   inelastic                            |              |       |
+| | flag          |           | | scattering will **not** be           | 0,1,2        | 5.e   |
+|                 |           |   approximated using                   |              |       |
+|                 |           | | the Vineyard / Skold methods. If     |              |       |    
+|                 |           | | ``nsk = 1`` the Vineyard             |              |       |
+|                 |           |   approximation                        |              |       |
+|                 |           | | will be used, and if ``nsk = 2`` then|              |       |
+|                 |           | | the Skold approximation will be used |              |       |
++-----------------+-----------+-----------+-------------+--------------+--------------+-------+
+| | Number of     |           | | The coherent inelastic calculation   |              |       |
+|   :math:`\kappa`| ``nka``   | | requires that a *static structure*   |              |       |
+| | values        |           |   *factor*                             | :math:`\geq0`| 17.a  |
+|                 |           | | :math:`S(\kappa)`                    |              |       |
+|                 |           |   be given. ``nka`` is the number of   |              |       |
+|                 |           | | :math:`S(\kappa)` values that will   |              |       |
+|                 |           |   be provided. If                      |              |       |
+|                 |           | | ``nka = 0`` then cards 17.b and 18   |              |       |
+|                 |           | | (``dka`` and ``ska``) are omitted    |              |       |
++-----------------+-----------+----------------------------------------+--------------+-------+
+| | Spacing of    |           | | The structure factor                 |              |       |
+|   :math:`\kappa`| ``dka``   |   :math:`S(\kappa)` is provided on a   | :math:`>0`   | 17.b  |
+| | values        |           | | uniform :math:`\kappa` grid with     |              |       |
+|                 |           | | spacing ``dka``                      |              |       | 
++-----------------+-----------+----------------------------------------+--------------+-------+
+| | Pair          |           | | This is the *static structure*       |              |       |
+|   Correlation   | ``ska``   |   *factor*. There                      | | All values |       |
+| | Function      |           | | should be ``nka`` values given       | | must be    | 18    |
+|                 |           |   which lie on                         | | :math:`>0` |       |
+|                 |           | | a :math:`\kappa` grid of spacing     |              |       |
+|                 |           |   ``dka``                              |              |       |
++-----------------+-----------+----------------------------------------+--------------+-------+
 
 
 

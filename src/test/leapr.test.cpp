@@ -10,7 +10,6 @@ TEST_CASE( "leapr" ){
   double sps, awr, aws, delta, twt, c, tbeta, dka, cfrac;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, kappa;
 
-  /*
   GIVEN( "coarse alpha, beta grids (for quick testing)" ) {
     WHEN( "continuous, translational, and discrete oscillator options used" ) {
       nphon = 100;
@@ -560,7 +559,6 @@ TEST_CASE( "leapr" ){
     } // WHEN
   } // GIVEN
 
-  */
 
   GIVEN( "Beryllium oxide" ) {
     WHEN( "a secondary scatterer is considered"){
@@ -688,28 +686,7 @@ TEST_CASE( "leapr" ){
         REQUIRE( ranges::equal(std::get<5>(out),effectiveTemps2,equal) );
         REQUIRE( ranges::equal(std::get<6>(out),debyeWaller2,   equal) );
 
-
-        //std::cout << std::get<5>(out).size() << std::endl;
-        //std::cout << std::get<6>(out)[0] << std::endl;
-
-        /*
-        auto braggOut = std::get<3>(out);
-        if (auto* bragg = std::get_if<std::vector<double>>(&braggOut)) {
-          checkPartOfVec( *bragg, bragg_0_49,         0 );
-          checkPartOfVec( *bragg, bragg_500_549,    500 );
-        }
-        else{ REQUIRE(false); }
-        
-        checkPartOfVec( std::get<0>(out), sab_alpha_1,  28*1  );
-        checkPartOfVec( std::get<0>(out), sab_alpha_10, 28*10 );
-        checkPartOfVec( std::get<0>(out), sab_alpha_20, 28*20 );
-        checkPartOfVec( std::get<0>(out), sab_alpha_30, 28*30 );
-        */
-
       } // THEN
-
-
-
 
     } // WHEN
   } // GIVEN
