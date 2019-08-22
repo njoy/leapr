@@ -39,36 +39,38 @@ Every LEAPR run requires that a continuous, solid-type spectrum be processed. Tr
 General Information
 -----------------------
 
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| Parameter Name     | Symbol     |  Description               | Restriction  | Default | Card    |
-+====================+============+============================+==============+=========+=========+
-| | Number of        | ``nalpha`` | | Length of                |              |         |         | 
-|   :math:`\alpha`   |            |   :math:`\alpha` vector    |              |         | 7.a     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of        |  ``nbeta`` | | Length of                |              |         |         | 
-|   :math:`\beta`    |            |   :math:`\alpha` vector    |              |         | 7.b     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha,   | ``lat``    | | If ``lat`` is set to     | 0 or 1       |         |         | 
-|   \beta` scaling   |            |   1 all :math:`\alpha`     |              |         |         |
-| | flag             |            | | and :math:`\beta`        |              |  0      | 7.c     | 
-|                    |            |   values are scaled        |              |         |         |
-|                    |            | | by                       |              |         |         |
-|                    |            |   0.0253/:math:`k_bT`      |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha`   | ``alpha``  | | :math:`\alpha`           | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 8       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\beta`    | ``beta``   | | :math:`\beta`            | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 9       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Temperature      | ``temp``   | | Temperature in Kelvin    | :math:`>0`   |         | 10      |
-+--------------------+------------+----------------------------+--------------+---------+---------+
++--------------------+------------+----------------------------+--------------+---------+
+| Parameter Name     | Symbol     |  Description               | Restriction  | Card    |
++====================+============+============================+==============+=========+
+| | Number of        | ``nalpha`` | | Length of                |              |         | 
+|   :math:`\alpha`   |            |   :math:`\alpha` vector    | :math:`>0`   | 7.a     | 
+|   values           |            |                            |              |         |
++--------------------+------------+----------------------------+--------------+---------+
+| | Number of        |  ``nbeta`` | | Length of                |              |         | 
+|   :math:`\beta`    |            |   :math:`\alpha` vector    |              | 7.b     | 
+|   values           |            |                            |  :math:`>0`  |         |
++--------------------+------------+----------------------------+--------------+---------+
+| | :math:`\alpha`   | ``lat``    | | If ``lat`` is set to     | 0 or 1       |         | 
+|   and :math:`\beta`|            |   1, all :math:`\alpha`    |              |         |
+|   scaling flag     |            |   and :math:`\beta`        |              | 7.c     | 
+|                    |            | | values are scaled        |              |         |
+|                    |            |   by                       |              |         |
+|                    |            |   0.0253/                  |              |         |
+|                    |            |  :math:`\mathrm{k_bT}`     |              |         |
+|                    |            | | *(default value of 0)*   |              |         | 
++--------------------+------------+----------------------------+--------------+---------+
+| | :math:`\alpha`   | ``alpha``  | | :math:`\alpha` values    | :math:`\geq  |         |
+|   values           |            |   given in increasing order| 0`           | 8       |
+|                    |            | | A total of ``nalpha``    |              |         |
+|                    |            |   values needed            |              |         |
++--------------------+------------+----------------------------+--------------+---------+
+| | :math:`\beta`    | ``beta``   | | :math:`\beta` values     | :math:`\geq  |         |
+|   values           |            |   given in increasing order| 0`           | 9       |
+|                    |            | | A total of ``nbeta``     |              |         |
+|                    |            |   values needed            |              |         |
++--------------------+------------+----------------------------+--------------+---------+
+| | Temperature      | ``temp``   | | Temperature in Kelvin    | :math:`>0`   | 10      |
++--------------------+------------+----------------------------+--------------+---------+
 
 
 
@@ -81,65 +83,34 @@ Continuous Treatment
 The continuous treatment takes in a vibrational frequency spectrum (also called a phonon distribution) and computes a scattering law :math:`S(\alpha,\beta)` via the *phonon expansion method*. This approach makes numerous assumptions, which are outlined in :ref:`Theory of Incoherent Scattering<theory_incoherent>`. The following input parameters are necessary to perform a continuous treatment calculation.
 
 
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| Parameter Name     | Symbol     |  Description               | Restriction  | Default | Card    |
-+====================+============+============================+==============+=========+=========+
-| | Order of phonon  | ``nphon``  | | Number of terms used     |              |         | 3.c     |
-| | expansion        |            | | in the phonon            |              | 100     |         |
-|                    |            | | expansion sum            |  :math:`>0`  |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of        | ``nalpha`` | | Length of                |              |         |         | 
-|   :math:`\alpha`   |            |   :math:`\alpha` vector    |              |         | 7.a     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of        |  ``nbeta`` | | Length of                |              |         |         | 
-|   :math:`\beta`    |            |   :math:`\alpha` vector    |              |         | 7.b     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha,   | ``lat``    | | If ``lat`` is set to     | 0 or 1       |         |         | 
-|   \beta` scaling   |            |   1 all :math:`\alpha`     |              |         |         |
-| | flag             |            | | and :math:`\beta`        |              |  0      | 7.c     | 
-|                    |            |   values are scaled        |              |         |         |
-|                    |            | | by                       |              |         |         |
-|                    |            |   0.0253/:math:`k_bT`      |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha`   | ``alpha``  | | :math:`\alpha`           | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 8       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\beta`    | ``beta``   | | :math:`\beta`            | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 9       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Temperature      | ``temp``   | | Temperature in Kelvin    | :math:`>0`   |         | 10      |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Phonon grid      | ``delta``  | | The phonon distribution  |              |         |         |
-| | spacing          |            | | will be provided on a    |              |         | 11.a    |
-|                    |            | | uniform energy grid that |              |         |         |
-|                    |            | | starts at 0. This is the |              |         |         |
-|                    |            | | energy grid spacing in eV|              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of points | ``ni``     | | Number of values that    |              |         |         |
-| | in phonon grid   |            | | will be provided in the  |              |         | 11.b    |
-|                    |            | | phonon distribution      |  :math:`>0`  |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Phonon           | ``rho``    | | Phonon distribution,     | | All values |         |         |
-| | distribution     |            |   given                    | | must be    |         | 12      |
-|                    |            | | on an equally-spaced grid| | :math:`>0` |         |         |
-|                    |            | | of length ``ni`` with    |              |         |         |
-|                    |            | | spacing ``delta``        |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Normalization    |            | | Continuous,              |              |         |         |
-| | for continuous   |            |   translational,           | | (0,1]      |         |         |
-| | component        | ``tbeta``  | | and discrete treatments  | | (cannot be |         | 13.a    |
-|                    |            | | all have weights, which  | | 0 but can  |         |         |
-|                    |            | | must sum to 1. This is   | | be 1)      |         |         |
-|                    |            | | the weighting for the    |              |         |         |
-|                    |            | | continuous, solid-type   |              |         |         |
-|                    |            | | spectrum                 |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
++--------------------+------------+-----------------------------------+---------------+---------+
+| Parameter Name     | Symbol     |  Description                      | Restriction   | Card    |
++====================+============+===================================+===============+=========+
+| | Order of phonon  | ``nphon``  | | Number of terms used in the     |               | 3.c     |
+| | expansion        |            | | phonon expansion sum            |               |         |
+|                    |            | | *(default value 100)*           |  :math:`>0`   |         |
++--------------------+------------+-----------------------------------+---------------+---------+
+| | Phonon grid      | ``delta``  | | The phonon distribution will be |               |         |
+| | spacing          |            | | provided on a uniform energy    |               | 11.a    |
+|                    |            | | grid, starting at 0. This is the|  :math:`>0`   |         |
+|                    |            | | energy spacing in eV            |               |         |
++--------------------+------------+-----------------------------------+---------------+---------+
+| | Number of points | ``ni``     | | Number of values in the phonon  |  :math:`>0`   |         |
+| | in phonon grid   |            | | distribution that will be given |               | 11.b    |
++--------------------+------------+-----------------------------------+---------------+---------+
+| | Phonon           | ``rho``    | | Phonon distribution values,     | | All ``rho`` |         |
+| | distribution     |            |   given                           |   values      | 12      |
+|                    |            | | on an equally-spaced grid of    | | must be     |         |
+|                    |            | | length ``ni`` with spacing      |   :math:`>0`  |         |
+|                    |            |   ``delta``                       |               |         |
++--------------------+------------+-----------------------------------+---------------+---------+
+| | Normalization    |            | | Continuous, translational, and  |               |         |
+| | for continuous   |            | | discrete oscillators all have   | :math:`0<`    |         |
+| | component        | ``tbeta``  |   weights                         | ``tbeta``     | 13.a    |
+|                    |            | | which sum to 1. This is the     | :math:`\leq1` |         |
+|                    |            |   weight                          |               |         |
+|                    |            | | for the continuous spectrum     |               |         |
++--------------------+------------+-----------------------------------+---------------+---------+
 
 
 
@@ -149,63 +120,25 @@ The continuous treatment takes in a vibrational frequency spectrum (also called 
 
 
 Translational/Diffusive
------------------------
+-------------------------
 
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| Parameter Name     | Symbol     |  Description               | Restriction  | Default | Card    |
-+====================+============+============================+==============+=========+=========+
-| | Number of        | ``nalpha`` | | Length of                |              |         |         | 
-|   :math:`\alpha`   |            |   :math:`\alpha` vector    |              |         | 7.a     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of        |  ``nbeta`` | | Length of                |              |         |         | 
-|   :math:`\beta`    |            |   :math:`\alpha` vector    |              |         | 7.b     | 
-| | values           |            |   that                     |  :math:`>0`  |         |         |
-|                    |            | | is later given           |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha,   | ``lat``    | | If ``lat`` is set to     | 0 or 1       |         |         | 
-|   \beta` scaling   |            |   1 all :math:`\alpha`     |              |         |         |
-| | flag             |            | | and :math:`\beta`        |              |  0      | 7.c     | 
-|                    |            |   values are scaled        |              |         |         |
-|                    |            | | by                       |              |         |         |
-|                    |            |   0.0253/:math:`k_bT`      |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\alpha`   | ``alpha``  | | :math:`\alpha`           | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 8       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | :math:`\beta`    | ``beta``   | | :math:`\beta`            | :math:`\geq  |         |         |
-|   values           |            |   values provided in       | 0`           |         | 9       |
-|                    |            | | increasing order         |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Temperature      | ``temp``   | | Temperature in Kelvin    | :math:`>0`   |         | 10      |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Phonon grid      | ``delta``  | | The phonon distribution  |              |         |         |
-| | spacing          |            | | will be provided on a    |              |         | 11.a    |
-|                    |            | | uniform energy grid that |              |         |         |
-|                    |            | | starts at 0. This is the |              |         |         |
-|                    |            | | energy grid spacing in eV|              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Number of points | ``ni``     | | Number of values that    |              |         |         |
-| | in phonon grid   |            | | will be provided in the  |              |         | 11.b    |
-|                    |            | | phonon distribution      |  :math:`>0`  |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Phonon           | ``rho``    | | Phonon distribution,     | | All values |         |         |
-| | distribution     |            |   given                    | | must be    |         | 12      |
-|                    |            | | on an equally-spaced grid| | :math:`>0` |         |         |
-|                    |            | | of length ``ni`` with    |              |         |         |
-|                    |            | | spacing ``delta``        |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
-| | Normalization    |            | | Continuous,              |              |         |         |
-| | for continuous   |            |   translational,           | | (0,1]      |         |         |
-| | component        | ``tbeta``  | | and discrete treatments  | | (cannot be |         | 13.a    |
-|                    |            | | all have weights, which  | | 0 but can  |         |         |
-|                    |            | | must sum to 1. This is   | | be 1)      |         |         |
-|                    |            | | the weighting for the    |              |         |         |
-|                    |            | | continuous, solid-type   |              |         |         |
-|                    |            | | spectrum                 |              |         |         |
-+--------------------+------------+----------------------------+--------------+---------+---------+
++--------------------+------------+-----------------------------------+--------------+---------+
+| Parameter Name     | Symbol     |  Description                      | Restriction  | Card    |
++====================+============+===================================+==============+=========+
+| | Diffusion        | ``c``      | | The translational term can be   |              |         |
+| | constant         |            | | either a free-gas law           | :math:`\geq0`| 13.b    |
+|                    |            |   (``c``:math:`=0.0`)             |              |         |
+|                    |            | | or a                            |              |         |
+|                    |            |   diffusive law ``c``             |              |         |
+|                    |            |   (:math:`>0.0`)                  |              |         |
++--------------------+------------+-----------------------------------+--------------+---------+
+| | Normalization    |            | | Continuous, translational, and  |              |         |
+| | for translational|            | | discrete oscillators all have   | :math:`0     |         |
+| | component        | ``twt``    |   weights                         | \leq`        | 13.c    |
+|                    |            | | which sum to 1. This is the     | ``twt``      |         |
+|                    |            |   weight                          | :math:`<1`   |         |
+|                    |            | | for the translational spectrum  |              |         |
++--------------------+------------+-----------------------------------+--------------+---------+
 
 
 
@@ -213,8 +146,68 @@ Translational/Diffusive
 Discrete Oscillators
 -----------------------
 
++--------------------+------------+-----------------------------------------+--------------+---------+
+| Parameter Name     | Symbol     |  Description                            | Restriction  | Card    |
++====================+============+=========================================+==============+=========+
+| | Number of        | ``nd``     | | The number of oscillators to be       |              |         |
+| | oscillators      |            | | convolved with the existing scattering| :math:`\geq0`| 14      |
+|                    |            | | law. If ``nd``:math:`=0` then cards 15|              |         |
+|                    |            |   and 16                                |              |         |
+|                    |            | | will not be read                      |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+| | Oscillator       | ``bdel``   | | Energy locations of the oscillators   |              |         |
+| | energies         |            | | are given here, in eV. There must be  | :math:`\geq0`| 15      |
+|                    |            | | ``nd`` values provided                |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+| | Oscillator       | ``adel``   | | Continuous, translational, and        |              |         |
+| | weights          |            | | discrete oscillators all have         | :math:`\geq0`| 16      |
+|                    |            |   weights                               |              |         |
+|                    |            | | which sum to 1. These are the         |              |         |
+|                    |            | | weights of each oscillator.           |              |         |
+|                    |            | | There must be ``nd`` values           |              |         |
+|                    |            |   given                                 |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+
+
+
+
+
+
 Coherent Elastic 
 ==================
+
+
++--------------------+------------+-----------------------------------------+--------------+---------+
+| Parameter Name     | Symbol     |  Description                            | Restriction  | Card    |
++====================+============+=========================================+==============+=========+
+| | Number of        | ``nd``     | | The number of oscillators to be       |              |         |
+| | oscillators      |            | | convolved with the existing scattering| :math:`\geq0`| 14      |
+|                    |            | | law. If ``nd``:math:`=0` then cards 15|              |         |
+|                    |            |   and 16                                |              |         |
+|                    |            | | will not be read                      |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+| | Oscillator       | ``bdel``   | | Energy locations of the oscillators   |              |         |
+| | energies         |            | | are given here, in eV. There must be  | :math:`\geq0`| 15      |
+|                    |            | | ``nd`` values provided                |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+| | Oscillator       | ``adel``   | | Continuous, translational, and        |              |         |
+| | weights          |            | | discrete oscillators all have         | :math:`\geq0`| 16      |
+|                    |            |   weights                               |              |         |
+|                    |            | | which sum to 1. These are the         |              |         |
+|                    |            | | weights of each oscillator.           |              |         |
+|                    |            | | There must be ``nd`` values           |              |         |
+|                    |            |   given                                 |              |         |
++--------------------+------------+-----------------------------------------+--------------+---------+
+
+
+
+
+
+
+
+
+
+
 
 Coherent Inelastic
 ===================
