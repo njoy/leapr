@@ -6,6 +6,8 @@
 .. |EXAMPLE| image:: _images/temp.png
    :width: 1em
 
+.. _theory:
+
 **********************
 Theory
 **********************
@@ -13,6 +15,8 @@ Theory
 ..
   COMMENT: .. contents:: Table of Contents
 
+
+.. _theory_incoherent:
 
 Incoherent Scattering (Elastic and Inelastic)
 ==============================================
@@ -357,7 +361,7 @@ where :math:`M` is the mass of the scatterer. Using these relations, the coheren
 
 
 Cold Hydrogen and Deuterium 
-==============================================
+-------------------------------
 The continuous treatment equations defined in Eq. :eq:`continuousSAB`- :eq:`PDefinition` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
 
 For the remainder of this discussion, "hydrogen" will refer to the element, i.e. both :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`. 
