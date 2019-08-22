@@ -11,8 +11,8 @@
 TEST_CASE( "coldh" ){
 
   std::vector<double> tempf, alpha, beta, ska, goodSymSab1(25), goodSymSab2(25);
-  double temp, tev, tbeta, trans_weight, scaling, dka;
-  int ncold, lat;
+  double temp, tev, continWeight, transWeight, scaling, dka;
+  int ncold;
   bool free;
 
   tempf = {193093.99765}; 
@@ -20,10 +20,12 @@ TEST_CASE( "coldh" ){
   beta  = {0.10, 0.15, 0.30, 0.60, 1.2}; 
   ska   = { 1.1, 2.2, 3.3, 5.5, 8.8, 13.13 };
 
-  temp = 200.0, tev = 1.72346606E-2, tbeta = 0.7, trans_weight = 0.3, scaling = 1.4679720;
+  temp = 200.0, tev = 1.72346606E-2, continWeight = 0.7, transWeight = 0.3, scaling = 1.4679720;
+  for ( auto& a : alpha ){ a *= scaling; }
+  for ( auto& b : beta  ){ b *= scaling; }
 
   double tbart = 2.1908278997651038; 
-  lat = 1;
+  
 
   dka = 0.2;
   std::vector<double> sym_sab_1 = ranges::view::iota(1,26);
@@ -48,8 +50,8 @@ TEST_CASE( "coldh" ){
       10.5638393, 7.82654458, 3.50708747 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );
@@ -73,8 +75,8 @@ TEST_CASE( "coldh" ){
       6.31585E-2, 4.81693E-2, 2.51138E-2 };
       
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );
@@ -110,8 +112,8 @@ TEST_CASE( "coldh" ){
       2.9803987599 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );
@@ -137,8 +139,8 @@ TEST_CASE( "coldh" ){
       2.550662E-2 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );
@@ -169,8 +171,8 @@ TEST_CASE( "coldh" ){
         7.45990382, 4.82240089, 2.44514882 };
 
         THEN( "output scattering law vectors are correct" ){
-          coldh( tev, ncold, trans_weight, tbeta, scaling, 
-            alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+          coldh( tev, ncold, transWeight + continWeight, 
+            alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
           for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
             REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
             REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -192,8 +194,8 @@ TEST_CASE( "coldh" ){
         4.8224008, 2.4451488 };
 
         THEN( "output scattering law vectors are correct" ){
-          coldh( tev, ncold, trans_weight, tbeta, scaling, 
-            alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+          coldh( tev, ncold, transWeight + continWeight, 
+            alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
           for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
             REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
             REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -217,8 +219,8 @@ TEST_CASE( "coldh" ){
       1.8690471E-2 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -246,8 +248,8 @@ TEST_CASE( "coldh" ){
       7.45990382, 4.82240089, 2.44514882 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -270,8 +272,8 @@ TEST_CASE( "coldh" ){
       1.8690471E-2 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -298,8 +300,8 @@ TEST_CASE( "coldh" ){
       2.899509, 9.698859, 8.510247, 8.006278, 5.762811, 2.694623 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-5) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-5) );
@@ -321,8 +323,8 @@ TEST_CASE( "coldh" ){
       0.04925662, 0.03766815, 0.02003144 };
 
       THEN( "output scattering law vectors are correct" ){
-        coldh( tev, ncold, trans_weight, tbeta, scaling, 
-          alpha, beta, dka, ska, lat, free, sym_sab_1, sym_sab_2, tbart );
+        coldh( tev, ncold, transWeight + continWeight, 
+          alpha, beta, dka, ska, free, sym_sab_1, sym_sab_2, tbart );
         for ( size_t i = 0; i < sym_sab_1.size(); ++i ){
           REQUIRE( goodSymSab1[i] == Approx(sym_sab_1[i]).epsilon(1e-6) );
           REQUIRE( goodSymSab2[i] == Approx(sym_sab_2[i]).epsilon(1e-6) );

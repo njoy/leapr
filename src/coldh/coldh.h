@@ -35,9 +35,9 @@ auto getSumConstants( int ncold, Float& scatLenI, Float& scatLenC, Float& sk ){
 
 
 template <typename Float, typename Range>
-auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta, 
-  Float scaling, const Range& alpha, const Range& beta, Float& dka, Range& ska, 
-  int lat,  bool free, Range& sym_sab_1, Range& sym_sab_2, const Float& tbart ){
+auto coldh( Float tev, int ncold, Float transContinWeight, 
+  const Range& alpha, const Range& beta, Float& dka, Range& ska, 
+  bool free, Range& sab_1, Range& sab_2, const Float& tbart ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -47,11 +47,10 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
    * symmetric in beta
    */
 
-  Float de, x, massMolecule, bp, scatLenC, scatLenI, wt, therm = 0.0253;
+  Float de, x, massMolecule, bp, scatLenC, scatLenI, wt;
   int nbx, maxbb = 2 * beta.size() + 1;
 
-  Range exb(beta.size(), 0.0), betan(int(beta.size()), 0.0), bex(maxbb, 0.0), 
-    rdbex(maxbb, 0.0);
+  Range exb(beta.size(), 0.0), bex(maxbb, 0.0), rdbex(maxbb, 0.0);
 
   // Either Ortho Deuterium or Para Deuterium 
   if ( ncold > 2 ){
@@ -74,19 +73,17 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
   }
 
   x = de / tev;
-  wt = trans_weight + tbeta;  
+  //wt = trans_weight + tbeta;  
+  wt = transContinWeight;
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
              | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); 
   auto xyZipped = ranges::view::zip(xVals,ska);
 
   for ( int b = 0; b < int(beta.size()); ++b ){
-      Float be=beta[b];
-      if (lat == 1){ be = be * therm / tev; }
-      exb[b] = exp(-be*0.5);
-      betan[b] = be;
+      exb[b] = exp(-beta[b]*0.5);
   } 
-  auto output = bfill(rdbex,betan);
+  auto output = bfill(rdbex,beta);
 
   nbx = std::get<0>(output);
   for ( size_t i = 0; i < bex.size(); ++i ){
@@ -95,8 +92,7 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
 
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
-    Float al = alpha[a]*scaling;
-    Float waven = 1e-10 * sqrt( massMolecule * tev * ev * al ) / hbar;
+    Float waven = 1e-10 * sqrt( massMolecule * tev * ev * alpha[a] ) / hbar;
     Float y = bp * waven;
 
     // We interpolate S(kappa) to get the corresponding value that we will use
@@ -139,12 +135,12 @@ auto coldh( Float tev, int ncold, Float trans_weight, Float tbeta,
 
     Range input ( beta.size(), 0.0 ); 
     for ( size_t b = 0; b < beta.size(); ++b ){
-      input[b] = sym_sab_1[b+a*betan.size()];
+      input[b] = sab_1[b+a*beta.size()];
     }
-    auto sex = extsCOLDH( input, exb, betan );
+    auto sex = extsCOLDH( input, exb, beta );
 
-    betaLoop( betan, rdbex, bex, sex, al*wt, tbart, x, y, evenSumConst, 
-      oddSumConst, nbx, a, ncold, free, sym_sab_1, sym_sab_2 );
+    betaLoop( beta, rdbex, bex, sex, alpha[a]*transContinWeight, tbart, x, y, 
+      evenSumConst, oddSumConst, nbx, a, ncold, free, sab_1, sab_2 );
 
   }
  

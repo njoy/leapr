@@ -6,16 +6,18 @@
 #include <variant>
 
 TEST_CASE( "leapr" ){
-  int nphon, ncold, lat, iel, npr;
+  int nphon, ncold, lat, iel, npr, nss, b7;
   double sps, awr, aws, delta, twt, c, tbeta, dka, cfrac;
   std::vector<double> alpha, beta, temp, rho, oscE, oscW, kappa;
 
+  /*
   GIVEN( "coarse alpha, beta grids (for quick testing)" ) {
     WHEN( "continuous, translational, and discrete oscillator options used" ) {
       nphon = 100;
       awr   = 0.99917;  iel = 0; npr = 2.0; ncold = 0; 
       aws   = 15.85316; sps = 3.8883; 
       lat   = 0;
+      nss   = 0; b7 = 0;
       alpha = {.01008,   .033,     0.050406, 0.504060, 0.554466, 1.873790, 
                2.055660, 5.671180, 7.472890, 20.52030, 32.46250, 50.0};
       beta  = {0.000000, 0.006375, 0.038250, 0.06575, 0.564547, 1.77429,
@@ -35,12 +37,13 @@ TEST_CASE( "leapr" ){
       oscW   = { 0.166667, 0.333333 };                            
       dka    = 0.0;
       cfrac  = 0.0;
+      auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
 
       AND_WHEN ( "alpha and beta scaling not needed (lat = 0)" ){
         lat   = 0;            
         auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
+                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
   
         std::vector<double> sabCorrect { 1.188670E+1, 1.168376E+1, 6.300891E+0, 
         1.781912E+0, 3.162210E-4, 4.692060E-4, 3.081720E-4, 2.514578E-5, 
@@ -68,19 +71,19 @@ TEST_CASE( "leapr" ){
         6.436519E-5, 8.208659E-5, 1.425013E-4, 2.777029E-4, 1.245381E-3, 
         6.606240E-3, 1.044380E-2};
   
-        double debyeWaller   = 0.2352041964;
-        std::vector<double> effectiveTemps {1397.671178314};
+        std::vector<double> effectiveTemps {1397.671178314},
+                            debyeWaller    {0.2352041964  };
 
         THEN( "the scattering law is correctly returned on a scaled grid" ){
-          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,equal) );
+          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,    equal) );
           REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
-          REQUIRE( debyeWaller == Approx(std::get<2>(out)).epsilon(1e-6));
+          REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
         } // THEN
       } // AND WHEN
       AND_WHEN ( "alpha and beta scaling is requested (lat = 1)" ){
         lat   = 1;            
         auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
+                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
         std::vector<double> sabCorrect { 1.193557E+1, 1.173342E+1, 6.361294E+0, 
           1.816275E+0, 3.124950E-4, 4.639237E-4, 3.122224E-4, 7.882191E-5, 
           1.011487E-5,7.888274E-10, 6.555078E+0, 6.527275E+0, 5.467981E+0, 
@@ -106,19 +109,19 @@ TEST_CASE( "leapr" ){
           1.954142E-2, 1.944808E-2, 6.624281E-5, 6.645256E-5, 6.751134E-5, 
           6.843838E-5, 8.710059E-5, 1.505165E-4, 2.916502E-4, 1.290367E-3, 
           6.740754E-3, 1.056903E-2};
-        double debyeWaller   = 0.2352041964;
-        std::vector<double> effectiveTemps {1397.671178314};
+        std::vector<double> effectiveTemps {1397.671178314},
+                            debyeWaller    {0.2352041964  };
 
         THEN( "the scattering law is correctly returned on a scaled grid" ){
-          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,equal) );
+          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,    equal) );
           REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
-          REQUIRE( debyeWaller == Approx(std::get<2>(out)).epsilon(1e-6));
+          REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
         } // THEN
       } // AND WHEN
       AND_WHEN( "material is cold" ){
         temp  = { 100.0 };                                          
         auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
+                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
 
         std::vector<double> sabCorrect { 1.191059E+1, 1.170723E+1, 6.313288E+0, 
           1.785018E+0, 1.591388E-5, 1.977783E-5, 3.162744E-5, 5.709636E-5, 
@@ -145,19 +148,22 @@ TEST_CASE( "leapr" ){
           1.878867E-2, 1.665706E-2, 3.443731E-3, 3.454243E-3, 3.507459E-3, 
           3.554265E-3, 4.448901E-3, 6.591632E-3, 8.198762E-3, 9.342037E-3, 
           1.423867E-2, 1.370927E-2};
-        double debyeWaller   = 5.68713599E-2;
-        std::vector<double> effectiveTemps {1366.18152086};
+
+        std::vector<double> effectiveTemps {1366.18152086 },
+                            debyeWaller    {5.68713599E-2 };
 
         THEN( "the scattering law is correctly returned on a scaled grid" ){
-          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,equal) );
+          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,    equal) );
           REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
-          REQUIRE( debyeWaller == Approx(std::get<2>(out)).epsilon(1e-6));
+          REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
         } // THEN
+
       } // AND WHEN
+
       AND_WHEN( "material is hot" ){
         temp  = { 600.0 };                                          
         auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac);
+                          rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
 
         std::vector<double> sabCorrect { 1.182050E+1, 1.161877E+1, 6.267602E+0, 
           1.775094E+0, 2.538069E-3, 1.274758E-3, 3.453815E-6, 2.589951E-7, 
@@ -184,14 +190,16 @@ TEST_CASE( "leapr" ){
           1.537487E-2, 2.126633E-2, 5.110181E-6, 5.126508E-6, 5.208941E-6, 
           5.281167E-6, 6.762964E-6, 1.198200E-5, 2.513165E-5, 1.576405E-4, 
           2.127419E-3, 5.732186E-3 };
-        double debyeWaller = 0.78234716272468541;
-        std::vector<double> effectiveTemps {1507.2963449849456};
-          
+
+        std::vector<double> effectiveTemps {1507.296344984},
+                            debyeWaller    {0.782347162724};
+
         THEN( "the scattering law is correctly returned on a scaled grid" ){
-          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,equal) );
+          REQUIRE( ranges::equal(std::get<0>(out),sabCorrect,    equal) );
           REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
-          REQUIRE( debyeWaller == Approx(std::get<2>(out)).epsilon(1e-6));
+          REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
         } // THEN
+
       } // AND WHEN
     } // WHEN
   } // GIVEN
@@ -202,6 +210,7 @@ TEST_CASE( "leapr" ){
       awr   = 0.99917;  ncold = 0; 
       aws   = 15.85316; sps = 3.8883; 
       lat   = 1;
+      nss   = 0; b7 = 0;
       alpha = { 0.01008, 0.015, 0.0252, 0.033, 0.050406, 0.0756, 0.100812, 
       0.151218, 0.201624, 0.252030, 0.302436, 0.352842, 0.403248, 0.453654, 
       0.504060, 0.554466, 0.609711, 0.670259, 0.736623, 0.809349, 0.889061, 
@@ -241,10 +250,11 @@ TEST_CASE( "leapr" ){
       dka    = 0.0;
       cfrac  = 0.0;
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
+      auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
 
 
       auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac);
+                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
       std::vector<double> sab = std::get<0>(out),
       sab_0_99 { 1.193557E+1, 1.173342E+1, 1.115293E+1, 9.042512E+0, 6.361295E+0, 
       3.862215E+0, 1.816276E+0, 6.976093E-1, 1.990600E-2, 5.694252E-4, 
@@ -306,14 +316,16 @@ TEST_CASE( "leapr" ){
       1.37061E-2, 1.65404E-3, 1.47705E-3, 6.12595E-4, 4.62908E-4};
 
 
+      std::vector<double> effectiveTemps {1397.671178},
+                          debyeWaller    {0.235204196 };
 
-      REQUIRE( ranges::equal(std::get<1>(out),{1397.671178},equal) );
-      REQUIRE( 0.235204196 == Approx(std::get<2>(out)) );
-
-      checkPartOfVec( sab, sab_0_99,         0 );
-      checkPartOfVec( sab, sab_500_599,    500 );
-      checkPartOfVec( sab, sab_2000_2099, 2000 );
-
+      THEN( "the scattering law is correctly returned on a scaled grid" ){
+        REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
+        REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
+        checkPartOfVec( sab, sab_0_99,         0 );
+        checkPartOfVec( sab, sab_500_599,    500 );
+        checkPartOfVec( sab, sab_2000_2099, 2000 );
+      } // THEN
 
     } // WHEN
   } // GIVEN
@@ -324,6 +336,7 @@ TEST_CASE( "leapr" ){
       awr   = 8.93478;  iel = 2; npr = 1; ncold = 0; 
       aws   = 0; sps = 0; 
       lat   = 1;
+      nss   = 0; b7 = 0;
       alpha = { 3.504421E-3, 4.022632E-3, 6.983712E-3, 8.016418E-3, 1.391734E-2, 
         1.597535E-2, 2.773489E-2, 3.183614E-2, 5.527088E-2, 6.344398E-2, 
         1.101454E-1, 1.264330E-1, 2.195010E-1, 2.519593E-1, 4.374279E-1, 
@@ -369,10 +382,11 @@ TEST_CASE( "leapr" ){
       cfrac  = 0.0;
  
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
+      auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
 
 
       auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac);
+                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
 
       std::vector<double> sab_alpha_0 { 8.64142E-5, 8.45470E-5, 1.22065E-4, 
       1.26150E-4, 1.66740E-4, 1.89049E-4, 2.77557E-4, 3.32110E-4, 5.68091E-4, 
@@ -418,24 +432,27 @@ TEST_CASE( "leapr" ){
       7.136292E19, 5.111142E-8, 7.151167E19, 1.915366E-8, 7.154989E19, 
       1.056123E-7, 7.175038E19, 8.802859E-7 };
         
-      std::vector<double> correctEffectiveTemps {433.38329725}; 
-      double correctDebyeWaller = 0.603338907;
+      std::vector<double> effectiveTemps {433.38329725},
+                          debyeWaller    {0.603338907 };
 
-      auto braggOut = std::get<3>(out);
-      if (auto* bragg = std::get_if<std::vector<double>>(&braggOut)) {
-        checkPartOfVec( *bragg, bragg_0_49,         0 );
-        checkPartOfVec( *bragg, bragg_500_549,    500 );
-      }
-      else{ REQUIRE(false); }
+      THEN( "the scattering law is correctly returned on a scaled grid" ){
+        REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps,equal) );
+        REQUIRE( ranges::equal(std::get<2>(out),debyeWaller,   equal) );
+
+        auto braggOut = std::get<3>(out);
+        if (auto* bragg = std::get_if<std::vector<double>>(&braggOut)) {
+          checkPartOfVec( *bragg, bragg_0_49,         0 );
+          checkPartOfVec( *bragg, bragg_500_549,    500 );
+        }
+        else{ REQUIRE(false); }
         
-      REQUIRE( ranges::equal(std::get<1>(out),correctEffectiveTemps,equal) );
-      REQUIRE( correctDebyeWaller == Approx(std::get<2>(out)) );
-      checkPartOfVec( std::get<0>(out), sab_alpha_0,     0  );
-      checkPartOfVec( std::get<0>(out), sab_alpha_1,  28*1  );
-      checkPartOfVec( std::get<0>(out), sab_alpha_10, 28*10 );
-      checkPartOfVec( std::get<0>(out), sab_alpha_20, 28*20 );
-      checkPartOfVec( std::get<0>(out), sab_alpha_30, 28*30 );
+        checkPartOfVec( std::get<0>(out), sab_alpha_0,     0  );
+        checkPartOfVec( std::get<0>(out), sab_alpha_1,  28*1  );
+        checkPartOfVec( std::get<0>(out), sab_alpha_10, 28*10 );
+        checkPartOfVec( std::get<0>(out), sab_alpha_20, 28*20 );
+        checkPartOfVec( std::get<0>(out), sab_alpha_30, 28*30 );
 
+      } // THEN
 
     } // WHEN
   } // GIVEN
@@ -511,10 +528,11 @@ TEST_CASE( "leapr" ){
       cfrac  = 0.73194;
 
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
+      auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
 
 
       auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
-                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac );
+                        rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
 
  
       std::vector<double> sab = std::get<0>(out),
@@ -538,6 +556,160 @@ TEST_CASE( "leapr" ){
       checkPartOfVec( std::get<0>(out), sab_alpha_9,   9*beta.size() );
       checkPartOfVec( std::get<0>(out), sab_alpha_12, 12*beta.size() );
       checkPartOfVec( std::get<0>(out), sab_alpha_15, 15*beta.size() );
+
+    } // WHEN
+  } // GIVEN
+
+  */
+
+  GIVEN( "Beryllium oxide" ) {
+    WHEN( "a secondary scatterer is considered"){
+
+      nphon = 100;
+      awr   = 8.93478;  npr = 1; iel = 3; ncold = 0; 
+      nss   = 1; b7 = 0; aws   = 15.858; sps = 3.7481; 
+      lat   = 1;
+      alpha = { .252, .504, .756, 1.008, 1.260, 1.512, 1.764, 2.016, 2.268, 
+      2.520, 2.772, 3.024, 3.282, 3.544, 3.813, 4.087, 4.366, 4.652, 4.943, 
+      5.241, 5.545, 5.855, 6.172, 6.495, 6.825, 7.162, 7.507, 7.858, 8.217, 
+      8.583, 8.957, 9.339, 9.729, 10.13, 10.53, 10.95, 11.37, 11.81, 12.25, 
+      12.69, 13.16, 13.63, 14.11, 14.60, 15.10, 15.61, 16.13, 16.66, 17.21, 
+      17.76 };
+      beta = { 0., .1513, .3025, .4537, .6049, .7561, .9073, 1.059, 1.210, 
+      1.361, 1.512, 1.663, 1.815, 1.966, 2.117, 2.268, 2.419, 2.571, 2.722, 
+      2.873, 3.024, 3.176, 3.327, 3.478, 3.629, 3.780, 3.932, 4.083, 4.241, 
+      4.408, 4.583, 4.766, 4.958, 5.159, 5.371, 5.592, 5.825, 6.069, 6.325, 
+      6.593, 6.875, 7.170, 7.480, 7.805, 8.146, 8.504, 8.879, 9.273, 9.686, 
+      10.12, 10.57, 11.05, 11.55, 12.07, 12.62, 13.20, 13.81, 14.44, 15.11, 
+      15.81, 16.54, 17.31, 18.12, 18.96, 19.85, 20.78, 21.76, 22.78, 23.86, 
+      24.99, 26.17, 27.41, 28.71, 30.08, 31.51, 33.01, 34.59, 36.24, 37.98, 
+      39.80 };
+      temp  = { 296.0 };                                          
+
+      delta = .0016518;
+      std::vector<double> rho_Be = { 0, .3, .7, .9, 1., 1.2, 1.6, 2, 2.2, 3, 
+      3.5, 4.5, 5.5, 6.8, 8, 9.2, 10.9, 12.9, 15.5, 18.6, 22, 26, 30.5, 35, 39, 
+      40, 34, 28, 26, 24.4, 23, 21.3, 19.8, 17, 14.1, 12, 10, 9, 9, 8.5, 7.5, 6, 
+      4.6, 3.1, 1.6, 0.5, 0., 0, 4, 15, 38, 52, 70, 105, 165, 230, 200, 170, 
+      145, 136, 134, 112, 96, 89, 84, 75, 87, 81, 66, 59, 68, 105, 95, 97, 135, 
+      163, 130, 111, 92, 67, 45, 19, 7, 0 },
+      rho_O = {0, 0.4, 0.8, 1, 1.4, 2, 2.5, 3.5, 4.8, 6.2, 8.9, 11, 14, 17.2, 
+      21.5, 26.5, 34, 40, 46, 58, 60, 93, 110, 129, 141, 142, 125, 101, 93, 92, 
+      91, 95, 95, 98, 108, 93, 78, 98, 112, 115, 145, 160, 190, 190, 120, 43, 
+      0, 0, 1, 9, 19, 26, 35, 48, 66, 92, 82, 56, 44, 35, 29, 21, 15, 11.5, 9, 
+      8, 7, 6, 5.2, 4.5, 5, 5.9, 6, 5, 4, 2.5, 1.8, 1, 0.5, 0.50, 0.2, 0, 0, 0};
+
+
+
+      twt    = 0.0;   c = 0.0;   tbeta = 1.0;
+      oscE   = { };                                 
+      oscW   = { };                            
+      dka    = 0.0;
+      cfrac  = 0.0;
+      auto secondaryScatterInput = std::make_tuple(nss,b7,rho_O);
+      auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
+
+      auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
+      rho_Be, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
+
+      std::vector<double> effectiveTemps1 {596.67224686},
+                          effectiveTemps2 {427.92269393},
+                          debyeWaller1    {0.4933530515},
+                          debyeWaller2    {0.8818971809},
+      sab1_alpha_0 { 6.29193E-2, 3.42835E-2, 1.32566E-2, 1.09786E-2, 1.04764E-2, 
+      1.15726E-2, 1.32879E-2, 1.49366E-2, 1.83317E-2, 2.27266E-2, 2.73285E-2, 
+      2.50529E-2, 1.59443E-2, 1.24747E-2, 9.38148E-3, 5.98628E-3, 4.12817E-3, 
+      3.54511E-3, 2.27881E-3, 1.05735E-3, 5.64969E-4, 3.84247E-3, 1.49046E-2, 
+      3.26393E-2, 5.41286E-2, 3.62788E-2, 3.04328E-2, 2.10853E-2, 1.66747E-2, 
+      1.56121E-2, 1.54433E-2, 1.90942E-2, 2.47544E-2, 1.25443E-2, 1.79039E-3, 
+      7.95924E-4, 6.80115E-4, 5.87810E-4, 5.16439E-4, 4.10645E-4, 3.93152E-4, 
+      5.85319E-4, 6.02568E-4, 5.13025E-4, 5.20746E-4, 6.66682E-4, 4.46563E-4, 
+      2.40055E-4, 1.78008E-4, 8.33936E-5, 1.46131E-5, 1.18548E-5, 1.00354E-5, 
+      1.05085E-5, 8.56971E-6, 6.13765E-6, 3.50533E-6, 1.31623E-6, 4.39957E-7, 
+      1.58419E-7, 1.18657E-7, 8.32124E-8, 3.99688E-8, 1.32923E-8, 3.53850E-9, 
+      1.28276E-9, 6.92649E-10, 2.61334E-10, 6.18222E-11, 1.38797E-11, 
+      5.16923E-12, 1.51297E-12, 2.66579E-13, 5.30734E-14, 1.37056E-14, 
+      2.11175E-15, 2.98620E-16, 5.42533E-17, 5.88530E-18, 6.95140E-19},
+
+      sab2_alpha_0 { 4.81133E-2, 2.25962E-2, 1.20589E-2, 1.12154E-2, 1.33425E-2, 
+      1.67238E-2, 2.04055E-2, 2.65700E-2, 3.19258E-2, 4.46239E-2, 5.69658E-2, 
+      5.12138E-2, 3.23843E-2, 2.82217E-2, 2.70557E-2, 2.50986E-2, 2.36814E-2, 
+      2.79966E-2, 3.70647E-2, 2.35842E-2, 1.38590E-3, 2.36073E-3, 5.34433E-3, 
+      9.17828E-3, 1.35511E-2, 7.41699E-3, 4.75938E-3, 2.83036E-3, 2.11969E-3, 
+      1.63906E-3, 1.34857E-3, 1.21429E-3, 8.39224E-4, 6.48088E-4, 5.20179E-4, 
+      3.81904E-4, 2.24828E-4, 2.11820E-4, 2.04270E-4, 1.10165E-4, 6.00981E-5, 
+      5.21596E-5, 3.56711E-5, 1.81567E-5, 1.08936E-5, 6.61733E-6, 3.78630E-6, 
+      2.08283E-6, 1.12873E-6, 6.68799E-7, 3.04509E-7, 1.61864E-7, 6.97864E-8, 
+      3.14532E-8, 1.33687E-8, 5.27542E-9, 2.12871E-9, 7.68895E-10, 2.65565E-10, 
+      8.52744E-11, 2.60616E-11, 7.47241E-12, 1.97548E-12, 4.92910E-13, 
+      1.11466E-13, 2.34034E-14, 4.48506E-15, 7.91720E-16, 1.24476E-16, 
+      1.77399E-17, 2.28907E-18, 2.61793E-19, 2.65729E-20, 2.34741E-21, 
+      1.83137E-22, 1.23911E-23, 7.12281E-25, 3.53512E-26, 1.46139E-27, 
+      5.01966E-29 }, 
+
+      sab1_alpha_40 {1.63025E-2, 1.34122E-2, 1.07498E-2, 1.04380E-2, 1.07038E-2, 
+      1.13794E-2, 1.22731E-2, 1.33229E-2, 1.47410E-2, 1.63851E-2, 1.79150E-2, 
+      1.81921E-2, 1.73979E-2, 1.73418E-2, 1.74424E-2, 1.75355E-2, 1.78880E-2, 
+      1.84952E-2, 1.91087E-2, 1.98182E-2, 2.08557E-2, 2.28477E-2, 2.63222E-2, 
+      3.11368E-2, 3.55129E-2, 3.40037E-2, 3.30059E-2, 3.18897E-2, 3.17875E-2, 
+      3.26455E-2, 3.44468E-2, 3.76722E-2, 4.09518E-2, 4.07117E-2, 3.92462E-2, 
+      3.89610E-2, 3.91337E-2, 3.97233E-2, 4.06877E-2, 4.14868E-2, 4.32466E-2, 
+      4.68919E-2, 4.86620E-2, 4.91484E-2, 5.12188E-2, 5.54778E-2, 5.58055E-2, 
+      5.47091E-2, 5.50506E-2, 5.48200E-2, 5.40918E-2, 5.45857E-2, 5.46061E-2, 
+      5.59416E-2, 5.58157E-2, 5.47575E-2, 5.30733E-2, 5.04379E-2, 4.80906E-2, 
+      4.61523E-2, 4.39258E-2, 4.13817E-2, 3.78084E-2, 3.41029E-2, 3.06037E-2, 
+      2.73056E-2, 2.38374E-2, 2.02915E-2, 1.69484E-2, 1.39929E-2, 1.12939E-2, 
+      8.83676E-3, 6.76262E-3, 5.04682E-3, 3.64352E-3, 2.54962E-3, 1.72591E-3, 
+      1.12413E-3, 7.03259E-4, 4.22101E-4}, 
+
+      sab2_alpha_40 {2.73175E-2, 2.61311E-2, 2.61790E-2, 2.75520E-2, 2.95027E-2, 
+      3.17372E-2, 3.41880E-2, 3.71261E-2, 4.01019E-2, 4.39533E-2, 4.77031E-2, 
+      4.89360E-2, 4.85091E-2, 4.99536E-2, 5.21296E-2, 5.43386E-2, 5.68473E-2, 
+      6.03683E-2, 6.42309E-2, 6.50303E-2, 6.44331E-2, 6.63948E-2, 6.86272E-2, 
+      7.11246E-2, 7.37068E-2, 7.49702E-2, 7.65116E-2, 7.82267E-2, 7.99989E-2, 
+      8.09320E-2, 8.14420E-2, 8.27510E-2, 8.44695E-2, 8.60277E-2, 8.72207E-2, 
+      8.77037E-2, 8.77097E-2, 8.82857E-2, 8.87857E-2, 8.84452E-2, 8.78812E-2, 
+      8.69544E-2, 8.56027E-2, 8.41192E-2, 8.19525E-2, 7.92605E-2, 7.63569E-2, 
+      7.29113E-2, 6.90145E-2, 6.47682E-2, 6.02597E-2, 5.53468E-2, 5.03166E-2, 
+      4.51875E-2, 4.00037E-2, 3.48628E-2, 2.98784E-2, 2.52314E-2, 2.08564E-2, 
+      1.69053E-2, 1.34237E-2, 1.03966E-2, 7.84376E-3, 5.77762E-3, 4.11937E-3, 
+      2.84986E-3, 1.90235E-3, 1.22853E-3, 7.59864E-4, 4.51201E-4, 2.56830E-4, 
+      1.39227E-4, 7.17379E-5, 3.48773E-5, 1.60507E-5, 6.93966E-6, 2.79609E-6, 
+      1.05342E-6, 3.65857E-7, 1.17493E-7};
+
+      THEN( "the scattering law is correctly returned on a scaled grid" ){
+        checkPartOfVec( std::get<0>(out), sab1_alpha_0,     0  );
+        checkPartOfVec( std::get<0>(out), sab1_alpha_40,40*beta.size()  );
+        REQUIRE( ranges::equal(std::get<1>(out),effectiveTemps1,equal) );
+        REQUIRE( ranges::equal(std::get<2>(out),debyeWaller1   ,equal) );
+
+        checkPartOfVec( std::get<4>(out), sab2_alpha_0,     0  );
+        checkPartOfVec( std::get<4>(out), sab2_alpha_40,40*beta.size()  );
+        REQUIRE( ranges::equal(std::get<5>(out),effectiveTemps2,equal) );
+        REQUIRE( ranges::equal(std::get<6>(out),debyeWaller2,   equal) );
+
+
+        //std::cout << std::get<5>(out).size() << std::endl;
+        //std::cout << std::get<6>(out)[0] << std::endl;
+
+        /*
+        auto braggOut = std::get<3>(out);
+        if (auto* bragg = std::get_if<std::vector<double>>(&braggOut)) {
+          checkPartOfVec( *bragg, bragg_0_49,         0 );
+          checkPartOfVec( *bragg, bragg_500_549,    500 );
+        }
+        else{ REQUIRE(false); }
+        
+        checkPartOfVec( std::get<0>(out), sab_alpha_1,  28*1  );
+        checkPartOfVec( std::get<0>(out), sab_alpha_10, 28*10 );
+        checkPartOfVec( std::get<0>(out), sab_alpha_20, 28*20 );
+        checkPartOfVec( std::get<0>(out), sab_alpha_30, 28*30 );
+        */
+
+      } // THEN
+
+
+
 
     } // WHEN
   } // GIVEN

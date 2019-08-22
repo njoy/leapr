@@ -1,5 +1,4 @@
 #include <iostream> 
-#include <vector>
 #include "contin/contin.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
@@ -11,14 +10,13 @@
 #include <variant>
 
 template<typename Range, typename Float, typename RangeZipped>
-auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac ){
+auto leaprTempLoop( int nphon, Float awr, int iel, int npr, int ncold, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac, Float arat ){
 
-  std::cout << std::setprecision(15);
-  Float lambda_s, tBar, arat=1.0, effectiveTemp, temp, tev, sc, scaling;
+  Float tBar, effectiveTemp, temp, tev, sc, scaling;
   std::vector<Float> sab( alpha.size()*beta.size(),0.0),
                      sab2(alpha.size()*beta.size(),0.0);
-  Range effectiveTemps(temps.size());
-  std::variant<std::vector<double>,bool> braggOutput;
+  Range effectiveTemps(temps.size()), lambdaVals(temps.size());
+  std::variant<Range,bool> braggOutput;
   
 
   for ( size_t itemp = 0; itemp < temps.size(); ++itemp ){ 
@@ -32,32 +30,34 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
     
     delta /= tev;
 
+    //---------------- Incoherent (Elastic and Inelastic) ----------------------
     auto continOutput = contin(nphon, delta, continWgt, rho, alpha, beta, sab);
 
-    lambda_s = std::get<0>(continOutput);
+    lambdaVals[itemp] = std::get<0>(continOutput);
     tBar     = std::get<1>(continOutput);
     effectiveTemp = temp*tBar;
     
     if (transWgt > 0){
-      trans( alpha, beta, transWgt, delta, diffusion_const, lambda_s, continWgt, 
-             effectiveTemp, temp,  sab );
+      trans( alpha, beta, transWgt, delta, diffusion_const, lambdaVals[itemp], 
+             continWgt, effectiveTemp, temp, sab );
     }
 
     if (oscEnergiesWgts.size() > 0){
-      discre( lambda_s, transWgt, continWgt, alpha, beta, temp, oscEnergiesWgts, 
-              effectiveTemp, sab );
+      discre( lambdaVals[itemp], transWgt, continWgt, alpha, beta, temp, 
+               oscEnergiesWgts, effectiveTemp, sab );
     }
 
+    //--------------- Coherent (Inelastic Approximations) ----------------------
     if (ncold > 0){ 
       bool free = false;
-      coldh( tev, ncold, transWgt, continWgt, scaling, alpha, beta, dka, 
-             kappaVals, lat, free, sab, sab2, tBar );
+      coldh( tev, ncold, transWgt+continWgt, alpha, beta, dka, kappaVals, free, 
+             sab, sab2, tBar );
     }
     else if (kappaVals.size() > 0){
       skold( cfrac, tev, alpha, beta, kappaVals, awr, dka, sab );
-
     }
 
+    //-------------------------- Coherent (Elastic) ----------------------------
     if (iel > 0){
       double emax = 5.0;
       std::vector<double> bragg ( 60000, 0.0 );
@@ -66,16 +66,63 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
       bragg.resize(numVals); 
       braggOutput = bragg;
     }
-    else {
-      braggOutput = false;
-    }
+    else { braggOutput = false; }
+
     effectiveTemps[itemp] = effectiveTemp;
+
   }
 
 
-  return std::make_tuple(sab,effectiveTemps,lambda_s,braggOutput);
-  std::cout << (sab|ranges::view::all) << std::endl;
+  return std::make_tuple(sab,effectiveTemps,lambdaVals,braggOutput);
 
-  std::cout << nphon << awr << ncold << aws << lat << alpha[0] << beta[0] << temps[0] << delta << rho[0] << transWgt << diffusion_const << continWgt << std::get<0>(oscEnergiesWgts[0]) << dka << kappaVals[0] << iel << std::endl;
+
+}
+
+template<typename Range, typename Float, typename RangeZipped>
+auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac, std::tuple<int,int,Range> secondaryScatterInput ){
+
+  //std::variant<Range,std::tuple<Range,Range>> sab, effectiveTemps, lambdaVals;
+  Range sab,  effectiveTemps,  lambdaVals;
+  std::variant<Range,bool> braggOutput;
+
+  Range sab2, effectiveTemps2, lambdaVals2;
+  std::variant<Range,bool> braggOutput2;
+
+  //----------------Principal scatterer (isecs = 0)----------------------------
+  Float arat = 1.0;
+  auto out1 = leaprTempLoop( nphon, awr, iel, npr, ncold, lat, alpha, beta, 
+    temps, delta, rho, transWgt, diffusion_const, continWgt, oscEnergiesWgts, 
+    dka, kappaVals, cfrac, arat );
+
+  sab             = std::get<0>(out1);
+  effectiveTemps  = std::get<1>(out1);
+  lambdaVals      = std::get<2>(out1);
+  braggOutput     = std::get<3>(out1);
+
+  // if number of secondary scatterers is 0 or user wants free gas or diffusion 
+  // for the secondary scatterer
+  int nss = std::get<0>(secondaryScatterInput),
+      b7  = std::get<1>(secondaryScatterInput);
+  if (nss == 0 or b7 > 0){
+    return std::make_tuple(sab, effectiveTemps, lambdaVals, braggOutput,
+                           sab2,effectiveTemps2,lambdaVals2,braggOutput2);
+  }
+
+
+  //----------------Secondary scatterer (isecs = 1)----------------------------
+  arat = aws/awr;
+  Range secondaryRho = std::get<2>(secondaryScatterInput);
+  auto out2 = leaprTempLoop( nphon, awr, iel, npr, ncold, lat, alpha, beta, 
+    temps, delta, secondaryRho, transWgt, diffusion_const, continWgt, 
+    oscEnergiesWgts, dka, kappaVals, cfrac, arat );
+
+  sab2            = std::get<0>(out2);
+  effectiveTemps2 = std::get<1>(out2);
+  lambdaVals2     = std::get<2>(out2);
+  braggOutput2    = std::get<3>(out2);
+
+  return std::make_tuple(sab, effectiveTemps, lambdaVals, braggOutput,
+                         sab2,effectiveTemps2,lambdaVals2,braggOutput2);
+
 
 }

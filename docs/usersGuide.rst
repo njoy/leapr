@@ -88,7 +88,7 @@ The continuous treatment takes in a vibrational frequency spectrum (also called 
 +====================+============+===================================+===============+=========+
 | | Order of phonon  | ``nphon``  | | Number of terms used in the     |               | 3.c     |
 | | expansion        |            | | phonon expansion sum            |               |         |
-|                    |            | | *(default value 100)*           |  :math:`>0`   |         |
+|                    |            | | **(default value 100)**         |  :math:`>0`   |         |
 +--------------------+------------+-----------------------------------+---------------+---------+
 | | Phonon grid      | ``delta``  | | The phonon distribution will be |               |         |
 | | spacing          |            | | provided on a uniform energy    |               | 11.a    |
@@ -127,10 +127,8 @@ Translational/Diffusive
 +====================+============+===================================+==============+=========+
 | | Diffusion        | ``c``      | | The translational term can be   |              |         |
 | | constant         |            | | either a free-gas law           | :math:`\geq0`| 13.b    |
-|                    |            |   (``c``:math:`=0.0`)             |              |         |
-|                    |            | | or a                            |              |         |
-|                    |            |   diffusive law ``c``             |              |         |
-|                    |            |   (:math:`>0.0`)                  |              |         |
+|                    |            |   ``c = 0.0``                     |              |         |
+|                    |            | | or a diffusive law ``c > 0.0``  |              |         |
 +--------------------+------------+-----------------------------------+--------------+---------+
 | | Normalization    |            | | Continuous, translational, and  |              |         |
 | | for translational|            | | discrete oscillators all have   | :math:`0     |         |
@@ -151,8 +149,8 @@ Discrete Oscillators
 +====================+============+=========================================+==============+=========+
 | | Number of        | ``nd``     | | The number of oscillators to be       |              |         |
 | | oscillators      |            | | convolved with the existing scattering| :math:`\geq0`| 14      |
-|                    |            | | law. If ``nd``:math:`=0` then cards 15|              |         |
-|                    |            |   and 16                                |              |         |
+|                    |            | | law. If ``nd = 0`` then cards 15 and  |              |         |
+|                    |            |   16                                    |              |         |
 |                    |            | | will not be read                      |              |         |
 +--------------------+------------+-----------------------------------------+--------------+---------+
 | | Oscillator       | ``bdel``   | | Energy locations of the oscillators   |              |         |
@@ -177,27 +175,43 @@ Coherent Elastic
 ==================
 
 
-+--------------------+------------+-----------------------------------------+--------------+---------+
-| Parameter Name     | Symbol     |  Description                            | Restriction  | Card    |
-+====================+============+=========================================+==============+=========+
-| | Number of        | ``nd``     | | The number of oscillators to be       |              |         |
-| | oscillators      |            | | convolved with the existing scattering| :math:`\geq0`| 14      |
-|                    |            | | law. If ``nd``:math:`=0` then cards 15|              |         |
-|                    |            |   and 16                                |              |         |
-|                    |            | | will not be read                      |              |         |
-+--------------------+------------+-----------------------------------------+--------------+---------+
-| | Oscillator       | ``bdel``   | | Energy locations of the oscillators   |              |         |
-| | energies         |            | | are given here, in eV. There must be  | :math:`\geq0`| 15      |
-|                    |            | | ``nd`` values provided                |              |         |
-+--------------------+------------+-----------------------------------------+--------------+---------+
-| | Oscillator       | ``adel``   | | Continuous, translational, and        |              |         |
-| | weights          |            | | discrete oscillators all have         | :math:`\geq0`| 16      |
-|                    |            |   weights                               |              |         |
-|                    |            | | which sum to 1. These are the         |              |         |
-|                    |            | | weights of each oscillator.           |              |         |
-|                    |            | | There must be ``nd`` values           |              |         |
-|                    |            |   given                                 |              |         |
-+--------------------+------------+-----------------------------------------+--------------+---------+
++--------------------+------------+----------------------------------------+--------------+---------+
+| Parameter Name     | Symbol     |  Description                           | Restriction  | Card    |
++====================+============+========================================+==============+=========+
+| | Number principal | ``npr``    | | The number of principal scattering in|              |         |
+| | scattering atoms |            | | the compound. For water, the         | :math:`> 0`  | 5.c     |
+|                    |            |   principal                            |              |         |
+|                    |            | | scatterer is H, so ``npr = 2``       |              |         |
++--------------------+------------+--------+----------------+--------------+--------------+---------+
+| | Coherent elastic | ``iel``    | | LEAPR can process coherent elastic   |              |         |
+| | option           |            | | scattering for selected materials. If| | Integer    | 5.d     |
+|                    |            | | ``iel`` is set to 0, no coherent     | | between    |         |
+|                    |            |   elastic.                             | | 0 and 6    |         |
+|                    |            | | calculation will be performed. Else, |              |         |
+|                    |            | | the following values correspond to   |              |         |
+|                    |            | | the given materials:                 |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            | ``iel`` |  **Material**  |**Structure**|              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    1    |  Graphite      | Hex         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    2    |  Beryllium     | HCP         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    3    | Beryllium oxide| HCP         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    4    | Aluminum       | FCC         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    5    | Lead           | FCC         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            |    6    | Iron           | BCC         |              |         |
+|                    |            +---------+----------------+-------------+              |         |
+|                    |            | **(default value 0)**                  |              |         |
++--------------------+------------+---------+----------------+-------------+--------------+---------+
+| | Maximum  energy  | ``emax``   | | Energy under which Bragg edges will  |              |         |
+|                    |            | | be considered. LEAPR will return the | :math:`> 0`  | N/A     | 
+|                    |            | | Bragg peaks that lie below ``emax``  |              |         |
+|                    |            | | **(default value 5 eV)**             |              |         |
++--------------------+------------+----------------------------------------+--------------+---------+
 
 
 
@@ -211,6 +225,49 @@ Coherent Elastic
 
 Coherent Inelastic
 ===================
+
+
+
+Cold Hyrogen and Deuterium 
+----------------------------
+
++-----------------+-----------+----------------------------------------+--------------+-------+
+| Parameter Name  | Symbol    |  Description                           | Restriction  | Card  |
++=================+===========+========================================+==============+=======+
+| | Cold Hydrogen | ``ncold`` | | If ``ncold = 0``, then no cold       |              |       |
+| | option        |           |   hydrogen                             |              |       |
+|                 |           | | calculation will be performed.       | 0,1,2,3,4    | 5.e   |
+|                 |           |   Otherwise,                           |              |       |
+|                 |           | | the following values will invoke the |              |       |
+|                 |           | | corresponding calculation            |              |       |
+|                 |           +-----------+-------------+--------------+              |       |
+|                 |           | ``ncold`` | **Nuclide** | **Spin**     |              |       |
+|                 |           +-----------+-------------+--------------+              |       |
+|                 |           |    1      | Hydrogen    |  Ortho       |              |       |
+|                 |           +-----------+             +--------------+              |       |
+|                 |           |    2      |             |  Para        |              |       |
+|                 |           +-----------+-------------+--------------+              |       |
+|                 |           |    3      |             |  Ortho       |              |       |
+|                 |           +-----------+ Deuterium   +--------------+              |       |
+|                 |           |    4      |             |  Para        |              |       |
++-----------------+-----------+-----------+-------------+--------------+--------------+-------+
+
+
+
+
+
+
+
+
+Skold Approximation
+---------------------------
+
+
+
+
+
+
+
 
 
 
