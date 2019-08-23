@@ -25,6 +25,8 @@ LEAPR describes incoherent scattering by starting with a continuous (solid-type)
 The continuous calculation will now be discussed, followed by each of the aforementioned features.
 
 
+.. _theory_incoherent_contin: 
+
 Continuous Treatment 
 -------------------------
 
@@ -46,12 +48,21 @@ where :math:`S^{(s)}_{n.sym}` is the non-symmetric scattering law for solids, :m
 
 By Taylor expanding :math:`\gamma(t)`, the above can be simplified to 
 
-.. math:: 
+.. .. math:: 
     S^{(s)}_{n.sym}(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n}{n!} W_n(\beta)
+
+.. math:: 
+    S^{(s)}_{n.sym}(\alpha,\beta) = \mathrm{e}^{-\alpha\lambda_s}\sum_{n=0}^\infty \frac{\alpha^n\lambda_s^n}{n!} \mathcal{T}_n(\beta)
+
 
 where
 
+
 .. math:: 
+    \mathcal{T}_1(\beta) = \frac{1}{\lambda_s}P(\beta)~\mathrm{e}^{-\beta/2}\qquad\mbox{and}\qquad \mathcal{T}_n(\beta) = \int_{-\infty}^\infty \mathcal{T}_1(\beta')~\mathcal{T}_{n-1}(\beta-\beta')~d\beta'.
+
+
+.. .. math:: 
     W_1(\beta) = P(\beta)~\mathrm{e}^{-\beta/2}\qquad\mbox{and}\qquad W_n(\beta) = \int_{-\infty}^\infty W_1(\beta')~W_{n-1}(\beta-\beta')~d\beta'.
 
 
@@ -197,7 +208,7 @@ To process the scattering law for a material described by discrete oscillators, 
 
 
 
-Translational and Diffusive Behavior
+Translational Behavior
 --------------------------------------
 Thermal neutron scattering off of liquids can be described by solving a solid-type spectrum that is combined with a diffusive term. A popular diffusive model is the "Effective Width Model", which is defined as 
 

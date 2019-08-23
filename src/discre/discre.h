@@ -11,14 +11,9 @@
 
 
 template <typename Float, typename Range, typename RangeZipped>
-auto discre( const Float& lambda_s, 
-  const Float& twt, const Float& tbeta, Range alpha, Range beta, 
-  const Float& temp, RangeZipped oscEnergiesWeights, Float& t_eff, Range& sab ){
-
-  //for ( auto& a : alpha ){ a *= scaling; }
-  //for ( auto& b : beta  ){ b *= sc;      }
-
-
+auto discre( const Float& lambda_s, const Float& twt, const Float& tbeta, 
+  Range alpha, Range beta, const Float& temp, RangeZipped oscEnergiesWeights, 
+  Float& t_eff, Range& sab ){
 
   int maxdd = 500;
 
@@ -28,6 +23,8 @@ auto discre( const Float& lambda_s,
 
   prepareParams(oscEnergiesWeights, tev, oscBetas, ar, t_eff_consts,
     debyeWaller, exb, beta );
+
+
 
   /* --> ar = [ weight / ( sinh( 0.5 * energy / tev ) * energy / tev ) ]
    *            This ends up being argument for bessel function in Eq. 537
@@ -119,9 +116,9 @@ auto discre( const Float& lambda_s,
     }
   }
   double tsave = 0.0;
-  for ( size_t n = 0; n < t_eff_consts.size(); ++n){
-    tsave += t_eff_consts[n]/kb;
-  }
+  for ( Float& t_eff_const : t_eff_consts ){ tsave += t_eff_const; }
+  tsave /= kb;
+
 
   t_eff = (tbeta+twt)*t_eff + tsave;
 }
