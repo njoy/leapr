@@ -66,16 +66,24 @@ The discrete oscillator treatment in ``discre`` begins by calling ``prepareParam
 
 Coherent Scattering (Elastic)
 ==============================================
+The ``coher`` function handles coherent elastic scattering processing for ``leapr``. It is prepared to handle graphite, beryllium, beryllium oxide, aluminum, lead, and iron. The lattice constants, masses, and bound coherent cross sections for each of these materials are hard coded into the ``coher`` function. Depending on the crystalline structure (hexagonal/hexagonal close-packed, FCC, or BCC), the lattice factors are computed using ``hexLatticeFactors``, ``fccLatticeFactors``, or ``bccLatticeFactors``. Once these lattice factors are computed, they are sorted and duplicate Bragg edges are combined. In the output vector from ``coher``, the Bragg edge locations and their weights alternate.
 
 
 Coherent Scattering (Inelastic) Approximations
 ================================================
 
-Skold and Vineyard
+Skold 
 ------------------------
+The purpose of the ``skold`` approximation is to add in the effect of intermolecular coherence. It approximates the coherent scattering law, and then uses the ``cfrac`` input to weight the coherent and incoherent scattering laws, and returns the weighted combination as the final scattering law.j 
+
+``skold`` begins by calculating the wave numbers for all :math:`\alpha` values, which are in units of inverse Angstroms. Then it loops through all :math:`\alpha` and :math:`\beta` values, approximating the coherent scattering. Then the coherent and incoherent pieces are weighted using ``cfrac`` and written to the scattering law, which is then output back to ``leapr``.
 
 
 Cold Hydrogen and Deuterium 
 -------------------------------
+The cold hydrogen and deuterium calculations are run through the ``coldh`` function. In dealing with these cold materials, the effects of spin-correlation become non-negligible. Both coherent and incoherent scattering is represented in this module. 
 
+First, atomic masses and scattering lengths (both coherent and incoherent) are defined. Note that all of these values vary depending on whether ortho/para hydrogen/deuterium is requested. Then ``coldh`` loops through :math:`\alpha` values, where even and odd :math:`A` and :math:`B` coefficients are computed from the scattering lenghts. 
+
+The :math:`\beta` loop is complicated by the fact that it is necessary to keep both the :math:`-\beta` and :math:`+\beta` sides of the scattering function. This is due to the fact that detailed balance does not hold for para or ortho phases treated separatedly. The :math:`-\beta` terms go into ``sab1`` and the :math:`+\beta` terms go into ``sab2``. 
 

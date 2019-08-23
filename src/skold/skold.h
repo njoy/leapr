@@ -48,22 +48,24 @@ auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta,
    */
 
   int a2;
-  Float sk, ap, waven;
+  Float sk, ap;
   Range scoh( alpha.size() );
   Range kappa2Grid = ranges::view::iota(0,int(skappa.size()));
   Range kappaGrid = kappa2Grid 
                   | ranges::view::transform([delta=dka](auto& x){return delta*x;});
+
+  // wave number [inverse angstroms]
   Float tempJoules = tev*ev;
+  Float wavenVariables = 1.0e-10 * sqrt(2*awr*massNeutron*tempJoules) / hbar;
+  Range waven = alpha | ranges::view::transform([wavenVariables](Float a){
+                           return wavenVariables*sqrt(a);});
+
   // apply the skold approximation
-  //  std::cout << sab[7] << "   " << sab[8] << "   " << sab[9] << std::endl;
   for ( size_t b = 0; b < beta.size(); ++b ){    
     for ( size_t a = 0; a < alpha.size(); ++a ){
 
-      // wave number [inverse angstroms]
-      waven = 1.0e-10 * sqrt(2*awr*massNeutron*tempJoules*alpha[a])/hbar;
-
       // Interpolate to find the waven value in the skappa input 
-      sk = interpolate( skappa, waven, kappaGrid, 1.0 );
+      sk = interpolate( skappa, waven[a], kappaGrid, 1.0 );
       ap = alpha[a] / sk;
       for ( a2 = 0; a2 < int(alpha.size()); a2++ ){
         if (ap < alpha[a2]){ break; }
@@ -75,8 +77,6 @@ auto skold( Float cfrac, Float tev,const Range& alpha, const Range& beta,
       scoh[a] = terp1( alpha[a2-1], sab[b+(a2-1)*beta.size()], alpha[a2], 
              sab[b+a2*beta.size()], ap, 5 ) * sk;
     } // alpha loop
-   // std::cout << sab[7] << "   " << sab[8] << "   " << sab[9] << std::endl;
-   // return;
 
     // Amend the existing scattering law by combining a piece of it with a 
     // piece of the coherent scattering interactions. 

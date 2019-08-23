@@ -1,4 +1,3 @@
-#include <iostream> 
 #include "contin/contin.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
@@ -71,12 +70,15 @@ auto leaprTempLoop( int nphon, Float awr, int iel, int npr, int ncold, int lat, 
     effectiveTemps[itemp] = effectiveTemp;
 
   }
-
-
   return std::make_tuple(sab,effectiveTemps,lambdaVals,braggOutput);
-
-
 }
+
+
+
+
+
+
+
 
 template<typename Range, typename Float, typename RangeZipped>
 auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int lat, Range alpha, Range beta, Range temps, Float delta, Range rho, Float transWgt, Float diffusion_const, Float continWgt, RangeZipped oscEnergiesWgts, Float dka, Range kappaVals, Float cfrac, std::tuple<int,int,Range> secondaryScatterInput ){
@@ -88,16 +90,15 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
   Range sab2, effectiveTemps2, lambdaVals2;
   std::variant<Range,bool> braggOutput2;
 
-  //----------------Principal scatterer (isecs = 0)----------------------------
-  Float arat = 1.0;
+  //-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+  //-/-/-/-/-/-/-/-/-Principal scatterer (isecs = 0)-/-/-/-/-/-/-/-/-/-/-/-/-/-
+  //-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
   auto out1 = leaprTempLoop( nphon, awr, iel, npr, ncold, lat, alpha, beta, 
     temps, delta, rho, transWgt, diffusion_const, continWgt, oscEnergiesWgts, 
-    dka, kappaVals, cfrac, arat );
+    dka, kappaVals, cfrac, 1.0 );
 
-  sab             = std::get<0>(out1);
-  effectiveTemps  = std::get<1>(out1);
-  lambdaVals      = std::get<2>(out1);
-  braggOutput     = std::get<3>(out1);
+  sab             = std::get<0>(out1); effectiveTemps  = std::get<1>(out1);
+  lambdaVals      = std::get<2>(out1); braggOutput     = std::get<3>(out1);
 
   // if number of secondary scatterers is 0 or user wants free gas or diffusion 
   // for the secondary scatterer
@@ -108,18 +109,17 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
                            sab2,effectiveTemps2,lambdaVals2,braggOutput2);
   }
 
-
-  //----------------Secondary scatterer (isecs = 1)----------------------------
-  arat = aws/awr;
+  //-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+  //-/-/-/-/-/-/-/-/-Secondary scatterer (isecs = 1)-/-/-/-/-/-/-/-/-/-/-/-/-/-
+  //-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+  
   Range secondaryRho = std::get<2>(secondaryScatterInput);
   auto out2 = leaprTempLoop( nphon, awr, iel, npr, ncold, lat, alpha, beta, 
     temps, delta, secondaryRho, transWgt, diffusion_const, continWgt, 
-    oscEnergiesWgts, dka, kappaVals, cfrac, arat );
+    oscEnergiesWgts, dka, kappaVals, cfrac, aws/awr );
 
-  sab2            = std::get<0>(out2);
-  effectiveTemps2 = std::get<1>(out2);
-  lambdaVals2     = std::get<2>(out2);
-  braggOutput2    = std::get<3>(out2);
+  sab2            = std::get<0>(out2); effectiveTemps2 = std::get<1>(out2);
+  lambdaVals2     = std::get<2>(out2); braggOutput2    = std::get<3>(out2);
 
   return std::make_tuple(sab, effectiveTemps, lambdaVals, braggOutput,
                          sab2,effectiveTemps2,lambdaVals2,braggOutput2);

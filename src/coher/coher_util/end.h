@@ -41,8 +41,6 @@ auto end( std::vector<double>& b, int& k, double econ,
   }
 
   nbe = j;
-  // only invoke this for iel = 2, don't forget you're debugging weird 
-  // stuff in formf right now
   return nbe;
 }
 

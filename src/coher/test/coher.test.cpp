@@ -522,35 +522,6 @@ TEST_CASE( "coher" ){
 
 
 
-    /*
-
-  GIVEN( "nonsense is the requested material" ){
-    iel = 7; npr = 1;
-    coher( iel, npr, b, emax );
-
-    iel = 2; npr = 1;
-    std::vector<double> b_with_2 ( 60000, 0.0 );
-    coher( iel, npr, b_with_2, emax );
-    for ( size_t i = 1; i < b.size(); i += 2){
-      if ( std::abs(0.5*b[i] - b_with_2[i]) > 1e-5 ){ 
-        std::cout << i << "   " << b[i] << "    " << b_with_2[i] << std::endl;
-        break;
-      }
-    }
-    std::cout << std::endl;
-  } // GIVEN
-    */
-    /*
-    //for (size_t i = 1; i < 16; i += 2 ){ std::cout << 0.5*b[i] << "   "; }
-    std::cout << b[0] << "    " << b[1] << "    " << b[2] << std::endl;
-    std::cout << b[3] << "    " << b[4] << "    " << b[5] << std::endl;
-    std::cout << b[6] << "    " << b[7] << "    " << b[8] << std::endl;
-
-  */
-
-
-
-
 
 
 
