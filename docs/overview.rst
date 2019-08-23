@@ -96,7 +96,7 @@ Once obtained, the scattering law can be used to calculate the double differenti
 .. math::
   \frac{d^2\sigma}{dE'~d\Omega }=\frac{\sigma_b}{2k_bT}\sqrt{\frac{E'}{E}}S(\alpha,\beta)
 
-[IS THIS IN THE INCOHERENT APPROXIMATION I THINK SO BUT I"M NOT SURE CHECK YOUR BOOK]
+.. [IS THIS IN THE INCOHERENT APPROXIMATION I THINK SO BUT I"M NOT SURE CHECK YOUR BOOK]
 
 Thus, the goal of LEAPR is to calculate this scattering law for some user-provided :math:`\alpha,\beta` grid. Doing so requires many approximation that will be described in the coming sections. Incoherent scattering is significantly easier to describe, and LEAPR calculates this contribution to the scattering law by use of a user-provided vibrational frequency spectrum (sometimes known as frequency distribution, phonon distribution, phonon density of states, etc.). Cohernt scattering is significantly more difficult to describe, and so LEAPR's ability to calculate coherent scattering contributions is much more limited. Coherent elastic scattering capabilities are available for certain materials, and coherent inelastic scattering can be approximated if additional material data (namely, the static structure factor) is provided.
 

@@ -4,7 +4,7 @@
 
 template <typename Range, typename Float>
 void sbfill(Range& sb, int nbt, const Float& delta, const Float& be, 
-  Range& s, const Range& betan, int ndmax){
+  Range& s, const Range& beta, int ndmax){
 
   Float bmin = -be - (nbt-1) * delta;
   Float bmax = -be + (nbt-1) * delta + delta * 0.01;
@@ -12,7 +12,7 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
   if ( 1 + (bmax-bmin) / delta > ndmax){ throw std::exception(); }
   
   int i = 0;
-  size_t j = betan.size()-1;
+  size_t j = beta.size()-1;
   Float current, toLeft, bet = bmin;
   bool foundRange = false, indexInRange = false; 
   
@@ -21,15 +21,15 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
 
     foundRange = false;
     while (not foundRange){
-      if ( b > betan[j] ){   
-        if ( j + 1 == betan.size() ){ 
-          indexInRange = b < 1.00001 * betan[j] ? true : false;
+      if ( b > beta[j] ){   
+        if ( j + 1 == beta.size() ){ 
+          indexInRange = b < 1.00001 * beta[j] ? true : false;
           foundRange = true;
         }
         else { j = j + 1; } 
       } // desired value is to the right
       else {              
-        if ( b < betan[j-1] and j > 1 ){
+        if ( b < beta[j-1] and j > 1 ){
           j = j - 1;
         }
         else {
@@ -46,7 +46,7 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
       current = s[j]   <= 0 ? -225 : log( s[j]   );
       toLeft  = s[j-1] <= 0 ? -225 : log( s[j-1] );
 
-      sb[i] = current + (b-betan[j])*(toLeft-current)/(betan[j-1]-betan[j]);
+      sb[i] = current + (b-beta[j])*(toLeft-current)/(beta[j-1]-beta[j]);
 
       if (bet > 0) { sb[i] = sb[i] - bet; }
 

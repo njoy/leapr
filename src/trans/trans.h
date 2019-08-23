@@ -13,7 +13,7 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
   int ndmax = beta.size() > 1e6 ? beta.size() : 1e6;
   Range sabTrans(ndmax), ap(ndmax), sb(ndmax,0.0);
 
-  Float nsd, ded, st, delta;
+  Float nsd, ded, st, delta, s, f;
   for ( size_t a = 0; a < alpha.size(); ++a ){
     ded = diffusion == 0 ? 
       0.2 * sqrt( transWeight * alpha[a] ) :
@@ -32,10 +32,10 @@ auto trans( Range alpha, Range beta, const Float& transWeight, Float deltaBeta,
     }
     for ( size_t b = 0; b < beta.size(); ++b ){
       sbfill( sb, nsd, delta, beta[b], ap, beta, ndmax );
-      Float s = 0;
+      s = 0;
       for ( int i = 0; i < nsd; ++i ){
-        Float f = 2*(i%2)+2;
-        if ( i == 0 or i == nsd - 1 ){ f = 1; }
+
+        f = (i == 0 or i == nsd - 1) ? 1 : 2*(i%2)+2;
                   
         s += f * sabTrans[i] * sb[nsd+i-1] + 
              f * sabTrans[i] * sb[nsd-i-1] * exp(-i*delta);

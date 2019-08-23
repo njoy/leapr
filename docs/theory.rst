@@ -34,15 +34,15 @@ To calculate the incoherent contribution to the scattering law, the following eq
 
 .. math::
     S^{(s)}_{n.sym}(\alpha, \beta)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t
-   :label: continuousSAB
+..   :label: continuousSAB
 
 .. math::
     \gamma(t)=\alpha\lambda_s -\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'
-   :label: gammaDefinition
+..    :label: gammaDefinition
 
 .. math:: 
   P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)},
-  :label: PDefinition
+..  :label: PDefinition
 
 where :math:`S^{(s)}_{n.sym}` is the non-symmetric scattering law for solids, :math:`\rho(\beta)` is the phonon frequency distribution, and :math:`\lambda_s` is the Debye-Waller coefficient. For a introductory discussion on the phonon frequency spectrum and the Debye-Waller coefficient, please see [SECTION]. 
 
@@ -145,6 +145,45 @@ where
 
 
 
+
+
+
+Translational Behavior
+--------------------------------------
+Thermal neutron scattering off of liquids can be described by solving a solid-type spectrum that is combined with a diffusive term. A popular diffusive model is the "Effective Width Model", which is defined as 
+
+.. math:: 
+  S_{n.sym}^{(t)}(\alpha,\beta) = \frac{2c\omega_t\alpha}{\pi}~\mathrm{exp}\left({2c^2\omega_t\alpha-\beta/2}\right)\sqrt{\frac{c^2+0.25}{\beta^2+4c^2\omega_t^2\alpha^2}}\mathrm{K}_1\left[\sqrt{c^2+0.25}\sqrt{\beta^2+4c^2\omega_t^2\alpha^2}\right]
+
+with a corresponding frequency spectrum
+
+.. math::
+  \rho(\beta)=\omega_t\frac{4c}{\pi\beta}\sqrt{c^2+0.25}~\sinh(\beta/2)~\mbox{K}_1\left[\sqrt{c^2+0.25}~\beta\right]
+
+where :math:`K_n(x)` is the modified Bessel function of the second kind with order :math:`n`.
+
+
+An alternative to the effective width model is the free gas model, which is defined as 
+
+.. math:: 
+  S^{(f)}_{n.sym}(\alpha,\beta) = \frac{1}{\sqrt{4\pi\omega_t\alpha}}~\mathrm{exp}\left[-\frac{(\omega_t\alpha+\beta)^2}{4\omega_t\alpha}\right]
+
+
+So to model a diffusive material, the solid-type solution obtained from the vibrational spectrum is convolved with some appropriate translative model (i.e. effective width model or free gas model). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Discrete Oscillators
 -------------------------
 The blue region in the below figure shows the vibrational frequency spectrum for hydrogen bound in water [inspired by [CITE DAMIAN]]. Note the two prominent peaks near 0.20 eV and 0.42 eV. If a user wanted to process scattering data for this material, they could provide this full spectrum to LEAPR and have it run the full continuous calculation.
@@ -206,30 +245,6 @@ To process the scattering law for a material described by discrete oscillators, 
 
 
 
-
-
-Translational Behavior
---------------------------------------
-Thermal neutron scattering off of liquids can be described by solving a solid-type spectrum that is combined with a diffusive term. A popular diffusive model is the "Effective Width Model", which is defined as 
-
-.. math:: 
-  S_{n.sym}^{(t)}(\alpha,\beta) = \frac{2c\omega_t\alpha}{\pi}~\mathrm{exp}\left({2c^2\omega_t\alpha-\beta/2}\right)\sqrt{\frac{c^2+0.25}{\beta^2+4c^2\omega_t^2\alpha^2}}\mathrm{K}_1\left[\sqrt{c^2+0.25}\sqrt{\beta^2+4c^2\omega_t^2\alpha^2}\right]
-
-with a corresponding frequency spectrum
-
-.. math::
-  \rho(\beta)=\omega_t\frac{4c}{\pi\beta}\sqrt{c^2+0.25}~\sinh(\beta/2)~\mbox{K}_1\left[\sqrt{c^2+0.25}~\beta\right]
-
-where :math:`K_n(x)` is the modified Bessel function of the second kind with order :math:`n`.
-
-
-An alternative to the effective width model is the free gas model, which is defined as 
-
-.. math:: 
-  S^{(f)}_{n.sym}(\alpha,\beta) = \frac{1}{\sqrt{4\pi\omega_t\alpha}}~\mathrm{exp}\left[-\frac{(\omega_t\alpha+\beta)^2}{4\omega_t\alpha}\right]
-
-
-So to model a diffusive material, the solid-type solution obtained from the vibrational spectrum is convolved with some appropriate translative model (i.e. effective width model or free gas model). 
 
 
 
@@ -373,7 +388,7 @@ where :math:`M` is the mass of the scatterer. Using these relations, the coheren
 
 Cold Hydrogen and Deuterium 
 -------------------------------
-The continuous treatment equations defined in Eq. :eq:`continuousSAB`- :eq:`PDefinition` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
+The continuous treatment equations introduced in :ref:`theory_incoherent_contin` were stated assuming that spins are randomly distributed. This approximation is valid for most materials, but breaks down when describing liquid hydrogen and deuterium. To correct this error, quantum mechanical treatment is required to account for spin-spin correlations for atoms in the same molecule/structure.
 
 For the remainder of this discussion, "hydrogen" will refer to the element, i.e. both :math:`^1\mathrm{H}` and :math:`^2\mathrm{D}`. 
 
@@ -497,10 +512,25 @@ Special Cases and Misc. Functions
 
 Short-collision time approximation 
 ------------------------------------
-When calculating the contribution of incoherent scattering via use of the *phonon expansion*, values corresponding to significant change in momentum (i.e. large :math:`\alpha` values) can become costly to calculate. To avoid prohibitively costly calculations, LEAPR employs the **short-collision time approximation (SCT)** to describe scattering in a solid. 
+When calculating the contribution of incoherent scattering via use of the *phonon expansion*, values corresponding to significant change in momentum (i.e. large :math:`\alpha` values) can become costly to calculate. To avoid prohibitively costly calculations, LEAPR employs the **short-collision time approximation (SCT)** to describe scattering in a solid for these conditions of large momentum transfer. The SCT approximation is defined as 
 
-The SCT approximation is found to work "well for large incident neutron energies when the duration of a collision is short compared with the natural periods of atomic motion" [https://digital.library.unt.edu/ark:/67531/metadc1089525/m2/1/high_res_d/5508404.pdf] [THE SHORT COLLISION TIME APPROXIMATION FOR NEUTRON SCATTERING USING DISCRETE FREQUENCY DISTRIBUTION by Ryskamp] 
-"For large incident neutron energies the duration of a collison is short
-compared with the natural periods of atomic motion."
+.. math::
+  S(\alpha,-\beta)=\frac{1}{\sqrt{4\pi\alpha w_s \overline{T}/T}}~\mathrm{exp}\left[-\frac{(\alpha w_s-\beta)^2}{\alpha w_s\overline{T}/T}\right]
+  
+and
+
+.. math::
+  S(\alpha,\beta)=\mathrm{e}^{-\beta}~S(\alpha,\beta)
+
+
+where the effective temperature :math:`\overline{T}` is defined as 
+
+.. math:: 
+  \overline{T}=\frac{T}{2w_s}\int_{-\infty}^\infty\beta^2P(\beta)\mathrm{e}^{-\beta}~d\beta
+
+and :math:`w_s` is the weight for the continuous, solid-type spectrum.
+
+
+.. The SCT approximation is found to work "well for large incident neutron energies when the duration of a collision is short compared with the natural periods of atomic motion" [https://digital.library.unt.edu/ark:/67531/metadc1089525/m2/1/high_res_d/5508404.pdf] [THE SHORT COLLISION TIME APPROXIMATION FOR NEUTRON SCATTERING USING DISCRETE FREQUENCY DISTRIBUTION by Ryskamp]  "For large incident neutron energies the duration of a collison is short compared with the natural periods of atomic motion."
 
 

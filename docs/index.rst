@@ -15,7 +15,6 @@ Welcome to leapr's documentation!
    quickStart
    usersGuide
    codingDetails 
-   misc
 
 
 
