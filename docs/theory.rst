@@ -44,7 +44,8 @@ To calculate the incoherent contribution to the scattering law, the following eq
   P(\beta)=\frac{\rho(\beta)}{2\beta\sinh(\beta/2)},
 ..  :label: PDefinition
 
-where :math:`S^{(s)}_{n.sym}` is the non-symmetric scattering law for solids, :math:`\rho(\beta)` is the phonon frequency distribution, and :math:`\lambda_s` is the Debye-Waller coefficient. For a introductory discussion on the phonon frequency spectrum and the Debye-Waller coefficient, please see [SECTION]. 
+where :math:`S^{(s)}_{n.sym}` is the non-symmetric scattering law for solids, :math:`\rho(\beta)` is the phonon frequency distribution, and :math:`\lambda_s` is the Debye-Waller coefficient. 
+.. For a introductory discussion on the phonon frequency spectrum, please see :ref:`background_phonon_dos`. 
 
 By Taylor expanding :math:`\gamma(t)`, the above can be simplified to 
 
@@ -122,25 +123,27 @@ where
 .. seealso::
   **Want more information?**
 
-  +-------------------+---------------------------------------------+-----------------------------------+
-  | Topic             | Internal resources                          | External resources                |
-  +===================+=============================================+===================================+
-  | | Phonon frequency| | please see [  ]                           |                                   |
-  | | spectrum theory | |                                           |                                   |
-  +-------------------+---------------------------------------------+-----------------------------------+
-  | | Phonon frequency| | please see [  ]                           | | Materials project               |
-  | | spectrum        |                                             | | can create your own             |
-  | | availability    |                                             |                                   |
-  +-------------------+---------------------------------------------+-----------------------------------+
-  | | Derivation of   | | Please see [  ] this will show how we     |                                   |
-  | | Eq. [   ]       | | got to the phonon expansion               |                                   |
-  +-------------------+---------------------------------------------+-----------------------------------+
-  | | Debye-Waller    | | please see [  ]                           |                                   |
-  | | coefficient     | |                                           |                                   |
-  +-------------------+---------------------------------------------+-----------------------------------+
-  | |                 |                                             |                                   |
-  +-------------------+---------------------------------------------+-----------------------------------+
+  +-------------------+-----------------------------------------------------------------------------------+
+  | Topic             | Resources                                                                         |
+  +===================+===================================================================================+
+  | | Phonon frequency| | Please see :ref:`background_phonon_dos`                                         |
+  | | spectrum theory | |                                                                                 |
+  +-------------------+-----------------------------------------------------------------------------------+
+  | | Phonon frequency| | 1. http://materialsproject.com/                                                 |
+  | | spectrum        | | 2. ENDF-B/VIII release available at https://www.nndc.bnl.gov/endf/b8.0/         |
+  | | availability    | |    has a thermal neutron scattering sublibrary, with ENDF outputs and the       |
+  |                   | |    LEAPR inputs with which the ENDF files were generated. In those LEAPR inputs |
+  |                   | |    are phonon distributions.                                                    |
+  +-------------------+-----------------------------------------------------------------------------------+
+  | | Derivation of   | | Please see [  ] this will show how we                                           |
+  | | Eq. [   ]       | | got to the phonon expansion                                                     |
+  +-------------------+-----------------------------------------------------------------------------------+
+  | |                 |                                                                                   |
+  +-------------------+-----------------------------------------------------------------------------------+
 
+..  | | Debye-Waller    | | please see [  ]                                                                 |
+  | | coefficient     | |                                                                                 |
+  +-------------------+-----------------------------------------------------------------------------------+
 
 
 
@@ -183,6 +186,7 @@ So to model a diffusive material, the solid-type solution obtained from the vibr
 
 
 
+.. _theory_incoherent_discre: 
 
 Discrete Oscillators
 -------------------------
