@@ -67,8 +67,10 @@ In fact, when considering the cross section obtained using the above phonon spec
 
 -------------------------------------------------------------------------------
 
+.. _additional_phonon_expansion:
+
 Phonon Expansion Method
----------------------------------
+===========================
 
 As mentioned in :ref:`theory_incoherent_contin`, the scattering law equations that need be solved are 
 
@@ -123,8 +125,10 @@ and
 
 -------------------------------------------------------------------------------
 
+.. _additional_discrete_oscillator:
+
 Discrete Oscillator Method
----------------------------------
+==============================
 
 Recall from :ref:`theory_incoherent_contin` that definition of the non-symmetric scattering law (in the incoherent and Gaussian approximations) is 
 

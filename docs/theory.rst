@@ -135,8 +135,8 @@ where
   |                   | |    LEAPR inputs with which the ENDF files were generated. In those LEAPR inputs |
   |                   | |    are phonon distributions.                                                    |
   +-------------------+-----------------------------------------------------------------------------------+
-  | | Derivation of   | | Please see [  ] this will show how we                                           |
-  | | Eq. [   ]       | | got to the phonon expansion                                                     |
+  | | Derivation of   | | Please see :ref:`additional_phonon_expansion`                                   |
+  | | Phonon Expansion|                                                                                   |
   +-------------------+-----------------------------------------------------------------------------------+
   | |                 |                                                                                   |
   +-------------------+-----------------------------------------------------------------------------------+
@@ -233,19 +233,19 @@ To process the scattering law for a material described by discrete oscillators, 
 .. seealso::
   **Want more information?**
 
-  +-----------------------+---------------------------------------------+-----------------------------------+
-  | Topic                 | Internal resources                          | External resources                |
-  +=======================+=============================================+===================================+
-  | | Equivalence between | | please see [  ]                           |                                   |
-  | | discrete oscillator | |                                           |                                   |
-  | | and continuous      | |                                           |                                   |
-  | | treatment           | |                                           |                                   | 
-  +-----------------------+---------------------------------------------+-----------------------------------+
-  | | Experimental support| | Please see [  ] this will show how we     |                                   |
-  | | for validity of the | | got to the phonon expansion               |                                   |
-  | | discrete oscillator | |                                           |                                   |
-  | | treatment           | |                                           |                                   |
-  +-----------------------+---------------------------------------------+-----------------------------------+
+  +-----------------------+---------------------------------------------------------------------------------+
+  | Topic                 | Resources                                                                       |
+  +=======================+=================================================================================+
+  | | Equivalence between | | Please see :ref:`additional_discrete_oscillator`                              |  
+  | | discrete oscillator | |                                                                               |
+  | | and continuous      | |                                                                               |
+  | | treatment           | |                                                                               | 
+  +-----------------------+---------------------------------------------------------------------------------+
+..  | | Experimental support| | Please see [  ] this will show how we                                         |
+  | | for validity of the | | got to the phonon expansion                                                   |
+  | | discrete oscillator | |                                                                               |
+  | | treatment           | |                                                                               |
+  +-----------------------+---------------------------------------------------------------------------------+
 
 
 

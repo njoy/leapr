@@ -374,10 +374,6 @@
     "src/contin/contin_util/start_util/normalize.h",
     "src/contin/contin_util/start_util/getEffectiveTemp.h",
     "src/contin/contin_util/start_util/getDebyeWaller.h",
-    "src/endout/endout.h",
-    "src/endout/endout_util/tpidio.h",
-    "src/endout/endout_util/contio.h",
-    "src/endout/endout_util/repoz.h",
     "src/discre/discre.h",
     "src/discre/discre_util/prepareParams.h",
     "src/discre/discre_util/addDeltaFuncs.h",
@@ -484,13 +480,6 @@
     ],
     "discre.discre_util.oscLoopFuncs_util": [
       "src/discre/discre_util/oscLoopFuncs_util/test/bfact.test.cpp"
-    ],
-    "endout": [
-      "src/endout/test/endout.test.cpp"
-    ],
-    "endout.endout_util": [
-      "src/endout/endout_util/test/tpidio.test.cpp",
-      "src/endout/endout_util/test/repoz.test.cpp"
     ],
     "generalTools": [
       "src/generalTools/test/interpolate.test.cpp",
