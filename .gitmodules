@@ -1,9 +1,6 @@
 [submodule "dependencies/catch-adapter"]
 	path = dependencies/catch-adapter
 	url = https://github.com/njoy/catch-adapter.git
-[submodule "dependencies/eigen-adapter"]
-	path = dependencies/eigen-adapter
-	url = https://github.com/njoy/eigen-adapter.git
 [submodule "dependencies/range-v3-adapter"]
 	path = dependencies/range-v3-adapter
 	url = https://github.com/njoy/range-v3-adapter

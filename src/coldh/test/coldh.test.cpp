@@ -7,7 +7,6 @@
 #include <range/v3/all.hpp>
 #include "generalTools/testing.h"
 
-//  std::cout << std::setprecision(15) << std::endl;
 TEST_CASE( "coldh" ){
 
   std::vector<double> tempf, alpha, beta, ska, goodSymSab1(25), goodSymSab2(25);
