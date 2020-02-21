@@ -600,7 +600,7 @@
     "src/coldh/coldh_util/betaLoop_util/bt.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h",
-    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/getClebschGordon.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/sjbes.h",
     "src/contin/contin.h",
     "src/contin/contin_util/checkMoments.h",
@@ -626,11 +626,8 @@
     "src/skold/skold.h",
     "src/trans/trans.h",
     "src/trans/trans_util/bessel_K1.h",
-    "src/generalTools/testing.h",
-    "src/generalTools/interpolate.h",
-    "src/generalTools/constants.h",
-    "src/generalTools/trapezoidIntegral.h",
-    "src/generalTools/print.h"
+    "src/trans/trans_util/s_table_generation.h",
+    "src/trans/trans_util/sbfill.h"
   ],
   "ignore pattern": "$^",
   "implementation files": [
@@ -678,7 +675,7 @@
       "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/test/sumh.test.cpp"
     ],
     "coldh.coldh_util.betaLoop_util.jprimeLoop_util.sumh_util": [
-      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/cn.test.cpp",
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/getClebschGordon.test.cpp",
       "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/sjbes.test.cpp"
     ],
     "contin": [

@@ -29,7 +29,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
     int lat = 4;
     double a = 4.04e-8, maxTauSq = 5.79115688E19, massScatterer = 4.4418589E-23;
     std::vector<double> b (60000, 0.0), bVec1(100), bVec2(100), bVec3(100);
-    int imax = fccLatticeFactors( lat, a, maxTauSq, massScatterer, b);
+    int imax = fccLatticeFactors( lat, a, maxTauSq, b);
     
     bVec1 = { 5.776055E19, 2.105253E-9, 5.580134E19, 2.141893E-9, 5.398725E19, 
     2.177581E-9, 5.231829E19, 2.212041E-9, 5.079445E19, 2.244977E-9, 4.941575E19, 
@@ -95,7 +95,7 @@ TEST_CASE( "Function to Compute FCC Lattice Factors" ){
     int lat = 5;
     double a = 4.94e-8, maxTauSq = 5.79115688E19, massScatterer = 3.4373158E-22;
     std::vector<double> b (60000, 0.0), bVec1(100), bVec2(100), bVec3(100);
-    int imax = fccLatticeFactors( lat, a, maxTauSq, massScatterer, b);
+    int imax = fccLatticeFactors( lat, a, maxTauSq, b);
 
     bVec1 = { 4.003880E19, 2.528596E-9, 3.863137E19, 2.574245E-9, 3.732101E19, 
     2.619047E-9, 3.610772E19, 2.662686E-9, 3.499148E19, 2.704823E-9, 3.397231E19, 

@@ -80,7 +80,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
 
   else if ( iel < 6 ){ // compute lattice factors for fcc lattices
     scon/=(16*a*a*a*econ);
-    imax = fccLatticeFactors( iel, a, maxTauSq, massScatterer, b );
+    imax = fccLatticeFactors( iel, a, maxTauSq, b );
   } 
 
   else { // iel == 6  // compute lattice factors for bcc lattices
@@ -89,7 +89,6 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   }
   k = imax + 1;
 
-  // nbe is the number of edges
   int nbe = end( b, k, econ, toler, scon, maxTauSq, imax );
   return std::make_tuple(2*k,2*nbe);
   // first return is the number of nonzero values in b vector

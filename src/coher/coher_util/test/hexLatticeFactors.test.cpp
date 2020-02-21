@@ -6,11 +6,11 @@ TEST_CASE( "tausq" ){
   GIVEN( "inputs" ){
     std::vector<std::tuple<int,int,int,double,double>> inputs
       { {0,0,0,2,4}, {1,0,0,2,4}, {0,1,0,2,4}, {0,0,1,2,4}, {1,1,0,2,4}, 
-	{1,0,1,2,4}, {0,1,1,2,4}, {1,1,1,2,4}, {1,2,3,4,5}, {5,3,6,4,5},
+        {1,0,1,2,4}, {0,1,1,2,4}, {1,1,1,2,4}, {1,2,3,4,5}, {5,3,6,4,5},
         {8,7,9,.1,.2} };
     std::vector<double> correct { 0, 78.956835, 78.956835, 157.91367041, 
-	236.870505, 236.870505, 236.870505, 394.78417604, 2881.924485, 
-	14843.885019, 1306.735642 };
+    236.870505, 236.870505, 236.870505, 394.78417604, 2881.924485, 
+    14843.885019, 1306.735642 };
     
     for ( size_t i = 0; i < inputs.size(); ++i ){
       auto output = tausq(std::get<0>(inputs[i]),std::get<1>(inputs[i]),
@@ -26,12 +26,17 @@ TEST_CASE( "tausq" ){
 TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   std::vector<double> b (60000, 0.0);
   std::vector<double> bVec1(100), bVec2(100);
+  int lat, imax;
+  double a, c;
+  double maxTauSq;
+
   GIVEN( "input material is graphite" ){
-    int lat = 1;
-    double a = 2.4573e-8, c = 6.7e-8;
+    lat = 1;
+    a = 2.4573e-8, c = 6.7e-8;
+
     WHEN( "max energy of 3eV is used" ){
-      double maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       REQUIRE( imax == 376 );
       bVec1 = { 8.794479E15, 0.000000000, 8.794479E15, 0.000000000, 3.517792E16, 
                 2.132676E-8, 3.517792E16, 2.132676E-8, 7.915031E16, 0.000000000, 
@@ -81,8 +86,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
 
     WHEN( "max energy of 5eV is used" ){
-      double maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       REQUIRE( imax == 424 );
       bVec1 = { 8.794479E15, 0.000000000, 8.794479E15, 0.000000000, 3.517792E16, 
                 2.132676E-8, 3.517792E16, 2.132676E-8, 7.915031E16, 0.000000000, 
@@ -132,11 +137,11 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
 
   GIVEN( "input material is beryllium metal" ){
-    int lat = 2;
-    double a = 2.2856e-8, c = 3.5832e-8;
+    lat = 2;
+    a = 2.2856e-8, c = 3.5832e-8;
     WHEN( "max energy of 3eV is used" ){
-      double maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       REQUIRE( imax == 257);
       bVec1 = { 3.074805E16, 0.000000000, 3.074805E16, 0.000000000, 1.229922E17, 
                 5.702840E-9, 1.229922E17, 5.702840E-9, 2.767325E17, 0.000000000, 
@@ -186,8 +191,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
 
 
     WHEN( "max energy of 5eV is used" ){
-      double maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       REQUIRE( imax == 294 );
       bVec1 = {3.074805E16, 0.000000000, 3.074805E16, 0.000000000, 1.229922E17, 
                5.702840E-9, 1.229922E17, 5.702840E-9, 2.767325E17, 0.000000000, 
@@ -236,11 +241,11 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
   } // GIVEN
 
   GIVEN( "input material is beryllium in beryllium oxide" ){
-    int lat = 3;
-    double a = 2.695e-8, c = 4.39e-8;
+    lat = 3;
+    a = 2.695e-8, c = 4.39e-8;
     WHEN( "max energy of 3eV is used" ){
-      double maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 5.79115688E19; // this corresponds with Emax = 3eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       bVec1 = { 2.048475E16, 0.000000000, 2.048475E16, 0.000000000, 8.193901E16, 
                 8.230571E-8, 8.193901E16, 8.230571E-8, 1.843628E17, 0.000000000, 
                 1.843628E17, 0.000000000, 3.277560E17, 1.641922E-9, 3.277560E17, 
@@ -288,8 +293,8 @@ TEST_CASE( "Function to Compute Hex Lattice Factors" ){
     } // WHEN
 
     WHEN( "max energy of 5eV is used" ){
-      double maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
-      int imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
+      maxTauSq = 9.65192813E19; // this corresponds with Emax = 5eV
+      imax = hexLatticeFactors( lat, a, c, maxTauSq, b );
       bVec1 = { 2.048475E16, 0.000000000, 2.048475E16, 0.000000000, 8.193901E16, 
                 8.230571E-8, 8.193901E16, 8.230571E-8, 1.843628E17, 0.000000000, 
                 1.843628E17, 0.000000000, 3.277560E17, 1.641922E-9, 3.277560E17, 

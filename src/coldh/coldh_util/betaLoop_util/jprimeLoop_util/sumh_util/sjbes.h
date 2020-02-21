@@ -2,7 +2,8 @@
 #include <vector>
 
 
-double sjbes( int n, double y ){
+template <typename Float>
+Float sjbes( int n, const Float& y ){
   /* Calculates spherical bessel functions for cold hydrogen or deuterium 
    * calculation. These will be used in Eq. 567 - 568
    * The spherical bessel function is of nth order, evaluated at position y.
@@ -10,7 +11,7 @@ double sjbes( int n, double y ){
    */
 
   int k, l, nm;
-  double w, sj, t1, t2, t3;
+  Float w, sj, t1, t2, t3;
 
   // check for large or negative arguments
   if ( n >= 3.0e4 or y > 3.0e4 or y < 0.0 or n < 0.0 ){
