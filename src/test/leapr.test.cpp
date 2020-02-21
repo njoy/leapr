@@ -206,7 +206,7 @@ TEST_CASE( "leapr" ){
   GIVEN( "test9 (simple H in H2O)" ) {
     WHEN( "continuous, translational, and discrete oscillator options used" ) {
       nphon = 100;
-      awr   = 0.99917;  ncold = 0; 
+      awr   = 0.99917;  iel = 0; ncold = 0; 
       aws   = 15.85316; sps = 3.8883; 
       lat   = 1;
       nss   = 0; b7 = 0;
@@ -251,6 +251,7 @@ TEST_CASE( "leapr" ){
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
       auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
 
+      std::cout << " A " << std::endl;
 
       auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                         rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
@@ -328,6 +329,7 @@ TEST_CASE( "leapr" ){
 
     } // WHEN
   } // GIVEN
+/*
 
   GIVEN( "Beryllium metal" ) {
     WHEN( "continuous and coherent elastic options used" ) {
@@ -690,5 +692,6 @@ TEST_CASE( "leapr" ){
 
     } // WHEN
   } // GIVEN
+  */
 } // TEST CASE
 

@@ -588,38 +588,43 @@
     ]
   },
   "header files": [
-    "src/contin/contin.h",
-    "src/contin/contin_util/convol.h",
-    "src/contin/contin_util/checkMoments.h",
-    "src/contin/contin_util/start.h",
-    "src/contin/contin_util/start_util/normalize.h",
-    "src/contin/contin_util/start_util/getEffectiveTemp.h",
-    "src/contin/contin_util/start_util/getDebyeWaller.h",
-    "src/discre/discre.h",
-    "src/discre/discre_util/prepareParams.h",
-    "src/discre/discre_util/addDeltaFuncs.h",
-    "src/discre/discre_util/exts.h",
-    "src/discre/discre_util/bfill.h",
-    "src/discre/discre_util/sint.h",
-    "src/discre/discre_util/oscLoopFuncs.h",
-    "src/discre/discre_util/oscLoopFuncs_util/bfact.h",
     "src/coher/coher.h",
-    "src/coher/coher_util/fccLatticeFactors.h",
-    "src/coher/coher_util/end.h",
     "src/coher/coher_util/bccLatticeFactors.h",
-    "src/coher/coher_util/hexLatticeFactors.h",
+    "src/coher/coher_util/end.h",
+    "src/coher/coher_util/fccLatticeFactors.h",
     "src/coher/coher_util/formf.h",
+    "src/coher/coher_util/hexLatticeFactors.h",
     "src/coher/coher_util/hexLatticeFactors_util/hexLatticeFactorsHelper.h",
-    "src/skold/skold.h",
     "src/coldh/coldh.h",
     "src/coldh/coldh_util/betaLoop.h",
-    "src/coldh/coldh_util/betaLoop_util/jprimeLoop.h",
     "src/coldh/coldh_util/betaLoop_util/bt.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh.h",
     "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/cn.h",
+    "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/sjbes.h",
+    "src/contin/contin.h",
+    "src/contin/contin_util/checkMoments.h",
+    "src/contin/contin_util/convol.h",
+    "src/contin/contin_util/start.h",
+    "src/contin/contin_util/start_util/getDebyeWaller.h",
+    "src/contin/contin_util/start_util/getEffectiveTemp.h",
+    "src/contin/contin_util/start_util/normalize.h",
+    "src/discre/discre.h",
+    "src/discre/discre_util/addDeltaFuncs.h",
+    "src/discre/discre_util/bfill.h",
+    "src/discre/discre_util/exts.h",
+    "src/discre/discre_util/oscLoopFuncs.h",
+    "src/discre/discre_util/prepareParams.h",
+    "src/discre/discre_util/sint.h",
+    "src/discre/discre_util/oscLoopFuncs_util/bfact.h",
+    "src/generalTools/constants.h",
+    "src/generalTools/interpolate.h",
+    "src/generalTools/print.h",
+    "src/generalTools/swap.h",
+    "src/generalTools/testing.h",
+    "src/generalTools/trapezoidIntegral.h",
+    "src/skold/skold.h",
     "src/trans/trans.h",
-    "src/trans/trans_util/sbfill.h",
-    "src/trans/trans_util/s_table_generation.h",
     "src/trans/trans_util/bessel_K1.h",
     "src/generalTools/testing.h",
     "src/generalTools/interpolate.h",
@@ -650,11 +655,11 @@
       "src/coher/test/coher.test.cpp"
     ],
     "coher.coher_util": [
-      "src/coher/coher_util/test/end.test.cpp",
-      "src/coher/coher_util/test/hexLatticeFactors.test.cpp",
-      "src/coher/coher_util/test/formf.test.cpp",
       "src/coher/coher_util/test/bccLatticeFactors.test.cpp",
-      "src/coher/coher_util/test/fccLatticeFactors.test.cpp"
+      "src/coher/coher_util/test/end.test.cpp",
+      "src/coher/coher_util/test/fccLatticeFactors.test.cpp",
+      "src/coher/coher_util/test/formf.test.cpp",
+      "src/coher/coher_util/test/hexLatticeFactors.test.cpp"
     ],
     "coher.coher_util.hexLatticeFactors_util": [
       "src/coher/coher_util/hexLatticeFactors_util/test/hexLatticeFactorsHelper.test.cpp"
@@ -673,30 +678,31 @@
       "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/test/sumh.test.cpp"
     ],
     "coldh.coldh_util.betaLoop_util.jprimeLoop_util.sumh_util": [
-      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/cn.test.cpp"
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/cn.test.cpp",
+      "src/coldh/coldh_util/betaLoop_util/jprimeLoop_util/sumh_util/test/sjbes.test.cpp"
     ],
     "contin": [
       "src/contin/test/contin.test.cpp"
     ],
     "contin.contin_util": [
+      "src/contin/contin_util/test/checkMoments.test.cpp",
       "src/contin/contin_util/test/convol.test.cpp",
-      "src/contin/contin_util/test/start.test.cpp",
-      "src/contin/contin_util/test/checkMoments.test.cpp"
+      "src/contin/contin_util/test/start.test.cpp"
     ],
     "contin.contin_util.start_util": [
       "src/contin/contin_util/start_util/test/getDebyeWaller.test.cpp",
-      "src/contin/contin_util/start_util/test/normalize.test.cpp",
-      "src/contin/contin_util/start_util/test/getEffectiveTemp.test.cpp"
+      "src/contin/contin_util/start_util/test/getEffectiveTemp.test.cpp",
+      "src/contin/contin_util/start_util/test/normalize.test.cpp"
     ],
     "discre": [
       "src/discre/test/discre.test.cpp"
     ],
     "discre.discre_util": [
-      "src/discre/discre_util/test/exts.test.cpp",
+      "src/discre/discre_util/test/addDeltaFuncs.test.cpp",
       "src/discre/discre_util/test/bfill.test.cpp",
+      "src/discre/discre_util/test/exts.test.cpp",
       "src/discre/discre_util/test/oscLoopFuncs.test.cpp",
       "src/discre/discre_util/test/prepareParams.test.cpp",
-      "src/discre/discre_util/test/addDeltaFuncs.test.cpp",
       "src/discre/discre_util/test/sint.test.cpp"
     ],
     "discre.discre_util.oscLoopFuncs_util": [
@@ -716,9 +722,9 @@
       "src/trans/test/trans.test.cpp"
     ],
     "trans.trans_util": [
-      "src/trans/trans_util/test/sbfill.test.cpp",
+      "src/trans/trans_util/test/bessel_K1.test.cpp",
       "src/trans/trans_util/test/s_table_generation.test.cpp",
-      "src/trans/trans_util/test/bessel_K1.test.cpp"
+      "src/trans/trans_util/test/sbfill.test.cpp"
     ]
   },
   "update": true

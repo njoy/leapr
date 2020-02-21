@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Coding Details &mdash; leapr  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Additional Resources" href="additional.html" />
+    <link rel="prev" title="User’s Guide" href="usersGuide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: red" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> leapr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickStart.html">QuickStart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usersGuide.html">User’s Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Coding Details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#incoherent-scattering-elastic-and-inelastic">Incoherent Scattering (Elastic and Inelastic)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-treatment">Continuous Treatment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#translational-behavior">Translational Behavior</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#discrete-oscillators">Discrete Oscillators</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#coherent-scattering-elastic">Coherent Scattering (Elastic)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coherent-scattering-inelastic-approximations">Coherent Scattering (Inelastic) Approximations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skold">Skold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cold-hydrogen-and-deuterium">Cold Hydrogen and Deuterium</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="additional.html">Additional Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">leapr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Coding Details</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/codingDetails.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="coding-details">
+<h1>Coding Details<a class="headerlink" href="#coding-details" title="Permalink to this headline">¶</a></h1>
+<p>The main <code class="docutils literal notranslate"><span class="pre">leapr</span></code> function consists of a loop over temperatures that is performed for the primary scatterer, and then for a secondary scatterer if one exists. There are not many differences in how the primary and secondary scatterer are processed: they each have their own phonon distribution <code class="docutils literal notranslate"><span class="pre">rho</span></code> and phonon grid spacing <code class="docutils literal notranslate"><span class="pre">delta</span></code>, and the <span class="math notranslate nohighlight">\(\alpha\)</span> grid is scaled differently for the secondary scatterer. For the primary scatterer, the <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> grids are scaled by <span class="math notranslate nohighlight">\(0.0253/\mathrm{k_bT}\)</span> if <code class="docutils literal notranslate"><span class="pre">lat</span> <span class="pre">=</span> <span class="pre">1</span></code>, and are left alone otherwise. For the secondary scatterer, both grids are scaled by <span class="math notranslate nohighlight">\(0.0253/\mathrm{k_bT}\)</span> if <code class="docutils literal notranslate"><span class="pre">lat</span> <span class="pre">=</span> <span class="pre">1</span></code>, but the <span class="math notranslate nohighlight">\(\alpha\)</span> grid is <em>always</em> scaled by the mass ratio of the secondary scatterer to the primary scatterer (regardless of the value of <code class="docutils literal notranslate"><span class="pre">lat</span></code>).</p>
+<div class="section" id="incoherent-scattering-elastic-and-inelastic">
+<h2>Incoherent Scattering (Elastic and Inelastic)<a class="headerlink" href="#incoherent-scattering-elastic-and-inelastic" title="Permalink to this headline">¶</a></h2>
+<p>The incoherent scattering treatment is comprised of three functions (<code class="docutils literal notranslate"><span class="pre">contin</span></code>, <code class="docutils literal notranslate"><span class="pre">trans</span></code>, and <code class="docutils literal notranslate"><span class="pre">discre</span></code>), which calculate the continuous, the translational, and discrete oscillator contributions to the scattering law.</p>
+<p><code class="docutils literal notranslate"><span class="pre">contin</span></code> is called first, and takes basic parameters (most imporantly, the <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> grids and the phonon distribution) and returns the scattering law <span class="math notranslate nohighlight">\(S(\alpha,\beta)\)</span>. If translational behavior is requested, the scattering law and translational-related inputs are given to the <code class="docutils literal notranslate"><span class="pre">trans</span></code> function, where it calculates the translational contribution and convolves it with the scattering law. This process is repeated in <code class="docutils literal notranslate"><span class="pre">discre</span></code>, where the contribution of each oscillator is calculated and convolved with the existing scattering law.</p>
+<div class="section" id="continuous-treatment">
+<h3>Continuous Treatment<a class="headerlink" href="#continuous-treatment" title="Permalink to this headline">¶</a></h3>
+<p>The continuous treatment occurs in the <code class="docutils literal notranslate"><span class="pre">contin</span></code> function, whose main purpose is to perform the phonon expansion calculation that is described in <a class="reference internal" href="theory.html#theory-incoherent-contin"><span class="std std-ref">Theory of Continuous Distribution Calculations</span></a>. <code class="docutils literal notranslate"><span class="pre">contin</span></code> uses the <code class="docutils literal notranslate"><span class="pre">start</span></code> function to obtain the first term in the convolution integral <span class="math notranslate nohighlight">\(\mathcal{T}_1(\beta)\)</span> as well as the Debye-Waller factor <span class="math notranslate nohighlight">\(\lambda_s\)</span> and the effective temperature <span class="math notranslate nohighlight">\(T_{eff}\)</span>. In obtaining these values, <code class="docutils literal notranslate"><span class="pre">start</span></code> normlizes the <span class="math notranslate nohighlight">\(\rho(\beta)\)</span> and <span class="math notranslate nohighlight">\(P(\beta)\)</span> functions. Note that since the phonon distribution is known to behave parabolically <span class="math notranslate nohighlight">\(\big(\rho(\beta)\sim c\beta^2\big)\)</span> for small values of <span class="math notranslate nohighlight">\(\beta\)</span>, the first value of <span class="math notranslate nohighlight">\(P(\beta)\)</span>, denoted as <span class="math notranslate nohighlight">\(P_0\)</span>, is approximated as <span class="math notranslate nohighlight">\(P_0\approx\rho_0\beta_1^{-2}\)</span>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">contin</span></code> then begins the phonon expansion loop, where successive terms <span class="math notranslate nohighlight">\(\mathcal{T}_n(\beta)\)</span> are computed and convolved with the preceeding terms. The convolutions are performed using the <code class="docutils literal notranslate"><span class="pre">convol</span></code> function. Simplicity of <code class="docutils literal notranslate"><span class="pre">convol</span></code> function requires that the <span class="math notranslate nohighlight">\(\mathcal{T}(\beta)\)</span> terms be on an equally spaced <span class="math notranslate nohighlight">\(\beta\)</span> grid, which is why the input phonon distribution <span class="math notranslate nohighlight">\(\rho(\epsilon)\)</span> is requested on an equally spaced grid. Trapezoidal integration is used in <code class="docutils literal notranslate"><span class="pre">convol</span></code>.</p>
+<p>At any one time, only <span class="math notranslate nohighlight">\(\mathcal{T}_1,\mathcal{T}_{last},\)</span> and <span class="math notranslate nohighlight">\(\mathcal{T}_{next}\)</span> need be stored. Note that due to the nature of the convolution integrals that are used to calculate the <span class="math notranslate nohighlight">\(\mathcal{T}_n\)</span> functions, <span class="math notranslate nohighlight">\(\mathcal{T}_{last}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{T}_{next}\)</span> will grow in size with each subsequent step. The size of nonzero values in these vectors is tracked by the <code class="docutils literal notranslate"><span class="pre">nLast</span></code> and <code class="docutils literal notranslate"><span class="pre">nNext</span></code> variables. Note that these <span class="math notranslate nohighlight">\(\mathcal{T}_{last}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{T}_{next}\)</span> arrays contain only the <span class="math notranslate nohighlight">\(-\beta\)</span> part of the non-symmetric <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> functions, since they tend to be more reasonably sized than those in the <span class="math notranslate nohighlight">\(+\beta\)</span> side of the non-symmetric and those in the symmetric <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> functions.</p>
+<p><span class="math notranslate nohighlight">\(\mathcal{T}_1,\mathcal{T}_{last},\)</span></p>
+<div class="math notranslate nohighlight">
+\[S^{(s)}_{n.sym}(\alpha, \beta)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \mathrm{e}^{i \beta t} \mathrm{e}^{-\gamma(t)} d t\]</div>
+<div class="math notranslate nohighlight">
+\[\gamma(t)=\alpha\lambda_s -\alpha \int_{-\infty}^\infty P(\beta')~\mathrm{e}^{-\beta'/2}~\mathrm{e}^{-i\beta' t}~d\beta'\]</div>
+</div>
+<div class="section" id="translational-behavior">
+<h3>Translational Behavior<a class="headerlink" href="#translational-behavior" title="Permalink to this headline">¶</a></h3>
+<p>The translational component is solved for in <code class="docutils literal notranslate"><span class="pre">trans</span></code>, which is prepared to handle either a diffusive law or a free-gas law. Which law gets invoked depends on whether the diffusion coefficient provided is equal to zero. If it is equal to zero, a free gas scattering law is calculated and convolved with the existing <span class="math notranslate nohighlight">\(S(\alpha,\beta)\)</span> that is output from <code class="docutils literal notranslate"><span class="pre">contin</span></code>. Otherwise, the effective width model is solved and convolved with the scattering law.</p>
+<p>The first step done in <code class="docutils literal notranslate"><span class="pre">contin</span></code> is to compute the free gas or diffusive shape on an appropriate <span class="math notranslate nohighlight">\(\beta\)</span> grid, which is done using <code class="docutils literal notranslate"><span class="pre">getFreeGas</span></code> or <code class="docutils literal notranslate"><span class="pre">getDiffusion</span></code>, respectively. Then, <code class="docutils literal notranslate"><span class="pre">sbfill</span></code> is used to remap the crrent scattering law onto that same <span class="math notranslate nohighlight">\(\beta\)</span> grid. The convolution integral is them performed.</p>
+<p>Consideration of translational behavior does not change the Debye-Waller coefficient, but it does change the effective temperature.</p>
+</div>
+<div class="section" id="discrete-oscillators">
+<h3>Discrete Oscillators<a class="headerlink" href="#discrete-oscillators" title="Permalink to this headline">¶</a></h3>
+<p>The discrete oscillator treatment in <code class="docutils literal notranslate"><span class="pre">discre</span></code> begins by calling <code class="docutils literal notranslate"><span class="pre">prepareParams</span></code>, which sets up vectors will be later used as arguments in the discrete oscillator equations.</p>
+<div class="math notranslate nohighlight">
+\[S^{(i)}_{n.sym}(\alpha,\beta)=\mathrm{e}^{-\alpha\lambda_i}\sum_{n=-\infty}^\infty\delta(\beta-n\beta_i)~I_n\left[\frac{\alpha\omega_i}{\beta_i\sinh(\beta_i/2)}\right]~\mathrm{e}^{-n\beta_i/2}\]</div>
+<p><code class="docutils literal notranslate"><span class="pre">discre</span></code> loops through all <span class="math notranslate nohighlight">\(\alpha\)</span> values as well as through all oscillators. Note that the sum has <span class="math notranslate nohighlight">\(n\)</span> go from <span class="math notranslate nohighlight">\(-\infty\rightarrow\infty\)</span>, and both the positive and negative terms are handled in the <code class="docutils literal notranslate"><span class="pre">posNegTerms</span></code> function.</p>
+</div>
+</div>
+<div class="section" id="coherent-scattering-elastic">
+<h2>Coherent Scattering (Elastic)<a class="headerlink" href="#coherent-scattering-elastic" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">coher</span></code> function handles coherent elastic scattering processing for <code class="docutils literal notranslate"><span class="pre">leapr</span></code>. It is prepared to handle graphite, beryllium, beryllium oxide, aluminum, lead, and iron. The lattice constants, masses, and bound coherent cross sections for each of these materials are hard coded into the <code class="docutils literal notranslate"><span class="pre">coher</span></code> function. Depending on the crystalline structure (hexagonal/hexagonal close-packed, FCC, or BCC), the lattice factors are computed using <code class="docutils literal notranslate"><span class="pre">hexLatticeFactors</span></code>, <code class="docutils literal notranslate"><span class="pre">fccLatticeFactors</span></code>, or <code class="docutils literal notranslate"><span class="pre">bccLatticeFactors</span></code>. Once these lattice factors are computed, they are sorted and duplicate Bragg edges are combined. In the output vector from <code class="docutils literal notranslate"><span class="pre">coher</span></code>, the Bragg edge locations and their weights alternate.</p>
+</div>
+<div class="section" id="coherent-scattering-inelastic-approximations">
+<h2>Coherent Scattering (Inelastic) Approximations<a class="headerlink" href="#coherent-scattering-inelastic-approximations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="skold">
+<h3>Skold<a class="headerlink" href="#skold" title="Permalink to this headline">¶</a></h3>
+<p>The purpose of the <code class="docutils literal notranslate"><span class="pre">skold</span></code> approximation is to add in the effect of intermolecular coherence. It approximates the coherent scattering law, and then uses the <code class="docutils literal notranslate"><span class="pre">cfrac</span></code> input to weight the coherent and incoherent scattering laws, and returns the weighted combination as the final scattering law.j</p>
+<p><code class="docutils literal notranslate"><span class="pre">skold</span></code> begins by calculating the wave numbers for all <span class="math notranslate nohighlight">\(\alpha\)</span> values, which are in units of inverse Angstroms. Then it loops through all <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> values, approximating the coherent scattering. Then the coherent and incoherent pieces are weighted using <code class="docutils literal notranslate"><span class="pre">cfrac</span></code> and written to the scattering law, which is then output back to <code class="docutils literal notranslate"><span class="pre">leapr</span></code>.</p>
+</div>
+<div class="section" id="cold-hydrogen-and-deuterium">
+<h3>Cold Hydrogen and Deuterium<a class="headerlink" href="#cold-hydrogen-and-deuterium" title="Permalink to this headline">¶</a></h3>
+<p>The cold hydrogen and deuterium calculations are run through the <code class="docutils literal notranslate"><span class="pre">coldh</span></code> function. In dealing with these cold materials, the effects of spin-correlation become non-negligible. Both coherent and incoherent scattering is represented in this module.</p>
+<p>First, atomic masses and scattering lengths (both coherent and incoherent) are defined. Note that all of these values vary depending on whether ortho/para hydrogen/deuterium is requested. Then <code class="docutils literal notranslate"><span class="pre">coldh</span></code> loops through <span class="math notranslate nohighlight">\(\alpha\)</span> values, where even and odd <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> coefficients are computed from the scattering lenghts.</p>
+<p>The <span class="math notranslate nohighlight">\(\beta\)</span> loop is complicated by the fact that it is necessary to keep both the <span class="math notranslate nohighlight">\(-\beta\)</span> and <span class="math notranslate nohighlight">\(+\beta\)</span> sides of the scattering function. This is due to the fact that detailed balance does not hold for para or ortho phases treated separatedly. The <span class="math notranslate nohighlight">\(-\beta\)</span> terms go into <code class="docutils literal notranslate"><span class="pre">sab1</span></code> and the <span class="math notranslate nohighlight">\(+\beta\)</span> terms go into <code class="docutils literal notranslate"><span class="pre">sab2</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="additional.html" class="btn btn-neutral float-right" title="Additional Resources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="usersGuide.html" class="btn btn-neutral float-left" title="User’s Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright copyright stuff
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
