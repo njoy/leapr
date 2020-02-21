@@ -30,9 +30,8 @@ TEST_CASE( "continuous treatment" ){
     WHEN( "alpha and beta grid is relatively small" ){
       alpha = {0.01, 0.08, 4.00, 6.00, 20, 50};
       beta = {0.0, 0.4, 1.0, 5.0, 9.0, 20};
-//      for ( auto& a : alpha ){ a *= scaling; }
-//      for ( auto& b : beta  ){ b *= sc;      }
-tbeta = 1.0;
+      for ( auto& a : alpha ){ a *= scaling; }
+      for ( auto& b : beta  ){ b *= sc;      }
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
       output = contin( nphon, delta, tbeta, rho, alpha, beta, sab );
@@ -46,12 +45,12 @@ tbeta = 1.0;
         2.6874094E-2, 2.4511956E-2, 3.1123242E-2, 6.6847691E-2, 6.6284139E-2, 
         1.1948925E-2, 1.0067245E-3, 1.2017244E-3, 1.5855351E-3, 6.8388574E-3, 
         1.7465674E-2, 4.3725435E-2};
-//        REQUIRE(ranges::equal(sabCorrect, sab, equal));
-//        REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
-//        REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
+        
+        REQUIRE(ranges::equal(sabCorrect, sab, equal));
+        REQUIRE(lambda_s == Approx(std::get<0>(output)).epsilon(1e-6));
+        REQUIRE(t_bar    == Approx(std::get<1>(output)).epsilon(1e-6));
       } // THEN
     } // WHEN
-    /*
 
   
     WHEN( "alpha and beta grid is larger" ){
@@ -389,7 +388,6 @@ std::vector<double>
         } // THEN
       } // AND WHEN
     } // WHEN
-    */
   } // GIVEN 
 } // TEST CASE 
 

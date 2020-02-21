@@ -617,6 +617,7 @@
     "src/discre/discre_util/prepareParams.h",
     "src/discre/discre_util/sint.h",
     "src/discre/discre_util/oscLoopFuncs_util/bfact.h",
+    "src/endout/endout.h",
     "src/generalTools/constants.h",
     "src/generalTools/interpolate.h",
     "src/generalTools/print.h",
@@ -704,6 +705,9 @@
     ],
     "discre.discre_util.oscLoopFuncs_util": [
       "src/discre/discre_util/oscLoopFuncs_util/test/bfact.test.cpp"
+    ],
+    "endout": [
+      "src/endout/test/endout.test.cpp"
     ],
     "generalTools": [
       "src/generalTools/test/interpolate.test.cpp",
