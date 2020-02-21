@@ -5,18 +5,26 @@
 
 
 TEST_CASE( "finalize the debye-waller coefficient output" ){
-  GIVEN( "mixed moderator" ){
-    int numSecondaryScatterers = 1, secondaryScatterType = 1;
-    std::vector<double> dwpix { 0.27366867, 0.27913484, 0.43494593, 0.86192089, 1.44790731 },
+  GIVEN( "No secondary scatterers considered" ){
+  } // GIVEN
+  GIVEN( "Secondary scatterers considered" ){
+    WHEN( "Secondary scatterers use free gas approximation" ){
+      THEN( "DWP1 is not changed" ){
+        int numSecondaryScatterers = 1, secondaryScatterType = 1;
+        std::vector<double> 
         dwp1 (5,0.0),
-    temps { 296.0, 300.0, 400.0, 600.0, 800.0 },
-    correctOutputDWF {10.73794694, 10.80639075, 12.62883113, 16.68414797, 21.02028737 };
-    
-    double awr = 0.99917, aws = 15.85316; 
-    scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, dwpix, dwp1, temps, awr, aws );
-    REQUIRE( ranges::equal(dwpix,correctOutputDWF,equal) );
+        dwpix { 0.27366867, 0.27913484, 0.43494593, 0.86192089, 1.44790731 },
+        temps { 296.0, 300.0, 400.0, 600.0, 800.0 },
+        correctOutputDWF {10.73794694, 10.80639075, 12.62883113, 16.68414797, 21.02028737 };
+        
+        double awr = 0.99917, aws = 15.85316; 
+        scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
+                                     dwpix, dwp1, temps, awr, aws );
+        REQUIRE( ranges::equal(dwpix,correctOutputDWF,equal) );
 
 
+      } // THEN
+    } // WHEN
   } // GIVEN
 } // TEST CASE
 
@@ -45,6 +53,6 @@ TEST_CASE( "endout" ){
 
   int numSecondaryScatterers = 1, secondaryScatterType = 1;
 
-  endout(sab,awr,aws,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,secondaryScatterVecThing,alphas,betas,dwpix,dwp1);
+  //endout(sab,awr,aws,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,secondaryScatterVecThing,alphas,betas,dwpix,dwp1);
 
 } // TEST CASE
