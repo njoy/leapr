@@ -8,19 +8,47 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
   GIVEN( "No secondary scatterers considered" ){
   } // GIVEN
   GIVEN( "Secondary scatterers considered" ){
+    WHEN( "SCT approximation (BeO test 23)" ){
+
+        int numSecondaryScatterers = 1, secondaryScatterType = 0;
+    double awr = 8.9347799999999999, aws = 15.858000000000001;
+    std::vector<double> 
+
+        temps { 296.0, 400.0, 500.0, 600.0, 700.0, 800.0, 1000.0, 1200.0 },
+        dwpix {0.8818971, 1.4901162, 2.2420109, 3.1591867, 4.2422269, 5.4913985, 8.4886147, 12.151347},
+
+dwp1 {0.493353051, 0.799415685, 1.172030041, 1.623758239, 2.155671110, 2.768306210, 4.236771573, 6.030290129},
+
+correctDWPIX {2.18024395, 2.72608260, 3.28130480, 3.85303452, 4.43480683, 5.02310000, 6.21177434, 7.41006538},
+
+correctDWP1 {2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 4.49435669, 5.50273307, 7.62948484};
+
+        scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
+                                     dwpix, dwp1, temps, awr, aws );
+        REQUIRE( ranges::equal(dwpix,correctDWPIX,equal) );
+        REQUIRE( ranges::equal(dwp1,correctDWP1,equal) );
+
+
+
+
+
+    } // WHEN
     WHEN( "Secondary scatterers use free gas approximation" ){
-      THEN( "DWP1 is not changed" ){
+      THEN( "DWP1 is not changed and DWPIX is scaled by awr" ){
         int numSecondaryScatterers = 1, secondaryScatterType = 1;
         std::vector<double> 
         dwp1 (5,0.0),
         dwpix { 0.27366867, 0.27913484, 0.43494593, 0.86192089, 1.44790731 },
         temps { 296.0, 300.0, 400.0, 600.0, 800.0 },
-        correctOutputDWF {10.73794694, 10.80639075, 12.62883113, 16.68414797, 21.02028737 };
+        correctDWPIX{10.73794694, 10.80639075, 12.62883113, 16.68414797, 21.02028737 },
+        correctDWP1 (5,0.0);
         
         double awr = 0.99917, aws = 15.85316; 
         scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
                                      dwpix, dwp1, temps, awr, aws );
-        REQUIRE( ranges::equal(dwpix,correctOutputDWF,equal) );
+        REQUIRE( ranges::equal(dwpix,correctDWPIX,equal) );
+        REQUIRE( ranges::equal(dwp1,correctDWP1,equal) );
+
 
 
       } // THEN
