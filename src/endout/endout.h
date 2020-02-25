@@ -5,32 +5,38 @@
 
 
 template <typename Range, typename Float> 
-auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, const Float& awr, const Float& aws ){
+auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
+  int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
+  const Float& awr, const Float& aws ){
   // display endf t-effective and debye-waller integral
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
-       dwpix[i]=dwpix[i]/(awr*temps[i]*kb);
+       dwpix[i] /= (awr*temps[i]*kb);
     }
     else {
-       dwpix[i] = dwpix[i]/(aws*temps[i]*kb);
-       dwp1[i]  = dwp1[i]/(awr*temps[i]*kb);
+       dwpix[i] /= (aws*temps[i]*kb);
+       dwp1[i]  /= (awr*temps[i]*kb);
     }
   }
 }
 
 
+template <typename Range>//, typename Float> 
+auto processCoherentElastic( const Range& bragg ){
+    std::cout << bragg[0] << std::endl;
+}
 
 
 template <typename Range, typename Float>
 auto endout( Range& sab, const Float awr, const Float& aws, const Float& spr, 
-  const Float& sps, const Range& temps, int numSecondaryScatterers, int secondaryScatterType, 
-  const Range& secondaryScatterVecThing, const Range& alphas, const Range& betas,
-  Range& dwpix, Range& dwp1){
+  const Float& sps, const Range& temps, int numSecondaryScatterers, 
+  int secondaryScatterType, const Range& secondaryScatterVecThing, 
+  const Range& alphas, const Range& betas, Range& dwpix, Range& dwp1, int iel,
+  const Float& translationalWeight ){
   // compute bound scattering cross sections
   using std::pow;
   Float sb  = spr*pow(((1.0+awr)/awr),2);
   Float sbs = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
-
 
   // for mixed moderators, merge ssm results
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
@@ -45,11 +51,20 @@ auto endout( Range& sab, const Float awr, const Float& aws, const Float& spr,
     }
   }
 
-
   scaleDebyeWallerCoefficients( numSecondaryScatterers, secondaryScatterType, 
                                 dwpix, dwp1, temps, awr, aws );
 
- 
+
+  if (iel == 0 and translationalWeight == 0.0){
+    iel = -1;
+    std::cout << " this has yet to be done! " << std::endl;
+    // Write out the incoherent elastic part
+  }
+  else if (iel > 0){
+    // Write out the coherent elastic part
+    
+  }
+
   return;
   std::cout << sab[0] << std::endl;
 

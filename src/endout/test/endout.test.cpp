@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "endout/endout.h"
 #include "generalTools/testing.h"
+#include "coher/coher.h"
 
 
 TEST_CASE( "finalize the debye-waller coefficient output" ){
@@ -9,27 +10,26 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
   } // GIVEN
   GIVEN( "Secondary scatterers considered" ){
     WHEN( "SCT approximation (BeO test 23)" ){
+        std::cout.precision(15);
 
         int numSecondaryScatterers = 1, secondaryScatterType = 0;
     double awr = 8.9347799999999999, aws = 15.858000000000001;
     std::vector<double> 
 
         temps { 296.0, 400.0, 500.0, 600.0, 700.0, 800.0, 1000.0, 1200.0 },
-        dwpix {0.8818971, 1.4901162, 2.2420109, 3.1591867, 4.2422269, 5.4913985, 8.4886147, 12.151347},
-
-dwp1 {0.493353051, 0.799415685, 1.172030041, 1.623758239, 2.155671110, 2.768306210, 4.236771573, 6.030290129},
-
-correctDWPIX {2.18024395, 2.72608260, 3.28130480, 3.85303452, 4.43480683, 5.02310000, 6.21177434, 7.41006538},
-
-correctDWP1 {2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 4.49435669, 5.50273307, 7.62948484};
+        correctDWPIX {2.18024395, 2.72608260, 3.28130480, 3.85303452, 4.43480683, 
+              5.02310000, 6.21177434, 7.41006538},
+        correctDWP1 {2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 
+              4.49435669, 5.50273307, 6.5268008},
+        dwpix { 0.88189718, 1.49011626, 2.24201096, 3.15918678, 4.24222697, 
+                5.49139855, 8.48861475, 12.1513474 },
+        dwp1  { 0.49335305, 0.79941568, 1.17203004, 1.62375823, 2.15567111, 
+                2.76830621, 4.23677157, 6.03029012 };
 
         scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
                                      dwpix, dwp1, temps, awr, aws );
         REQUIRE( ranges::equal(dwpix,correctDWPIX,equal) );
         REQUIRE( ranges::equal(dwp1,correctDWP1,equal) );
-
-
-
 
 
     } // WHEN
@@ -53,8 +53,29 @@ correctDWP1 {2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 4.49435
 
       } // THEN
     } // WHEN
+    /*
+    */
   } // GIVEN
 } // TEST CASE
+
+
+
+TEST_CASE( "processing coherent elastic scattering data" ){
+  GIVEN( "bragg scattering informatio" ){
+    std::vector<double> bragg (10000,0.0);
+    double maxEnergy = 5.0;
+    int iel = 3, npr = 1;
+    coher(iel,npr,bragg,maxEnergy);
+    //std::cout << bragg[0] << "   " << bragg[1] << "    " << bragg[2] << std::endl;
+    //std::cout << bragg[3] << "   " << bragg[4] << "    " << bragg[5] << std::endl;
+    processCoherentElastic(bragg);
+
+
+  } // GIVEN
+} // TEST CASE
+
+
+
 
 
 
@@ -74,6 +95,10 @@ TEST_CASE( "endout" ){
   temps = { 296.0 };
   dwpix = { 0.27366867553080776 };
   dwp1  = { 0.0 };
+
+
+
+
 
   std::cout.precision(15);
 //std::cout << sab[0+4*betas.size()] << std::endl;
