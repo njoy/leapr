@@ -9,7 +9,6 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, int secondaryScat
   // display endf t-effective and debye-waller integral
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
-        std::cout << "HERE" << std::endl;
        dwpix[i]=dwpix[i]/(awr*temps[i]*kb);
     }
     else {
