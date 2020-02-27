@@ -5,6 +5,7 @@
 
 
 
+
 template <typename Range, typename Float> 
 auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
   int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
@@ -22,75 +23,7 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers,
 }
 
 
-template <typename Range, typename Float> 
-auto processCoherentElastic( const Range& bragg, const Range& dwpix, 
-  const Range& dwp1, int numSecondaryScatterers, int secondaryScatterType,
-  int numEdges, const Float& tol, const Range& temps ){
-  Float w = dwpix[0];
-  if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-    w = 0.5*(dwpix[0]+dwp1[0]);
-  }
 
-  Range scr (2*numEdges+10,0.0);
-  std::vector<Range> totalSCR (temps.size());//,Range(2*numEdges,0.0));
-
-
-  int jmax = 0;
-  Float e;
-  Float sum  = 0.0;
-  Float suml = 0.0;
-  for (int j = 1; j <= numEdges; ++j){
-    e = bragg[2*j-2];
-    sum += exp(-4.0*w*e)*bragg[2*j-1];
-    if ( sum-suml > tol*sum ){
-      jmax = j;
-      suml = sum;
-    }
-  }
-
-  sum = 0;
-  for (size_t i = 0; i < temps.size(); ++i){
-    if ( i == 0 ){
-      Range scr (2*numEdges+10,0.0);
-      w = dwpix[i];
-      if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-        w = 0.5*(dwpix[i]+dwp1[i]);
-      }
-      int j = 0;
-      int jj = 0;
-      while ( j < numEdges ){
-        ++j;
-        e = bragg[2*j-2];
-        if ( j <= jmax ){ jj += 2; }
-        scr[jj-2] = sigfig(e,7,0);
-        scr[jj-1] = sum+exp(-4.0*w*e)*bragg[2*j-1];
-        sum = scr[jj-1];
-        scr[jj-1] = sigfig(scr[jj-1],7,0);
-      }
-      scr.resize(jj);
-      totalSCR[i] = scr;
-    }
-    else {
-      sum = 0.0;
-      Range scr (2*numEdges+10,0.0);
-      int jj = 0;
-      w = dwpix[i];
-      if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-        w = 0.5*(dwpix[i]+dwp1[i]);
-      }
-      for (int j = 1; j <= numEdges; ++j){ 
-        if (j <= jmax){ jj += 1; }
-        e = sigfig(bragg[2*jj-2],7,0);
-        scr[jj-1] = sum+exp(-4.0*w*e)*bragg[2*jj-1];
-        sum = scr[jj-1];
-        scr[jj-1] = sigfig(scr[jj-1],7,0);
-      }
-      scr.resize(jj);
-      totalSCR[i] = scr;
-    } 
-  }  
-  return totalSCR;
-}
 
 
 template <typename Range, typename Float>
@@ -125,20 +58,7 @@ auto endout( Range& sab, const Float awr, const Float& aws, const Float& spr,
     iel = -1;
     std::cout << " this has yet to be done! " << std::endl;
     // Write out the incoherent elastic part
-  }
-  else if (iel > 0){
-    // Write out the coherent elastic part
-    
-  }
-
-  return;
-  std::cout << sab[0] << std::endl;
-
-  /*
-
-
-
-
+    /*    
    !--write incoherent elastic part
    if (iel.lt.0) then
       ndw=ntempr
@@ -155,106 +75,23 @@ auto endout( Range& sab, const Float awr, const Float& aws, const Float& spr,
             scr(2*i+8)=scr(2*i+6)
          endif
       enddo
+      */
+
+  }
+  else if (iel > 0){
+    // Write out the coherent elastic part
+  }
 
 
-   !--write coherent elastic part
-   if (iel.ge.1) then
-      mfh=7
-      mth=2
-      scr(1)=za
-      scr(2)=awr
-      scr(3)=1
-      scr(4)=0
-      scr(5)=0
-      scr(6)=0
-      call contio(0,nout,nprnt,scr(1),nb,nw)
+  // write out the inelastic part
 
-      !--thin out the 1/e part at high energies.
-      sum=0
-      suml=0
-      w=dwpix(1)
-      if (nss.gt.0.and.b7.eq.zero) w=(dwpix(1)+dwp1(1))/2
-      do j=1,nedge
-         e=bragg(1+2*j-2)
-         sum=sum+exp(-4*w*e)*bragg(1+2*j-1)
-         if (sum-suml.gt.tol*sum) then
-            jmax=j
-            suml=sum
-         endif
-      enddo
 
-      !--now output the records for each temperature
-      do i=1,ntempr
-         if (i.eq.1) then
-            scr(1)=tempr(i)
-            scr(2)=0
-            scr(3)=ntempr-1
-            scr(4)=0
-            scr(5)=1
-            scr(6)=jmax
-            scr(7)=jmax
-            scr(8)=1
-            ii=8
-            jj=0
-            j1=0
-            sum=0
-            w=dwpix(i)
-            if (nss.gt.0.and.b7.eq.zero) w=(dwpix(i)+dwp1(i))/2
-            j=0
-            do while (j.lt.nedge)
-               j=j+1
-               e=bragg(1+2*j-2)
-               if (j.le.jmax) jj=jj+2
-               scr(ii+jj-1-j1)=sigfig(e,7,0)
-               scr(ii+jj-j1)=sum+exp(-4*w*e)*bragg(1+2*j-1)
-               sum=scr(ii+jj-j1)
-               scr(ii+jj-j1)=sigfig(scr(ii+jj-j1),7,0)
-               if (j.ge.nedge.or.jj-j1.ge.npage) then
-                  if (ii.ge.8) then
-                     call tab1io(0,nout,nprnt,scr(1),nb,nw)
-                     ii=0
-                     j1=npage
-                     idone=1
-                  else
-                     call moreio(0,nout,nprnt,scr(1),nb,nw)
-                     j1=j1+npage
-                  endif
-               endif
-            enddo
-         else
-            scr(1)=tempr(i)
-            scr(2)=0
-            scr(3)=2
-            scr(4)=0
-            scr(5)=jmax
-            scr(6)=0
-            ii=6
-            jj=0
-            j1=0
-            sum=0
-            w=dwpix(i)
-            if (nss.gt.0.and.b7.eq.zero) w=(dwpix(i)+dwp1(i))/2
-            do j=1,nedge
-               if (j.le.jmax) jj=jj+1
-               e=sigfig(bragg(1+2*jj-2),7,0)
-               scr(ii+jj-j1)=sum+exp(-4*w*e)*bragg(1+2*jj-1)
-               sum=scr(ii+jj-j1)
-               scr(ii+jj-j1)=sigfig(scr(ii+jj-j1),7,0)
-               if (j.ge.nedge.or.jj-j1.ge.npage) then
-                  if (ii.ge.6) then
-                     call listio(0,nout,nprnt,scr(1),nb,nw)
-                     ii=0
-                     j1=npage
-                  else
-                     call moreio(0,nout,nprnt,scr(1),nb,nw)
-                     j1=j1+npage
-                  endif
-               endif
-            enddo
-         endif
-      enddo
-      call asend(nout,nprnt)
-   endif
+  return;
+  std::cout << sab[0] << std::endl;
+
+  /*
+
+
 
    !--write inelastic part
    mfh=7

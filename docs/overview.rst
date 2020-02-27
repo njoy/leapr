@@ -15,9 +15,10 @@ Overview
 
 What is LEAPR?
 =====================
-LEAPR is one of 24 modules that comprise the NJOY nuclear data preaparation code. Two modules (LEAPR and THERMR) handle data corresponding the thermal (low energy) neutron scattering. It was originally written and is currently maintained at Los ALamos National Laboratory. For more information regarding the NJOY code, please visit https://www.njoy21.io/NJOY2016/.
+There are 24 modules that comprise the NJOY nuclear data preaparation code. Two modules (LEAPR and THERMR) handle data corresponding the thermal (low energy) neutron scattering. It was originally written and is currently maintained at Los ALamos National Laboratory. For more information regarding the NJOY code, please visit https://www.njoy21.io/NJOY2016/.
 
-.. LEAPR prepares the **scattering law** :math:`S(\alpha,\beta)`, and THERMR writes the scattering law in a convenient way for use in simulations, etc. The scattering law can be used to calculate the scattering cross sections, where :math:`\alpha` and :math:`\beta` are unitless momentum and energy change, respectively.
+
+Broadly speaking, LEAPR prepares thermal scattering data (such as the **scattering law** :math:`S(\alpha,\beta)`, Bragg peaks, etc.), and THERMR turns this data into cross sections, which it then writes to output ENDF files. While LEAPR and THERMR are most powerful when used together, THERMR can perform a limited range of LEAPR services.
 
 
 
@@ -37,7 +38,7 @@ The probability of a neutron with initial energy and solid angle :math:`(E,\Omeg
 
 .. image:: _images/scatteringBreakdown.jpeg
 
-In elastic scattering, total kinetic energy (i.e. sum of neutron and target kinetic energy) is conserved, which is not the case for inelastic scattering. Inelastic scattering thus requires for some excitation of the target to occur, which accounts for the difference between initial and final kinetic energy. 
+.. In elastic scattering, total kinetic energy (i.e. sum of neutron and target kinetic energy) is conserved, which is not the case for inelastic scattering. Inelastic scattering thus requires for some excitation of the target to occur, which accounts for the difference between initial and final kinetic energy. 
 
 
 Elastic vs. Inelastic 
@@ -47,6 +48,7 @@ Elastic scattering means that the total kinetic energy of the system (neutron pl
 ----------------------------------------------------------------------------
 
 **Does an elastically scattered neutron have the same incoming/outgoing energy?**
+
 If a neutron scatters off of a target of similar size (e.g. a hydrogen nucleus), the neutron can lose nearly all its energy. If the target is significantly more massive than the neutron, however, conservation of momentum prevents the neutron from losing a large amount of its energy. 
 
 When fast / resonance range neutrons scatter off of media, their incoming energy is so much larger than the molecular bonds of the scattering material, which allows the neutron to effectively "see" the target as just a free atom. Thermal neutrons, however, do not have enough incoming energy to allow them to ignore molecular and lattice bonds. They thus cannot scatter off of a free atom, but rather scatter off of an atom that is part of a much larger aggregate system. This can make it harder for the neutron to lose a large fraction of its energy in an elastic scattering event. 
@@ -56,6 +58,7 @@ The incoming and outgoing energies of scattered thermal neutrons are not the sam
 ----------------------------------------------------------------------------
 
 **Isn't inelastic scattering a threshold reaction?**
+
 For high energy neutrons, the excitation associated with an inelastic collision is a *nuclear* excitation, where the target nucleus is brought to some excited state. This requires a significant amount of energy, and thus nuclear inelastic scattering is a *threshold* reaction, as seen below.
 
 .. figure:: _images/U238_xs.png

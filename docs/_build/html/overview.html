@@ -167,7 +167,8 @@
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-is-leapr">
 <h2>What is LEAPR?<a class="headerlink" href="#what-is-leapr" title="Permalink to this headline">¶</a></h2>
-<p>LEAPR is one of 24 modules that comprise the NJOY nuclear data preaparation code. Two modules (LEAPR and THERMR) handle data corresponding the thermal (low energy) neutron scattering. It was originally written and is currently maintained at Los ALamos National Laboratory. For more information regarding the NJOY code, please visit <a class="reference external" href="https://www.njoy21.io/NJOY2016/">https://www.njoy21.io/NJOY2016/</a>.</p>
+<p>There are 24 modules that comprise the NJOY nuclear data preaparation code. Two modules (LEAPR and THERMR) handle data corresponding the thermal (low energy) neutron scattering. It was originally written and is currently maintained at Los ALamos National Laboratory. For more information regarding the NJOY code, please visit <a class="reference external" href="https://www.njoy21.io/NJOY2016/">https://www.njoy21.io/NJOY2016/</a>.</p>
+<p>Broadly speaking, LEAPR prepares thermal scattering data (such as the <strong>scattering law</strong> <span class="math notranslate nohighlight">\(S(\alpha,\beta)\)</span>, Bragg peaks, etc.), and THERMR turns this data into cross sections, which it then writes to output ENDF files. While LEAPR and THERMR are most powerful when used together, THERMR can perform a limited range of LEAPR services.</p>
 </div>
 <div class="section" id="thermal-neutrons">
 <h2>Thermal Neutrons<a class="headerlink" href="#thermal-neutrons" title="Permalink to this headline">¶</a></h2>
@@ -177,18 +178,17 @@
 <span id="overview-types-of-scattering"></span><h2>Types of Scattering<a class="headerlink" href="#types-of-scattering" title="Permalink to this headline">¶</a></h2>
 <p>The probability of a neutron with initial energy and solid angle <span class="math notranslate nohighlight">\((E,\Omega)\)</span> scattering to have some final energy and solid angle <span class="math notranslate nohighlight">\((E',\Omega')\)</span> is described using the double differential scattering cross section <span class="math notranslate nohighlight">\(\sigma(E\rightarrow E', \Omega\rightarrow\Omega')\)</span>. This cross section describes both elastic and inelastic scattering, both of which have a coherent and incoherent contribution.</p>
 <img alt="_images/scatteringBreakdown.jpeg" src="_images/scatteringBreakdown.jpeg" />
-<p>In elastic scattering, total kinetic energy (i.e. sum of neutron and target kinetic energy) is conserved, which is not the case for inelastic scattering. Inelastic scattering thus requires for some excitation of the target to occur, which accounts for the difference between initial and final kinetic energy.</p>
 <div class="section" id="elastic-vs-inelastic">
 <h3>Elastic vs. Inelastic<a class="headerlink" href="#elastic-vs-inelastic" title="Permalink to this headline">¶</a></h3>
 <p>Elastic scattering means that the total kinetic energy of the system (neutron plus target) is the same before and after the scattering collision. This is contrasted with inelastic scattering, where kinetic energy is not conserved. This change in energy is due to some excitation (or de-excitation) occurred.</p>
 <hr class="docutils" />
-<p><strong>Does an elastically scattered neutron have the same incoming/outgoing energy?</strong>
-If a neutron scatters off of a target of similar size (e.g. a hydrogen nucleus), the neutron can lose nearly all its energy. If the target is significantly more massive than the neutron, however, conservation of momentum prevents the neutron from losing a large amount of its energy.</p>
+<p><strong>Does an elastically scattered neutron have the same incoming/outgoing energy?</strong></p>
+<p>If a neutron scatters off of a target of similar size (e.g. a hydrogen nucleus), the neutron can lose nearly all its energy. If the target is significantly more massive than the neutron, however, conservation of momentum prevents the neutron from losing a large amount of its energy.</p>
 <p>When fast / resonance range neutrons scatter off of media, their incoming energy is so much larger than the molecular bonds of the scattering material, which allows the neutron to effectively “see” the target as just a free atom. Thermal neutrons, however, do not have enough incoming energy to allow them to ignore molecular and lattice bonds. They thus cannot scatter off of a free atom, but rather scatter off of an atom that is part of a much larger aggregate system. This can make it harder for the neutron to lose a large fraction of its energy in an elastic scattering event.</p>
 <p>The incoming and outgoing energies of scattered thermal neutrons are not the same, but will have a tendency to be much closer than those of higher energy neutrons.</p>
 <hr class="docutils" />
-<p><strong>Isn’t inelastic scattering a threshold reaction?</strong>
-For high energy neutrons, the excitation associated with an inelastic collision is a <em>nuclear</em> excitation, where the target nucleus is brought to some excited state. This requires a significant amount of energy, and thus nuclear inelastic scattering is a <em>threshold</em> reaction, as seen below.</p>
+<p><strong>Isn’t inelastic scattering a threshold reaction?</strong></p>
+<p>For high energy neutrons, the excitation associated with an inelastic collision is a <em>nuclear</em> excitation, where the target nucleus is brought to some excited state. This requires a significant amount of energy, and thus nuclear inelastic scattering is a <em>threshold</em> reaction, as seen below.</p>
 <div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="_images/U238_xs.png"><img alt="_images/U238_xs.png" src="_images/U238_xs.png" style="width: 60%;" /></a>
 <p class="caption"><span class="caption-text">Elastic and nuclear inelastic scattering cross sections for U-238 (from NNDC). Note that nuclear inelastic scattering is a threshold reaction that does not appreciable contribute until incoming neutrons have an incoming energy of about 0.1 MeV.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
