@@ -1,5 +1,61 @@
 #include <range/v3/all.hpp>
 #include "generalTools/constants.h"
+#include "generalTools/sigfig.h"
+#include <iostream>
+
+
+template <typename Range>
+auto getSAB(const Range& fullSAB, int t, int a, int b, int nbeta){
+  return fullSAB[t][b+a*nbeta];
+}
+
+
+
+
+template <typename Range, typename RangeOfRange >
+auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const Range& alphas, const Range& betas, int isym, int ilog, int lat, size_t b ){
+    std::vector<Range> toWrite (temps.size()); 
+    // This is a vector of vectors where the ith entry of this is a vector of 
+    // SAB (in order of increasing temperature) for the ith temperature
+
+    auto outputBeta = betas[b];
+    for (size_t t = 0; t < temps.size(); ++t){
+      double sc = 1.0;
+      if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
+      Range scr(alphas.size(),0.0);
+      //if ( t == 0 ){
+      if ( isym == 0 or isym == 2){ outputBeta =  betas[b]; }
+      else if ( b < betas.size() ){ outputBeta = -betas[betas.size()-(b+1)+1-1]; }
+      else                        { outputBeta =  betas[betas.size()-(b+1)+1-1]; }
+      double be = outputBeta*sc;
+
+      for ( size_t a = 0; a < alphas.size(); ++a ){
+        if (isym == 0){
+          // No ncold option 
+          // Symmetric scattering law
+          if (ilog == 0){
+            scr[a] = getSAB(fullSAB, t, a, b, betas.size())*exp(-be*0.5);
+            scr[a] = (scr[2*a] < 1e-9) ? sigfig(scr[a],6,0)
+                                       : sigfig(scr[a],7,0);
+          }
+          else {
+            std::cout << "AHHHHH IMPLEMENT THIS" << std::endl;
+          }
+          std::cout << scr[a] << std::endl;
+        } 
+        if (ilog == 0 and scr[a] < -999.0){
+          scr[a] = 0.0;
+        }
+      } 
+      toWrite[t] = scr;
+    }
+  return std::make_tuple(outputBeta,toWrite); 
+}
+
+
+
+
+
 
 
 template <typename Range, typename RangeOfRange>//, typename Float>
@@ -10,27 +66,122 @@ auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRang
   if (isym == 1 or isym == 3){ nbt = 2*betas.size()-1; }
 
   Range outputBetas (nbt,0.0);
-  Range scr(1000,0.0);
   for (size_t b = 0; b < (unsigned) nbt; ++b){
-    for (size_t t = 0; t < temps.size(); ++t){
-      double sc = 1.0;
-      if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
-      if ( t == 0 ){
-        if ( isym == 0 or isym == 2){ outputBetas[1] =  betas[b]; }
-        else if ( b < betas.size() ){ outputBetas[1] = -betas[betas.size()-(b+1)+1-1];  }
-        else                        { outputBetas[1] =  betas[betas.size()-(b+1)+1-1];  }
-        double be = outputBetas[1]*sc;
+    getSABreadyToWrite( fullSAB, temps, alphas, betas, isym, ilog, lat, b );
 
-        for ( size_t a = 0; a < alphas.size(); ++a ){
-          if (isym == 0){
-            if (ilog == 0){
-              scr[2*a] = fullSAB[t][b+a*betas.size()]*exp(-be*0.5);
-            }
-          }
-        }
-      }
-    }
   }
+
+
+
+
+
+
+
+
+          /*
+          else if (isym == 1){
+            // Ncold option 
+            // Symmetric scattering law
+
+            if (i < betas.size()){
+              if (ilog == 0){
+                scr[2*a] = getSAB(fullSAB, t, a, betas.size()-b, betas.size())*exp(be*0.5);
+                if (scr(8+2*j) >= 1e-9) {
+                  scr[2*a] = sigfig(scr[2*a],7,0);
+                }
+                else {
+                  scr(8+2*j)=sigfig(scr(8+2*j),6,0)
+                }
+              }
+              else {
+                scr(8+2*j)=tiny
+                if (ssm(nbeta-i+1,j,nt).gt.zero) then
+                  scr(8+2*j)=log(ssm(nbeta-i+1,j,nt))+be/2
+                  scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                endif
+              endif
+                  else
+                     if (ilog.eq.0) then
+                        scr(8+2*j)=ssp(i-nbeta+1,j,nt)*exp(be/2)
+                        if (scr(8+2*j).ge.small) then
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        else
+                           scr(8+2*j)=sigfig(scr(8+2*j),6,0)
+                        endif
+                     else
+                        scr(8+2*j)=tiny
+                        if (ssp(i-nbeta+1,j,nt).gt.zero) then
+                           scr(8+2*j)=log(ssp(i-nbeta+1,j,nt))+be/2
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        endif
+                     endif
+                  endif
+
+          } 
+          else if (isym == 2){
+            // No ncold option 
+            // Non-symmetric scattering law
+
+          } 
+          else if (isym == 3){
+            // Ncold option 
+            // Non-symmetric scattering law
+
+          } 
+
+
+
+
+
+               else if (isym.eq.2) then
+                  if (ilog.eq.0) then
+                     scr(8+2*j)=ssm(i,j,nt)
+                    if (scr(8+2*j).ge.small) then
+                        scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                     else
+                        scr(8+2*j)=sigfig(scr(8+2*j),6,0)
+                     endif
+                  else
+                     scr(8+2*j)=tiny
+                     if (ssm(i,j,nt).gt.zero) then
+                        scr(8+2*j)=log(ssm(i,j,nt))
+                        scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                     endif
+                  endif
+               else if (isym.eq.3) then
+                  if (i.lt.nbeta) then
+                     if (ilog.eq.0) then
+                        scr(8+2*j)=ssm(nbeta-i+1,j,nt)
+                        if (scr(8+2*j).ge.small) then
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        else
+                           scr(8+2*j)=sigfig(scr(8+2*j),6,0)
+                        endif
+                     else
+                        scr(8+2*j)=tiny
+                        if (ssm(nbeta-i+1,j,nt).gt.zero) then
+                           scr(8+2*j)=log(ssm(nbeta-i+1,j,nt))
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        endif
+                     endif
+                  else
+                     if (ilog.eq.0) then
+                        scr(8+2*j)=ssp(i-nbeta+1,j,nt)
+                        if (scr(8+2*j).ge.small) then
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        else
+                           scr(8+2*j)=sigfig(scr(8+2*j),6,0)
+                        endif
+                     else
+                        scr(8+2*j)=tiny
+                        if (ssp(-nbeta+1,j,nt).gt.zero) then
+                           scr(8+2*j)=log(ssp(i-nbeta+1,j,nt))
+                           scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+                        endif
+                     endif
+                  endif
+
+                  */
 
   
 }
