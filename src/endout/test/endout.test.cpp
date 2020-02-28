@@ -5,8 +5,6 @@
 #include "coher/coher.h"
 
 
-/*
-*/
 TEST_CASE( "finalize the debye-waller coefficient output" ){
   GIVEN( "No secondary scatterers considered" ){
   } // GIVEN

@@ -23,7 +23,6 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
       double sc = 1.0;
       if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
       Range scr(alphas.size(),0.0);
-      //if ( t == 0 ){
       if ( isym == 0 or isym == 2){ outputBeta =  betas[b]; }
       else if ( b < betas.size() ){ outputBeta = -betas[betas.size()-(b+1)+1-1]; }
       else                        { outputBeta =  betas[betas.size()-(b+1)+1-1]; }
@@ -35,14 +34,42 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
           // Symmetric scattering law
           if (ilog == 0){
             scr[a] = getSAB(fullSAB, t, a, b, betas.size())*exp(-be*0.5);
-            scr[a] = (scr[2*a] < 1e-9) ? sigfig(scr[a],6,0)
-                                       : sigfig(scr[a],7,0);
+            scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
+                                     : sigfig(scr[a],7,0);
           }
           else {
-            std::cout << "AHHHHH IMPLEMENT THIS" << std::endl;
+            scr[a] = -999.0;
+            auto sab = getSAB(fullSAB, t, a, b, betas.size());
+            if ( sab > 0 ){
+              scr[a] = log(sab)+be*0.5;
+              scr[a] = sigfig(scr[a],7,0);
+              //std::cout << sab << "    " << log(sab) << std::endl;
+            }
           }
-          std::cout << scr[a] << std::endl;
         } 
+
+        if (isym == 2){
+          if (ilog == 0){
+            scr[a] = getSAB(fullSAB, t, a, b, betas.size());
+            if (scr[a] >= 1e-9){
+              scr[a] = sigfig(scr[a],7,0);
+            } else {
+              scr[a] = sigfig(scr[a],6,0);
+            }
+          }
+          else {
+               //      scr(8+2*j)=tiny
+               //      if (ssm(i,j,nt).gt.zero) then
+               //         scr(8+2*j)=log(ssm(i,j,nt))
+               //         scr(8+2*j)=sigfig(scr(8+2*j),7,0)
+               //      endif
+
+          }
+        }
+
+
+
+
         if (ilog == 0 and scr[a] < -999.0){
           scr[a] = 0.0;
         }
