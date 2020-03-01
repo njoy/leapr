@@ -13,7 +13,7 @@ auto getSAB(const Range& fullSAB, int t, int a, int b, int nbeta){
 
 
 template <typename Range, typename RangeOfRange >
-auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const Range& alphas, const Range& betas, int isym, int ilog, int lat, size_t b ){
+auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const Range& alphas, const Range& betas, int isym, int ilog, int lat, size_t b, const RangeOfRange& fullSAB_2 = {std::vector<double> (0)} ){
     std::vector<Range> toWrite (temps.size()); 
     // This is a vector of vectors where the ith entry of this is a vector of 
     // SAB (in order of increasing temperature) for the ith temperature
@@ -24,8 +24,8 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
       if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
       Range scr(alphas.size(),0.0);
       if ( isym == 0 or isym == 2){ outputBeta =  betas[b]; }
-      else if ( b < betas.size() ){ outputBeta = -betas[betas.size()-(b+1)+1-1]; }
-      else                        { outputBeta =  betas[betas.size()-(b+1)+1-1]; }
+      else if ( b < betas.size() ){ outputBeta = -betas[betas.size()-b-1]; }
+      else                        { outputBeta =  betas[b-betas.size()+1]; }
       double be = outputBeta*sc;
 
       for ( size_t a = 0; a < alphas.size(); ++a ){
@@ -47,6 +47,42 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
           }
         } 
 
+        if (isym == 1){
+          if ( b < betas.size()-1 ){
+            if (ilog == 0){
+              scr[a] = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size())*exp(be*0.5);
+              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
+                                       : sigfig(scr[a],7,0);
+            }
+            else {
+              scr[a] = -999.0;
+              auto sab = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size());
+              //std::cout << sab << std::endl;
+              if ( sab > 0 ){
+                scr[a] = log(sab)+be*0.5;
+                scr[a] = sigfig(scr[a],7,0);
+              }
+            }
+          }
+          else {
+            if (ilog == 0){
+              scr[a] = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size())*exp(be*0.5);
+              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
+                                       : sigfig(scr[a],7,0);
+            }
+            else {
+              scr[a] = -999.0;
+              auto sab = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size());
+              if ( sab > 0 ){
+                scr[a] = log(sab)+be*0.5;
+                scr[a] = sigfig(scr[a],7,0);
+              }
+            }
+          }
+        }
+
+
+
         if (isym == 2){
           if (ilog == 0){
             scr[a] = getSAB(fullSAB, t, a, b, betas.size());
@@ -57,7 +93,7 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
             scr[a] = -999.0;
             auto sab = getSAB(fullSAB, t, a, b, betas.size());
             if ( sab > 0 ){
-              scr[a] = log(sab)+be*0.5;
+              scr[a] = log(sab);//+be*0.5;
               scr[a] = sigfig(scr[a],7,0);
             }
           }
