@@ -4,22 +4,24 @@
 #include <iostream>
 
 
-template <typename Range>
-auto getSAB(const Range& fullSAB, int t, int a, int b, int nbeta){
-  return fullSAB[t][b+a*nbeta];
-}
+//template <typename Range>
+//auto getSAB(const Range& fullSAB, int t, int a, int b, int nbeta){
+//  return fullSAB[t][b+a*nbeta];
+//}
 
 template<typename Range, typename Float>
 auto getlog10SAB( const Range& sab, const Float& be, int a, int b, int nbeta, int expBetaSign ){
-  Float log10SAB = -999.0;
   Float sabVal = sab[b+a*nbeta];
-  if ( sabVal > 0 ){
-    log10SAB = log(sabVal) + expBetaSign * be * 0.5;
-    log10SAB = sigfig(log10SAB,7,0);
-  }
-  return log10SAB;
+  if ( sabVal <= 0.0 ){ return -999.0; }
+  return sigfig(log(sabVal) + expBetaSign * be * 0.5, 7, 0);;
 }
 
+template<typename Range, typename Float>
+auto getSAB( const Range& sab, const Float& be, int a, int b, int nbeta, int expBetaSign ){
+  Float sabVal = sab[b+a*nbeta]*exp(expBetaSign*be*0.5);
+  return (sabVal < 1e-9) ? sigfig(sabVal,6,0)
+                         : sigfig(sabVal,7,0);
+}
 
 
 
@@ -30,130 +32,39 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, const 
     // SAB (in order of increasing temperature) for the ith temperature
 
     auto outputBeta = betas[b];
+    size_t nbeta = betas.size();
     for (size_t t = 0; t < temps.size(); ++t){
+
       double sc = 1.0;
       if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
       Range scr(alphas.size(),0.0);
-      if ( isym == 0 or isym == 2){ outputBeta =  betas[b]; }
-      else if ( b < betas.size() ){ outputBeta = -betas[betas.size()-b-1]; }
-      else                        { outputBeta =  betas[b-betas.size()+1]; }
-      double be = outputBeta*sc;
-
+      if ( isym == 0 or isym == 2){ outputBeta =  betas[b];         }
+      else if ( b < nbeta )       { outputBeta = -betas[nbeta-b-1]; }
+      else                        { outputBeta =  betas[b-nbeta+1]; }
+      auto be = outputBeta*sc;
+      
       for ( size_t a = 0; a < alphas.size(); ++a ){
-        if (isym == 0){
-          // No ncold option 
-          // Symmetric scattering law
-          if (ilog == 0){
-            scr[a] = getSAB(fullSAB, t, a, b, betas.size())*exp(-be*0.5);
-            scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                     : sigfig(scr[a],7,0);
-          }
-          else {
-            //scr[a] = -999.0;
-            //auto sab = getSAB(fullSAB, t, a, b, betas.size());
-            //if ( sab > 0 ){
-            //  scr[a] = log(sab)-be*0.5;
-            //  scr[a] = sigfig(scr[a],7,0);
-           // }
 
-            scr[a] = getlog10SAB( fullSAB[t], be, a, b, betas.size(), -1 );
-          }
+        if (isym == 0 or isym == 2){
+          int expBetaSign = ( isym == 0 ) ? -1 : 0;
+          if (ilog == 0){ scr[a] = getSAB     (fullSAB[t],be,a,b,nbeta,expBetaSign);}
+          else          { scr[a] = getlog10SAB(fullSAB[t],be,a,b,nbeta,expBetaSign);}
         } 
 
-
-
-        if (isym == 1){
-          if ( b < betas.size()-1 ){
-            if (ilog == 0){
-              scr[a] = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size())*exp(be*0.5);
-              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                       : sigfig(scr[a],7,0);
-            }
-            else {
-              scr[a] = -999.0;
-              auto sab = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size());
-              if ( sab > 0 ){
-                scr[a] = log(sab)+be*0.5;
-                scr[a] = sigfig(scr[a],7,0);
-              }
-            }
-          }
-          else {
-            if (ilog == 0){
-              scr[a] = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size())*exp(be*0.5);
-              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                       : sigfig(scr[a],7,0);
-            }
-            else {
-              scr[a] = -999.0;
-              auto sab = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size());
-              if ( sab > 0 ){
-                scr[a] = log(sab)+be*0.5;
-                scr[a] = sigfig(scr[a],7,0);
-              }
-            }
-          }
+        if (isym == 1 or isym == 3){
+          const Range& SAB = (b < nbeta-1) ? fullSAB[t] : fullSAB_2[t];
+          int bIndex = std::abs(int(nbeta-b-1));
+          int expBetaSign = ( isym == 1 ) ? 1 : 0; 
+          if (ilog == 0){ scr[a] = getSAB     (SAB,be,a,bIndex,nbeta,expBetaSign);} 
+          else          { scr[a] = getlog10SAB(SAB,be,a,bIndex,nbeta,expBetaSign);}
         }
 
+        if (ilog == 0 and scr[a] < -999.0){ scr[a] = 0.0; }
 
-
-        if (isym == 2){
-          if (ilog == 0){
-            scr[a] = getSAB(fullSAB, t, a, b, betas.size());
-            scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                     : sigfig(scr[a],7,0);
-          }
-          else {
-            scr[a] = -999.0;
-            auto sab = getSAB(fullSAB, t, a, b, betas.size());
-            if ( sab > 0 ){
-              scr[a] = log(sab);//+be*0.5;
-              scr[a] = sigfig(scr[a],7,0);
-            }
-          }
-        }
-
-
-        if (isym == 3){
-          if ( b < betas.size()-1){
-            if (ilog == 0){
-              scr[a] = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size());
-              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                       : sigfig(scr[a],7,0);
-            } 
-            else {
-              scr[a] = -999.0;
-              auto sab = getSAB(fullSAB, t, a, betas.size()-b-1, betas.size());
-              if ( sab > 0 ){
-                scr[a] = log(sab);
-                scr[a] = sigfig(scr[a],7,0);
-              }
-            }
-          } 
-          else {
-            if (ilog == 0){
-              scr[a] = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size());
-              scr[a] = (scr[a] < 1e-9) ? sigfig(scr[a],6,0)
-                                       : sigfig(scr[a],7,0);
-            } 
-            else {
-              scr[a] = -999.0;
-              auto sab = getSAB(fullSAB_2, t, a, b-betas.size()+1, betas.size());
-              if ( sab > 0 ){
-                scr[a] = log(sab);
-                scr[a] = sigfig(scr[a],7,0);
-              }
-            }
-          }
-        }
-
-
-        if (ilog == 0 and scr[a] < -999.0){
-          scr[a] = 0.0;
-        }
-      } 
+      } // alpha loop
       toWrite[t] = scr;
-    }
+    } // temperature loop
+
   return std::make_tuple(outputBeta,toWrite); 
 }
 
