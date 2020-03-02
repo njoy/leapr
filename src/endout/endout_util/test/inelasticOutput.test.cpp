@@ -327,4 +327,3 @@ TEST_CASE( "processing inelastic scattering data" ){
   } // GIVEN
 } // TEST CASE
 
-        //inelasticOutput(alphas,betas,fullSAB,temps,isym,ilog,lat);
