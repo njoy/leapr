@@ -1,6 +1,7 @@
 #include <range/v3/all.hpp>
 #include "generalTools/constants.h"
 #include "generalTools/sigfig.h"
+#include "ENDFtk.hpp"
 #include <iostream>
 
 template<typename Range, typename Float>
@@ -71,13 +72,26 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
 template <typename Range, typename RangeOfRange>
 auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRange& fullSAB,
   const Range& temps, int isym, int ilog, int lat ){
+  using namespace njoy::ENDFtk;
+
+
+  using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
+  ScatteringLawConstants constants ( 0, 1, 1.9e2, 5.0, {6.15, 3.74}, {8.9, 1.5}, {1,2}, {1} );
+
 
   int nbt = betas.size();
   if (isym == 1 or isym == 3){ nbt = 2*betas.size()-1; }
 
   Range outputBetas (nbt,0.0);
   for (size_t b = 0; b < (unsigned) nbt; ++b){
-    getSABreadyToWrite( fullSAB, temps, alphas, betas, isym, ilog, lat, b );
+    auto out = getSABreadyToWrite( fullSAB, temps, alphas, betas, isym, ilog, lat, b );
+    outputBetas[b] = std::get<0>(out);
+    auto toWrite = std::get<1>(out);
+    for ( auto& vec : toWrite ){
+        std::cout << (vec|ranges::view::all) << std::endl;
+    }
+    std::cout << std::endl;
+    
 
   }
   

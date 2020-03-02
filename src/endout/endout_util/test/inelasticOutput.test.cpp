@@ -327,3 +327,48 @@ TEST_CASE( "processing inelastic scattering data" ){
   } // GIVEN
 } // TEST CASE
 
+
+TEST_CASE( "processing inelastic scattering data ( all betas )" ){
+  GIVEN( "" ){  
+    std::cout.precision(15);
+    int lat = 1;
+
+    std::vector<double>
+      alphas {0.1, 0.2, 0.3},
+      betas  {0.0, 0.2, 0.4, 0.6},
+      temps  {296.0, 400.0, 1200.0};
+    std::vector<std::vector<double>> fullSAB {
+     { 3.80335716E-2, 1.30979776E-2, 7.237890430E-3, 7.39846449E-3, 7.283325728E-2, 
+       2.52793721E-2, 1.40624592E-2, 1.436865581E-2, 0.104609458,   3.659346961E-2, 
+       2.04910576E-2, 2.092936745E-2 },
+     { 6.88877596E-2, 2.32208158E-2, 1.256643491E-2, 1.255765314E-2, 0.1308459204, 
+       4.460619358E-2, 2.436734637E-2, 2.433019342E-2, 0.186412246, 6.426830031E-2, 
+       3.543562590E-2, 3.535462320E-2 },
+     { 0.5744354712, 0.1893883947,  9.98357465889E-2, 9.508460039E-2, 1.011714767, 
+       0.3459625751, 0.1876968818, 0.178217691,  1.3376224712, 0.474214044, 
+       0.264483953, 0.2505332640 } };
+    std::vector<std::vector<double>> correctOut_beta0 (betas.size());
+    std::vector<std::vector<double>> correctOut_beta1 (betas.size());
+    
+    WHEN( "isym = 0. No cold option used and symmetric S(a,b) requested" ){
+      int isym = 0;
+      AND_WHEN( "No log option is used" ){
+        int ilog = 0;
+        inelasticOutput(alphas,betas,fullSAB,temps,isym,ilog,lat);
+      } // AND WHEN
+    } // WHEN
+  } // GIVEN
+} // TEST CASE
+
+
+
+
+
+
+
+
+
+
+
+
+
