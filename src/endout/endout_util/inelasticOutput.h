@@ -67,7 +67,7 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
 template </*typename Float, typename ScatteringLawConstants,*/ typename Range, typename RangeOfRange >
 auto writeToENDF( /*const Float& za, const Float& awr, int lasym, int lat, 
   const ScatteringLawConstants& constants,*/
-  const RangeOfRange& sabFull, const Range alphas, const Range& betas, const Range& temps 
+  const RangeOfRange& fullSAB, const Range alphas, const Range& betas, const Range& temps 
   
   ){
 
@@ -86,51 +86,63 @@ auto writeToENDF( /*const Float& za, const Float& awr, int lasym, int lat,
   ScatteringLawConstants constants( 0, 1.976285e+2, 5.000001e+0,
                                     6.153875e+0, 8.934780e+0, 1 );
 
+  std::vector<Range> alphaVec (betas.size(),alphas);
+
+  int isym = 0, ilog = 0;
+  auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
+  auto toWrite0 = std::get<1>(out0);
+
+  auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1);
+  auto toWrite1 = std::get<1>(out1);
 
   int nalpha = alphas.size();
+  auto temps2  = temps;
+  auto temps3  = temps;
   auto alphas2 = alphas;
   auto alphas3 = alphas;
-  ScatteringFunction chunk1 ( betas[0], 
-                              { nalpha }, 
-                              { 4 },
-                              { 293.6, 400 },
-                              { 4 },
-                              std::move(alphas2),
-                              { { 2.386876e-4, 2.508466e-4, 2.636238e-4 },
-                                { 4.430020e-4, 4.655671e-4, 4.892796e-4 }
-                              } );
+
+  std::vector< long > boundaries = { 3 };
+  std::vector< long > interpolants = { 2 };
+  std::vector< long > li = { 4 };
+
+  auto boundaries0 = boundaries;
+  auto boundaries1 = boundaries;
+  auto interpolants0 = interpolants;
+  auto interpolants1 = interpolants;
+  auto li0 = li;
+  auto li1 = li;
+
+
+  //std::vector<ScatteringFunction> chunkVectors(betas.size());
+
+
+  ScatteringFunction chunk1 ( 
+                              betas[0], 
+                              std::move(boundaries0),
+                              std::move(interpolants0),
+                              std::move(temps2),
+                              std::move(li0),
+                              std::move(alphaVec[0]),
+                              { std::move(toWrite0[0]),
+                                std::move(toWrite0[1])
+                              }
+                              );
   ScatteringFunction chunk2 ( 
                               betas[1],
-                              { nalpha }, { 2 },
-                              { 293.6, 400 },
-                              { 4 },
-                              std::move(alphas3),
-                              { { 2.386694e-4, 2.508273e-4, 2.636238e-4 },
-                                { 6.921141e-4, 7.273641e-4, 7.644060e-4 }
-                              } );
+                              std::move(boundaries1),
+                              std::move(interpolants1),
+                              std::move(temps3),
+                              std::move(li1),
+                              std::move(alphaVec[1]),
+                              { std::move(toWrite1[0]),
+                                std::move(toWrite1[1])
+                              }
+                              );
 
   ScatteringLaw law =
     Tabulated( { 2 }, { 4 },
                { chunk1, 
                  chunk2
-                 //ScatteringFunction(
-                 //           betas[0], 
-                 //           { nalpha }, 
-                 //           { 4 },
-                 //           { 293.6, 400 },
-                 //           { 4 },
-                 //           alphas2,
-                 //           { { 2.386876e-4, 2.508466e-4, 2.636238e-4 },
-                 //             { 4.430020e-4, 4.655671e-4, 4.892796e-4 }
-                 //           } ),
-                 //ScatteringFunction(
-                 //           3.952570e-2, { nalpha }, { 2 },
-                 //           { 293.6, 400 },
-                 //           { 4 },
-                 //           std::move(alphas3),
-                 //           { { 2.386694e-4, 2.508273e-4, 2.636238e-4 },
-                 //             { 6.921141e-4, 7.273641e-4, 7.644060e-4 }
-                 //           } )
                } 
              );
   EffectiveTemperature principal( { 3 }, { 2 }, 
@@ -190,7 +202,7 @@ auto writeToENDF( /*const Float& za, const Float& awr, int lasym, int lat,
   chunk.print(output,27,7);
   std::cout << buffer << std::endl;
   return;
-  std::cout << sabFull.size() << std::endl;
+  std::cout << fullSAB.size() << std::endl;
   std::cout << alphas.size() << std::endl;
   std::cout << betas.size() << std::endl;
   std::cout << temps.size() << std::endl;
@@ -239,7 +251,7 @@ auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRang
     auto toWrite   = std::get<1>(out);
     //for ( auto& vec : toWrite ){
     //  std::cout << (vec|ranges::view::all) << std::endl;
-    //}
+   // }
     //ScatteringFunction chunk(
     //                    betas[0], 
     //                    std::move(boundaries),

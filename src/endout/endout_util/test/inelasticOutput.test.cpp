@@ -16,7 +16,8 @@ TEST_CASE( "writing" ){
 
   std::vector<double> alphas { 0.1, 0.2, 0.3 }, 
                       betas  { 0.0, 0.2, 0.4, 0.6 },
-  temps { 296.0, 400.0, 1200.0 },
+  temps { 296.0, 400.0 },//, 1200.0 },
+
   sab_temp_1 {3.803356e-2, 1.186118e-2, 5.35523e-3,  5.494297e-3,   // a0b0 a0b1 a0b2 a0b3
               7.283326e-2, 2.289232e-2, 1.153210e-2, 1.067055e-2,   // a1b0 a1b1 a1b2 a1b3
               1.046095e-1, 3.313806e-2, 1.680395e-2, 1.554271e-2 }, // a2b0 a2b1 a2b2 a2b3
@@ -26,14 +27,18 @@ TEST_CASE( "writing" ){
   sab_temp_3 {5.744355e-1, 1.848110e-1, 9.506814e-2, 8.835550e-2, 
               1.011715e+0, 3.376009e-1, 1.787335e-1, 1.656053e-1,
               1.337622e+0, 4.627526e-1, 2.518537e-1, 2.328031e-1 };
+  int ilog = 0;
+  int isym = 0;
 
+  //std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2, sab_temp_3 };
+  std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2 };//, sab_temp_3 };
+  //auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
+  //auto toWrite = std::get<1>(out0);
+  //std::cout << (toWrite[0]|ranges::view::all) << std::endl;
+  //std::cout << (toWrite[1]|ranges::view::all) << std::endl;
+  //std::cout << (toWrite[2]|ranges::view::all) << std::endl;
 
-  std::vector<std::vector<double>> sabFull { sab_temp_1, sab_temp_2, sab_temp_3 };
-
-
-
-
-  writeToENDF(/*za, awr, lasym, lat, constants,*/ sabFull, alphas, betas, temps);
+  writeToENDF(/*za, awr, lasym, lat, constants,*/ fullSAB, alphas, betas, temps);
 } // TEST CASE
 
 
