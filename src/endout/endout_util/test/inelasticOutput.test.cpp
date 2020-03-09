@@ -3,6 +3,42 @@
 #include "generalTools/testing.h"
 
 
+TEST_CASE( "writing" ){
+  using namespace njoy::ENDFtk;
+  using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
+
+  double za  = 127.0,
+         awr = 8.934780e+0;
+  int    lasym = 0,
+           lat = 1;
+  ScatteringLawConstants 
+    constants( 0, 1.976285e+2, 5.000001e+0, 6.153875e+0, 8.934780e+0, 1 );
+
+  std::vector<double> alphas { 0.1, 0.2, 0.3 }, 
+                      betas  { 0.0, 0.2, 0.4, 0.6 },
+  temps { 296.0, 400.0, 1200.0 },
+  sab_temp_1 {3.803356e-2, 1.186118e-2, 5.35523e-3,  5.494297e-3,   // a0b0 a0b1 a0b2 a0b3
+              7.283326e-2, 2.289232e-2, 1.153210e-2, 1.067055e-2,   // a1b0 a1b1 a1b2 a1b3
+              1.046095e-1, 3.313806e-2, 1.680395e-2, 1.554271e-2 }, // a2b0 a2b1 a2b2 a2b3
+  sab_temp_2 {6.888776e-2, 2.157749e-2, 1.085073e-2, 1.007578e-2,    
+              1.308459e-1, 4.144943e-2, 2.104045e-2, 1.952161e-2,
+              1.864122e-1, 5.972006e-2, 3.059757e-2, 2.836719e-2 },
+  sab_temp_3 {5.744355e-1, 1.848110e-1, 9.506814e-2, 8.835550e-2, 
+              1.011715e+0, 3.376009e-1, 1.787335e-1, 1.656053e-1,
+              1.337622e+0, 4.627526e-1, 2.518537e-1, 2.328031e-1 };
+
+
+  std::vector<std::vector<double>> sabFull { sab_temp_1, sab_temp_2, sab_temp_3 };
+
+
+
+
+  writeToENDF(/*za, awr, lasym, lat, constants,*/ sabFull, alphas, betas, temps);
+} // TEST CASE
+
+
+
+
 TEST_CASE( "processing inelastic scattering data" ){
   GIVEN( "" ){  
     std::cout.precision(15);
@@ -335,7 +371,7 @@ TEST_CASE( "processing inelastic scattering data ( all betas )" ){
 
     std::vector<double>
       alphas {0.1, 0.2, 0.3},
-      betas  {0.0, 0.2, 0.4, 0.6},
+      betas  {0.0, 0.2},//, 0.4, 0.6},
       temps  {296.0, 400.0, 1200.0};
     std::vector<std::vector<double>> fullSAB {
      { 3.80335716E-2, 1.30979776E-2, 7.237890430E-3, 7.39846449E-3, 7.283325728E-2, 
@@ -363,8 +399,10 @@ TEST_CASE( "processing inelastic scattering data ( all betas )" ){
 
 
 
+/*
 
 
+*/
 
 
 
