@@ -1,7 +1,7 @@
 
 add_executable( endout.endout_util.test
-                inelasticOutput.test.cpp
-                coherentElasticOutput.test.cpp )
+                coherentElasticOutput.test.cpp
+                inelasticOutput.test.cpp )
 target_compile_options( endout.endout_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

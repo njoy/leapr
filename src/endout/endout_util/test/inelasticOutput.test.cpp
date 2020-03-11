@@ -11,12 +11,13 @@ TEST_CASE( "writing" ){
          awr = 8.934780e+0;
   int    lasym = 0,
            lat = 1;
-  ScatteringLawConstants 
-    constants( 0, 1.976285e+2, 5.000001e+0, 6.153875e+0, 8.934780e+0, 1 );
+  //ScatteringLawConstants 
+  //  constants( 0, 1.976285e+2, 5.000001e+0, 6.153875e+0, 8.934780e+0, 1 );
 
-  std::vector<double> alphas { 0.1, 0.2, 0.3 }, 
-                      betas  { 0.0, 0.2, 0.4, 0.6 },
-  temps { 296.0, 400.0 },//, 1200.0 },
+  std::vector<double> alphas         { 0.1, 0.2, 0.3 }, 
+                      betas          { 0.0, 0.2 , 0.4, 0.6 },
+                      temps          { 296.0, 400.0, 1200.0 },
+                      effectiveTemps { 230.0, 310.0, 540.0 },
 
   sab_temp_1 {3.803356e-2, 1.186118e-2, 5.35523e-3,  5.494297e-3,   // a0b0 a0b1 a0b2 a0b3
               7.283326e-2, 2.289232e-2, 1.153210e-2, 1.067055e-2,   // a1b0 a1b1 a1b2 a1b3
@@ -29,16 +30,18 @@ TEST_CASE( "writing" ){
               1.337622e+0, 4.627526e-1, 2.518537e-1, 2.328031e-1 };
   int ilog = 0;
   int isym = 0;
+  
 
-  //std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2, sab_temp_3 };
-  std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2 };//, sab_temp_3 };
-  //auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
-  //auto toWrite = std::get<1>(out0);
-  //std::cout << (toWrite[0]|ranges::view::all) << std::endl;
-  //std::cout << (toWrite[1]|ranges::view::all) << std::endl;
-  //std::cout << (toWrite[2]|ranges::view::all) << std::endl;
+  int lln = 0, natoms = 1;
+  double epsilon = 1.976285e2, emax = 5.000001e0, xs = 6.153875e0;
 
-  writeToENDF(/*za, awr, lasym, lat, constants,*/ fullSAB, alphas, betas, temps);
+
+  //using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
+  ScatteringLawConstants constants( lln, epsilon, emax, xs, awr, natoms );
+
+
+  std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2, sab_temp_3 };
+  writeToENDF(fullSAB, alphas, betas, temps, za, effectiveTemps, lasym, lat, isym, ilog, constants);
 } // TEST CASE
 
 
