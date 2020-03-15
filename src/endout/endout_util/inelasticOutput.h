@@ -67,7 +67,7 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
 template <typename Float, typename Range, typename RangeOfRange, 
           typename ScatteringLawConstants >
 auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas, 
-  const Range& betas, const Range& temps, const Float& za, Range effectiveTemps,
+  const Range& betas, const Range& temps, const Float& za, Range effectiveTempsPrincipal, Range effectiveTempsSecondary,
   int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
 
   using namespace njoy::ENDFtk;
@@ -88,7 +88,8 @@ auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas,
     auto li_b           = li;
     auto temps_b        = temps;
     auto alphas_b       = alphas;
-    auto out_b          = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,b);
+    auto out_b          = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,
+                                             ilog,lat,b);
     auto toWrite_b      = std::get<1>(out_b);
     ScatteringFunction chunk_b ( 
                                 betas[b], 
@@ -108,21 +109,25 @@ auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas,
     Tabulated( { int(betas.size()) }, { 4 }, std::move(chunkVectors) );
 
   auto temps_c = temps;
+  auto temps_d = temps;
 
   EffectiveTemperature principal( { int(temps.size()) }, { int(temps.size()-1) }, 
                                   std::move(temps_c),
-                                  std::move(effectiveTemps)
+                                  std::move(effectiveTempsPrincipal)
+                                );
+  EffectiveTemperature secondary( { int(temps.size()) }, { int(temps.size()-1) }, 
+                                  std::move(temps_d),
+                                  std::move(effectiveTempsSecondary)
                                 );
 
-  section::Type< 7, 4 > chunk( za, awr, lat, lasym,
-                               std::move( constants ),
-                               std::move( scatter_law ),
-                               std::move( principal ) );
-  std::string buffer;
-  auto output = std::back_inserter(buffer);
-  chunk.print(output,27,7);
-  std::cout << buffer << std::endl;
 
+
+  section::Type< 7, 4 > chunk( za, awr, lat, lasym,
+                               std::move(constants),
+                               std::move(scatter_law),
+                               std::move(principal), 
+                             { std::optional<EffectiveTemperature>(secondary) } );
+  return chunk;
 }
 
 
@@ -132,13 +137,6 @@ template <typename Range, typename RangeOfRange>
 auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRange& fullSAB,
   const Range& temps, int isym, int ilog, int lat ){
   using namespace njoy::ENDFtk;
-
-  using namespace njoy::ENDFtk;
-  //using ScatteringFunction     = section::Type< 7, 4 >::Tabulated::ScatteringFunction;
-
-
-  //using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
-  //ScatteringLawConstants constants ( 0, 1, 1.9e2, 5.0, {6.15, 3.74}, {8.9, 1.5}, {1,2}, {1} );
 
   std::vector< long > boundaries = { 5 };
   std::vector< long > interpolants = { 4 };
@@ -191,4 +189,3 @@ auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRang
   }
   
 }
-

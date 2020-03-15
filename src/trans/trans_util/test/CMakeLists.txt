@@ -1,8 +1,8 @@
 
 add_executable( trans.trans_util.test
-                bessel_K1.test.cpp
+                sbfill.test.cpp
                 s_table_generation.test.cpp
-                sbfill.test.cpp )
+                bessel_K1.test.cpp )
 target_compile_options( trans.trans_util.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}

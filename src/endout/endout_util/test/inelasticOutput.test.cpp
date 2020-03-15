@@ -2,22 +2,88 @@
 #include "endout/endout_util/inelasticOutput.h"
 #include "generalTools/testing.h"
 
+std::string validSEND() {
+  return
+    "                                                                    27 7  0     \n";
+}
+
+std::string check1() {
+  return
+" 1.270000+2 8.934780+0          0          1          3          0  27 7  4      \n"
+" 0.000000+0 0.000000+0          0          0         12          1  27 7  4      \n"
+" 6.150000+0 6.000000-1 8.934780+0 1.518000-2 0.000000+0 1.000000+0  27 7  4      \n"
+" 0.000000+0 3.748100+0 1.585800+1 0.000000+0 0.000000+0 1.000000+0  27 7  4      \n"
+" 0.000000+0 0.000000+0          0          0          1          7  27 7  4      \n"
+"          7          4                                              27 7  4      \n"
+" 2.960000+2-6.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 1.066516-2 2.000000-1 2.082273-2 3.000000-1 2.930870-2  27 7  4      \n"
+" 4.000000+2-6.000000-1          4          0          3          0  27 7  4      \n"
+" 1.814988-2 3.526223-2 4.951282-2                                   27 7  4      \n"
+" 1.200000+3-6.000000-1          4          0          3          0  27 7  4      \n"
+" 1.318445-1 2.432061-1 3.293787-1                                   27 7  4      \n"
+" 2.960000+2-4.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 1.418638-2 2.000000-1 2.592329-2 3.000000-1 3.452343-2  27 7  4      \n"
+" 4.000000+2-4.000000-1          4          0          3          0  27 7  4      \n"
+" 2.508672-2 4.497266-2 5.954545-2                                   27 7  4      \n"
+" 1.200000+3-4.000000-1          4          0          3          0  27 7  4      \n"
+" 1.634772-1 2.819640-1 3.704010-1                                   27 7  4      \n"
+" 2.960000+2-2.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 2.137508-2 2.000000-1 3.892861-2 3.000000-1 5.227166-2  27 7  4      \n"
+" 4.000000+2-2.000000-1          4          0          3          0  27 7  4      \n"
+" 3.788786-2 6.838178-2 9.144674-2                                   27 7  4      \n"
+" 1.200000+3-2.000000-1          4          0          3          0  27 7  4      \n"
+" 2.700463-1 4.629903-1 5.986514-1                                   27 7  4      \n"
+" 2.960000+2 0.000000+0          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 2.664996-2 2.000000-1 5.008647-2 3.000000-1 7.026869-2  27 7  4      \n"
+" 4.000000+2 0.000000+0          4          0          3          0  27 7  4      \n"
+" 4.833979-2 9.022656-2 1.254638-1                                   27 7  4      \n"
+" 1.200000+3 0.000000+0          4          0          3          0  27 7  4      \n"
+" 3.875195-1 6.638266-1 8.498093-1                                   27 7  4      \n"
+" 2.960000+2 2.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 6.709659-3 2.000000-1 1.298148-2 3.000000-1 1.879842-2  27 7  4      \n"
+" 4.000000+2 2.000000-1          4          0          3          0  27 7  4      \n"
+" 1.258480-2 2.454353-2 3.554293-2                                   27 7  4      \n"
+" 1.200000+3 2.000000-1          4          0          3          0  27 7  4      \n"
+" 1.141221-1 2.132539-1 2.918076-1                                   27 7  4      \n"
+" 2.960000+2 4.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 3.900015-3 2.000000-1 7.662907-3 3.000000-1 1.131221-2  27 7  4      \n"
+" 4.000000+2 4.000000-1          4          0          3          0  27 7  4      \n"
+" 7.544915-3 1.507582-2 2.236445-2                                   27 7  4      \n"
+" 1.200000+3 4.000000-1          4          0          3          0  27 7  4      \n"
+" 7.529282-2 1.467675-1 2.066500-1                                   27 7  4      \n"
+" 2.960000+2 6.000000-1          2          0          1          3  27 7  4      \n"
+"          3          4                                              27 7  4      \n"
+" 1.000000-1 4.036312-3 2.000000-1 8.005619-3 3.000000-1 1.182832-2  27 7  4      \n"
+" 4.000000+2 6.000000-1          4          0          3          0  27 7  4      \n"
+" 8.044133-3 1.608329-2 2.370712-2                                   27 7  4      \n"
+" 1.200000+3 6.000000-1          4          0          3          0  27 7  4      \n"
+" 8.297012-2 1.572996-1 2.183293-1                                   27 7  4      \n"
+" 0.000000+0 0.000000+0          0          0          1          3  27 7  4      \n"
+"          3          2                                              27 7  4      \n"
+" 2.960000+2 5.966722+2 4.000000+2 6.441872+2 1.200000+3 1.292336+3  27 7  4      \n"
+" 0.000000+0 0.000000+0          0          0          1          3  27 7  4      \n"
+"          3          2                                              27 7  4      \n"
+" 2.960000+2 4.279227+2 4.000000+2 5.028527+2 1.200000+3 1.236600+3  27 7  4      \n";
+}
+
+
+
 
 TEST_CASE( "writing" ){
   using namespace njoy::ENDFtk;
   using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
 
-  double za  = 127.0,
-         awr = 8.934780e+0;
-  int    lasym = 0,
-           lat = 1;
-  //ScatteringLawConstants 
-  //  constants( 0, 1.976285e+2, 5.000001e+0, 6.153875e+0, 8.934780e+0, 1 );
-
   std::vector<double> alphas         { 0.1, 0.2, 0.3 }, 
                       betas          { 0.0, 0.2 , 0.4, 0.6 },
                       temps          { 296.0, 400.0, 1200.0 },
-                      effectiveTemps { 230.0, 310.0, 540.0 },
+                      effectiveTempsPrincipal { 596.6722, 644.18716, 1292.3357},
+                      effectiveTempsSecondary { 427.9226, 502.85271, 1236.5996},
 
   sab_temp_1 {3.803356e-2, 1.186118e-2, 5.35523e-3,  5.494297e-3,   // a0b0 a0b1 a0b2 a0b3
               7.283326e-2, 2.289232e-2, 1.153210e-2, 1.067055e-2,   // a1b0 a1b1 a1b2 a1b3
@@ -28,20 +94,42 @@ TEST_CASE( "writing" ){
   sab_temp_3 {5.744355e-1, 1.848110e-1, 9.506814e-2, 8.835550e-2, 
               1.011715e+0, 3.376009e-1, 1.787335e-1, 1.656053e-1,
               1.337622e+0, 4.627526e-1, 2.518537e-1, 2.328031e-1 };
-  int ilog = 0;
+  int ilog = 0; // also known as lln
   int isym = 0;
   
 
-  int lln = 0, natoms = 1;
-  double epsilon = 1.976285e2, emax = 5.000001e0, xs = 6.153875e0;
+  unsigned int  natoms_principal = 1;
+  unsigned int natoms_secondary = 1;
+  using std::move;
+  double za  = 127.0, awr_principal = 8.934780e+0;
+  double              awr_secondary = 15.858; 
+  double              xs_principal  = 6.153875e0;
+  double              xs_secondary  = 3.7481;
+  std::vector<unsigned int> secondaryScattererTypes { 0 }; // 0  = SCT, 1 = free, 2 = S(a,b)
+  std::vector<double>  xsVec    {move(xs_principal),     move(xs_secondary)     };
+  std::vector<double>  awrVec   {move(awr_principal),    move(awr_secondary)    };
+  std::vector<unsigned int>     natomsVec{move(natoms_principal), move(natoms_secondary) };
+  int lasym = 0, lat = 1;
+  double epsilon = 1.976285e2, emax = 5.000001e0;
 
+  int numSecondaryScatterers = 1;
+  std::string sectionString = check1() +
+                                validSEND();
 
-  //using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
-  ScatteringLawConstants constants( lln, epsilon, emax, xs, awr, natoms );
-
+  ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, emax, std::move(xsVec), std::move(awrVec), std::move(natomsVec), std::move(secondaryScattererTypes) );
 
   std::vector<std::vector<double>> fullSAB { sab_temp_1, sab_temp_2, sab_temp_3 };
-  writeToENDF(fullSAB, alphas, betas, temps, za, effectiveTemps, lasym, lat, isym, ilog, constants);
+  auto chunk = writeToENDF(fullSAB, alphas, betas, temps, za, effectiveTempsPrincipal, effectiveTempsSecondary, lasym, lat, isym, ilog, constants);
+  std::string buffer;
+  auto output = std::back_inserter( buffer );
+  chunk.print( output, 27, 7 );
+  std::cout << buffer << std::endl;
+  for ( size_t i = 0; i < buffer.size(); ++i ){
+    std::cout << buffer[i] << "      " <<  sectionString[i] << std::endl;
+    REQUIRE( buffer[i] == sectionString[i] );
+  }
+
+
 } // TEST CASE
 
 
@@ -407,10 +495,8 @@ TEST_CASE( "processing inelastic scattering data ( all betas )" ){
 
 
 
-/*
 
 
-*/
 
 
 
