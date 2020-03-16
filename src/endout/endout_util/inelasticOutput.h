@@ -67,14 +67,15 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
 template <typename Float, typename Range, typename RangeOfRange, 
           typename ScatteringLawConstants >
 auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas, 
-  const Range& betas, const Range& temps, const Float& za, Range effectiveTempsPrincipal, Range effectiveTempsSecondary,
+  const Range& betas, const Range& temps, const Float& za, 
+  Range effectiveTempsPrincipal, Range effectiveTempsSecondary,
   int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
 
   using namespace njoy::ENDFtk;
-  using ScatteringFunction     = section::Type< 7, 4 >::Tabulated::ScatteringFunction;
-  using ScatteringLaw          = section::Type< 7, 4 >::ScatteringLaw;
-  using EffectiveTemperature   = section::Type< 7, 4 >::EffectiveTemperature;
-  using Tabulated = section::Type< 7, 4 >::Tabulated;
+  using ScatteringFunction   = section::Type<7,4>::Tabulated::ScatteringFunction;
+  using ScatteringLaw        = section::Type<7,4>::ScatteringLaw;
+  using EffectiveTemperature = section::Type<7,4>::EffectiveTemperature;
+  using Tabulated            = section::Type<7,4>::Tabulated;
 
   std::vector<Range> alphaVec (betas.size(),alphas);
   std::vector< long > boundaries   = { int(alphas.size()) },
@@ -120,8 +121,6 @@ auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas,
                                   std::move(effectiveTempsSecondary)
                                 );
 
-
-
   section::Type< 7, 4 > chunk( za, awr, lat, lasym,
                                std::move(constants),
                                std::move(scatter_law),
@@ -132,7 +131,7 @@ auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas,
 
 
 
-
+/*
 template <typename Range, typename RangeOfRange>
 auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRange& fullSAB,
   const Range& temps, int isym, int ilog, int lat ){
@@ -184,8 +183,7 @@ auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRang
                         //} ),
 
     std::cout << std::endl;
-    
-
   }
-  
 }
+
+*/
