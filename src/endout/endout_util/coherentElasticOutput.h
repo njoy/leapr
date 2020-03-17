@@ -27,55 +27,39 @@ auto processCoherentElastic( const Range& bragg, const Range& dwpix,
   }
 
   Range energies (numEdges+5, 0.0);
-  //Range energies (numEdges+5, 0.0);
 
   sum = 0;
   for (size_t i = 0; i < temps.size(); ++i){
+    sum = 0.0;
+    Range scr (numEdges+5,0.0);
+
+    w = dwpix[i];
+    if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
+      w = 0.5*(dwpix[i]+dwp1[i]);
+    }
+
+    int jj = 0;
+
     if ( i == 0 ){
-      Range scr (numEdges+5,0.0);
-      w = dwpix[i];
-      if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-        w = 0.5*(dwpix[i]+dwp1[i]);
-      }
-      int j = 0;
-      //int jj = 0;
-      int jjj = 0;
-      while ( j < numEdges ){
-        ++j;
+      for ( int j = 1; j <= numEdges; ++j ){
+        if (j <= jmax){ ++jj; }
         e = bragg[2*j-2];
-        //if ( j <= jmax ){ jj += 2; }
-
-        if ( j <= jmax ){ jjj+= 1; }
-        energies[jjj-1] = sigfig(e,7,0);
-
-        //scr[jj-2] = sigfig(e,7,0);
-
-        scr[jjj-1] = sum+exp(-4.0*w*e)*bragg[2*j-1];
-        sum = scr[jjj-1];
-        scr[jjj-1] = sigfig(scr[jjj-1],7,0);
+        energies[jj-1] = sigfig(e,7,0);
+        sum = sum+exp(-4.0*w*e)*bragg[2*j-1];
+        scr[jj-1] = sigfig(sum,7,0);
       }
-      energies.resize(jjj);
-      scr.resize(jjj);
-      totalSCR[i] = scr;
+      energies.resize(jj);
     }
     else {
-      sum = 0.0;
-      Range scr (numEdges+5,0.0);
-      int jj = 0;
-      w = dwpix[i];
-      if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-        w = 0.5*(dwpix[i]+dwp1[i]);
-      }
       for (int j = 1; j <= numEdges; ++j){ 
-        if (j <= jmax){ jj += 1; }
+        if (j <= jmax){ ++jj; }
         e = sigfig(bragg[2*jj-2],7,0);
-        scr[jj-1] = sum+exp(-4.0*w*e)*bragg[2*jj-1];
-        sum = scr[jj-1];
-        scr[jj-1] = sigfig(scr[jj-1],7,0);
+        sum = sum+exp(-4.0*w*e)*bragg[2*jj-1];
+        scr[jj-1] = sigfig(sum,7,0);
       }
-      scr.resize(jj);
-      totalSCR[i] = scr;
     } 
+    scr.resize(jj);
+    totalSCR[i] = scr;
   }  
   totalSCR[temps.size()] = energies;
   return totalSCR;
