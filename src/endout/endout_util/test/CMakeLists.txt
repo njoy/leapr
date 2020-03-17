@@ -1,5 +1,6 @@
 
 add_executable( endout.endout_util.test
+                writeInelasticToENDF.test.cpp
                 inelasticOutput.test.cpp
                 coherentElasticOutput.test.cpp )
 target_compile_options( endout.endout_util.test PRIVATE ${${PREFIX}_common_flags}

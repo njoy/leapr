@@ -63,6 +63,7 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
   return std::make_tuple(outputBeta,toWrite); 
 }
 
+/*
 
 template <typename Float, typename Range, typename RangeOfRange, 
           typename ScatteringLawConstants >
@@ -128,62 +129,4 @@ auto writeToENDF( const RangeOfRange& fullSAB, const Range alphas,
                              { std::optional<EffectiveTemperature>(secondary) } );
   return chunk;
 }
-
-
-
-/*
-template <typename Range, typename RangeOfRange>
-auto inelasticOutput( const Range& alphas, const Range& betas, const RangeOfRange& fullSAB,
-  const Range& temps, int isym, int ilog, int lat ){
-  using namespace njoy::ENDFtk;
-
-  std::vector< long > boundaries = { 5 };
-  std::vector< long > interpolants = { 4 };
-  std::vector< long > li = { 4 };
-  //std::vector< double > alphas =
-  //{ 4.423802e-3, 4.649528e-3, 4.886772e-3, 8.418068e+1, 8.847604e+1 };
-  std::vector< double > temperatures = { 293.6, 400.0 };
-  std::vector< std::vector< double > > sab =
-  { { 2.386876e-4, 2.508466e-4, 2.636238e-4, 1.306574e-9, 5.29573e-10 },
-    { 4.430020e-4, 4.655671e-4, 4.892796e-4, 4.510209e-8, 2.183942e-8 } };
-  //ScatteringFunction chunk( beta,
-  //                          std::move( boundaries ),
-  //                          std::move( interpolants ),
-  //                          std::move( temperatures ),
-  //                          std::move( li ),
-  //                          std::move( alphas ),
-  //                          std::move( sab ) );
-
-  int nbt = betas.size();
-  if (isym == 1 or isym == 3){ nbt = 2*betas.size()-1; }
-
-  Range outputBetas (nbt,0.0);
-  for (size_t b = 0; b < (unsigned) nbt; ++b){
-    auto out = getSABreadyToWrite( fullSAB, temps, alphas, betas, isym, ilog, lat, b );
-    outputBetas[b] = std::get<0>(out);
-    auto toWrite   = std::get<1>(out);
-    //for ( auto& vec : toWrite ){
-    //  std::cout << (vec|ranges::view::all) << std::endl;
-   // }
-    //ScatteringFunction chunk(
-    //                    betas[0], 
-    //                    std::move(boundaries),
-    //                    std::move(interpolants),
-    //                    std::move(temperatures),
-    //                    std::move(li),
-    //                    std::move(alphas),
-    //                    std::move(toWrite) );
-                        //{ 3 }, 
-                        //{ 4 },
-                        //{ 293.6, 400 },
-                        //{ 4 },
-                        //std::copy(alphas),
-                        //{ { 2.386876e-4, 2.508466e-4, 2.636238e-4 },
-                        //  { 4.430020e-4, 4.655671e-4, 4.892796e-4 }
-                        //} ),
-
-    std::cout << std::endl;
-  }
-}
-
 */

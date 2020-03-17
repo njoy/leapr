@@ -597,6 +597,7 @@
     "src/contin/contin_util/start_util/getDebyeWaller.h",
     "src/endout/endout.h",
     "src/endout/endout_util/inelasticOutput.h",
+    "src/endout/endout_util/writeInelasticToENDF.h",
     "src/endout/endout_util/coherentElasticOutput.h",
     "src/discre/discre.h",
     "src/discre/discre_util/prepareParams.h",
@@ -713,6 +714,7 @@
       "src/endout/test/endout.test.cpp"
     ],
     "endout.endout_util": [
+      "src/endout/endout_util/test/writeInelasticToENDF.test.cpp",
       "src/endout/endout_util/test/inelasticOutput.test.cpp",
       "src/endout/endout_util/test/coherentElasticOutput.test.cpp"
     ],
