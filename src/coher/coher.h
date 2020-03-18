@@ -1,3 +1,6 @@
+#ifndef LEAPR_COHER
+#define LEAPR_COHER
+
 #include <iostream>
 #include <vector>
 #include "generalTools/constants.h"
@@ -95,4 +98,4 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // second value is 2*#edges
 
 }
-
+#endif
