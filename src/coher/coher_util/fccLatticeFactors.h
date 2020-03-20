@@ -20,7 +20,7 @@ auto fccLatticeFactors(int lat, const Float& a, const Float& maxTauSq, Range& b)
         tsq = taufcc( i1, i2, i3, c1 );
         if (tsq > 0 and tsq <= maxTauSq) {
           k += 1;
-          if ((2*k) > int(b.size())) std::cout << "storage exceeded" << std::endl; 
+          if ((2*k) > int(b.size())) std::cout << "storage exceeded (FCC)" << std::endl; 
           tau = sqrt(tsq);
           b[2*k-2] = tsq;
           //b[2*k-1] = ( exp(-tsq*t2*wint) / tau ) * formf(lat,i1,i2,i3);

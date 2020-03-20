@@ -1,6 +1,3 @@
-#ifndef LEAPR_COHER
-#define LEAPR_COHER
-
 #include <iostream>
 #include <vector>
 #include "generalTools/constants.h"
@@ -9,7 +6,8 @@
 #include "coher_util/fccLatticeFactors.h"
 #include "coher_util/end.h"
 
-auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
+template <typename Range, typename Float>
+static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
   /* Compute Bragg energies and associated structure factors
    * for coherent elastic scattering from graphite, Be, or BeO.
    *
@@ -17,15 +15,14 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
    * primary atoms, the b vector is the bragg edges vector, nbe is the number 
    * of edges, and maxEnergy (emax) are also there
    */
-  int k,imax;
-  std::vector<double> 
+  Range 
   //       Graphite   Be         BeO       Al       Pb       Fe  
     aVals {2.4573e-8, 2.2856e-8, 2.695e-8, 4.04e-8, 4.94e-8, 2.8600e-8 },
     cVals {6.7000e-8, 3.5832e-8, 4.39e-8},
     mass  {12.011,    9.0100,    12.50,    26.7495, 207.,    55.454    },
     xsCoh {5.5000,    7.5300,    1.000,    1.49500, 1.00,    12.900    };
 
-  double econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6;
+  Float econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6;
 
 
   // Lattice Constants (a) in angstroms
@@ -74,9 +71,10 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // The reason there is a 1e-4 here is to make sure that the max tau^2 value
   // is in units of inverse cm^2.
 
+  int imax;
   if ( iel < 4 ){ // compute lattice factors for hexagonal lattices
     c = cVals[iel-1];
-    double volume = sqrt(3)*a*a*c/2; // Eq. 559
+    Float volume = sqrt(3)*a*a*c/2; // Eq. 559
     scon /= 4*volume*econ;
     imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
   }
@@ -90,7 +88,7 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
     scon/=(8*a*a*a*econ);
     imax = bccLatticeFactors( maxTauSq, b, iel, a, massScatterer );
   }
-  k = imax + 1;
+  int k = imax + 1;
 
   int nbe = end( b, k, econ, toler, scon, maxTauSq, imax );
   return std::make_tuple(2*k,2*nbe);
@@ -98,4 +96,6 @@ auto coher( int iel, int npr, std::vector<double>& b, double maxEnergy ){
   // second value is 2*#edges
 
 }
-#endif
+
+
+
