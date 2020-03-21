@@ -1,77 +1,7 @@
 #include "catch.hpp"
 #include "endout/endout_util/writeInelasticToENDF.h"
 #include "generalTools/testing.h"
-
-std::string validSEND() {
-  return
-    "                                                                    27 7  0     \n";
-}
-
-std::string check1() {
-  return
-" 1.270000+2 8.934780+0          0          1          3          0  27 7  4      \n"
-" 0.000000+0 0.000000+0          0          0         12          1  27 7  4      \n"
-" 6.150000+0 6.000000-1 8.934780+0 1.518000-2 0.000000+0 1.000000+0  27 7  4      \n"
-" 0.000000+0 3.748100+0 1.585800+1 0.000000+0 0.000000+0 1.000000+0  27 7  4      \n"
-" 0.000000+0 0.000000+0          0          0          1          7  27 7  4      \n"
-"          7          4                                              27 7  4      \n"
-" 2.960000+2-6.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 1.066516-2 2.000000-1 2.082273-2 3.000000-1 2.930870-2  27 7  4      \n"
-" 4.000000+2-6.000000-1          4          0          3          0  27 7  4      \n"
-" 1.814988-2 3.526223-2 4.951282-2                                   27 7  4      \n"
-" 1.200000+3-6.000000-1          4          0          3          0  27 7  4      \n"
-" 1.318445-1 2.432061-1 3.293787-1                                   27 7  4      \n"
-" 2.960000+2-4.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 1.418638-2 2.000000-1 2.592329-2 3.000000-1 3.452343-2  27 7  4      \n"
-" 4.000000+2-4.000000-1          4          0          3          0  27 7  4      \n"
-" 2.508672-2 4.497266-2 5.954545-2                                   27 7  4      \n"
-" 1.200000+3-4.000000-1          4          0          3          0  27 7  4      \n"
-" 1.634772-1 2.819640-1 3.704010-1                                   27 7  4      \n"
-" 2.960000+2-2.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 2.137508-2 2.000000-1 3.892861-2 3.000000-1 5.227166-2  27 7  4      \n"
-" 4.000000+2-2.000000-1          4          0          3          0  27 7  4      \n"
-" 3.788786-2 6.838178-2 9.144674-2                                   27 7  4      \n"
-" 1.200000+3-2.000000-1          4          0          3          0  27 7  4      \n"
-" 2.700463-1 4.629903-1 5.986514-1                                   27 7  4      \n"
-" 2.960000+2 0.000000+0          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 2.664996-2 2.000000-1 5.008647-2 3.000000-1 7.026869-2  27 7  4      \n"
-" 4.000000+2 0.000000+0          4          0          3          0  27 7  4      \n"
-" 4.833979-2 9.022656-2 1.254638-1                                   27 7  4      \n"
-" 1.200000+3 0.000000+0          4          0          3          0  27 7  4      \n"
-" 3.875195-1 6.638266-1 8.498093-1                                   27 7  4      \n"
-" 2.960000+2 2.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 6.709659-3 2.000000-1 1.298148-2 3.000000-1 1.879842-2  27 7  4      \n"
-" 4.000000+2 2.000000-1          4          0          3          0  27 7  4      \n"
-" 1.258480-2 2.454353-2 3.554293-2                                   27 7  4      \n"
-" 1.200000+3 2.000000-1          4          0          3          0  27 7  4      \n"
-" 1.141221-1 2.132539-1 2.918076-1                                   27 7  4      \n"
-" 2.960000+2 4.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 3.900015-3 2.000000-1 7.662907-3 3.000000-1 1.131221-2  27 7  4      \n"
-" 4.000000+2 4.000000-1          4          0          3          0  27 7  4      \n"
-" 7.544915-3 1.507582-2 2.236445-2                                   27 7  4      \n"
-" 1.200000+3 4.000000-1          4          0          3          0  27 7  4      \n"
-" 7.529282-2 1.467675-1 2.066500-1                                   27 7  4      \n"
-" 2.960000+2 6.000000-1          2          0          1          3  27 7  4      \n"
-"          3          4                                              27 7  4      \n"
-" 1.000000-1 4.036312-3 2.000000-1 8.005619-3 3.000000-1 1.182832-2  27 7  4      \n"
-" 4.000000+2 6.000000-1          4          0          3          0  27 7  4      \n"
-" 8.044133-3 1.608329-2 2.370712-2                                   27 7  4      \n"
-" 1.200000+3 6.000000-1          4          0          3          0  27 7  4      \n"
-" 8.297012-2 1.572996-1 2.183293-1                                   27 7  4      \n"
-" 0.000000+0 0.000000+0          0          0          1          3  27 7  4      \n"
-"          3          2                                              27 7  4      \n"
-" 2.960000+2 5.966722+2 4.000000+2 6.441872+2 1.200000+3 1.292336+3  27 7  4      \n"
-" 0.000000+0 0.000000+0          0          0          1          3  27 7  4      \n"
-"          3          2                                              27 7  4      \n"
-" 2.960000+2 4.279227+2 4.000000+2 5.028527+2 1.200000+3 1.236600+3  27 7  4      \n";
-}
-
+#include "endout/endout_util/test/correctInelasticOutput.h"
 
 
 
@@ -79,6 +9,7 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
   GIVEN( "Be in BeO example - multiple temperatures and 1 secondary scatterer" ){
     using namespace njoy::ENDFtk;
     using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
+    using Inelastic = section::Type< 7, 4 >;
 
     std::vector<double> alphas         { 0.1, 0.2, 0.3 }, 
                         betas          { 0.0, 0.2 , 0.4, 0.6 },
@@ -107,14 +38,14 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
     using std::move;
     double za  = 127.0, 
            awr_principal = 8.934780e+0, awr_secondary = 15.858, 
-           xs_principal  = 6.153875e0,  xs_secondary  = 3.7481;
+           xs_principal  = 6.15,  xs_secondary  = 3.7481;
 
     int lasym = 0, lat = 1;
 
 
     //-------------- Create Scattering Law Constants Object -------------------
     int numSecondaryScatterers = 1;
-    double epsilon = 1.976285e2, emax = 5.000001e0;
+    double epsilon = betas[betas.size()-1], emax = 0.0253*betas[betas.size()-1];//5.000001e0;
     std::vector<double>  
       xsVec  {move(xs_principal),  move(xs_secondary)  },
       awrVec {move(awr_principal), move(awr_secondary) };
@@ -130,15 +61,194 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
     //-------------------------------------------------------------------------
 
 
-    auto chunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
-                             effectiveTempsPrincipal, effectiveTempsSecondary, 
-                             lasym, lat, isym, ilog, constants);
+    auto chunk1 = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+                              effectiveTempsPrincipal, effectiveTempsSecondary, 
+                              lasym, lat, isym, ilog, constants);
+
+
+    auto begin = ENDF_BeO_correct.begin();
+    auto end = ENDF_BeO_correct.end();
+    long lineNumber = 1;
+    HeadRecord head( begin, end, lineNumber );
+
+    Inelastic chunk2( head, begin, end, lineNumber, 27 );
+
+
+    REQUIRE( chunk1.ZA() == Approx(chunk2.ZA()) );
+    REQUIRE( chunk1.AWR() == Approx(chunk2.AWR()) );
+
+    REQUIRE( chunk1.LAT() == chunk2.LAT() );
+    REQUIRE( chunk1.temperatureOption() == chunk2.temperatureOption() );
+    REQUIRE( chunk1.LASYM() == chunk2.LASYM() );
+    REQUIRE( chunk1.symmetryOption() == chunk2.symmetryOption() );
+
+    auto barray1 = chunk1.constants();
+    auto barray2 = chunk2.constants();
+    REQUIRE( barray1.LLN() == barray2.LLN() );
+    REQUIRE( barray1.sabStorageType() == barray2.sabStorageType() );
+    REQUIRE( barray1.NI() == barray2.NI() );
+    REQUIRE( barray1.numberConstants() == barray2.numberConstants() );
+    REQUIRE( barray1.NS() == barray2.NS() );
+    REQUIRE( barray1.numberNonPrincipalScatterers() == 
+             barray2.numberNonPrincipalScatterers() );
+
+    
+  REQUIRE( barray2.epsilon() == Approx( barray2.epsilon() ) );
+  REQUIRE( barray1.upperEnergyLimit() == Approx( barray2.upperEnergyLimit() ) );
+  REQUIRE( ranges::equal(barray1.totalFreeCrossSections(),
+                         barray2.totalFreeCrossSections(), equal) );
+  REQUIRE( ranges::equal(barray1.atomicWeightRatios(),
+                         barray2.atomicWeightRatios(), equal) );
+  REQUIRE( ranges::equal(barray1.numberAtoms(),
+                         barray2.numberAtoms(), equal) );
+  REQUIRE( ranges::equal(barray1.analyticalFunctionTypes(),
+                         barray2.analyticalFunctionTypes(), equal) );
+
+using Tabulated = section::Type< 7, 4 >::Tabulated;
+
+  auto table1 = std::get< Tabulated >( chunk1.scatteringLaw() );
+  auto table2 = std::get< Tabulated >( chunk2.scatteringLaw() );
+  REQUIRE( table1.NR() == table2.NR() );
+  REQUIRE( table1.NB() == table2.NB() );
+  REQUIRE( table1.numberBetas() == table2.numberBetas() );
+  REQUIRE( ranges::equal(table1.boundaries(),table2.boundaries(),equal) );
+  REQUIRE( ranges::equal(table1.interpolants(),table2.interpolants(),equal) );
+
+  for (size_t b = 0; b < betas.size(); ++b){
+    auto value1 = table1.betas()[b];
+    auto value2 = table2.betas()[b];
+    REQUIRE( value1.beta() == Approx( value2.beta() ) );
+    REQUIRE( value1.LT() == value2.LT() );
+    REQUIRE( value1.temperatureDependenceFlag() == value2.temperatureDependenceFlag() );
+    REQUIRE( value1.NT() == value2.NT() );
+    REQUIRE( value1.numberTemperatures() == value2.numberTemperatures() );
+
+    REQUIRE( value1.NR() == value2.NR() );
+    REQUIRE( value1.NA() == value2.NA() );
+    REQUIRE( value1.numberAlphas() == value2.numberAlphas() );
+    REQUIRE( ranges::equal(value1.boundaries(),value2.boundaries(),equal) );
+    REQUIRE( ranges::equal(value1.interpolants(),value2.interpolants(),equal) );
+
+
+    REQUIRE( ranges::equal(value1.temperatures(), value2.temperatures(), equal) );
+    REQUIRE( ranges::equal(value1.alphas(), value2.alphas(), equal) );
+    REQUIRE( ranges::equal(value1.LI(), value2.LI(), equal) );
+    REQUIRE( ranges::equal(value1.temperatureInterpolants(), value2.temperatureInterpolants(), [](auto x, auto y){return x == y;} ) );
+    REQUIRE( value1.thermalScatteringValues().size() == 
+             value2.thermalScatteringValues().size() );
+    for (size_t i = 0; i < value1.thermalScatteringValues().size(); ++i){
+
+        /*
+      std::cout << value1.thermalScatteringValues()[i][0] << "       ";
+      std::cout << value2.thermalScatteringValues()[i][0] << std::endl;
+      std::cout << value1.thermalScatteringValues()[i][1] << "       ";
+      std::cout << value2.thermalScatteringValues()[i][1] << std::endl;
+      std::cout << value1.thermalScatteringValues()[i][2] << "       ";
+      std::cout << value2.thermalScatteringValues()[i][2] << std::endl;
+      std::cout << value1.thermalScatteringValues()[i][3] << "       ";
+      std::cout << value2.thermalScatteringValues()[i][3] << std::endl;
+
+      REQUIRE( ranges::equal(value1.thermalScatteringValues()[i], 
+                             value2.thermalScatteringValues()[i], equal) );
+                             */
+    }
+
+  }
+
+
+
     std::string buffer;
     auto output = std::back_inserter( buffer );
-    chunk.print( output, 27, 7 );
+    chunk1.print( output, 27, 7 );
     //std::cout << buffer << std::endl;
+    //std::cout << std::endl;
+    
 
-    std::string sectionString = check1() + validSEND();
+/*
+  value = table.betas()[1];
+  REQUIRE( 3.952570e-2 == Approx( value.beta() ) );
+  REQUIRE( 1 == value.LT() );
+  REQUIRE( 1 == value.temperatureDependenceFlag() );
+  REQUIRE( 2 == value.NT() );
+  REQUIRE( 2 == value.numberTemperatures() );
+
+  REQUIRE( 1 == value.NR() );
+  REQUIRE( 5 == value.NA() );
+  REQUIRE( 5 == value.numberAlphas() );
+  REQUIRE( 1 == value.boundaries().size() );
+  REQUIRE( 5 == value.boundaries()[0] );
+  REQUIRE( 1 == value.interpolants().size() );
+  REQUIRE( 2 == value.interpolants()[0] );
+
+  REQUIRE( 2 == value.temperatures().size() );
+  REQUIRE( 293.6 == Approx( value.temperatures()[0] ) );
+  REQUIRE( 400.0 == Approx( value.temperatures()[1] ) );
+
+  REQUIRE( 5 == value.alphas().size() );
+  REQUIRE( 4.423802e-3 == Approx( value.alphas()[0] ) );
+  REQUIRE( 4.649528e-3 == Approx( value.alphas()[1] ) );
+  REQUIRE( 4.886772e-3 == Approx( value.alphas()[2] ) );
+  REQUIRE( 8.418068e+1 == Approx( value.alphas()[3] ) );
+  REQUIRE( 8.847604e+1 == Approx( value.alphas()[4] ) );
+
+  REQUIRE( 1 == value.LI().size() );
+  REQUIRE( 4 == value.LI()[0] );
+  REQUIRE( 1 == value.temperatureInterpolants().size() );
+  REQUIRE( 4 == value.temperatureInterpolants()[0] );
+
+  REQUIRE( 2 == value.thermalScatteringValues().size() );
+  REQUIRE( 5 == value.thermalScatteringValues()[0].size() );
+  REQUIRE( 2.386694e-4 == Approx( value.thermalScatteringValues()[0][0] ) );
+  REQUIRE( 2.508273e-4 == Approx( value.thermalScatteringValues()[0][1] ) );
+  REQUIRE( 2.636238e-4 == Approx( value.thermalScatteringValues()[0][2] ) );
+  REQUIRE( 2.770291e-4 == Approx( value.thermalScatteringValues()[0][3] ) );
+  REQUIRE( 2.911373e-4 == Approx( value.thermalScatteringValues()[0][4] ) );
+  REQUIRE( 5 == value.thermalScatteringValues()[1].size() );
+  REQUIRE( 6.921141e-4 == Approx( value.thermalScatteringValues()[1][0] ) );
+  REQUIRE( 7.273641e-4 == Approx( value.thermalScatteringValues()[1][1] ) );
+  REQUIRE( 7.644060e-4 == Approx( value.thermalScatteringValues()[1][2] ) );
+  REQUIRE( 8.033305e-4 == Approx( value.thermalScatteringValues()[1][3] ) );
+  REQUIRE( 8.442328e-4 == Approx( value.thermalScatteringValues()[1][4] ) );
+
+  auto temp = chunk.principalEffectiveTemperature();
+  REQUIRE( 3 == temp.NT() );
+  REQUIRE( 3 == temp.numberTemperatures() );
+  REQUIRE( 1 == temp.NR() );
+  REQUIRE( 1 == temp.interpolants().size() );
+  REQUIRE( 1 == temp.boundaries().size() );
+  REQUIRE( 2 == temp.interpolants()[0] );
+  REQUIRE( 3 == temp.boundaries()[0] );
+  REQUIRE( 3 == temp.moderatorTemperatures().size() );
+  REQUIRE( 3 == temp.effectiveTemperatures().size() );
+  REQUIRE( 293.6 == Approx( temp.moderatorTemperatures()[0] ) );
+  REQUIRE( 600. == Approx( temp.moderatorTemperatures()[1] ) );
+  REQUIRE( 1200. == Approx( temp.moderatorTemperatures()[2] ) );
+  REQUIRE( 5.332083e+2 == Approx( temp.effectiveTemperatures()[0] ) );
+  REQUIRE( 7.354726e+2 == Approx( temp.effectiveTemperatures()[1] ) );
+  REQUIRE( 1.270678e+3 == Approx( temp.effectiveTemperatures()[2] ) );
+
+  // one secondary scatterer => 1 secondary temperature (std::nullopt in this
+  // case)
+  REQUIRE( 1 == chunk.secondaryEffectiveTemperatures().size() );
+  REQUIRE( std::nullopt == chunk.secondaryEffectiveTemperatures()[0] );
+
+  REQUIRE( 21 == chunk.NC() );
+ 
+ 
+*/
+
+    /*
+    REQUIRE( chunk1.() == chunk2.() );
+    REQUIRE( chunk1.() == chunk2.() );
+
+
+    REQUIRE( chunk1.() == Approx(chunk2.()) );
+    REQUIRE( chunk1.() == Approx(chunk2.()) );
+    REQUIRE( chunk1.() == Approx(chunk2.()) );
+    REQUIRE( chunk1.() == Approx(chunk2.()) );
+    REQUIRE( chunk1.() == Approx(chunk2.()) );
+    */
+
 
   } // GIVEN
 } // TEST CASE

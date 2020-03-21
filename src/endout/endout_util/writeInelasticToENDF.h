@@ -20,8 +20,8 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
 
   std::vector<Range> alphaVec (betas.size(),alphas);
   std::vector< long > boundaries   = { int(alphas.size()) },
-                      interpolants = { 2 },  // // ENDF interpolation type 
-                      li (temps.size()-1,int(alphas.size()-1));
+                      interpolants = { 4 },  // // ENDF interpolation type 
+                      li (temps.size()-1,4);
 
   std::vector<ScatteringFunction> chunkVectors;
   for (size_t b = 0; b < betas.size(); ++b){

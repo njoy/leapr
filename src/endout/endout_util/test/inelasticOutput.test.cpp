@@ -2,6 +2,7 @@
 #include "endout/endout_util/inelasticOutput.h"
 #include "generalTools/testing.h"
 
+/*
 
 
 TEST_CASE( "processing inelastic scattering data" ){
@@ -329,5 +330,5 @@ TEST_CASE( "processing inelastic scattering data" ){
   } // GIVEN
 } // TEST CASE
 
-
+*/
 

@@ -11,10 +11,11 @@ template <typename Range, typename Float>
 auto processCoherentElastic( const Range& bragg, const Range& dwpix, 
   const Range& dwp1, int numSecondaryScatterers, int secondaryScatterType,
   int numEdges, const Float& tol, const Range& temps ){
-  Float w = dwpix[0];
-  if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-    w = 0.5*(dwpix[0]+dwp1[0]);
-  }
+
+  bool secondScattererWithSCT = ( numSecondaryScatterers > 0 and 
+                                  secondaryScatterType  == 0 );
+
+  Float w = secondScattererWithSCT ? (dwpix[0]+dwp1[0])*0.5 : dwpix[0];
 
   Range scr (2*numEdges+10,0.0);
   std::vector<Range> totalSCR (temps.size());
@@ -37,10 +38,7 @@ auto processCoherentElastic( const Range& bragg, const Range& dwpix,
     sum = 0.0;
     Range scr (numEdges+5,0.0);
 
-    w = dwpix[i];
-    if (numSecondaryScatterers > 0 and secondaryScatterType == 0){
-      w = 0.5*(dwpix[i]+dwp1[i]);
-    }
+    w = secondScattererWithSCT ? (dwpix[i]+dwp1[i])*0.5 : dwpix[i];
 
     int jj = 0;
 
