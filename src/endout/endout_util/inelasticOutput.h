@@ -27,16 +27,12 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
     std::vector<Range> toWrite (temps.size()); 
     // This is a vector of vectors where the ith entry of this is a vector of 
     // SAB (in order of increasing temperature) for the ith temperature
-    //std::cout << (temps|ranges::view::all) << std::endl;
-    //std::cout << lat << "   " << isym << std::endl;
-    std::cout << "getSAB ready     beta = "<< betas[b] << std::endl;
     auto outputBeta = betas[b];
     size_t nbeta = betas.size();
+    std::cout.precision(15);
     for (size_t t = 0; t < temps.size(); ++t){
-
       double sc = 1.0;
       if (lat == 1) {sc = 0.0253/(kb*temps[t]); }
-      std::cout << "SC    " << sc << std::endl;
       Range scr(alphas.size(),0.0);
       if ( isym == 0 or isym == 2){ outputBeta =  betas[b];         }
       else if ( b < nbeta )       { outputBeta = -betas[nbeta-b-1]; }
