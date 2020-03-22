@@ -53,19 +53,19 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
   auto temps_c = temps;
   auto temps_d = temps;
 
-  EffectiveTemperature principal( { int(temps.size()) }, { int(temps.size()-1) }, 
+  EffectiveTemperature principal( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_c),
                                   std::move(effectiveTempsPrincipal)
                                 );
-  EffectiveTemperature secondary( { int(temps.size()) }, { int(temps.size()-1) }, 
+  EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_d),
                                   std::move(effectiveTempsSecondary)
                                 );
 
-  section::Type< 7, 4 > chunk( za, awr, lat, lasym,
-                               std::move(constants),
-                               std::move(scatter_law),
-                               std::move(principal), 
-                             { std::optional<EffectiveTemperature>(secondary) } );
+  section::Type<7,4> chunk( za, awr, lat, lasym,
+                            std::move(constants),
+                            std::move(scatter_law),
+                            std::move(principal), 
+                          { std::optional<EffectiveTemperature>(secondary) } );
   return chunk;
 }
