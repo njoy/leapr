@@ -598,6 +598,7 @@
     "src/endout/endout.h",
     "src/endout/endout_util/inelasticOutput.h",
     "src/endout/endout_util/writeCohElasticToENDF.h",
+    "src/endout/endout_util/writeIncElasticToENDF.h",
     "src/endout/endout_util/writeInelasticToENDF.h",
     "src/endout/endout_util/coherentElasticOutput.h",
     "src/discre/discre.h",
@@ -717,6 +718,7 @@
     "endout.endout_util": [
       "src/endout/endout_util/test/writeInelasticToENDF.test.cpp",
       "src/endout/endout_util/test/inelasticOutput.test.cpp",
+      "src/endout/endout_util/test/writeIncElasticToENDF.test.cpp",
       "src/endout/endout_util/test/coherentElasticOutput.test.cpp",
       "src/endout/endout_util/test/writeCohElasticToENDF.test.cpp"
     ],

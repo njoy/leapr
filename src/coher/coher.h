@@ -1,3 +1,6 @@
+#ifndef LEAPR_COHER
+#define LEAPR_COHER
+
 #include <iostream>
 #include <vector>
 #include "generalTools/constants.h"
@@ -97,5 +100,5 @@ static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
 
 }
 
-
+#endif
 

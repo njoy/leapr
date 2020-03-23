@@ -4,10 +4,8 @@
 #include "endout/endout_util/test/correctInelasticOutput.h"
 
 using namespace njoy::ENDFtk;
-using ScatteringLawConstants = section::Type< 7, 4 >::ScatteringLawConstants;
-using Inelastic = section::Type< 7, 4 >;
-
-
+using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
+using Inelastic = section::Type<7,4>;
 
 template <typename ENDFtk_Inelastic>
 void checkFullInelastic(std::string correctString, ENDFtk_Inelastic testChunk,
@@ -116,8 +114,8 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
 
     int isym = 0, ilog = 0; // also known as lln
 
-    unsigned int natoms_principal = 1;
-    unsigned int natoms_secondary = 1;
+    unsigned int nAtomsPrincipal = 1;
+    unsigned int nAtomsSecondary = 1;
     using std::move;
     double za  = 127.0, 
            awr_principal = 8.934780e+0, awr_secondary = 15.858, 
@@ -135,7 +133,7 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
       xsVec  {move(xs_principal),  move(xs_secondary)  },
       awrVec {move(awr_principal), move(awr_secondary) };
     std::vector<unsigned int>  
-      natomsVec{ move(natoms_principal), move(natoms_secondary) },
+      natomsVec{ move(nAtomsPrincipal), move(nAtomsSecondary) },
       secondaryScattererTypes { 0 }; // 0 = SCT, 1 = Free, 2 = S(a,b)
 
     ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, 
@@ -161,7 +159,7 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
 
     } // WHEN
     WHEN( "three temperatures are considered" ){
-      std::vector<double> temps          { 296.0, 400.0, 1200.0 },
+      std::vector<double> temps                   { 296.0, 400.0, 1200.0 },
                           effectiveTempsPrincipal { 596.6722, 644.18716, 1292.3357},
                           effectiveTempsSecondary { 427.9226, 502.85271, 1236.5996},
 
@@ -189,11 +187,10 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
       } // AND WHEN
       AND_WHEN( "No log option chosen (return S(a,b))" ){
         ilog = 1;
-        std::vector<double>  
-          xsVec  {move(xs_principal),  move(xs_secondary)  },
-          awrVec {move(awr_principal), move(awr_secondary) };
+        std::vector<double>  xsVec  {move(xs_principal),  move(xs_secondary) },
+                             awrVec {move(awr_principal), move(awr_secondary)};
         std::vector<unsigned int>  
-          natomsVec{ move(natoms_principal), move(natoms_secondary) },
+          natomsVec{ move(nAtomsPrincipal), move(nAtomsSecondary) },
           secondaryScattererTypes { 0 }; // 0 = SCT, 1 = Free, 2 = S(a,b)
         ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, 
           emax, std::move(xsVec), std::move(awrVec), std::move(natomsVec), 
@@ -203,6 +200,27 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
                        lat, isym, ilog, constants);
         checkFullInelastic( ENDF_BeO_correct_3temps_log, myChunk, betas );
       } // AND WHEN
+      AND_WHEN( "Symmetric scattering law requested" ){
+          /*
+           * DOES NOT WORK BECAUSE ENDFTK NOT EQUIPPED TO READ LEAPR FILES WHEN
+           * WE HAVE ISYM IN THERE (NOT LASYM)
+        ilog = 0;
+        isym = 2;
+        std::vector<double>  xsVec  {move(xs_principal),  move(xs_secondary) },
+                             awrVec {move(awr_principal), move(awr_secondary)};
+        std::vector<unsigned int>  
+          natomsVec{ move(nAtomsPrincipal), move(nAtomsSecondary) },
+          secondaryScattererTypes { 0 }; // 0 = SCT, 1 = Free, 2 = S(a,b)
+        ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, 
+          emax, std::move(xsVec), std::move(awrVec), std::move(natomsVec), 
+          std::move(secondaryScattererTypes) );
+        auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+                       effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
+                       lat, isym, ilog, constants);
+        checkFullInelastic( ENDF_BeO_correct_3temps_nonsymmetric, myChunk, betas );
+        */
+      } // AND WHEN
+
     } // WHEN
   } // GIVEN
 } // TEST CASE
