@@ -161,7 +161,6 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
 
     } // WHEN
     WHEN( "three temperatures are considered" ){
-
       std::vector<double> temps          { 296.0, 400.0, 1200.0 },
                           effectiveTempsPrincipal { 596.6722, 644.18716, 1292.3357},
                           effectiveTempsSecondary { 427.9226, 502.85271, 1236.5996},
@@ -181,12 +180,29 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
 
       std::vector<std::vector<double>> fullSAB {sab_temp_1, sab_temp_2, sab_temp_3};
 
-      auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
-                     effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
-                     lat, isym, ilog, constants);
-      checkFullInelastic( ENDF_BeO_correct_3temps, myChunk, betas );
-
-
+      AND_WHEN( "No log option chosen (return S(a,b))" ){
+        ilog = 0;
+        auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+                       effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
+                       lat, isym, ilog, constants);
+        checkFullInelastic( ENDF_BeO_correct_3temps, myChunk, betas );
+      } // AND WHEN
+      AND_WHEN( "No log option chosen (return S(a,b))" ){
+        ilog = 1;
+        std::vector<double>  
+          xsVec  {move(xs_principal),  move(xs_secondary)  },
+          awrVec {move(awr_principal), move(awr_secondary) };
+        std::vector<unsigned int>  
+          natomsVec{ move(natoms_principal), move(natoms_secondary) },
+          secondaryScattererTypes { 0 }; // 0 = SCT, 1 = Free, 2 = S(a,b)
+        ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, 
+          emax, std::move(xsVec), std::move(awrVec), std::move(natomsVec), 
+          std::move(secondaryScattererTypes) );
+        auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+                       effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
+                       lat, isym, ilog, constants);
+        checkFullInelastic( ENDF_BeO_correct_3temps_log, myChunk, betas );
+      } // AND WHEN
     } // WHEN
   } // GIVEN
 } // TEST CASE
