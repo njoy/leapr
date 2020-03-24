@@ -61,7 +61,7 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
 
 TEST_CASE( "endout" ){
   REQUIRE( true );
-  std::vector<double> alphas, betas, sab, temps, secondaryScatterVecThing (10,0.0), dwpix, dwp1;
+  std::vector<double> alphas, betas, sab, temps, secondaryScatterVecThing (10,0.0), dwpix, dwp1, tempf, tempf1;
 
 
   alphas = { 0.4, 4.0 };
@@ -71,6 +71,8 @@ TEST_CASE( "endout" ){
   temps  = { 293.6 };
   dwpix  = { 2.063703012 };
   dwp1   = { 1.893758364 };
+  tempf  = { 486.4483635 };
+  tempf1 = { 508.3412436 };
   double awr = 27.84423, spr = 2.021, aws = 15.862, sps = 7.4975;
   int numSecondaryScatterers = 1, secondaryScatterType = 0;
   int iel = 0;
@@ -79,7 +81,9 @@ TEST_CASE( "endout" ){
   std::vector<double> bragg(0);
   int numEdges = 0;
   int za = 147;
+  int ilog = 0, isym = 0, lat = 1, numPrincipalAtoms = 1, numSecondaryAtoms = 1;
 
-  endout(sab,za,awr,aws,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,secondaryScatterVecThing,alphas,betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges);
+
+  endout(sab,za,awr,aws,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,secondaryScatterVecThing,alphas,betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,numPrincipalAtoms,numSecondaryAtoms);
 
 } // TEST CASE
