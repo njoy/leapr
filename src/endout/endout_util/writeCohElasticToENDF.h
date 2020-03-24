@@ -4,10 +4,10 @@
 #include <iostream>
 
 
-template <typename Range, typename Float>
+template <typename Range, typename Float=double>
 auto writeCohElasticToENDF( const Range& bragg, const Range& dwpix, 
   const Range& dwp1, int numSecondaryScatterers, int secondaryScatterType,
-  int numEdges, const Float& tol, Range temps ){ //, const Float& za, const Float& awr){
+  int numEdges, Range temps, const Float tol = 9e-8 ){ //, const Float& za, const Float& awr){
 
   using namespace njoy::ENDFtk;
   using CoherentElastic = section::Type<7,2>::CoherentElastic;

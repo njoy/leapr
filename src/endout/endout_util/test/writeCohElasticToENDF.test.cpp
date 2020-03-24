@@ -26,7 +26,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
         dwp1  { 0.0 };
 
       auto myCohEl = writeCohElasticToENDF( bragg, dwpix, dwp1, 
-           numSecondaryScatterers, secondaryScatterType, numEdges, tol, temps );
+           numSecondaryScatterers, secondaryScatterType, numEdges, temps, tol );
 
       THEN( "output CoherentElastic ENDF result is correct" ){
           auto begin = aluminum.begin();
@@ -89,7 +89,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
 
 
       auto myCohEl = writeCohElasticToENDF( bragg, dwpix, dwp1, 
-           numSecondaryScatterers, secondaryScatterType, numEdges, tol, temps );
+           numSecondaryScatterers, secondaryScatterType, numEdges, temps, tol );
 
       THEN( "output CoherentElastic ENDF result is correct" ){
           auto begin = berylliumOxide.begin();
@@ -150,7 +150,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
 
 
       auto myCohEl = writeCohElasticToENDF( bragg, dwpix, dwp1, 
-           numSecondaryScatterers, secondaryScatterType, numEdges, tol, temps );
+           numSecondaryScatterers, secondaryScatterType, numEdges, temps, tol );
 
       THEN( "output CoherentElastic ENDF result is correct" ){
           auto begin = graphite.begin();
