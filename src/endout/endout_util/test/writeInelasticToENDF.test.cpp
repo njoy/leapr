@@ -2,111 +2,11 @@
 #include "endout/endout_util/writeInelasticToENDF.h"
 #include "generalTools/testing.h"
 #include "endout/endout_util/test/correctInelasticOutput.h"
+#include "endout/endout_util/test/check_MF_Output.h"
 
 using namespace njoy::ENDFtk;
 using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 using Inelastic = section::Type<7,4>;
-
-template <typename ENDFtk_Inelastic>
-void checkFullInelastic(std::string correctString, ENDFtk_Inelastic testChunk,
-        std::vector<double> betas ){
-
-    auto begin = correctString.begin();
-    auto end = correctString.end();
-    long lineNumber = 1;
-    HeadRecord head( begin, end, lineNumber );
-
-    Inelastic trueChunk( head, begin, end, lineNumber, 27 );
-
-    REQUIRE( testChunk.ZA()  == Approx(trueChunk.ZA())  );
-    REQUIRE( testChunk.AWR() == Approx(trueChunk.AWR()) );
-
-    REQUIRE( testChunk.NC()    == trueChunk.NC()    );
-    REQUIRE( testChunk.LAT()   == trueChunk.LAT()   );
-    REQUIRE( testChunk.LASYM() == trueChunk.LASYM() );
-    REQUIRE( testChunk.temperatureOption() == trueChunk.temperatureOption() );
-    REQUIRE( testChunk.symmetryOption()    == trueChunk.symmetryOption()    );
-
-    auto constsMine = testChunk.constants();
-    auto constsNjoy = trueChunk.constants();
-    REQUIRE( constsMine.LLN() == constsNjoy.LLN() );
-    REQUIRE( constsMine.NI()  == constsNjoy.NI()  );
-    REQUIRE( constsMine.NS()  == constsNjoy.NS()  );
-    REQUIRE( constsMine.sabStorageType()  == constsNjoy.sabStorageType()  );
-    REQUIRE( constsMine.numberConstants() == constsNjoy.numberConstants() );
-    REQUIRE( constsMine.numberNonPrincipalScatterers() == 
-             constsNjoy.numberNonPrincipalScatterers() );
-    
-    REQUIRE( constsMine.epsilon()          == Approx( constsNjoy.epsilon() ) );
-    REQUIRE( constsMine.upperEnergyLimit() == Approx( constsNjoy.upperEnergyLimit() ) );
-
-    REQUIRE( ranges::equal(constsMine.totalFreeCrossSections(),
-                           constsNjoy.totalFreeCrossSections(), equal) );
-    REQUIRE( ranges::equal(constsMine.atomicWeightRatios(),
-                           constsNjoy.atomicWeightRatios(), equal) );
-    REQUIRE( ranges::equal(constsMine.numberAtoms(),
-                           constsNjoy.numberAtoms(), equal) );
-    REQUIRE( ranges::equal(constsMine.analyticalFunctionTypes(),
-                           constsNjoy.analyticalFunctionTypes(), equal) );
-  
-    using Tabulated = section::Type< 7, 4 >::Tabulated;
-  
-    auto table1 = std::get< Tabulated >( testChunk.scatteringLaw() );
-    auto table2 = std::get< Tabulated >( trueChunk.scatteringLaw() );
-    REQUIRE( table1.NR() == table2.NR() );
-    REQUIRE( table1.NB() == table2.NB() );
-    REQUIRE( table1.numberBetas() == table2.numberBetas() );
-    REQUIRE( ranges::equal(table1.boundaries(),table2.boundaries(),equal) );
-    REQUIRE( ranges::equal(table1.interpolants(),table2.interpolants(),equal) );
-  
-    for (size_t b = 0; b < betas.size(); ++b){
-      auto value1 = table1.betas()[b];
-      auto value2 = table2.betas()[b];
-      REQUIRE( value1.beta() == Approx( value2.beta() ) );
-      REQUIRE( value1.LT() == value2.LT() );
-      REQUIRE( value1.temperatureDependenceFlag() == value2.temperatureDependenceFlag() );
-      REQUIRE( value1.NT() == value2.NT() );
-      REQUIRE( value1.numberTemperatures() == value2.numberTemperatures() );
-  
-      REQUIRE( value1.NR() == value2.NR() );
-      REQUIRE( value1.NA() == value2.NA() );
-      REQUIRE( value1.numberAlphas() == value2.numberAlphas() );
-      REQUIRE( ranges::equal(value1.boundaries(),value2.boundaries(),equal) );
-      REQUIRE( ranges::equal(value1.interpolants(),value2.interpolants(),equal) );
-  
-
-      REQUIRE( ranges::equal(value1.temperatures(), value2.temperatures(), equal) );
-      REQUIRE( ranges::equal(value1.alphas(), value2.alphas(), equal) );
-      REQUIRE( ranges::equal(value1.LI(), value2.LI(), equal) );
-      REQUIRE( ranges::equal(value1.temperatureInterpolants(), 
-                             value2.temperatureInterpolants(), 
-                             [](auto x, auto y){return x == y;} ) );
-      REQUIRE( value1.thermalScatteringValues().size() == 
-               value2.thermalScatteringValues().size() );
-      for (size_t i = 0; i < value1.thermalScatteringValues().size(); ++i){
-        REQUIRE( ranges::equal(value1.thermalScatteringValues()[i], 
-                               value2.thermalScatteringValues()[i], equal) );
-      }
-    }
-  
-    auto tempMine = testChunk.principalEffectiveTemperature();
-    auto tempNjoy = trueChunk.principalEffectiveTemperature();
-    REQUIRE( tempMine.NT() == tempNjoy.NT() );
-    REQUIRE( tempMine.NR() == tempNjoy.NR() );
-    REQUIRE( tempMine.numberTemperatures() == tempNjoy.numberTemperatures() );
-    REQUIRE( ranges::equal(tempMine.interpolants(), tempNjoy.interpolants(), equal) );
-    REQUIRE( ranges::equal(tempMine.boundaries(), tempNjoy.boundaries(), equal) );
-    REQUIRE( ranges::equal(tempMine.moderatorTemperatures(), 
-                           tempNjoy.moderatorTemperatures(), equal) );
-    REQUIRE( ranges::equal(tempMine.effectiveTemperatures(), 
-                           tempNjoy.effectiveTemperatures(), equal) );
-
-  
-    std::string buffer;
-    auto output = std::back_inserter( buffer );
-    testChunk.print( output, 27, 7 );
-    }
-
 
 
 TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){

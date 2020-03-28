@@ -3,7 +3,12 @@
 #include "endout/endout.h"
 #include "generalTools/testing.h"
 #include "coher/coher.h"
-#include "endout/test/correctMF7.test.cpp"
+#include "endout/test/correctMF7.h"
+#include "endout/endout_util/test/check_MF_Output.h"
+
+template <typename T> std::string type_name();
+using namespace njoy::ENDFtk;
+using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 
 
 TEST_CASE( "finalize the debye-waller coefficient output" ){
@@ -113,11 +118,22 @@ TEST_CASE( "endout" ){
     REQUIRE( good.hasMT(4) == myMF7.hasMT(4) ); 
 
 
-    //njoy::ENDFtk::section::Type<7,4> g4 = good.MT(4_c), m4 = myMF7.MT(4_c);
-    //njoy::ENDFtk::section::Type<7,2> g2 = good.MT(2), m2 = myMF7.MT(2);
+
+    njoy::ENDFtk::section::Type<7,4> g4 = good.MT(4_c), m4 = myMF7.MT(4_c);
+    njoy::ENDFtk::section::Type<7,2> g2 = good.MT(2_c), m2 = myMF7.MT(2_c);
+    
+    REQUIRE( g2.ZA() == m2.ZA() );
 
 
-
+    REQUIRE( g2.elasticScatteringType() == m2.elasticScatteringType() );
+    if (g2.elasticScatteringType() == 2){
+      auto g2_law = std::get<njoy::ENDFtk::section::Type<7,2>::IncoherentElastic>(g2.scatteringLaw());
+      auto m2_law = std::get<njoy::ENDFtk::section::Type<7,2>::IncoherentElastic>(m2.scatteringLaw());
+      testIncoherentElasticOutput(g2_law,m2_law);
+    }
+    //else if ( ){
+    //checkFullCohElastic(g2_law,m2_law,temps);
+    //
     
   } // GIVEN
 

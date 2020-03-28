@@ -2,30 +2,11 @@
 #include "generalTools/testing.h"
 #include "endout/endout_util/writeIncElasticToENDF.h"
 #include "endout/endout_util/test/correctIncElasticOutput.h"
+#include "endout/endout_util/test/check_MF_Output.h"
 
 using namespace njoy::ENDFtk;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 using Elastic = section::Type<7,2>;
-
-
-template <typename IncoherentElastic >
-void testIncoherentElasticOutput( IncoherentElastic mine, IncoherentElastic good ){
-  REQUIRE( good.LTHR() == mine.LTHR() );
-  REQUIRE( good.elasticScatteringType() == mine.elasticScatteringType() );
-  REQUIRE( good.SB() == Approx( mine.SB() ) );
-  REQUIRE( good.boundCrossSection() == Approx( mine.boundCrossSection() ) );
-  REQUIRE( good.NP() == mine.NP() );
-  REQUIRE( good.numberTemperatures() == mine.numberTemperatures() );
-  REQUIRE( good.NR() == mine.NR() );
-  REQUIRE( ranges::equal(good.interpolants(), mine.interpolants(), equal) );
-  REQUIRE( ranges::equal(good.boundaries(), mine.boundaries(), equal) );
-  REQUIRE( ranges::equal(good.temperatures(), mine.temperatures(), equal) );
-  REQUIRE( ranges::equal(good.debyeWallerValues(), mine.debyeWallerValues(), equal) );
-}
-
-
-
-
 
 TEST_CASE( "finalizing incoherent elastic scattering data for ENDF" ){
   GIVEN( "alpha Si test case from ENDFB-VIII.0" ){

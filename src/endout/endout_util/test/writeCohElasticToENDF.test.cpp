@@ -3,46 +3,10 @@
 #include "generalTools/testing.h"
 #include "endout/endout_util/writeCohElasticToENDF.h"
 #include "endout/endout_util/test/correctCoherentOutput.h"
+#include "endout/endout_util/test/check_MF_Output.h"
 
 using namespace njoy::ENDFtk;
 using CoherentElastic = section::Type<7,2>::CoherentElastic;
-
-void checkFullCohElastic(CoherentElastic goodCohEl, CoherentElastic myCohEl, const std::vector<double>& temps){
-  REQUIRE( myCohEl.elasticScatteringType() == 
-           goodCohEl.elasticScatteringType() );
-  REQUIRE( myCohEl.temperatureDependenceFlag() == 
-           goodCohEl.temperatureDependenceFlag() );
-  REQUIRE( myCohEl.temperatureDependenceFlag() == 
-           goodCohEl.temperatureDependenceFlag() );
-
-  REQUIRE( myCohEl.NT() == goodCohEl.NT() );
-  REQUIRE( myCohEl.NP() == goodCohEl.NP() );
-  REQUIRE( myCohEl.NR() == goodCohEl.NR() );
-  REQUIRE( myCohEl.NC() == goodCohEl.NC() );
-
-  REQUIRE( myCohEl.numberBraggEdges() == goodCohEl.numberBraggEdges() );
-  REQUIRE( myCohEl.numberBraggEdges() == int(myCohEl.energies().size()) );
-
-  REQUIRE( ranges::equal(myCohEl.LI(), goodCohEl.LI(), equal) );
-
-  REQUIRE( ranges::equal(goodCohEl.boundaries(), 
-                         myCohEl.boundaries(), equal) );
-  REQUIRE( ranges::equal(goodCohEl.interpolants(),
-                         myCohEl.interpolants(), equal) );
-
-  REQUIRE( ranges::equal(temps, goodCohEl.temperatures(), equal) );
-  REQUIRE( ranges::equal(temps,   myCohEl.temperatures(), equal) );
-
-  REQUIRE( ranges::equal(myCohEl.energies(),goodCohEl.energies(),equal) );
-
-  for ( size_t itemp = 0; itemp < temps.size(); ++itemp ){
-    auto correctXSVals = goodCohEl.thermalScatteringValues()[itemp];
-    auto outputXSVals  =   myCohEl.thermalScatteringValues()[itemp];
-    REQUIRE( ranges::equal(correctXSVals,outputXSVals,equal) );
-  }
-
-
-}
 
 
 TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
