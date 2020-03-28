@@ -16,11 +16,15 @@ using Inelastic       = section::Type<7,4>;
 using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
 
-template <typename Range, typename Float> 
+template <typename Range> 
 auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
   int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
-  const Float& awr, const Float& aws ){
+  const Range& awrVec ){
+  //const Float& awr, const Float& aws ){
   // display endf t-effective and debye-waller integral
+  
+  auto awr = awrVec[0];
+  auto aws = awrVec[1];
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
        dwpix[i] /= (awr*temps[i]*kb);
@@ -37,19 +41,22 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers,
 
 
 template <typename Range, typename Float>
-auto endout( Range& sab, int za, const Float awr, const Float& aws, 
+auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& aws, 
   const Float& spr, const Float& sps, const Range& temps, 
   int numSecondaryScatterers, unsigned int secondaryScatterType, 
-  const Range& secondaryScatterVecThing, const Range& alphas, 
+  const Range& principalScatterSAB, const Range& alphas, 
   const Range& betas, Range& dwpix, Range& dwp1, int iel,
-  const Float& translationalWeight, const Range& bragg, int numEdges, Range tempf, Range tempf1, int ilog, int isym, int lat, unsigned int numPrincipalAtoms, unsigned int numSecondaryAtoms ){
+  const Float& translationalWeight, const Range& bragg, int numEdges, 
+  Range tempf, Range tempf1, int ilog, int isym, int lat, 
+  std::vector<unsigned int> numAtomsVec ){
   // compute bound scattering cross sections
   using std::pow;
+  Float awr = awrVec[0];
+  Float aws = awrVec[1];
   Float sigma_b  = spr*pow(((1.0+awr)/awr),2);
   Float sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
   Range xsVec  { sigma_b, sigma_b2 };
-  Range awrVec { awr,     aws      };
-  std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
+  //std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
   std::vector<Range> fullSAB (temps.size());
   // for mixed moderators, merge ssm results
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
@@ -59,9 +66,9 @@ auto endout( Range& sab, int za, const Float awr, const Float& aws,
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
           sab[b+a*betas.size()] = srat*sab[b+a*betas.size()] 
-                                + secondaryScatterVecThing[b+a*betas.size()];
+                                + principalScatterSAB[b+a*betas.size()];
           thisSAB[b+a*betas.size()] = srat*sab[b+a*betas.size()] 
-                                + secondaryScatterVecThing[b+a*betas.size()];
+                                + principalScatterSAB[b+a*betas.size()];
         }
       }
       fullSAB[t] = thisSAB;
@@ -69,7 +76,7 @@ auto endout( Range& sab, int za, const Float awr, const Float& aws,
   }
 
   scaleDebyeWallerCoefficients( numSecondaryScatterers, secondaryScatterType, 
-                                dwpix, dwp1, temps, awr, aws );
+                                dwpix, dwp1, temps, awrVec );//, aws );
 
 
   // write out the inelastic part

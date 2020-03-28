@@ -38,6 +38,6 @@ auto makeGrid( int len, Float delta ){
        | ranges::view::transform([delta](auto x){ return x*delta;});
 }
 
-auto equal = [](auto x, auto y, double tol = 1e-6){return x == Approx(y).epsilon(tol);};
-auto equal_1e5 = [](auto x, auto y, double tol = 1e-5){return x == Approx(y).epsilon(tol);};
+auto equal = [](auto x, auto y){return x == Approx(y).epsilon(1e-6);};
+auto equal_1e5 = [](auto x, auto y){return x == Approx(y).epsilon(1e-5);};
 

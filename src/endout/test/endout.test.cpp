@@ -3,6 +3,7 @@
 #include "endout/endout.h"
 #include "generalTools/testing.h"
 #include "coher/coher.h"
+#include "endout/test/correctMF7.test.cpp"
 
 
 TEST_CASE( "finalize the debye-waller coefficient output" ){
@@ -24,10 +25,11 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
         dwpix { 0.88189718, 1.49011626, 2.24201096, 3.15918678, 4.24222697, 
                 5.49139855, 8.48861475, 12.1513474 },
         dwp1  { 0.49335305, 0.79941568, 1.17203004, 1.62375823, 2.15567111, 
-                2.76830621, 4.23677157, 6.03029012 };
+                2.76830621, 4.23677157, 6.03029012 },
+        awrVec { awr, aws };
 
        scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
-                                     dwpix, dwp1, temps, awr, aws );
+                                     dwpix, dwp1, temps, awrVec );
         REQUIRE( ranges::equal(dwpix,correctDWPIX,equal) );
         REQUIRE( ranges::equal(dwp1,correctDWP1,equal) );
 
@@ -36,16 +38,17 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
     WHEN( "Secondary scatterers use free gas approximation" ){
       THEN( "DWP1 is not changed and DWPIX is scaled by awr" ){
         int numSecondaryScatterers = 1, secondaryScatterType = 1;
+        double awr = 0.99917, aws = 15.85316; 
         std::vector<double> 
         dwp1 (5,0.0),
         dwpix { 0.27366867, 0.27913484, 0.43494593, 0.86192089, 1.44790731 },
         temps { 296.0, 300.0, 400.0, 600.0, 800.0 },
         correctDWPIX{10.73794694, 10.80639075, 12.62883113, 16.68414797, 21.02028737 },
-        correctDWP1 (5,0.0);
+        correctDWP1 (5,0.0),
+        awrVec { awr, aws };
         
-        double awr = 0.99917, aws = 15.85316; 
         scaleDebyeWallerCoefficients(numSecondaryScatterers, secondaryScatterType, 
-                                     dwpix, dwp1, temps, awr, aws );
+                                     dwpix, dwp1, temps, awrVec );
         REQUIRE( ranges::equal(dwpix,correctDWPIX,equal) );
         REQUIRE( ranges::equal(dwp1,correctDWP1,equal) );
 
@@ -60,30 +63,62 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
 
 
 TEST_CASE( "endout" ){
-  REQUIRE( true );
-  std::vector<double> alphas, betas, sab, temps, secondaryScatterVecThing (10,0.0), dwpix, dwp1, tempf, tempf1;
+  GIVEN( "SiO2 example from ENDFB-VIII.0 library" ){
+    REQUIRE( true );
+    std::vector<double> alphas, betas, sab, temps, principalScatterSAB (10,0.0), dwpix, dwp1, tempf, tempf1;
 
 
-  alphas = { 0.4, 4.0 };
-  betas  = { 0.0, 2.0, 4.0, 8.0, 16.0 };
-  sab    = { 0.202037135, 0.118385279, 0.019020055, 2.1675111E-3, 4.4194542E-6, 
-             0.029581729, 0.062124313, 0.084467155, 0.0746431711, 0.0147378131 };
-  temps  = { 293.6 };
-  dwpix  = { 2.063703012 };
-  dwp1   = { 1.893758364 };
-  tempf  = { 486.4483635 };
-  tempf1 = { 508.3412436 };
-  double awr = 27.84423, spr = 2.021, aws = 15.862, sps = 7.4975;
-  int numSecondaryScatterers = 1, secondaryScatterType = 0;
-  int iel = 0;
-  double translationalWeight = 0.0;
-  std::cout.precision(15);
-  std::vector<double> bragg(0);
-  int numEdges = 0;
-  int za = 147;
-  int ilog = 0, isym = 0, lat = 1, numPrincipalAtoms = 1, numSecondaryAtoms = 1;
+    alphas = { 0.4, 4.0 };
+    betas  = { 0.0, 2.0, 4.0, 8.0, 16.0 };
+    sab    = { 0.202037135, 0.118385279, 0.019020055, 2.1675111E-3, 4.4194542E-6, 
+               0.029581729, 0.062124313, 0.084467155, 0.0746431711, 0.0147378131 };
+    temps  = { 293.6 };
+    dwpix  = { 2.063703012 };
+    dwp1   = { 1.893758364 };
+    tempf  = { 486.4483635 };
+    tempf1 = { 508.3412436 };
+    double awr = 27.84423, spr = 2.021, aws = 15.862, sps = 7.4975;
+    unsigned int numSecondaryScatterers = 1, secondaryScatterType = 0,
+                      numPrincipalAtoms = 1,    numSecondaryAtoms = 1;
+    int iel = 0;
+    double translationalWeight = 0.0;
+    std::cout.precision(15);
+    std::vector<double> bragg(0);
+    int numEdges = 0;
+    int za = 147;
+    int ilog = 0, isym = 0, lat = 1; 
+  
+    std::vector<double> awrVec {awr,aws};
+    std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
 
 
-  endout(sab,za,awr,aws,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,secondaryScatterVecThing,alphas,betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,numPrincipalAtoms,numSecondaryAtoms);
+    njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,numAtomsVec);
+
+    njoy::ENDFtk::section::Type<7,2> myMT2 = myMF7.MT(2_c);
+    njoy::ENDFtk::section::Type<7,4> myMT4 = myMF7.MT(4_c);
+
+    long lineNumber = 1;
+    auto begin = SiO2_1.begin(),
+         end   = SiO2_1.end();
+
+    StructureDivision division( begin, end, lineNumber );
+    njoy::ENDFtk::file::Type<7> good( division, begin, end, lineNumber );
+
+    //std::cout << good.MF() << std::endl;
+    //std::cout << good.hasMT(2) << std::endl;
+    //std::cout << good.hasMT(4) << std::endl;
+
+    REQUIRE( good.MF() == myMF7.MF() ); 
+    REQUIRE( good.hasMT(2) == myMF7.hasMT(2) ); 
+    REQUIRE( good.hasMT(4) == myMF7.hasMT(4) ); 
+
+
+    //njoy::ENDFtk::section::Type<7,4> g4 = good.MT(4_c), m4 = myMF7.MT(4_c);
+    //njoy::ENDFtk::section::Type<7,2> g2 = good.MT(2), m2 = myMF7.MT(2);
+
+
+
+    
+  } // GIVEN
 
 } // TEST CASE
