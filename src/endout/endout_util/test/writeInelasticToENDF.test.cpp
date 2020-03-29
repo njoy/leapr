@@ -55,7 +55,13 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
       auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
                      effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
                      lat, isym, ilog, constants);
-      checkFullInelastic( ENDF_BeO_correct_1temp, myChunk, betas );
+
+      auto begin = ENDF_BeO_correct_1temp.begin();
+      auto end   = ENDF_BeO_correct_1temp.end();
+      long lineNumber = 1;
+      HeadRecord head( begin, end, lineNumber );
+      Inelastic trueChunk( head, begin, end, lineNumber, 27 );
+      checkFullInelastic( trueChunk, myChunk, betas );
 
     } // WHEN
     WHEN( "three temperatures are considered" ){
@@ -83,7 +89,12 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
         auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
                        effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
                        lat, isym, ilog, constants);
-        checkFullInelastic( ENDF_BeO_correct_3temps, myChunk, betas );
+        auto begin = ENDF_BeO_correct_3temps.begin();
+        auto end   = ENDF_BeO_correct_3temps.end();
+        long lineNumber = 1;
+        HeadRecord head( begin, end, lineNumber );
+        Inelastic trueChunk( head, begin, end, lineNumber, 27 );
+        checkFullInelastic( trueChunk, myChunk, betas );
       } // AND WHEN
       AND_WHEN( "No log option chosen (return S(a,b))" ){
         ilog = 1;
@@ -98,7 +109,12 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
         auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
                        effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
                        lat, isym, ilog, constants);
-        checkFullInelastic( ENDF_BeO_correct_3temps_log, myChunk, betas );
+        auto begin = ENDF_BeO_correct_3temps_log.begin();
+        auto end   = ENDF_BeO_correct_3temps_log.end();
+        long lineNumber = 1;
+        HeadRecord head( begin, end, lineNumber );
+        Inelastic trueChunk( head, begin, end, lineNumber, 27 );
+        checkFullInelastic( trueChunk, myChunk, betas );
       } // AND WHEN
       AND_WHEN( "Symmetric scattering law requested" ){
           /*

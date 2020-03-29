@@ -69,9 +69,8 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
 
 TEST_CASE( "endout" ){
   GIVEN( "SiO2 example from ENDFB-VIII.0 library" ){
-    REQUIRE( true );
-    std::vector<double> alphas, betas, sab, temps, principalScatterSAB (10,0.0), dwpix, dwp1, tempf, tempf1;
-
+    std::vector<double> alphas, betas, sab, temps, principalScatterSAB {  0.18326071106074671,5.0948139958071362E-002,4.8354745621089948E-002,7.8537767197893525E-004,4.9377941654609296E-007,9.3108694798471323E-002,0.11873837355924075,0.10074323514059416,4.5988839322158581E-002,2.7552449142656003E-003},
+                        dwpix, dwp1, tempf, tempf1;
 
     alphas = { 0.4, 4.0 };
     betas  = { 0.0, 2.0, 4.0, 8.0, 16.0 };
@@ -96,39 +95,39 @@ TEST_CASE( "endout" ){
     std::vector<double> awrVec {awr,aws};
     std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
 
-
-    njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,numAtomsVec);
+    njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,
+    numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,
+    dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,
+    numAtomsVec);
 
     njoy::ENDFtk::section::Type<7,2> myMT2 = myMF7.MT(2_c);
     njoy::ENDFtk::section::Type<7,4> myMT4 = myMF7.MT(4_c);
 
     long lineNumber = 1;
-    auto begin = SiO2_1.begin(),
-         end   = SiO2_1.end();
-
+    auto begin = SiO2_1.begin(), end = SiO2_1.end();
     StructureDivision division( begin, end, lineNumber );
     njoy::ENDFtk::file::Type<7> good( division, begin, end, lineNumber );
 
-    //std::cout << good.MF() << std::endl;
-    //std::cout << good.hasMT(2) << std::endl;
-    //std::cout << good.hasMT(4) << std::endl;
-
-    REQUIRE( good.MF() == myMF7.MF() ); 
+    REQUIRE( good.MF()     == myMF7.MF() ); 
     REQUIRE( good.hasMT(2) == myMF7.hasMT(2) ); 
     REQUIRE( good.hasMT(4) == myMF7.hasMT(4) ); 
 
 
-
     njoy::ENDFtk::section::Type<7,4> g4 = good.MT(4_c), m4 = myMF7.MT(4_c);
+    REQUIRE( g4.ZA()   == m4.ZA() );
+    checkFullInelastic(g4,m4,betas);
+
+
     njoy::ENDFtk::section::Type<7,2> g2 = good.MT(2_c), m2 = myMF7.MT(2_c);
-    
-    REQUIRE( g2.ZA() == m2.ZA() );
+    REQUIRE( g2.ZA()   == m2.ZA() );
+    REQUIRE( g2.LTHR() == m2.LTHR() );
+    REQUIRE( g2.NC()   == m2.NC() );
 
 
     REQUIRE( g2.elasticScatteringType() == m2.elasticScatteringType() );
     if (g2.elasticScatteringType() == 2){
-      auto g2_law = std::get<njoy::ENDFtk::section::Type<7,2>::IncoherentElastic>(g2.scatteringLaw());
-      auto m2_law = std::get<njoy::ENDFtk::section::Type<7,2>::IncoherentElastic>(m2.scatteringLaw());
+      auto g2_law = std::get<IncoherentElastic>(g2.scatteringLaw());
+      auto m2_law = std::get<IncoherentElastic>(m2.scatteringLaw());
       testIncoherentElasticOutput(g2_law,m2_law);
     }
     //else if ( ){

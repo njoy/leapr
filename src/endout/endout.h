@@ -47,7 +47,7 @@ auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& a
   const Range& principalScatterSAB, const Range& alphas, 
   const Range& betas, Range& dwpix, Range& dwp1, int iel,
   const Float& translationalWeight, const Range& bragg, int numEdges, 
-  Range tempf, Range tempf1, int ilog, int isym, int lat, 
+  Range tempf1, Range tempf, int ilog, int isym, int lat, 
   std::vector<unsigned int> numAtomsVec ){
   // compute bound scattering cross sections
   using std::pow;
@@ -55,7 +55,8 @@ auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& a
   Float aws = awrVec[1];
   Float sigma_b  = spr*pow(((1.0+awr)/awr),2);
   Float sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
-  Range xsVec  { sigma_b, sigma_b2 };
+  //std::cout << sigma_b << "    " << sigma_b2 << std::endl;
+  Range xsVec  { spr, sps };
   //std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
   std::vector<Range> fullSAB (temps.size());
   // for mixed moderators, merge ssm results
@@ -65,8 +66,6 @@ auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& a
       Range thisSAB (alphas.size()*betas.size(),0.0);
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
-          sab[b+a*betas.size()] = srat*sab[b+a*betas.size()] 
-                                + principalScatterSAB[b+a*betas.size()];
           thisSAB[b+a*betas.size()] = srat*sab[b+a*betas.size()] 
                                 + principalScatterSAB[b+a*betas.size()];
         }

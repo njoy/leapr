@@ -9,7 +9,7 @@ template <typename Float, typename Range, typename RangeOfRange,
           typename ScatteringLawConstants >
 auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas, 
   const Range& betas, const Range& temps, const Float& za, 
-  Range effectiveTempsPrincipal, Range effectiveTempsSecondary,
+  Range tempf, Range tempf1,
   int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
 
   using namespace njoy::ENDFtk;
@@ -55,11 +55,11 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
 
   EffectiveTemperature principal( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_c),
-                                  std::move(effectiveTempsPrincipal)
+                                  std::move(tempf)
                                 );
   EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_d),
-                                  std::move(effectiveTempsSecondary)
+                                  std::move(tempf1)
                                 );
 
   section::Type<7,4> chunk( za, awr, lat, lasym,

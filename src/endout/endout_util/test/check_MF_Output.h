@@ -65,15 +65,9 @@ inline void testIncoherentElasticOutput( IncoherentElastic mine, IncoherentElast
 
 
 template <typename ENDFtk_Inelastic>
-inline void checkFullInelastic(std::string correctString, ENDFtk_Inelastic testChunk,
+//inline void checkFullInelastic(std::string correctString, ENDFtk_Inelastic testChunk,
+inline void checkFullInelastic(ENDFtk_Inelastic trueChunk, ENDFtk_Inelastic testChunk,
         std::vector<double> betas ){
-
-    auto begin = correctString.begin();
-    auto end = correctString.end();
-    long lineNumber = 1;
-    HeadRecord head( begin, end, lineNumber );
-
-    Inelastic trueChunk( head, begin, end, lineNumber, 27 );
 
     REQUIRE( testChunk.ZA()  == Approx(trueChunk.ZA())  );
     REQUIRE( testChunk.AWR() == Approx(trueChunk.AWR()) );
@@ -140,7 +134,7 @@ inline void checkFullInelastic(std::string correctString, ENDFtk_Inelastic testC
                              [](auto x, auto y){return x == y;} ) );
       REQUIRE( value1.thermalScatteringValues().size() == 
                value2.thermalScatteringValues().size() );
-      for (size_t i = 0; i < value1.thermalScatteringValues().size(); ++i){
+      for (size_t i = 0; i < value1.thermalScatteringValues().size(); ++i){ 
         REQUIRE( ranges::equal(value1.thermalScatteringValues()[i], 
                                value2.thermalScatteringValues()[i], equal) );
       }
