@@ -41,7 +41,7 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers,
 
 
 template <typename Range, typename Float>
-auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& aws, 
+auto endout( std::vector<Range>& sab, int za, Range awrVec, //const Float awr, const Float& aws, 
   const Float& spr, const Float& sps, const Range& temps, 
   int numSecondaryScatterers, unsigned int secondaryScatterType, 
   const Range& principalScatterSAB, const Range& alphas, 
@@ -52,30 +52,29 @@ auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& a
   // compute bound scattering cross sections
   using std::pow;
   Float awr = awrVec[0];
-  Float aws = awrVec[1];
   Float sigma_b  = spr*pow(((1.0+awr)/awr),2);
-  Float sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
-  //std::cout << sigma_b << "    " << sigma_b2 << std::endl;
-  Range xsVec  { spr, sps };
-  //std::vector<unsigned int> numAtomsVec {numPrincipalAtoms, numSecondaryAtoms};
-  std::vector<Range> fullSAB (temps.size());
-  // for mixed moderators, merge ssm results
+  Range xsVec = { spr, sps };
+  if (numSecondaryScatterers == 0){ xsVec.resize(1); }
+  Range primaryTempf   = (numSecondaryScatterers == 0) ? tempf1 : tempf ;
+  Range secondaryTempf = (numSecondaryScatterers == 0) ? tempf  : tempf1;
+
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
+    Float aws = awrVec[1];
+    Float sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
     Float srat=sigma_b2/sigma_b;
     for (size_t t = 0; t < temps.size(); ++t){
       Range thisSAB (alphas.size()*betas.size(),0.0);
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
-          thisSAB[b+a*betas.size()] = srat*sab[b+a*betas.size()] 
+          sab[t][b+a*betas.size()] = srat*sab[t][b+a*betas.size()] 
                                 + principalScatterSAB[b+a*betas.size()];
         }
       }
-      fullSAB[t] = thisSAB;
     }
   }
 
   scaleDebyeWallerCoefficients( numSecondaryScatterers, secondaryScatterType, 
-                                dwpix, dwp1, temps, awrVec );//, aws );
+                                dwpix, dwp1, temps, awrVec );
 
 
   // write out the inelastic part
@@ -83,11 +82,15 @@ auto endout( Range& sab, int za, Range awrVec, //const Float awr, const Float& a
   auto emax    = 0.0253 * epsilon;
   unsigned int lasym = (isym > 1) ? 1 : 0;
   std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
+  if (numSecondaryScatterers == 0){ secondaryScattererTypes = {}; }
+  //std::cout << secondaryScattererTypes.size() << std::endl;
   ScatteringLawConstants constants(ilog, numSecondaryScatterers, epsilon, emax, 
     std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
     std::move(secondaryScattererTypes));
-  Inelastic mt4 = writeInelasticToENDF(fullSAB,alphas,betas,temps,za,tempf,
-                                       tempf1,lasym,lat,isym,ilog,constants);
+  //std::cout << "HERE" << std::endl;
+  Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
+                                       secondaryTempf,lasym,lat,isym,ilog,constants);
+  //std::cout << "THERE" << std::endl;
 
   if (iel == 0 and translationalWeight > 0.0) {
     return njoy::ENDFtk::file::Type<7>(std::move(mt4));

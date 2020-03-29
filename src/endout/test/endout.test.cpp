@@ -5,10 +5,46 @@
 #include "coher/coher.h"
 #include "endout/test/correctMF7.h"
 #include "endout/endout_util/test/check_MF_Output.h"
+#include "endout/test/braggVectors.h"
 
 template <typename T> std::string type_name();
 using namespace njoy::ENDFtk;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
+using MF7 = njoy::ENDFtk::file::Type<7>;
+
+
+void checkFullMF7( MF7 myMF7, MF7 goodMF7, const std::vector<double>& betas ){
+
+    njoy::ENDFtk::section::Type<7,2> myMT2 = myMF7.MT(2_c);
+    njoy::ENDFtk::section::Type<7,4> myMT4 = myMF7.MT(4_c);
+
+    REQUIRE( goodMF7.MF()     == myMF7.MF() ); 
+    REQUIRE( goodMF7.hasMT(2) == myMF7.hasMT(2) ); 
+    REQUIRE( goodMF7.hasMT(4) == myMF7.hasMT(4) ); 
+
+
+    njoy::ENDFtk::section::Type<7,4> g4 = goodMF7.MT(4_c), m4 = myMF7.MT(4_c);
+    REQUIRE( g4.ZA()   == m4.ZA() );
+    checkFullInelastic(g4,m4,betas);
+
+
+    njoy::ENDFtk::section::Type<7,2> g2 = goodMF7.MT(2_c), m2 = myMF7.MT(2_c);
+    REQUIRE( g2.ZA()   == m2.ZA() );
+    REQUIRE( g2.LTHR() == m2.LTHR() );
+    REQUIRE( g2.NC()   == m2.NC() );
+
+
+    REQUIRE( g2.elasticScatteringType() == m2.elasticScatteringType() );
+    if (g2.elasticScatteringType() == 2){
+      auto g2_law = std::get<IncoherentElastic>(g2.scatteringLaw());
+      auto m2_law = std::get<IncoherentElastic>(m2.scatteringLaw());
+      testIncoherentElasticOutput(g2_law,m2_law);
+    }
+    //else if ( ){
+    //checkFullCohElastic(g2_law,m2_law,temps);
+    //}
+}
+    
 
 
 TEST_CASE( "finalize the debye-waller coefficient output" ){
@@ -68,14 +104,75 @@ TEST_CASE( "finalize the debye-waller coefficient output" ){
 
 
 TEST_CASE( "endout" ){
-  GIVEN( "SiO2 example from ENDFB-VIII.0 library" ){
-    std::vector<double> alphas, betas, sab, temps, principalScatterSAB {  0.18326071106074671,5.0948139958071362E-002,4.8354745621089948E-002,7.8537767197893525E-004,4.9377941654609296E-007,9.3108694798471323E-002,0.11873837355924075,0.10074323514059416,4.5988839322158581E-002,2.7552449142656003E-003},
-                        dwpix, dwp1, tempf, tempf1;
+  std::cout.precision(15);
+  std::vector<double> alphas, betas, temps, dwpix, dwp1, tempf, tempf1, 
+                      principalScatterSAB;
+  std::vector<std::vector<double>> sab;
+  GIVEN( "Be-metal example from ENDFB-VIII.0 library" ){
+    alphas = { 1e-5, 1e-4, 1e-2, 1.0, 5.0, 10.0, 20.0 };
+    betas  = { 0.0 , 1e-4, 1e-2, 1.0, 5.0, 10.0, 20.0 };
+    sab    = {{ 7.0370229E-7, 7.0372301E-7, 7.0577387E-7, 1.4116065E-6, 
+    1.2170307E-11, 1.7831318E-21, 0.0, 7.0372343E-6, 7.0374415E-6, 7.0579502E-6, 
+    1.4115607E-5, 1.2169519E-9, 1.9790182E-18, 0.0, 7.0601224E-4, 7.0603296E-4, 
+    7.0808382E-4, 1.4065297E-3, 1.2083139E-5, 2.3385738E-11, 4.0799692E-22, 
+    0.0699738674, 0.0699756356, 0.0701506867, 0.0963893250, 0.0609049689, 
+    1.1474717E-3, 6.2785457E-8, 0.0831645662, 0.0831667740, 0.0833853408, 
+    0.1008018396, 0.1602491842, 0.0722414864, 1.7231248E-3, 0.0307479891, 
+    0.0307488804, 0.0308371224, 0.0400176130, 0.0859075534, 0.1082226866, 
+    0.0293209593, 5.2427266E-3, 5.2428810E-3, 5.2581677E-3, 6.9719489E-3, 
+    0.0184325047, 0.0429634563, 0.0762340185}, 
+           {4.0533651E-6, 4.0534147E-6, 
+    4.0583290E-6, 6.9324270E-6, 8.2963850E-11,1.5871830E-20, 0.0, 4.0538456E-5, 
+    4.0538952E-5, 4.0588092E-5, 6.9320726E-5, 8.2952306E-9, 1.9675371E-17, 0.0, 
+    4.1053480E-3, 4.1053972E-3, 4.1102672E-3, 6.8930346E-3, 8.1693568E-5, 
+    4.3226337E-10,2.9047298E-20,0.3503790866, 0.3503816671, 0.35063713329, 
+    0.3521927490, 0.2108203648, 0.0115059177, 4.1423910E-6, 0.1941325368, 
+    0.1941348829, 0.1943671448, 0.2156022593, 0.2556926558, 0.1793803211, 
+    0.0190373489, 0.1000797079, 0.1000809325, 0.1002021626, 0.1123720386, 
+    0.1569720963, 0.1790575095, 0.0948108014, 0.0383713594, 0.0383718292, 
+    0.0384183449, 0.0432273443, 0.0653505809, 0.0950446341, 0.126090255 }};
+    principalScatterSAB = { };
+    temps  = { 500.0, 1200.0 };
+    dwpix  = { 1.4490209, 7.58479373 };
+    dwp1   = { 0.0, 0.0 };
+    tempf  = { 586.94826, 1237.45113 };
+    tempf1 = { 0.0, 0.0 };
+    double awr = 8.93478, spr = 6.153875, aws = 0.0, sps = 0;
+    unsigned int numSecondaryScatterers = 0, secondaryScatterType = 0,
+                      numPrincipalAtoms = 1,    numSecondaryAtoms = 0;
+    int iel = 2;
+    double translationalWeight = 0.0;
+    std::vector<double> bragg = Be_metal_bragg;
+    int numEdges = 254;
+    int za = 126;
+    int ilog = 0, isym = 0, lat = 1; 
+  
+    std::vector<double> awrVec {awr};
+    std::vector<unsigned int> numAtomsVec {numPrincipalAtoms};
 
+    njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,
+    numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,
+    dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,
+    numAtomsVec);
+
+    auto begin = BeMetal_1.begin(), end = BeMetal_1.end();
+    long lineNumber = 1;
+    StructureDivision division( begin, end, lineNumber );
+    njoy::ENDFtk::file::Type<7> goodMF7( division, begin, end, lineNumber );
+
+    checkFullMF7( myMF7, goodMF7, betas );
+
+  } // GIVEN
+
+
+  GIVEN( "SiO2 example from ENDFB-VIII.0 library" ){
     alphas = { 0.4, 4.0 };
     betas  = { 0.0, 2.0, 4.0, 8.0, 16.0 };
-    sab    = { 0.202037135, 0.118385279, 0.019020055, 2.1675111E-3, 4.4194542E-6, 
-               0.029581729, 0.062124313, 0.084467155, 0.0746431711, 0.0147378131 };
+    sab    = {{ 0.202037135, 0.118385279, 0.019020055, 2.1675111E-3, 4.4194542E-6, 
+               0.029581729, 0.062124313, 0.084467155, 0.0746431711, 0.0147378131 }},
+    principalScatterSAB = { 0.18326071, 5.09481399E-2, 4.83547456E-2, 7.8537767E-4, 
+      4.93779416E-7, 9.310869479E-2, 0.118738373, 0.1007432351, 4.598883932E-2, 
+      2.755244914E-3};
     temps  = { 293.6 };
     dwpix  = { 2.063703012 };
     dwp1   = { 1.893758364 };
@@ -86,7 +183,6 @@ TEST_CASE( "endout" ){
                       numPrincipalAtoms = 1,    numSecondaryAtoms = 1;
     int iel = 0;
     double translationalWeight = 0.0;
-    std::cout.precision(15);
     std::vector<double> bragg(0);
     int numEdges = 0;
     int za = 147;
@@ -100,40 +196,12 @@ TEST_CASE( "endout" ){
     dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,
     numAtomsVec);
 
-    njoy::ENDFtk::section::Type<7,2> myMT2 = myMF7.MT(2_c);
-    njoy::ENDFtk::section::Type<7,4> myMT4 = myMF7.MT(4_c);
-
-    long lineNumber = 1;
     auto begin = SiO2_1.begin(), end = SiO2_1.end();
+    long lineNumber = 1;
     StructureDivision division( begin, end, lineNumber );
-    njoy::ENDFtk::file::Type<7> good( division, begin, end, lineNumber );
+    njoy::ENDFtk::file::Type<7> goodMF7( division, begin, end, lineNumber );
 
-    REQUIRE( good.MF()     == myMF7.MF() ); 
-    REQUIRE( good.hasMT(2) == myMF7.hasMT(2) ); 
-    REQUIRE( good.hasMT(4) == myMF7.hasMT(4) ); 
+    checkFullMF7( myMF7, goodMF7, betas );
 
-
-    njoy::ENDFtk::section::Type<7,4> g4 = good.MT(4_c), m4 = myMF7.MT(4_c);
-    REQUIRE( g4.ZA()   == m4.ZA() );
-    checkFullInelastic(g4,m4,betas);
-
-
-    njoy::ENDFtk::section::Type<7,2> g2 = good.MT(2_c), m2 = myMF7.MT(2_c);
-    REQUIRE( g2.ZA()   == m2.ZA() );
-    REQUIRE( g2.LTHR() == m2.LTHR() );
-    REQUIRE( g2.NC()   == m2.NC() );
-
-
-    REQUIRE( g2.elasticScatteringType() == m2.elasticScatteringType() );
-    if (g2.elasticScatteringType() == 2){
-      auto g2_law = std::get<IncoherentElastic>(g2.scatteringLaw());
-      auto m2_law = std::get<IncoherentElastic>(m2.scatteringLaw());
-      testIncoherentElasticOutput(g2_law,m2_law);
-    }
-    //else if ( ){
-    //checkFullCohElastic(g2_law,m2_law,temps);
-    //
-    
   } // GIVEN
-
 } // TEST CASE

@@ -9,7 +9,7 @@ template <typename Float, typename Range, typename RangeOfRange,
           typename ScatteringLawConstants >
 auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas, 
   const Range& betas, const Range& temps, const Float& za, 
-  Range tempf, Range tempf1,
+  Range primaryTempf, Range secondaryTempf,
   int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
 
   using namespace njoy::ENDFtk;
@@ -55,17 +55,23 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
 
   EffectiveTemperature principal( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_c),
-                                  std::move(tempf)
+                                  std::move(primaryTempf)
                                 );
-  EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
-                                  std::move(temps_d),
-                                  std::move(tempf1)
-                                );
-
-  section::Type<7,4> chunk( za, awr, lat, lasym,
+  if (constants.numberNonPrincipalScatterers() == 0){
+    return section::Type<7,4> ( za, awr, lat, lasym,
+                            std::move(constants),
+                            std::move(scatter_law),
+                            std::move(principal) );
+  }
+  else {
+    EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
+                                    std::move(temps_d),
+                                    std::move(secondaryTempf)
+                                  );
+    return section::Type<7,4> ( za, awr, lat, lasym,
                             std::move(constants),
                             std::move(scatter_law),
                             std::move(principal), 
                           { std::optional<EffectiveTemperature>(secondary) } );
-  return chunk;
+  }
 }
