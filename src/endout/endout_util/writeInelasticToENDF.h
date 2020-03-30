@@ -46,12 +46,12 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
   }
   auto awr = constants.atomicWeightRatios()[0];
 
-
   ScatteringLaw scatter_law =
     Tabulated( { int(betas.size()) }, { 4 }, std::move(chunkVectors) );
 
   auto temps_c = temps;
   auto temps_d = temps;
+
 
   EffectiveTemperature principal( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_c),
