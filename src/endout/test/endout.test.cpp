@@ -108,6 +108,8 @@ TEST_CASE( "endout" ){
   std::vector<double> alphas, betas, temps, dwpix, dwp1, tempf, tempf1;
   std::vector<std::vector<double>> sab, principalScatterSAB;
 
+  /*
+   */
   GIVEN( "H2O example from ENDFB-VIII.0 library" ){
     WHEN( "No incoherent scattering and Inelastic Scattering" ){
       alphas = { 1e-5, 1e-3, 2.0, 12.0 };
@@ -132,13 +134,12 @@ TEST_CASE( "endout" ){
                    522.87835724, 522.54084261, 1.5194978E-3, 5.1423444E-9, 
                    0.4311205135, 0.4311212990, 0.4212463955, 1.2738041E-2, 
                    6.2395678E-2, 6.2395792E-2, 7.2423939E-2, 7.4307981E-2 } };
-      principalScatterSAB = {{}};
+      principalScatterSAB = sab;
       temps  = { 283.6, 550.0, 600.0, 650.0, 800.0 };
       dwpix  = { 1.656474, 7.2675027, 8.6193808, 12.3081033, 18.58051546 };
       dwp1   = { 0.0, 0.0, 0.0, 0.0, 0.0 };
       tempf  = { 1192.460476, 1278.849394, 1301.020228, 1325.615088, 1412.887566 };
-      tempf1  = { 1192.460476, 1278.849394, 1301.020228, 1325.615088, 1412.887566 };
-      //tempf1 = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+      tempf1 = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
       double awr = 0.9991673, spr = 20.43608, aws = 15.85751, sps = 3.7939;
       unsigned int numSecondaryScatterers = 1, secondaryScatterType = 1,
@@ -150,9 +151,27 @@ TEST_CASE( "endout" ){
       int za = 1001;
       int ilog = 0, isym = 0, lat = 1; 
     
+
+
+
+
+
+
       std::vector<double> awrVec {awr, aws};
       std::vector<unsigned int> numAtomsVec {numPrincipalAtoms,numSecondaryAtoms};
   
+
+      /*
+
+      double epsilon = betas[betas.size()-1];
+      double emax = 0.0253*epsilon;
+      std::vector<double> xsVec {spr, sps};
+      if (numSecondaryScatterers == 0){ xsVec.resize(1); }
+      std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
+
+      ScatteringLawConstants constants(ilog,numSecondaryScatterers, epsilon, emax, std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), std::move(secondaryScattererTypes) );
+      */
+
       njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,
       numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,
       dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,
@@ -163,12 +182,12 @@ TEST_CASE( "endout" ){
       StructureDivision division( begin, end, lineNumber );
       njoy::ENDFtk::file::Type<7> goodMF7( division, begin, end, lineNumber );
   
-      checkFullMF7( myMF7, goodMF7, betas );
+      //checkFullMF7( myMF7, goodMF7, betas );
+              /*
+      */
   
     } // WHEN
   } // GIVEN
-
-
 
   /*
 
