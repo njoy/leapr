@@ -108,8 +108,6 @@ TEST_CASE( "endout" ){
   std::vector<double> alphas, betas, temps, dwpix, dwp1, tempf, tempf1;
   std::vector<std::vector<double>> sab, principalScatterSAB;
 
-  /*
-   */
   GIVEN( "H2O example from ENDFB-VIII.0 library" ){
     WHEN( "No incoherent scattering and Inelastic Scattering" ){
       alphas = { 1e-5, 1e-3, 2.0, 12.0 };
