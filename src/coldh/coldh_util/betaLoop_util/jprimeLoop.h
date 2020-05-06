@@ -7,6 +7,7 @@ auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst,
   const Float& pj, const Range& bex, const Range& rdbex, const Range& sex, 
   const Range& betan, const Float& alphaWgt, const Float& tbart, const Float& y, 
   int nbx, bool odd, bool free  ){
+
   //--sum over the odd or even values of j-prime
   
   Float add, snl = 0, tmp, bn, ex;
@@ -21,7 +22,7 @@ auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst,
 
     bn = be + (-j*(j+1) + jPrime*(jPrime+1)) * x * 0.5;
 
-    tmp = (2*jPrime+1) * pj * sumConst * 4 * sumh(j,jPrime,y);
+    tmp = (2*jPrime+1) * pj * sumConst * 4.0 * sumh(j,jPrime,y);
     // Here, sumConst is equal to 
     //       4*pi/sigma_b * A (if this is a sum over even values) 
     //                             or

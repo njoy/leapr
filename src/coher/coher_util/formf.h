@@ -48,7 +48,7 @@ inline double formf( int lat, int l1, int l2, int l3 ){
     // even or odd. Note that the returned value differs from Eq. 564 however
     // in that either possibility is divided by 4.
     return l3%2 == 0 ? (6+10*cos(2*M_PI*(l1-l2)/3))/4 :  // even
-                       pow(sin(  M_PI*(l1-l2)/3),2);   // odd
+                       pow(sin(  M_PI*(l1-l2)/3),2);     // odd
    }
 
    //  beryllium -- HCP

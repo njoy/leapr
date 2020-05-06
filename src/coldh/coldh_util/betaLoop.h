@@ -6,9 +6,9 @@
 
 template <typename Float, typename Range>
 auto betaLoop( const Range& betan, const Range& rdbex, const Range& bex, 
-  const Range& sex, const Float& alphaWgt, const Float& tbart, 
-  const Float& x, const Float& y, const Float& evenSumConst, 
-  const Float& oddSumConst, int nbx, int a, int ncold, bool free, Range& sym_sab_1, Range& sym_sab_2 ){
+  const Range& sex, const Float& alphaWgt, const Float& tbart, const Float& x, 
+  const Float& y, const Float& evenSumConst, const Float& oddSumConst, int nbx, 
+  int a, int ncold, bool free, Range& sym_sab_1, Range& sym_sab_2 ){
   
   //--loop over all beta values
   //    results for positive beta go into ssp results for negative beta go into sym_sab

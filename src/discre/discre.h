@@ -37,6 +37,7 @@ auto discre( const Float& lambda_s, const Float& twt, const Float& tbeta,
    *          S(a,b) --> S(a,-b) you need to multiply by exp( -beta )
    */
 
+
   Range rdbex( 2 * beta.size() + 1 );
   auto output = bfill(rdbex, beta);
   int nbx   = std::get<0>(output);
@@ -122,7 +123,6 @@ auto discre( const Float& lambda_s, const Float& twt, const Float& tbeta,
 
   t_eff = (tbeta+twt)*t_eff + tsave;
 }
-
 
 
 

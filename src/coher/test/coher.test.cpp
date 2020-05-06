@@ -520,10 +520,4 @@ TEST_CASE( "coher" ){
   } // GIVEN
   
 
-
-
-
-
-
-
 } // TEST CASE

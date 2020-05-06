@@ -540,12 +540,7 @@ TEST_CASE( "Discrete oscillator treatment" ){
 
 
 
-/*
-
-*/
-
 TEST_CASE( "Discrete oscillator treatment (old tests)" ){
-  //std::cout << std::setprecision(18);
   double temp  = 200.0012;
   GIVEN( "two oscillators" ){
     WHEN( "alpha and beta values are slightly small" ){

@@ -5,7 +5,8 @@
 #include "generalTools/constants.h"
 
 // HEXAGONAL
-double tausq( int i1, int i2, int i3, double c1, double c2 ){
+template <typename Float>
+Float tausq( int i1, int i2, int i3, const Float& c1, const Float& c2 ){
   /* This is meant to sort of evaluate Eq. 558. The output is  
    * multiplied by an extra factor of 2pi.
    * This is the reciprocal lattice vector length for hexagonal lattice 
@@ -19,7 +20,8 @@ double tausq( int i1, int i2, int i3, double c1, double c2 ){
 
 template <typename Float, typename Range>
 int hexLatticeFactors( int lat, Float a, Float c, Float maxTauSq, 
-                       Range& b ){
+  Range& b ){
+
   using std::sqrt;
 
   int i2m, i3m, k = 0;
