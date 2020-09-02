@@ -48,13 +48,14 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   const Float& translationalWeight, const Range& bragg, int numEdges, 
   Range primaryTempf, Range secondaryTempf, int ilog, int isym, int lat, 
   std::vector<unsigned int> numAtomsVec ){
-  // compute bound scattering cross sections
   using std::pow;
 
+  // compute bound scattering cross sections
+
   
-  Float awr = awrVec[0];
+  Float awr      = awrVec[0];
   Float sigma_b  = spr*pow(((1.0+awr)/awr),2);
-  Range xsVec = { spr, sps };
+  Range xsVec    = { spr, sps };
   if (numSecondaryScatterers == 0){ xsVec.resize(1); }
   //Range primaryTempf   = (numSecondaryScatterers == 0) ? tempf1 : tempf ;
   //Range secondaryTempf = (numSecondaryScatterers == 0) ? tempf  : tempf1;
@@ -85,8 +86,6 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   ScatteringLawConstants constants(ilog, numSecondaryScatterers, epsilon, emax, 
     std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
     std::move(secondaryScattererTypes));
-  //std::cout << (primaryTempf|ranges::view::all) << std::endl;
-  //std::cout << (secondaryTempf|ranges::view::all) << std::endl;
 
   Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
                                  secondaryTempf,lasym,lat,isym,ilog,constants);

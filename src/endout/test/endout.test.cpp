@@ -140,7 +140,7 @@ TEST_CASE( "endout" ){
       tempf1 = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
       double awr = 0.9991673, spr = 20.43608, aws = 15.85751, sps = 3.7939;
-      unsigned int numSecondaryScatterers = 1, secondaryScatterType = 1,
+      unsigned int numSecondaryScatterers = 1, secondaryScatterType = 0,
                         numPrincipalAtoms = 2,    numSecondaryAtoms = 1;
       int iel = 0;
       double translationalWeight = 6.9e-3;
@@ -187,7 +187,6 @@ TEST_CASE( "endout" ){
     } // WHEN
   } // GIVEN
 
-  /*
 
 
   GIVEN( "Be-metal example from ENDFB-VIII.0 library" ){
@@ -261,8 +260,8 @@ TEST_CASE( "endout" ){
       temps  = { 293.6 };
       dwpix  = { 2.063703012 };
       dwp1   = { 1.893758364 };
-      tempf  = { 486.4483635 };
-      tempf1 = { 508.3412436 };
+      tempf1 = { 486.4483635 };
+      tempf  = { 508.3412436 };
       double awr = 27.84423, spr = 2.021, aws = 15.862, sps = 7.4975;
       unsigned int numSecondaryScatterers = 1, secondaryScatterType = 0,
                         numPrincipalAtoms = 1,    numSecondaryAtoms = 1;
@@ -290,5 +289,6 @@ TEST_CASE( "endout" ){
 
     } // WHEN
   } // GIVEN
+  /*
 */
 } // TEST CASE

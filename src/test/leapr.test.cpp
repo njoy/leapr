@@ -5,6 +5,113 @@
 #include "generalTools/testing.h"
 #include <variant>
 
+
+
+TEST_CASE("full func"){
+  int nphon, ncold, lat, iel, npr, nss, b7, mat, isabt, ilog, nsk, mss, za;
+  double sps, awr, aws, delta, twt, c, tbeta, smin, spr;
+  std::vector<double> alphas, betas, temps;
+
+
+
+
+  GIVEN( "coarse alpha, beta grids (for quick testing)" ) {
+    WHEN( "continuous, translational, and discrete oscillator options used" ) {
+      nphon = 100;
+      mat = 1; za = 1001; isabt = 0; ilog = 0; smin = 2e-38;
+      awr = 0.9991673; spr = 20.43608; npr = 2; iel = 0; ncold = 0; nsk = 0;
+      nss = 1; b7 = 1; aws = 15.85751; sps = 3.7939; mss = 1;
+      lat = 1;
+      alphas = {1e-5, 12.0};
+      betas  = {0.0, 1.0, 9.0};
+      std::vector<int> generalInfo {nphon,mat,za,isabt,ilog,lat};
+      std::vector<int> scatterControl {npr,iel,ncold,nsk,nss,b7,mss};
+      std::vector<double> scatterInfo {awr,spr,aws,sps};
+
+
+      temps = { 283.6, 550.0 };
+      std::vector<double> rho_283 
+      { 0.000000E+00, 4.005204E-01, 1.119462E+00, 1.698629E+00, 2.010136E+00, 
+        2.072919E+00, 1.898872E+00, 1.580587E+00, 1.322490E+00, 1.206897E+00, 
+        1.171350E+00, 1.193990E+00, 1.252900E+00, 1.308722E+00, 1.372691E+00, 
+        1.458393E+00, 1.544730E+00, 1.632884E+00, 1.737451E+00, 1.839542E+00, 
+        1.926015E+00, 2.027550E+00, 2.141893E+00, 2.232498E+00, 2.288891E+00, 
+        2.340017E+00, 2.381759E+00, 2.383409E+00, 2.343025E+00, 2.309382E+00, 
+        2.315281E+00, 2.363291E+00, 2.456813E+00, 2.608183E+00, 2.803355E+00, 
+        3.023636E+00, 3.287621E+00, 3.596284E+00, 3.917294E+00, 4.268025E+00, 
+        4.680325E+00, 5.108988E+00, 5.509916E+00, 5.935525E+00, 6.396799E+00, 
+        6.827404E+00, 7.218567E+00, 7.614806E+00, 7.963608E+00, 8.212350E+00, 
+        8.407257E+00, 8.565375E+00, 8.611701E+00, 8.551322E+00, 8.491609E+00, 
+        8.456424E+00, 8.382308E+00, 8.252262E+00, 8.082789E+00, 7.892225E+00, 
+        7.709093E+00, 7.552676E+00, 7.385949E+00, 7.188253E+00, 6.997005E+00, 
+        6.834275E+00, 6.658732E+00, 6.452670E+00, 6.251437E+00, 6.078947E+00, 
+        5.906580E+00, 5.721030E+00, 5.545298E+00, 5.382871E+00, 5.199881E+00, 
+        4.998420E+00, 4.809347E+00, 4.637318E+00, 4.460711E+00, 4.285237E+00, 
+        4.119970E+00, 3.957456E+00, 3.802720E+00, 3.667038E+00, 3.537688E+00, 
+        3.392823E+00, 3.237844E+00, 3.083621E+00, 2.938483E+00, 2.794379E+00, 
+        2.618337E+00, 2.398675E+00, 2.174743E+00, 1.973006E+00, 1.767542E+00, 
+        1.559136E+00, 1.388105E+00, 1.245415E+00, 1.106893E+00, 9.899717E-01, 
+        9.134314E-01, 8.420908E-01, 7.698313E-01, 7.170319E-01, 6.787253E-01, 
+        6.379317E-01, 6.056904E-01, 5.856277E-01, 5.618792E-01, 5.377198E-01, 
+        5.222762E-01, 5.089940E-01, 4.943599E-01, 4.838341E-01, 4.732544E-01, 
+        4.588599E-01, 4.485080E-01, 4.417946E-01, 4.331451E-01 },
+      rho_550 
+      { 0.000000E+00, 4.324438E-01, 1.149558E+00, 1.832510E+00, 2.240700E+00,
+        2.487719E+00, 2.709575E+00, 2.874102E+00, 2.991449E+00, 3.119467E+00,
+        3.233615E+00, 3.348222E+00, 3.487496E+00, 3.640314E+00, 3.791807E+00,
+        3.963414E+00, 4.135150E+00, 4.291491E+00, 4.451899E+00, 4.642881E+00,
+        4.819324E+00, 4.985605E+00, 5.123753E+00, 5.316881E+00, 5.490964E+00,
+        5.629008E+00, 5.779357E+00, 5.934624E+00, 6.069339E+00, 6.214651E+00,
+        6.328005E+00, 6.433464E+00, 6.565717E+00, 6.626268E+00, 6.671826E+00,
+        6.788980E+00, 6.783930E+00, 6.845387E+00, 6.873965E+00, 6.874528E+00,
+        6.823557E+00, 6.769115E+00, 6.716161E+00, 6.661474E+00, 6.617604E+00,
+        6.522212E+00, 6.395003E+00, 6.329291E+00, 6.214303E+00, 6.122996E+00,
+        6.002230E+00, 5.893373E+00, 5.767771E+00, 5.630944E+00, 5.495732E+00,
+        5.382765E+00, 5.241958E+00, 5.089607E+00, 4.982199E+00, 4.846551E+00,
+        4.738482E+00, 4.579191E+00, 4.449045E+00, 4.332928E+00, 4.195822E+00,
+        4.038285E+00, 3.910536E+00, 3.780957E+00, 3.657666E+00, 3.521597E+00,
+        3.388630E+00, 3.246092E+00, 3.096439E+00, 2.962325E+00, 2.813099E+00,
+        2.667498E+00, 2.523798E+00, 2.387101E+00, 2.249823E+00, 2.108490E+00,
+        1.995867E+00, 1.880804E+00, 1.767768E+00, 1.665855E+00, 1.574605E+00,
+        1.478388E+00, 1.397494E+00, 1.322468E+00, 1.263067E+00, 1.193514E+00,
+        1.135380E+00, 1.081620E+00, 1.035438E+00, 9.859974E-01, 9.494125E-01,
+        9.155681E-01, 8.800506E-01, 8.444502E-01, 8.097923E-01, 7.877114E-01,
+        7.617647E-01, 7.387365E-01, 7.203094E-01, 7.016640E-01, 6.885593E-01,
+        6.740936E-01, 6.574666E-01, 6.430402E-01, 6.322819E-01, 6.192831E-01,
+        6.127931E-01, 6.031065E-01, 5.967796E-01, 5.921670E-01, 5.861204E-01,
+        5.801695E-01, 5.781248E-01, 5.760360E-01, 5.787275E-01 };
+     std::vector<std::vector<double>> rhoVec {rho_283,rho_550}; 
+     std::vector<double> rho_dx_vec = {0.001265,0.001265}; // Spacing in eV of rho for different temperatures
+                                //   283           550
+     std::vector<double>   twt_vec { 6.9210E-03 , 2.1290E-02 };
+     std::vector<double>     c_vec { 3.5910E+00 , 2.2343E+01 };
+     std::vector<double> tbeta_vec { 5.2308E-01 , 5.0871E-01 };
+     std::vector<std::vector<double>> transInfo {twt_vec,c_vec,tbeta_vec};
+     
+     std::vector<double> oscE_283   = { 0.205,    0.415}; 
+     std::vector<double> oscW_283   = { 0.15667, 0.31333 }; 
+     std::vector<double> oscE_550   = { 0.205,    0.415}; 
+     std::vector<double> oscW_550   = { 0.15667, 0.31333 }; 
+     std::vector<std::vector<double>> oscE_vec = {oscE_283,oscE_550};
+     std::vector<std::vector<double>> oscW_vec = {oscW_283,oscW_550};
+
+     full_LEAPR(generalInfo, scatterControl, scatterInfo, temps, alphas, betas,
+                rhoVec, rho_dx_vec, transInfo, oscE_vec, oscW_vec, smin);
+
+
+
+
+
+    } // WHEN
+  } // GIVEN
+} // TEST CASE
+
+
+
+
+
+/*
+
 TEST_CASE( "leapr" ){
   int nphon, ncold, lat, iel, npr, nss, b7;
   double sps, awr, aws, delta, twt, c, tbeta, dka, cfrac;
@@ -251,7 +358,6 @@ TEST_CASE( "leapr" ){
       auto oscEnergiesWeights = ranges::view::zip(oscE,oscW);
       auto secondaryScatterInput = std::make_tuple(nss,b7,std::vector<double>(0));
 
-      std::cout << " A " << std::endl;
 
       auto out = leapr( nphon, awr, iel, npr, ncold, aws, lat, alpha, beta, temp, delta, 
                         rho, twt, c, tbeta, oscEnergiesWeights, dka, kappa, cfrac, secondaryScatterInput );
@@ -329,6 +435,7 @@ TEST_CASE( "leapr" ){
 
     } // WHEN
   } // GIVEN
+*/
 /*
 
   GIVEN( "Beryllium metal" ) {
@@ -693,5 +800,5 @@ TEST_CASE( "leapr" ){
     } // WHEN
   } // GIVEN
   */
-} // TEST CASE
+//} // TEST CASE
 
