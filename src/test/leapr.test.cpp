@@ -4,6 +4,7 @@
 #include <range/v3/all.hpp>
 #include "generalTools/testing.h"
 #include <variant>
+#include "tsl_h2o_tape24.h"
 
 
 
@@ -11,7 +12,6 @@ TEST_CASE("full func"){
   int nphon, ncold, lat, iel, npr, nss, b7, mat, isabt, ilog, nsk, mss, za;
   double sps, awr, aws, delta, twt, c, tbeta, smin, spr;
   std::vector<double> alphas, betas, temps;
-
 
 
 
@@ -95,10 +95,25 @@ TEST_CASE("full func"){
      std::vector<std::vector<double>> oscE_vec = {oscE_283,oscE_550};
      std::vector<std::vector<double>> oscW_vec = {oscW_283,oscW_550};
 
-     full_LEAPR(generalInfo, scatterControl, scatterInfo, temps, alphas, betas,
-                rhoVec, rho_dx_vec, transInfo, oscE_vec, oscW_vec, smin);
+     auto my_MF7 = full_LEAPR(generalInfo, scatterControl, scatterInfo, temps, alphas, betas,
+                           rhoVec, rho_dx_vec, transInfo, oscE_vec, oscW_vec, smin);
+     njoy::ENDFtk::section::Type<7,4> my_MT4 = my_MF7.MT(4_c);
 
+     //std::string buffer;
+     //auto output = std::back_inserter(buffer);
+     //my_MT4.print(output,27,7);
+     //std::cout << buffer << std::endl;
+     /*
 
+     auto begin = good.begin(), end = good.end();
+     long lineNumber = 1;
+     StructureDivision division(begin,end,lineNumber);
+     njoy::ENDFtk::file::Type<7> good_MF7(division,begin,end,lineNumber);
+     njoy::ENDFtk::section::Type<7,4> good_MT4 = good_MF7.MT(4_c);
+
+    std::cout << my_MT4.ZA() << std::endl;
+    std::cout << good_MT4.ZA() << std::endl;
+    */
 
 
 

@@ -166,9 +166,9 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   int ncold = scatterControl[2];
   int isabt = generalInfo[3];
 
+  std::vector<std::vector<Float>> sab_AllTemps(temps.size());
   for (int scatterIter = 0; scatterIter < numIter; ++scatterIter){
-      std::cout << "HERE" << std::endl;
-    std::vector<std::vector<Float>> sab_AllTemps(temps.size());
+      std::cout << "HERE " << b7 << std::endl;
 
     for (size_t itemp = 0; itemp < temps.size(); ++itemp){
 
@@ -224,17 +224,21 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
 
   //---------------- Coherent (Elastic) ----------------------
   int iel = scatterControl[1];
-  int npr = scatterControl[0];
+  unsigned int npr = scatterControl[0];
   std::variant<Range,bool> braggOutput;
+  std::vector<double> bragg ( 60000, 0.0 );
   if (iel > 0){
     double emax = 5.0;
-    std::vector<double> bragg ( 60000, 0.0 );
     auto coherOut = coher( iel, npr, bragg, emax );
     int numVals = std::get<0>(coherOut);
     bragg.resize(numVals); 
     braggOutput = bragg;
   }
-  else { braggOutput = false; }
+  else { 
+      braggOutput = false; 
+      bragg.resize(0);
+  }
+  int numEdges = bragg.size();
 
   try {
     std::get<bool>(braggOutput); // w contains int, not float: will throw
@@ -242,11 +246,14 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   }
   catch (const std::bad_variant_access&) {}
 
+
+
+  //---------------------------- Write Output --------------------------------
+
   int za = generalInfo[2];
   std::vector<Float> awrVec = {awr,aws};
-  int spr = scatterInfo[1];
-  int sps = scatterInfo[3];
-
+  Float spr = scatterInfo[1];
+  Float sps = scatterInfo[3];
   
   int ilog = generalInfo[4];
 
@@ -254,21 +261,39 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   int isym = 0;
   if (ncold != 0){ isym = 1; }
   if (isabt == 1){ isym += 2; }
-  std::cout << isym << std::endl;
 
 
-  //njoy::ENDFtk::file::Type<7> MF7 = endout(sab_AllTemps,za,awrVec,spr,sps,temps,
-  //        numSecondaryScatterers, b7 ,sab_AllTemps,alphas,
-  //        betas,dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,
-   //       isym,lat,numAtomsVec);
+  auto transWgt = transInfo[0][temps.size()-1];
+  unsigned int mss = scatterControl[6];
+  std::vector<unsigned int> numAtomsVec {npr,mss};
+
+  
+  njoy::ENDFtk::file::Type<7> MF7 = endout(sab_AllTemps,za,awrVec,spr,sps,temps,
+          numSecondaryScatterers, b7 , sab_AllTemps,alphas,
+          betas,dwpix,dwp1,iel,transWgt,bragg,numEdges,tempf,tempf1,ilog,
+          isym,lat,numAtomsVec);
+
+  //njoy::ENDFtk::section::Type<7,2> MT2 = MF7.MT(2_c);
+  njoy::ENDFtk::section::Type<7,4> MT4 = MF7.MT(4_c);
+
+  return MF7;
+  std::cout << MT4.ZA() << std::endl;
+
+  std::string buffer;
+  auto output = std::back_inserter( buffer );
+  MT4.print( output, 27, 7 );
+  std::cout << buffer << std::endl;
+
+
+        //std::string buffer;
+        //auto output = std::back_inserter( buffer );
+        //chunk.print( output, 27, 7 );
 
 
 
 
-
-
-
-    return;
+  /*
+    //return;
     std::cout << ilog << sps << spr << za << std::endl;
     std::cout << generalInfo.size() << std::endl;
     std::cout << scatterControl.size() << std::endl;
@@ -281,8 +306,8 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
     std::cout << transInfo.size() << std::endl;
     std::cout << oscE_vec.size() << std::endl;
     std::cout << oscW_vec.size() << std::endl;
+    */
     std::cout << smin << std::endl;
-
 
 }
 

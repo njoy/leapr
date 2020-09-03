@@ -64,14 +64,27 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
                             std::move(principal) );
   }
   else {
-    EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
-                                    std::move(temps_d),
-                                    std::move(secondaryTempf)
-                                  );
-    return section::Type<7,4> ( za, awr, lat, lasym,
-                            std::move(constants),
-                            std::move(scatter_law),
-                            std::move(principal), 
-                          { std::optional<EffectiveTemperature>(secondary) } );
+    if (constants.analyticalFunctionTypes()[0] > 0){
+      std::vector< std::optional< EffectiveTemperature > > secondary2 =
+                { std::nullopt };
+
+      return section::Type<7,4> ( za, awr, lat, lasym,
+                                  std::move(constants),
+                                  std::move(scatter_law),
+                                  std::move(principal), 
+                                  secondary2 );
+
+    }
+    else {
+      EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
+                                      std::move(temps_d),
+                                      std::move(secondaryTempf)
+                                    );
+      return section::Type<7,4> ( za, awr, lat, lasym,
+                        std::move(constants),
+                        std::move(scatter_law),
+                        std::move(principal), 
+                      { std::optional<EffectiveTemperature>(secondary) } );
+    }
   }
 }
