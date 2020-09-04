@@ -53,9 +53,10 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   // compute bound scattering cross sections
 
   
-  Float awr      = awrVec[0];
-  Float sigma_b  = spr*pow(((1.0+awr)/awr),2);
-  Range xsVec    = { spr, sps };
+  Float awr        = awrVec[0];
+  unsigned int npr = numAtomsVec[0];
+  Float sigma_b    = spr*pow(((1.0+awr)/awr),2);
+  Range xsVec      = { spr*npr, sps };
   if (numSecondaryScatterers == 0){ xsVec.resize(1); }
   //Range primaryTempf   = (numSecondaryScatterers == 0) ? tempf1 : tempf ;
   //Range secondaryTempf = (numSecondaryScatterers == 0) ? tempf  : tempf1;

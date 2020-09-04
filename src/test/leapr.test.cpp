@@ -7,6 +7,7 @@
 #include "tsl_h2o_tape24.h"
 
 
+using Tabulated = section::Type< 7, 4 >::Tabulated;
 
 TEST_CASE("full func"){
   int nphon, ncold, lat, iel, npr, nss, b7, mat, isabt, ilog, nsk, mss, za;
@@ -80,43 +81,112 @@ TEST_CASE("full func"){
         6.740936E-01, 6.574666E-01, 6.430402E-01, 6.322819E-01, 6.192831E-01,
         6.127931E-01, 6.031065E-01, 5.967796E-01, 5.921670E-01, 5.861204E-01,
         5.801695E-01, 5.781248E-01, 5.760360E-01, 5.787275E-01 };
-     std::vector<std::vector<double>> rhoVec {rho_283,rho_550}; 
-     std::vector<double> rho_dx_vec = {0.001265,0.001265}; // Spacing in eV of rho for different temperatures
+      std::vector<std::vector<double>> rhoVec {rho_283,rho_550}; 
+      std::vector<double> rho_dx_vec = {0.001265,0.001265}; // Spacing in eV of rho for different temperatures
                                 //   283           550
-     std::vector<double>   twt_vec { 6.9210E-03 , 2.1290E-02 };
-     std::vector<double>     c_vec { 3.5910E+00 , 2.2343E+01 };
-     std::vector<double> tbeta_vec { 5.2308E-01 , 5.0871E-01 };
-     std::vector<std::vector<double>> transInfo {twt_vec,c_vec,tbeta_vec};
+      std::vector<double>   twt_vec { 6.9210E-03 , 2.1290E-02 };
+      std::vector<double>     c_vec { 3.5910E+00 , 2.2343E+01 };
+      std::vector<double> tbeta_vec { 5.2308E-01 , 5.0871E-01 };
+      std::vector<std::vector<double>> transInfo {twt_vec,c_vec,tbeta_vec};
+      
+      std::vector<double> oscE_283   = { 0.205,    0.415}; 
+      std::vector<double> oscW_283   = { 0.15667, 0.31333 }; 
+      std::vector<double> oscE_550   = { 0.205,    0.415}; 
+      std::vector<double> oscW_550   = { 0.15667, 0.31333 }; 
+      std::vector<std::vector<double>> oscE_vec = {oscE_283,oscE_550};
+      std::vector<std::vector<double>> oscW_vec = {oscW_283,oscW_550};
+  
+      auto my_MF7 = full_LEAPR(generalInfo, scatterControl, scatterInfo, temps, alphas, betas,
+                            rhoVec, rho_dx_vec, transInfo, oscE_vec, oscW_vec, smin);
+  
      
-     std::vector<double> oscE_283   = { 0.205,    0.415}; 
-     std::vector<double> oscW_283   = { 0.15667, 0.31333 }; 
-     std::vector<double> oscE_550   = { 0.205,    0.415}; 
-     std::vector<double> oscW_550   = { 0.15667, 0.31333 }; 
-     std::vector<std::vector<double>> oscE_vec = {oscE_283,oscE_550};
-     std::vector<std::vector<double>> oscW_vec = {oscW_283,oscW_550};
+      auto begin = good.begin(), end = good.end();
+      long lineNumber = 1;
+      StructureDivision division(begin,end,lineNumber);
+      njoy::ENDFtk::file::Type<7> good_MF7(division,begin,end,lineNumber);
+  
+      REQUIRE( my_MF7.hasMT(4) == good_MF7.hasMT(4));
+      REQUIRE( my_MF7.hasMT(2) == good_MF7.hasMT(2));
 
-     auto my_MF7 = full_LEAPR(generalInfo, scatterControl, scatterInfo, temps, alphas, betas,
-                           rhoVec, rho_dx_vec, transInfo, oscE_vec, oscW_vec, smin);
-     njoy::ENDFtk::section::Type<7,4> my_MT4 = my_MF7.MT(4_c);
+      if (my_MF7.hasMT(4)){
 
-     //std::string buffer;
-     //auto output = std::back_inserter(buffer);
-     //my_MT4.print(output,27,7);
-     //std::cout << buffer << std::endl;
-     /*
+        njoy::ENDFtk::section::Type<7,4> my_MT4   =   my_MF7.MT(4_c);
+        njoy::ENDFtk::section::Type<7,4> good_MT4 = good_MF7.MT(4_c);
 
-     auto begin = good.begin(), end = good.end();
-     long lineNumber = 1;
-     StructureDivision division(begin,end,lineNumber);
-     njoy::ENDFtk::file::Type<7> good_MF7(division,begin,end,lineNumber);
-     njoy::ENDFtk::section::Type<7,4> good_MT4 = good_MF7.MT(4_c);
+       std::string buffer;
+       auto output = std::back_inserter(buffer);
+       my_MT4.print(output,27,7);
+       std::cout << buffer << std::endl;
+ 
+ 
+        REQUIRE( my_MT4.MT() == good_MT4.MT() );
+        REQUIRE( my_MT4.ZA() == good_MT4.ZA() );
+        REQUIRE( my_MT4.AWR() == good_MT4.AWR() );
+        REQUIRE( my_MT4.LAT() == good_MT4.LAT() );
+        REQUIRE( my_MT4.temperatureOption() == good_MT4.temperatureOption() );
+        REQUIRE( my_MT4.LASYM() == good_MT4.LASYM() );
+        REQUIRE( my_MT4.symmetryOption() == good_MT4.symmetryOption() );
+        REQUIRE( my_MT4.NC() == good_MT4.NC() );
+  
+        auto   my_barray =   my_MT4.constants(),
+             good_barray = good_MT4.constants();
+        REQUIRE( my_barray.LLN()             == good_barray.LLN()             );
+        REQUIRE( my_barray.sabStorageType()  == good_barray.sabStorageType()  );
+        REQUIRE( my_barray.NI()              == good_barray.NI()              );
+        REQUIRE( my_barray.numberConstants() == good_barray.numberConstants() );
+        REQUIRE( my_barray.NS()              == good_barray.NS()              );
+        REQUIRE(   my_barray.numberNonPrincipalScatterers() == 
+                   good_barray.numberNonPrincipalScatterers() );
 
-    std::cout << my_MT4.ZA() << std::endl;
-    std::cout << good_MT4.ZA() << std::endl;
-    */
+        REQUIRE( my_barray.epsilon() == Approx(good_barray.epsilon()).epsilon(1e-6) );
+        REQUIRE(   my_barray.upperEnergyLimit() == 
+          Approx(good_barray.upperEnergyLimit()).epsilon(1e-6) );
+        checkVec(  my_barray.totalFreeCrossSections(),
+                 good_barray.totalFreeCrossSections());
+        checkVec(  my_barray.atomicWeightRatios(),
+                 good_barray.atomicWeightRatios());
+        checkVec(  my_barray.numberAtoms(),
+                 good_barray.numberAtoms());
+        checkVec(  my_barray.analyticalFunctionTypes(),
+                 good_barray.analyticalFunctionTypes());
+   
+        auto   my_table = std::get<Tabulated>(  my_MT4.scatteringLaw()),
+             good_table = std::get<Tabulated>(good_MT4.scatteringLaw());
+  
+        REQUIRE( my_table.NR() == good_table.NR() );
+        REQUIRE( my_table.NB() == good_table.NB() );
+        REQUIRE( my_table.numberBetas() == good_table.numberBetas() );
 
-
-
+        checkVec(my_table.boundaries(),good_table.boundaries());
+        checkVec(my_table.interpolants(),good_table.interpolants());
+  
+        for (size_t ibeta = 0; ibeta < my_table.numberBetas(); ++ibeta){
+          auto my_value   =   my_table.betas()[ibeta];
+          auto good_value = good_table.betas()[ibeta];
+          REQUIRE( my_value.beta() == Approx(good_value.beta()).epsilon(1e-6) );
+          REQUIRE( my_value.LT() == good_value.LT() );
+          REQUIRE(   my_value.temperatureDependenceFlag() == 
+                   good_value.temperatureDependenceFlag() );
+          REQUIRE( my_value.NT() == good_value.NT() );
+          REQUIRE( my_value.numberTemperatures() == good_value.numberTemperatures() );
+  
+          REQUIRE( my_value.NR() == good_value.NR() );
+          REQUIRE( my_value.NA() == good_value.NA() );
+          REQUIRE( my_value.numberAlphas() == good_value.numberAlphas() );
+          checkVec( my_value.boundaries(),good_value.boundaries());
+          checkVec( my_value.interpolants(),good_value.interpolants());
+    
+          checkVec( my_value.temperatures(),good_value.temperatures());
+          checkVec( my_value.alphas(),good_value.alphas());
+          checkVec( my_value.temperatureInterpolants(),good_value.temperatureInterpolants());
+          REQUIRE(   my_value.thermalScatteringValues().size() == 
+                   good_value.thermalScatteringValues().size());
+          for ( size_t i = 0; i < my_value.thermalScatteringValues().size(); ++i){
+            checkVec(  my_value.thermalScatteringValues()[i],
+                     good_value.thermalScatteringValues()[i]);
+          }
+        } // beta loop
+      } // if mf7 is present
     } // WHEN
   } // GIVEN
 } // TEST CASE

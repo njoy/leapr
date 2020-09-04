@@ -274,15 +274,15 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
           isym,lat,numAtomsVec);
 
   //njoy::ENDFtk::section::Type<7,2> MT2 = MF7.MT(2_c);
-  njoy::ENDFtk::section::Type<7,4> MT4 = MF7.MT(4_c);
+  //njoy::ENDFtk::section::Type<7,4> MT4 = MF7.MT(4_c);
 
   return MF7;
-  std::cout << MT4.ZA() << std::endl;
+  //std::cout << MT4.ZA() << std::endl;
 
-  std::string buffer;
-  auto output = std::back_inserter( buffer );
-  MT4.print( output, 27, 7 );
-  std::cout << buffer << std::endl;
+  //std::string buffer;
+  //auto output = std::back_inserter( buffer );
+  //MT4.print( output, 27, 7 );
+  //std::cout << buffer << std::endl;
 
 
         //std::string buffer;
