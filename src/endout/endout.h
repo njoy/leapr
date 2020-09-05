@@ -84,13 +84,13 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   unsigned int lasym = (isym > 1) ? 1 : 0;
   std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
   if (numSecondaryScatterers == 0){ secondaryScattererTypes = {}; }
+
   ScatteringLawConstants constants(ilog, numSecondaryScatterers, epsilon, emax, 
     std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
     std::move(secondaryScattererTypes));
 
   Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
                                  secondaryTempf,lasym,lat,isym,ilog,constants);
-
   if (iel == 0 and translationalWeight == 0.0){
     // Write incoherent elastic part
     Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,dwpix)); 

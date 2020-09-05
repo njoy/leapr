@@ -168,7 +168,6 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
 
   std::vector<std::vector<Float>> sab_AllTemps(temps.size());
   for (int scatterIter = 0; scatterIter < numIter; ++scatterIter){
-      std::cout << "HERE " << b7 << std::endl;
 
     for (size_t itemp = 0; itemp < temps.size(); ++itemp){
 
@@ -208,7 +207,7 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
 
       sab_AllTemps[itemp] = sab;
 
-    }
+    } // temp loop
 
     if (scatterIter == 0 and numIter == 2){
       for (size_t itemp = 0; itemp < temps.size(); ++itemp){
@@ -227,11 +226,15 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   unsigned int npr = scatterControl[0];
   std::variant<Range,bool> braggOutput;
   std::vector<double> bragg ( 60000, 0.0 );
+  int nedge = 0;
   if (iel > 0){
     double emax = 5.0;
     auto coherOut = coher( iel, npr, bragg, emax );
-    int numVals = std::get<0>(coherOut);
-    bragg.resize(numVals); 
+    //int numVals = std::get<0>(coherOut);
+    //int numVals2 = std::get<1>(coherOut);
+    nedge = std::get<1>(coherOut)* 0.5;
+    //std::cout << numVals << "   " << numVals2 << "   " << nedge  << std::endl;
+    bragg.resize(std::get<0>(coherOut)); 
     braggOutput = bragg;
   }
   else { 
@@ -239,10 +242,11 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
       bragg.resize(0);
   }
   int numEdges = bragg.size();
+  std::cout << numEdges << std::endl;
 
   try {
     std::get<bool>(braggOutput); // w contains int, not float: will throw
-    std::cout << "No bragg!" << std::endl;
+    //std::cout << "No bragg!" << std::endl;
   }
   catch (const std::bad_variant_access&) {}
 
@@ -251,9 +255,12 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   //---------------------------- Write Output --------------------------------
 
   int za = generalInfo[2];
-  std::vector<Float> awrVec = {awr,aws};
-  Float spr = scatterInfo[1];
-  Float sps = scatterInfo[3];
+  //std::vector<Float> awrVec = (numSecondaryScatterers == 0) ? {awr} : {awr,aws};
+  std::vector<Float> awrVec {awr,aws};
+  if (numSecondaryScatterers == 0){ awrVec.resize(1); }
+
+  Float spr = scatterInfo[1],
+        sps = scatterInfo[3];
   
   int ilog = generalInfo[4];
 
@@ -266,17 +273,27 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   auto transWgt = transInfo[0][temps.size()-1];
   unsigned int mss = scatterControl[6];
   std::vector<unsigned int> numAtomsVec {npr,mss};
+  if (numSecondaryScatterers == 0){ numAtomsVec.resize(1); }
 
-  
-  njoy::ENDFtk::file::Type<7> MF7 = endout(sab_AllTemps,za,awrVec,spr,sps,temps,
+    njoy::ENDFtk::file::Type<7> MF7 = endout(sab_AllTemps,za,awrVec,spr,sps,temps,
           numSecondaryScatterers, b7 , sab_AllTemps,alphas,
-          betas,dwpix,dwp1,iel,transWgt,bragg,numEdges,tempf,tempf1,ilog,
+          betas,dwpix,dwp1,iel,transWgt,bragg,nedge,tempf,tempf1,ilog,
           isym,lat,numAtomsVec);
 
+  return MF7;
+  /*
+return;
+  std::cout << numEdges << std::endl;
+  std::cout << ilog<< std::endl;
+  std::cout << za<< std::endl;
+  */
+  
+
+  /*
   //njoy::ENDFtk::section::Type<7,2> MT2 = MF7.MT(2_c);
   //njoy::ENDFtk::section::Type<7,4> MT4 = MF7.MT(4_c);
 
-  return MF7;
+  */
   //std::cout << MT4.ZA() << std::endl;
 
   //std::string buffer;

@@ -19,6 +19,15 @@ auto writeCohElasticToENDF( const Range& bragg, const Range& dwpix,
   std::vector<long> interpolants { 1 }; // desired ENDF interpolation type
   std::vector<long> temperatureInterpolation (temps.size()-1,2);
 
+  //std::cout << (boundaries|ranges::view::all) << std::endl;
+  //std::cout << (interpolants|ranges::view::all) << std::endl;
+  //std::cout << (temps|ranges::view::all) << std::endl;
+  //std::cout << (temperatureInterpolation|ranges::view::all) << std::endl;
+  //std::cout << (energies|ranges::view::all) << std::endl;
+  //std::cout << energies.size() << std::endl;
+  //std::cout << numEdges<< std::endl;
+  //std::cout << energies[energies.size()-3] << "   " <<  energies[energies.size()-2] << "  " << energies[energies.size()-1] << std::endl;
+
   CoherentElastic output( std::move(boundaries), 
                           std::move(interpolants),
                           std::move(temps), 
