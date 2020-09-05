@@ -137,11 +137,11 @@ auto leapr( int nphon, Float awr, int iel, int npr, int ncold, Float aws, int la
 }
 
 
-template <typename Range, typename RangeOfRanges, typename Float>
+template <typename Range, typename RangeOfRanges, typename Float >
 auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
         Range scatterInfo, Range temps, Range alphas, Range betas,
         RangeOfRanges rhoVec, Range rho_dx_vec, RangeOfRanges transInfo, 
-        RangeOfRanges oscE_vec, RangeOfRanges oscW_vec, Float smin ){
+        RangeOfRanges oscE_vec, RangeOfRanges oscW_vec, Float smin, std::tuple<std::vector<double>,double> kappaInfo  ){
 
   std::cout.precision(15);
   int nphon = generalInfo[0];
@@ -157,7 +157,6 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   auto awr = scatterInfo[0];
   auto aws = scatterInfo[2];
 
-
   Range dwpix (temps.size(),0.0),
         tempf (temps.size(),0.0),
         dwp1  (temps.size(),0.0),
@@ -172,6 +171,7 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
     for (size_t itemp = 0; itemp < temps.size(); ++itemp){
 
       std::vector<Float> sab(alphas.size()*betas.size(),0.0);
+      std::vector<Float> sab2(alphas.size()*betas.size(),0.0);
       auto tev = kb * temps[itemp];
 
       Float sc   = (lat         == 1) ? 0.0253/tev : 1.0,
@@ -204,6 +204,16 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
         discre( dwpix[itemp], transWgt, continWgt, scaledAlphas, scaledBetas, 
                 temps[itemp], oscEnergiesWgts, tempf[itemp], sab );
       }
+
+      if (ncold > 0){
+        bool free = false;
+
+        std::vector<double> kappa = std::get<0>(kappaInfo);
+        double dka                = std::get<1>(kappaInfo);
+        coldh( tev, ncold, transWgt+continWgt, alphas, betas, dka, kappa, free, 
+               sab, sab2, tempf[itemp]);
+      }
+
 
       sab_AllTemps[itemp] = sab;
 
@@ -242,7 +252,7 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
       bragg.resize(0);
   }
   int numEdges = bragg.size();
-  std::cout << numEdges << std::endl;
+  //std::cout << numEdges << std::endl;
 
   try {
     std::get<bool>(braggOutput); // w contains int, not float: will throw
@@ -275,17 +285,19 @@ auto full_LEAPR( std::vector<int> generalInfo, std::vector<int> scatterControl,
   std::vector<unsigned int> numAtomsVec {npr,mss};
   if (numSecondaryScatterers == 0){ numAtomsVec.resize(1); }
 
+  /*
     njoy::ENDFtk::file::Type<7> MF7 = endout(sab_AllTemps,za,awrVec,spr,sps,temps,
           numSecondaryScatterers, b7 , sab_AllTemps,alphas,
           betas,dwpix,dwp1,iel,transWgt,bragg,nedge,tempf,tempf1,ilog,
           isym,lat,numAtomsVec);
 
   return MF7;
-  /*
+  */
 return;
   std::cout << numEdges << std::endl;
   std::cout << ilog<< std::endl;
   std::cout << za<< std::endl;
+  /*
   */
   
 
