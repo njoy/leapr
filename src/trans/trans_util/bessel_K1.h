@@ -1,7 +1,6 @@
 #ifndef TRANS_TRANSUTIL_BESSELK1GEN
 #define TRANS_TRANSUTIL_BESSELK1GEN
 #include <vector>
-#include <iostream> 
 #include <cmath>
 
 template <typename Float>

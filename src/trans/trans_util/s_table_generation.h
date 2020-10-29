@@ -1,5 +1,9 @@
 #include "trans/trans_util/bessel_K1.h" 
 
+
+
+
+
 template <typename Float, typename Range>
 auto getFreeGas(const Float& trans_weight, const Float& alpha_sc, 
   const int& ndmax, const Float& delta, Range& s_free ){
@@ -31,4 +35,5 @@ auto getDiffusion( const Float& trans_weight, const Float& alpha_sc,
   } // while
   return ndmax-1;
 }
+
 

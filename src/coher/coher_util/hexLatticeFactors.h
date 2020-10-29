@@ -18,16 +18,16 @@ Float tausq( int i1, int i2, int i3, const Float& c1, const Float& c2 ){
 // because (tau/2pi)^2 = (4/3 a*a)(l1*l1 + l2*l2 + l1*l2) + l3*l3/(c*c)
 
 
-template <typename Float, typename Range>
-int hexLatticeFactors( int lat, Float a, Float c, Float maxTauSq, 
+template <typename Range>
+int hexLatticeFactors( int lat, double a, double c, double maxTauSq, 
   Range& b ){
 
   using std::sqrt;
 
   int i2m, i3m, k = 0;
-  Float tau, f, tsq;
+  double tau, f, tsq;
   // compute lattice factors for hexagonal lattices
-  Float phi = maxTauSq/(4*M_PI*M_PI), w1, w2, w3, 
+  double phi = maxTauSq/(4*M_PI*M_PI), w1, w2, w3, 
               c1 = 4/(3*a*a), c2 = 1/(c*c), 
               tsqx = 8*massNeutron/(20*1e4*hbar*hbar)*ev;
 
@@ -35,7 +35,7 @@ int hexLatticeFactors( int lat, Float a, Float c, Float maxTauSq,
     i2m = int((i1+sqrt(3*(a*a*phi-i1*i1)))/2) + 1;
 
     for ( auto i2 = i1; i2 < i2m; ++i2 ){
-      Float x = phi-c1*(i1*i1+i2*i2-i1*i2);
+      double x = phi-c1*(i1*i1+i2*i2-i1*i2);
       i3m = (x > 0) ? int(c*sqrt(x)) + 1 : 1;
 
       for ( auto i3 = 0; i3 < i3m; ++i3 ){

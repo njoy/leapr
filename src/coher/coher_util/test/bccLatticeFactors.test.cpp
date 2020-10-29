@@ -24,10 +24,10 @@ TEST_CASE( "taubcc" ){
 
 
 TEST_CASE( "Function to Compute BCC Lattice Factors (i.e. iron)" ){
-  double maxTauSq = 5.79115688E19, a = 2.86e-8, massScatterer = 9.208353194E-23;
+  double maxTauSq = 5.79115688E19, a = 2.86e-8;
   int lat = 6;
   std::vector<double> b (60000, 0.0), bVec1(100), bVec2(100), bVec3(100);
-  int imax = bccLatticeFactors( maxTauSq, b, lat, a, massScatterer);
+  int imax = bccLatticeFactors( maxTauSq, b, lat, a);
   bVec1 = { 5.733821E19, 5.28248E-10, 5.511804E19, 5.38782E-10, 5.309093E19, 
   5.48971E-10, 5.125688E19, 5.58706E-10, 4.961589E19, 5.67870E-10, 4.816796E19, 
   5.76342E-10, 4.691308E19, 5.84000E-10, 4.585126E19, 5.90723E-10, 4.498250E19, 

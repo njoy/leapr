@@ -8,9 +8,9 @@ Float taubcc( int l1, int l2, int l3, Float c1 ){
           4 * M_PI * M_PI;
 }
 
-template <typename Float>
-auto bccLatticeFactors( const Float& maxTauSq, std::vector<Float>& b, 
-  const int& lat, const Float& a, const Float& massScatterer ){
+template <typename Range>
+auto bccLatticeFactors( const double& maxTauSq, Range& b, 
+  const int& lat, const double& a ){
 
   double c1 = 2.0/(a*a), tsq;
   // compute lattice factors for bcc lattices
@@ -34,6 +34,5 @@ auto bccLatticeFactors( const Float& maxTauSq, std::vector<Float>& b,
   } // i1
 
   return k-1; // this is imax
-  std::cout << massScatterer << std::endl;
 }
 

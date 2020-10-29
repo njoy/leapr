@@ -9,8 +9,8 @@
 #include "coher_util/fccLatticeFactors.h"
 #include "coher_util/end.h"
 
-template <typename Range, typename Float>
-static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
+template <typename Range>
+static inline auto coher( int iel, int npr, Range& b, double maxEnergy ){
   /* Compute Bragg energies and associated structure factors
    * for coherent elastic scattering from graphite, Be, or BeO.
    *
@@ -25,7 +25,7 @@ static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
     mass  {12.011,    9.0100,    12.50,    26.7495, 207.,    55.454    },
     xsCoh {5.5000,    7.5300,    1.000,    1.49500, 1.00,    12.900    };
 
-  Float econ,a=0,c=0,sigmaC,scon,maxTauSq,massScatterer,toler=1.e-6;
+  double econ,a=0,c=0,sigmaC,scon,maxTauSq,toler=1.e-6;
 
 
   // Lattice Constants (a) in angstroms
@@ -61,7 +61,7 @@ static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
   // Convert lattice factors from angstroms to cm
   a = aVals[iel-1]; 
   sigmaC = xsCoh[iel-1]/npr;
-  massScatterer = amu*mass[iel-1];
+  //massScatterer = amu*mass[iel-1];
   scon = sigmaC*16*M_PI*M_PI;
 
   //wint=0;                        // This makes me suspicious
@@ -77,7 +77,7 @@ static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
   int imax;
   if ( iel < 4 ){ // compute lattice factors for hexagonal lattices
     c = cVals[iel-1];
-    Float volume = sqrt(3)*a*a*c/2; // Eq. 559
+    double volume = sqrt(3)*a*a*c/2; // Eq. 559
     scon /= 4*volume*econ;
     imax = hexLatticeFactors( iel, a, c, maxTauSq, b );
   }
@@ -89,7 +89,7 @@ static inline auto coher( int iel, int npr, Range& b, Float maxEnergy ){
 
   else { // iel == 6  // compute lattice factors for bcc lattices
     scon/=(8*a*a*a*econ);
-    imax = bccLatticeFactors( maxTauSq, b, iel, a, massScatterer );
+    imax = bccLatticeFactors( maxTauSq, b, iel, a );//, massScatterer );
   }
   int k = imax + 1;
 

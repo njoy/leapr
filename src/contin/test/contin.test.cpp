@@ -3,8 +3,6 @@
 #include "contin/contin.h"
 #include "generalTools/testing.h"
 
-
-
 TEST_CASE( "continuous treatment" ){
   int nphon;
   double delta, tbeta, tev, sc, scaling, lambda_s, t_bar;

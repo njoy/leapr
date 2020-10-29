@@ -1,8 +1,8 @@
 #include "generalTools/constants.h"
 
-template <typename Float, typename Range>
-auto hexLatticeFactorsHelper( int& k, const Float& tsq, const Float& tsqx, 
-  Range& b, const Float& f ){
+template <typename Range>
+auto hexLatticeFactorsHelper( int& k, const double & tsq, const double& tsqx, 
+  Range& b, const double& f ){
  
   if (k <= 0 or tsq <= tsqx) {
     k += 1;

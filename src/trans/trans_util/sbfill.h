@@ -1,23 +1,22 @@
-#include <iostream>
 #include <vector>
 #include <cmath>
 
-template <typename Range, typename Float>
-void sbfill(Range& sb, int nbt, const Float& delta, const Float& be, 
+template <typename Range>
+void sbfill(Range& sb, int nbt, const double& delta, const double& be, 
   Range& s, const Range& beta, int ndmax){
 
-  Float bmin = -be - (nbt-1) * delta;
-  Float bmax = -be + (nbt-1) * delta + delta * 0.01;
+  double bmin = -be - (nbt-1) * delta,
+         bmax = -be + (nbt-1) * delta + delta * 0.01;
 
   if ( 1 + (bmax-bmin) / delta > ndmax){ throw std::exception(); }
   
   int i = 0;
   size_t j = beta.size()-1;
-  Float current, toLeft, bet = bmin;
+  double current, toLeft, bet = bmin;
   bool foundRange = false, indexInRange = false; 
   
   while (bet < bmax){
-    Float b = std::abs(bet);
+    double b = std::abs(bet);
 
     foundRange = false;
     while (not foundRange){
@@ -60,7 +59,6 @@ void sbfill(Range& sb, int nbt, const Float& delta, const Float& be,
 }
 
 
-    //if ( i == 15849 ){ std::cout << "in sbfill  " << sb[i] << "   " << current << "   " << s[j] << std::endl; }
 
 
 

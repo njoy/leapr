@@ -3,7 +3,6 @@
 #include "generalTools/testing.h"
 #include <range/v3/all.hpp>
 
-
 TEST_CASE( "diffusion s-table generation" ){
   GIVEN( "trans. weight, alpha, diffusion const, delta and empty vectors" ){
     THEN( "the beta and translational scattering vectors are filled" ){
