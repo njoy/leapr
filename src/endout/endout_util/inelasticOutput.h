@@ -1,6 +1,7 @@
 #include <range/v3/all.hpp>
 #include "generalTools/constants.h"
-#include "generalTools/sigfig.h"
+//#include "generalTools/sigfig.h"
+#include "generalTools/tools.h"
 #include "ENDFtk.hpp"
 #include <iostream>
 

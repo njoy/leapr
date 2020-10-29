@@ -1,8 +1,6 @@
 #include "catch.hpp"
-#include "generalTools/interpolate.h"
+#include "generalTools/tools.h"
 #include "range/v3/all.hpp"
-#include "generalTools/print.h"
-
 
 TEST_CASE( "search" ){
   GIVEN( "Zipped X input range, a desired x value, and bounding indices" ){ 
