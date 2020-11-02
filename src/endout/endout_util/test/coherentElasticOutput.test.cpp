@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "endout/endout_util/coherentElasticOutput.h"
 #include "generalTools/testing.h"
-#include "coher/coher.h"
+#include "coherentElastic/coherentElastic.h"
 
 using namespace njoy::ENDFtk;
 using CoherentElastic = section::Type<7,2>::CoherentElastic;
@@ -13,7 +13,7 @@ TEST_CASE( "processing coherent elastic scattering data" ){
     std::vector<double> bragg (10000,0.0);
     double maxEnergy = 5.0;
     int iel = 3, npr = 1;
-    auto out = coher(iel,npr,bragg,maxEnergy);
+    auto out = coherentElastic(iel,npr,bragg,maxEnergy);
     int numEdges = int(0.5*std::get<1>(out));
 
     double tol = 1e-2;
@@ -153,7 +153,7 @@ TEST_CASE( "processing coherent elastic scattering data" ){
     std::vector<double> bragg (10000,0.0);
     double maxEnergy = 5.0;
     int iel = 3, npr = 1;
-    auto out = coher(iel,npr,bragg,maxEnergy);
+    auto out = coherentElastic(iel,npr,bragg,maxEnergy);
     int numEdges = int(0.5*std::get<1>(out));
 
     double tol = 0.9;
@@ -202,7 +202,7 @@ TEST_CASE( "processing coherent elastic scattering data" ){
       std::vector<double> bragg (10000,0.0);
       double maxEnergy = 5.0;
       int iel = 3, npr = 1;
-      auto out = coher(iel,npr,bragg,maxEnergy);
+      auto out = coherentElastic(iel,npr,bragg,maxEnergy);
       int numEdges = int(0.5*std::get<1>(out));
 
       double tol = 9e-8;

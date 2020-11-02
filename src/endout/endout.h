@@ -2,7 +2,7 @@
 #include "generalTools/constants.h"
 #include "range/v3/all.hpp"
 #include "generalTools/sigfig.h"
-#include "coher/coher.h"
+#include "coherentElastic/coherentElastic.h"
 #include "endout/endout_util/writeInelasticToENDF.h"
 #include "endout/endout_util/writeIncElasticToENDF.h"
 #include "endout/endout_util/writeCohElasticToENDF.h"

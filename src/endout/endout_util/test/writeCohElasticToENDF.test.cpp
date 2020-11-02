@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "coher/coher.h"
+#include "coherentElastic/coherentElastic.h"
 #include "generalTools/testing.h"
 #include "endout/endout_util/writeCohElasticToENDF.h"
 #include "endout/endout_util/test/correctCoherentOutput.h"
@@ -17,7 +17,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
       std::vector<double> bragg (60000,0.0);
       double maxEnergy = 5.0;
       int iel = 4, npr = 1;
-      auto out = coher(iel,npr,bragg,maxEnergy);
+      auto out = coherentElastic(iel,npr,bragg,maxEnergy);
       int numEdges = int(0.5*std::get<1>(out));
 
       double tol = 9e-8;
@@ -49,7 +49,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
       std::vector<double> bragg (10000,0.0);
       double maxEnergy = 5.0;
       int iel = 3, npr = 1;
-      auto out = coher(iel,npr,bragg,maxEnergy);
+      auto out = coherentElastic(iel,npr,bragg,maxEnergy);
       int numEdges = int(0.5*std::get<1>(out));
 
       double tol = 9e-8;
@@ -79,7 +79,7 @@ TEST_CASE( "finalizing coherent elastic scattering data for ENDF" ){
       std::vector<double> bragg (10000,0.0);
       double maxEnergy = 1.0;
       int iel = 1, npr = 1;
-      auto out = coher(iel,npr,bragg,maxEnergy);
+      auto out = coherentElastic(iel,npr,bragg,maxEnergy);
       int numEdges = int(0.5*std::get<1>(out));
 
       double tol = 9e-8;

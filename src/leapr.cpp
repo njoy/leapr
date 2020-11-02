@@ -1,8 +1,8 @@
-#include "contin/contin.h"
-#include "trans/trans.h"
-#include "discre/discre.h"
-#include "coldh/coldh.h"
-#include "coher/coher.h"
+#include "continuous/continuous.h"
+#include "translational/translational.h"
+#include "discreteOscillators/discreteOscillators.h"
+#include "coldHydrogen/coldHydrogen.h"
+#include "coherentElastic/coherentElastic.h"
 #include "skold/skold.h"
 #include "generalTools/constants.h"
 #include <range/v3/all.hpp>
@@ -61,7 +61,7 @@ auto leapr( std::vector<int> generalInfo, std::vector<int> scatterControl,
       auto rho_dx    = rho_dx_vec[itemp]/tev;
       auto continWgt = transInfo[2][itemp];
       auto rho       = rhoVec[itemp];
-      auto continOutput = contin(nphon, rho_dx, continWgt, rho, scaledAlphas, scaledBetas, sab);
+      auto continOutput = continuous(nphon, rho_dx, continWgt, rho, scaledAlphas, scaledBetas, sab);
 
       dwpix[itemp] = std::get<0>(continOutput);
       tempf[itemp] = std::get<1>(continOutput)*temps[itemp];
@@ -69,13 +69,13 @@ auto leapr( std::vector<int> generalInfo, std::vector<int> scatterControl,
       auto transWgt = transInfo[0][itemp];
       if (transWgt > 0){
         auto diffusion_const = transInfo[1][itemp];
-        trans( scaledAlphas, scaledBetas, transWgt, rho_dx, diffusion_const, 
+        translational( scaledAlphas, scaledBetas, transWgt, rho_dx, diffusion_const, 
                dwpix[itemp], continWgt, tempf[itemp], temps[itemp], sab );
       }
 
       auto oscEnergiesWgts = ranges::view::zip(oscE_vec[itemp],oscW_vec[itemp]);
       if (oscEnergiesWgts.size() > 0){
-        discre( dwpix[itemp], transWgt, continWgt, scaledAlphas, scaledBetas, 
+        discreteOscillators( dwpix[itemp], transWgt, continWgt, scaledAlphas, scaledBetas, 
                 temps[itemp], oscEnergiesWgts, tempf[itemp], sab );
       }
 
@@ -84,12 +84,9 @@ auto leapr( std::vector<int> generalInfo, std::vector<int> scatterControl,
 
         std::vector<double> kappa = std::get<0>(kappaInfo);
         double dka                = std::get<1>(kappaInfo);
-        coldh( tev, ncold, transWgt+continWgt, alphas, betas, dka, kappa, free, 
-               sab, sab2, tempf[itemp]);
-        //std::cout << (sab|ranges::view::all) << std::endl;
-        //std::cout << (sab2|ranges::view::all) << std::endl;
+        coldHydrogen( tev, ncold, transWgt+continWgt, alphas, betas, dka, kappa, 
+                      free, sab, sab2, tempf[itemp]);
       }
-
 
       sab_AllTemps[itemp] = sab;
 
@@ -115,7 +112,7 @@ auto leapr( std::vector<int> generalInfo, std::vector<int> scatterControl,
   int nedge = 0;
   if (iel > 0){
     double emax = 5.0;
-    auto coherOut = coher( iel, npr, bragg, emax );
+    auto coherOut = coherentElastic( iel, npr, bragg, emax );
     //int numVals = std::get<0>(coherOut);
     //int numVals2 = std::get<1>(coherOut);
     nedge = std::get<1>(coherOut)* 0.5;
