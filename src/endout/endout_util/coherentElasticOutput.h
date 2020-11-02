@@ -4,7 +4,7 @@
 #include <iostream>
 #include "generalTools/constants.h"
 #include "range/v3/all.hpp"
-#include "generalTools/sigfig.h"
+#include "generalTools/tools.h"
 #include "ENDFtk.hpp"
 
 template <typename Range, typename Float> 

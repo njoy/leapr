@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "generalTools/trapezoidIntegral.h"
+#include "generalTools/tools.h"
 #include "range/v3/all.hpp"
 
 

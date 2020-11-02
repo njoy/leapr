@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "endout/endout.h"
 #include "generalTools/testing.h"
-#include "coher/coher.h"
+#include "coherentElastic/coherentElastic.h"
 #include "endout/test/correctMF7.h"
 #include "endout/endout_util/test/check_MF_Output.h"
 #include "endout/test/braggVectors.h"

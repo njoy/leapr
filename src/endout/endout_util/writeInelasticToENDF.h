@@ -1,7 +1,8 @@
 #include <range/v3/all.hpp>
 #include "endout/endout_util/inelasticOutput.h"
 #include "generalTools/constants.h"
-#include "generalTools/sigfig.h"
+//#include "generalTools/sigfig.h"
+#include "generalTools/tools.h"
 #include "ENDFtk.hpp"
 #include <iostream>
 
