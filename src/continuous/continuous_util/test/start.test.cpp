@@ -21,6 +21,9 @@ TEST_CASE( "getting Debye Waller coefficient" ){
 } // TEST CASE
 
 
+
+
+
 TEST_CASE( "getting effective temperature" ){
   GIVEN( "a specified beta grid" ){ 
     std::vector<double> p1  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
@@ -37,6 +40,9 @@ TEST_CASE( "getting effective temperature" ){
     } // WHEN
   } // GIVEN
 } // TEST CASE
+
+
+
 
 
 
@@ -100,6 +106,14 @@ TEST_CASE( "normalize" ){
     } // THEN
   } // GIVEN
 } // TEST CASE
+
+
+
+
+
+
+
+
 
 
 

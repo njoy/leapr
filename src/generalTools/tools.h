@@ -1,10 +1,41 @@
-#ifndef LEAPR_GENERAL_TOOLS_INTERPOLATE
-#define LEAPR_GENERAL_TOOLS_INTERPOLATE
+#ifndef LEAPR_GENERAL_TOOLS
+#define LEAPR_GENERAL_TOOLS
+
 
 #include <range/v3/all.hpp>
 #include <iostream>
 #include <algorithm>
 #include <tuple>
+
+
+template <typename Range, typename Callable >
+auto trapezoidIntegral( Range inputXY, Callable callable ){
+  auto xVec = inputXY | ranges::view::keys;
+  auto yVec = inputXY | ranges::view::values;
+  auto binWidths = xVec | ranges::view::sliding(2) 
+                        | ranges::view::transform([](auto pair){ 
+                            return pair[1]-pair[0]; } );
+  auto argument = inputXY | ranges::view::transform(callable);
+  auto outputWindows = argument | ranges::view::sliding(2);
+  auto trapezoid = [](auto binWidth, auto leftRightPair){ 
+    return (leftRightPair[0]+leftRightPair[1])*0.5*binWidth;
+  };
+  auto integral = ranges::view::zip_with(trapezoid,binWidths,outputWindows);
+  return ranges::accumulate(integral,0.0);
+}
+
+
+
+
+
+template <typename Float>
+void swap( Float& a, Float& b ){
+    Float c = a;
+    a = b;
+    b = c;
+}
+
+
 
 
 template <typename Range, typename Float>
@@ -116,38 +147,15 @@ auto terp1( const Float& x1, const Float& y1, const Float& x2, const Float& y2,
   else if (i == 4) {
     return y1 * exp((x-x1) * log(y2/y1) / (x2-x1));
   }
-
   // ln(y) is linear in ln(x)
-  //else if (i == 5) {
   else {
     if (y1 == 0.0) {
-      //y = y1;
       return y1;
     } else {
-      //y = y1 * exp(log(x/x1) * log(y2/y1) / log(x2/x1));
       return y1 * exp(log(x/x1) * log(y2/y1) / log(x2/x1));
     }
   }
-
-  /* This is commmented out because I have no idea what thr6 is and 
-   * I doubt I will anytime soon. Shame
-  // coulomb penetrability law (charged particles only)
-  else if (i == 6) {
-    if (y1 == 0.0) {
-      y = y1;
-    else
-      t = sqrt(x1-thr6);
-      b = log((x2*y2)/(x1*y1));
-      b = b / (1/t-1/sqrt(x2-thr6));
-      a = exp(b/t) * x1 * y1;
-      y = (a/x) * exp(-b/sqrt(x-thr6));
-    }
-  }
-  */
 }
-
-
-
 
 #endif
 

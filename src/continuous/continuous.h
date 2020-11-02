@@ -1,7 +1,7 @@
 #include "continuous/continuous_util/start.h"
 #include "continuous/continuous_util/convolution.h"
 #include "continuous/continuous_util/checkMoments.h"
-#include "generalTools/interpolate.h"
+#include "generalTools/tools.h"
 #include <range/v3/all.hpp>
 
 template <typename Range, typename Float>

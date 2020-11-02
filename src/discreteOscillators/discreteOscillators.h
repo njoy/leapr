@@ -5,7 +5,7 @@
 #include "discreteOscillators_util/sint.h"
 #include "discreteOscillators_util/addDeltaFuncs.h"
 #include "generalTools/constants.h"
-#include "generalTools/swap.h"
+#include "generalTools/tools.h"
 #include <range/v3/all.hpp>
 #include <iostream>
 

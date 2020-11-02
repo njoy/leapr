@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "generalTools/interpolate.h"
+#include "generalTools/tools.h"
 #include "coldHydrogen_util/betaLoop.h"
 #include <range/v3/all.hpp>
 #include "generalTools/constants.h"

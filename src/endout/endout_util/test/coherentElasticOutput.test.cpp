@@ -24,7 +24,8 @@ TEST_CASE( "processing coherent elastic scattering data" ){
 
     int numSecondaryScatterers = 1, secondaryScatterType = 0;
 
-    auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,secondaryScatterType,numEdges,tol,temps);
+    auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,
+                                         secondaryScatterType,numEdges,tol,temps);
     auto energies = std::get<0>(output);
     auto totalSCR = std::get<1>(output);
     std::vector<std::vector<double>> correctSCR { 
@@ -159,12 +160,15 @@ TEST_CASE( "processing coherent elastic scattering data" ){
     double tol = 0.9;
     std::vector<double> 
     temps { 296.0, 400.0, 500.0, 600.0, 700.0, 800.0, 1000.0, 1200.0 },
-    dwpix { 2.18024395, 2.72608260, 3.28130480, 3.85303452, 4.43480683, 5.02310000, 6.21177434, 7.41006538},
-    dwp1  { 2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 4.49435669, 5.50273307, 6.5268008};
+    dwpix { 2.18024395, 2.72608260, 3.28130480, 3.85303452, 4.43480683, 
+            5.02310000, 6.21177434, 7.41006538},
+    dwp1  { 2.16475875, 2.59570940, 3.04447306, 3.51490437, 3.99970405, 
+            4.49435669, 5.50273307, 6.5268008};
 
     int numSecondaryScatterers = 1, secondaryScatterType = 0;
 
-    auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,secondaryScatterType,numEdges,tol,temps);
+    auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,
+                                         secondaryScatterType,numEdges,tol,temps);
     auto energies = std::get<0>(output);
     auto totalSCR = std::get<1>(output);
 
@@ -189,7 +193,9 @@ TEST_CASE( "processing coherent elastic scattering data" ){
     for ( size_t t = 0; t < temps.size(); ++t ){
       REQUIRE( ranges::equal( totalSCR[t], correctSCR[t], equal ) );
     }
-    std::vector<double> correctEnergies{ 0.001061174, 0.003754368, 0.004244696, 0.004815542, 0.007999064, 0.009550566, 0.0112631, 0.01232428, 0.01330493, 0.01501747, 5.0 };
+    std::vector<double> correctEnergies{ 0.001061174, 0.003754368, 0.004244696, 
+      0.004815542, 0.007999064, 0.009550566, 0.0112631, 0.01232428, 0.01330493, 
+      0.01501747, 5.0 };
     REQUIRE( ranges::equal(energies, correctEnergies, equal) );
 
 
@@ -248,7 +254,8 @@ TEST_CASE( "processing coherent elastic scattering data" ){
       1.351837, 1.351837, 1.351837 }};
 
 
-      auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,secondaryScatterType,numEdges,tol,temps);
+      auto output = processCoherentElastic(bragg,dwpix,dwp1,numSecondaryScatterers,
+                                       secondaryScatterType,numEdges,tol,temps);
       auto energies = std::get<0>(output);
       auto totalSCR = std::get<1>(output);
 

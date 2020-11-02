@@ -1,21 +1,11 @@
 //#include "contin/contin_util/start_util/normalize.h"
 //#include "contin/contin_util/start_util/getDebyeWaller.h"
 //#include "contin/contin_util/start_util/getEffectiveTemp.h"
-#include "generalTools/trapezoidIntegral.h"
 #include <range/v3/all.hpp>
 #include <iostream>
 
 
-
-template <typename Range_Zip>
-auto getEffectiveTemp(const Range_Zip& beta_P){
-  using std::cosh; using std::pow;
-  auto integrand = [](auto xy){ 
-    return std::get<1>(xy)*pow(std::get<0>(xy),2)*2.0*cosh(std::get<0>(xy)*0.5); };
-  return trapezoidIntegral(beta_P,integrand);
-}
-
-
+#include "generalTools/tools.h"
 
 template <typename Range_Zip>
 auto getDebyeWaller(const Range_Zip& beta_P){
@@ -30,19 +20,32 @@ auto getDebyeWaller(const Range_Zip& beta_P){
   return trapezoidIntegral(beta_P,integrand);
 }
 
+template <typename Range_Zip>
+auto getEffectiveTemp(const Range_Zip& beta_P){
+  using std::cosh; using std::pow;
+  auto integrand = [](auto xy){ 
+    return std::get<1>(xy)*pow(std::get<0>(xy),2)*2.0*cosh(std::get<0>(xy)*0.5); };
+  return trapezoidIntegral(beta_P,integrand);
+}
+
+
 
 
 template <typename Float, typename Range>
 auto normalize( Range beta_P, const Float& continWgt ){
+
   /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
    * equation that is being normalized to integrate to continWgt. 
+   *
    *             rho(beta) = P(beta) * 2 * beta * sinh( beta / 2 )
+   *
    * Inputs
    * ------------------------------------------------------------------------
    * p         : the vector to be normalized. This is P(beta), which is 
    *             defined by Eq. 507. 
    * delta_b   : spacing used in the Riemann sum for estimating the integral
    * continWgt : value to which the above equation should integrate
+   *
    * 
    * Operations
    * ------------------------------------------------------------------------
@@ -53,7 +56,9 @@ auto normalize( Range beta_P, const Float& continWgt ){
    * ------------------------------------------------------------------------
    * * P(beta) is amended
    */
+
   using std::sinh;
+
   auto integrand = [](auto xy){
     auto beta = std::get<0>(xy); 
     auto P = std::get<1>(xy); 
@@ -63,6 +68,9 @@ auto normalize( Range beta_P, const Float& continWgt ){
   return  ranges::view::values(beta_P)
         | ranges::view::transform([invSum](auto x){return x*invSum;});
 }
+
+
+
 
 
 
@@ -78,18 +86,22 @@ auto start( const Range& rho, const Float& continWgt, const Range& betaGrid ){
    * continWgt : normalization for the continuous frequency spectrum. Note that 
    *         the freq. spectrum rho should integrate to 1 (Eq. 508). Well continWgt
    *         is the scaling away from 1, if the user wants. Provided in Card13
+   * 
    * Operations
    * ------------------------------------------------------------------------
    * * Raw freq. spectrum rho(beta) [p] is altered to be P(beta) following 
    *   Eq. 507. It is then normalized and scaled. New P(beta) now exists in p.
    * * Debye-Waller coefficient is calculated, along with effective temperature
    * * P(beta) is turned into T1(beta), following Eq. 525. T1(beta) is in p.
+   * 
    * Outputs
    * ------------------------------------------------------------------------
    * * T1(beta) exists in the vector p
    * * A tuple containing the Debye-Waller coefficient and effective temperature
    *   is returned.
+   *
    */
+
   // Move phonon distribution rho(beta) to P(beta) by discretely solving at 
   // points delta apart. This follows Eq. 507.
   // What if the first phonon rho value is equal to zero? Then P(beta) is 
@@ -105,6 +117,7 @@ auto start( const Range& rho, const Float& continWgt, const Range& betaGrid ){
     auto rho  = std::get<1>(betaRho);
     return rho / ( 2.0 * beta * sinh(beta*0.5) );
   };
+  
   using std::pow;
   auto P = ranges::view::concat(ranges::view::single(rho[1]/pow(betaGrid[1],2)),
                                 ranges::view::zip(betaGrid,rho) 

@@ -1,0 +1,3 @@
+[submodule "subprojects/lipservice"]
+	path = subprojects/lipservice
+	url = https://github.com/njoy/lipservice

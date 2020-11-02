@@ -1,7 +1,7 @@
 #include "translational_util/s_table_generation.h"
 #include "translational_util/sbfill.h"
 #include "range/v3/all.hpp"
-#include "generalTools/interpolate.h"
+#include "generalTools/tools.h"
 
 template <typename Range, typename Float>
 auto translational( Range alpha, Range beta, const Float& transWeight, Float deltaBeta, 

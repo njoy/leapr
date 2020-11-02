@@ -2,12 +2,12 @@
 #include "generalTools/constants.h"
 #include "range/v3/all.hpp"
 #include "generalTools/sigfig.h"
+//#include "generalTools/tools.h"
 #include "coherentElastic/coherentElastic.h"
 #include "endout/endout_util/writeInelasticToENDF.h"
 #include "endout/endout_util/writeIncElasticToENDF.h"
 #include "endout/endout_util/writeCohElasticToENDF.h"
 #include "ENDFtk.hpp"
-
 
 using namespace njoy::ENDFtk;
 using Elastic         = section::Type<7,2>;
@@ -15,15 +15,13 @@ using CoherentElastic = section::Type<7,2>::CoherentElastic;
 using Inelastic       = section::Type<7,4>;
 using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
-
 template <typename Range> 
 auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
   int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
   const Range& awrVec ){
-  //const Float& awr, const Float& aws ){
   // display endf t-effective and debye-waller integral
-  auto awr = awrVec[0];
-  auto aws = awrVec[1];
+  auto awr = awrVec[0],
+       aws = awrVec[1];
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
        dwpix[i] /= (awr*temps[i]*kb);
@@ -49,17 +47,11 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   Range primaryTempf, Range secondaryTempf, int ilog, int isym, int lat, 
   std::vector<unsigned int> numAtomsVec ){
   using std::pow;
-
-  // compute bound scattering cross sections
-
-  
   Float awr        = awrVec[0];
   unsigned int npr = numAtomsVec[0];
   Float sigma_b    = spr*pow(((1.0+awr)/awr),2);
   Range xsVec      = { spr*npr, sps };
   if (numSecondaryScatterers == 0){ xsVec.resize(1); }
-  //Range primaryTempf   = (numSecondaryScatterers == 0) ? tempf1 : tempf ;
-  //Range secondaryTempf = (numSecondaryScatterers == 0) ? tempf  : tempf1;
 
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
     Float aws = awrVec[1];
