@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "contin/contin.h"
+#include "continuous/continuous.h"
 #include "generalTools/testing.h"
 
 

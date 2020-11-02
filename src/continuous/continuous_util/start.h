@@ -1,8 +1,77 @@
-#include "contin/contin_util/start_util/normalize.h"
-#include "contin/contin_util/start_util/getDebyeWaller.h"
-#include "contin/contin_util/start_util/getEffectiveTemp.h"
+//#include "contin/contin_util/start_util/normalize.h"
+//#include "contin/contin_util/start_util/getDebyeWaller.h"
+//#include "contin/contin_util/start_util/getEffectiveTemp.h"
 #include <range/v3/all.hpp>
 #include <iostream>
+
+
+#include "generalTools/trapezoidIntegral.h"
+
+template <typename Range_Zip>
+auto getDebyeWaller(const Range_Zip& beta_P){
+  // Now we want to find lambda_s = int -infty -> infty P(b)*exp(-b/2) db
+  // int -inf -> inf P(b)*exp(-b/2)
+  // int   0  -> inf P(-b)*exp(b/2) + P(b)*exp(-b/2) db
+  // int   0  -> inf P(b)*exp(b/2) + P(b)*exp(-b/2) db
+  // int   0  -> inf P(b)*2*cosh(b/2) db
+  using std::cosh;
+  auto integrand = [](auto xy){ 
+    return std::get<1>(xy)*2.0*cosh(std::get<0>(xy)*0.5); };
+  return trapezoidIntegral(beta_P,integrand);
+}
+
+template <typename Range_Zip>
+auto getEffectiveTemp(const Range_Zip& beta_P){
+  using std::cosh; using std::pow;
+  auto integrand = [](auto xy){ 
+    return std::get<1>(xy)*pow(std::get<0>(xy),2)*2.0*cosh(std::get<0>(xy)*0.5); };
+  return trapezoidIntegral(beta_P,integrand);
+}
+
+
+
+
+template <typename Float, typename Range>
+auto normalize( Range beta_P, const Float& continWgt ){
+
+  /* Rearranging Eq. 507 to get a definition for rho(beta), this is the 
+   * equation that is being normalized to integrate to continWgt. 
+   *
+   *             rho(beta) = P(beta) * 2 * beta * sinh( beta / 2 )
+   *
+   * Inputs
+   * ------------------------------------------------------------------------
+   * p         : the vector to be normalized. This is P(beta), which is 
+   *             defined by Eq. 507. 
+   * delta_b   : spacing used in the Riemann sum for estimating the integral
+   * continWgt : value to which the above equation should integrate
+   *
+   * 
+   * Operations
+   * ------------------------------------------------------------------------
+   * * Integrate (using fsum) the above equation from 0 to infty.
+   * * Scale each P(beta) value so that it is normlized to continWgt
+   *
+   * Outputs
+   * ------------------------------------------------------------------------
+   * * P(beta) is amended
+   */
+
+  using std::sinh;
+
+  auto integrand = [](auto xy){
+    auto beta = std::get<0>(xy); 
+    auto P = std::get<1>(xy); 
+    return P*2.0*beta*sinh(beta*0.5);};
+
+  Float invSum = continWgt / trapezoidIntegral(beta_P,integrand);
+  return  ranges::view::values(beta_P)
+        | ranges::view::transform([invSum](auto x){return x*invSum;});
+}
+
+
+
+
 
 
 template <typename Range, typename Float>

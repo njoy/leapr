@@ -5,6 +5,10 @@ include( FetchContent )
 # Declare project dependencies
 #######################################################################
 
+#FetchContent_Declare( lipservice
+#    GIT_REPOSITORY  https://github.com/njoy/lipservice
+#    GIT_TAG          9f84b282718d55324da36b01937e8b9c15ced2a7
+#    )
 FetchContent_Declare( range-v3-adapter
     GIT_REPOSITORY  https://github.com/njoy/range-v3-adapter
     GIT_TAG         4d1a3bde6aba47ca59a65713f9cab7877ad2cc87

@@ -1,4 +1,4 @@
-#include "contin/contin.h"
+#include "continuous/continuous.h"
 #include "trans/trans.h"
 #include "discre/discre.h"
 #include "coldh/coldh.h"
@@ -8,6 +8,7 @@
 #include <range/v3/all.hpp>
 #include <variant>
 #include "endout/endout.h"
+//#include "lipservice.hpp"
 
 
 template <typename Range, typename RangeOfRanges, typename Float>

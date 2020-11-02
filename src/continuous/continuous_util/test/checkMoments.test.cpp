@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "contin/contin_util/checkMoments.h"
+#include "continuous/continuous_util/checkMoments.h"
 #include <range/v3/all.hpp>
 
 auto equal = [](auto x, auto y, double tol = 1e-6){ return x == Approx(y).epsilon(tol); };

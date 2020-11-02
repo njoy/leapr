@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "contin/contin_util/convol.h"
+#include "continuous/continuous_util/convolution.h"
 
 TEST_CASE( "convol" ){
   GIVEN( "two vectors" ){
