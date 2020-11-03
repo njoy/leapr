@@ -66,7 +66,7 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
 
   Range ben(wts.size(), 0), wtn(wts.size(), 0); wtn[0] = 1.0;
 
-  Float alpha_debyeWaller, x, bzero;
+  Float x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators

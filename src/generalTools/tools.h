@@ -11,7 +11,7 @@
 template <typename Range, typename Callable >
 auto trapezoidIntegral( Range inputXY, Callable callable ){
   auto xVec = inputXY | ranges::view::keys;
-  auto yVec = inputXY | ranges::view::values;
+  //auto yVec = inputXY | ranges::view::values;
   auto binWidths = xVec | ranges::view::sliding(2) 
                         | ranges::view::transform([](auto pair){ 
                             return pair[1]-pair[0]; } );
