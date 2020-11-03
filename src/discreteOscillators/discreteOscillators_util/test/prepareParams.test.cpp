@@ -18,15 +18,9 @@ TEST_CASE( "prepare parameters helper function" ){
     weights = { 0.2  , 0.8  };
     beta    = { 0.10/sc, 0.15/sc, 0.30/sc, 0.60/sc, 1.20/sc };
 
+    auto oscEnergiesWeights = ranges::view::zip(energy,weights);
 
-
-    std::vector<std::tuple<double,double>> oscEnergiesWeights(energy.size());
-    for ( size_t i = 0; i < energy.size(); ++i ){
-      oscEnergiesWeights[i] = std::make_tuple(energy[i],weights[i]);
-    }
-    auto oscEnergiesWeights2 = ranges::view::zip(energy,weights);
-
-    prepareParams( oscEnergiesWeights2, tev, energyNorm, ar, dist,
+    prepareParams( oscEnergiesWeights, tev, energyNorm, ar, dist,
       dbw, exb, beta );
 
     correctExb = {0.904837, 0.860708, 0.740818, 0.548812, 0.301194 };
