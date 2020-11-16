@@ -95,7 +95,7 @@ TEST_CASE( "jprime loop" ){
         tbart, y, nbx, true, true );
 
       THEN( "output matches expectation" ){
-        REQUIRE( out == Approx(0.161404).epsilon(1e-6) );
+        REQUIRE( out == Approx(0.161404).epsilon(1e-5) );
       } // THEN
     } // WHEN
   } // GIVEN
