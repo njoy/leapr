@@ -1,4 +1,5 @@
 #include <range/v3/all.hpp>
+#include <cmath>
 
 double factorial( int n ){
   return ( n <= 1 ) ? 1.0 : n*factorial(n-1);
@@ -69,7 +70,7 @@ Float sjbes( int n, const Float& y ){
         t1 = (2*k + 3) * t2 / y - t3;
 
         if (n == k){ sj = t1;}
-        if (std::abs(t1) >= 1.0e25) {
+        if (std::fabs(t1) >= 1.0e25) {
           t1 = t1 / 1.0e25;
           t2 = t2 / 1.0e25;
           sj = sj / 1.0e25;

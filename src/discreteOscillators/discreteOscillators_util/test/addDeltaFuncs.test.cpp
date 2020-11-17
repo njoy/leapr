@@ -4,21 +4,6 @@
 #include "generalTools/testing.h"
 
 
-void equalOLD( double a, double b ){
-  if (b == 0.0){ 
-    REQUIRE( b-a < 1e-6 );
-    return;
-  }
-  REQUIRE ( std::abs( (a-b)/(b) ) < 1e-6 );
-}
-
-void equalOLD_vec( std::vector<double> a, std::vector<double> b ){
-  REQUIRE( a.size() == b.size() );
-  for ( size_t i = 0; i < a.size(); ++i ){
-    equalOLD( a[i], b[i] );
-  }
-}
-
 TEST_CASE( "helper function to add delta functions to scattering law" ){
   double twt = -0.1, dwf = 0.9;
   int n = 17;
@@ -83,7 +68,7 @@ TEST_CASE( "helper function to add delta functions to scattering law" ){
     dwf = 9.9e-11;
     addDeltaFuncs( twt, dwf, bes, betan, wts, sexpb, n );
     THEN( "no change to sexpbc" ){
-      equalOLD_vec( sexpb, {0.1,0.2,0.3,0.4,0.5} );
+      REQUIRE(ranges::equal( sexpb, {0.1,0.2,0.3,0.4,0.5},equal));
     } // THEN
   } // GIVEN
 

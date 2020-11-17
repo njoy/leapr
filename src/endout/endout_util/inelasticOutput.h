@@ -3,6 +3,7 @@
 #include "generalTools/sigfig.h"
 #include "generalTools/tools.h"
 #include "ENDFtk.hpp"
+#include <cmath>
 #include <iostream>
 
 template<typename Range, typename Float>

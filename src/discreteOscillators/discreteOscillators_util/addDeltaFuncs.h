@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 template <typename Float, typename Range>
 auto addDeltaFuncs( const Float twt, const Float& debyeWallerExp, const Range& bes, 
@@ -23,10 +24,10 @@ auto addDeltaFuncs( const Float twt, const Float& debyeWallerExp, const Range& b
         while ( j < betan.size() and not done ){
           j += 1;  //jj = j;
           jj = j;
-          if ( std::abs(-bes[m-1]-betan[j-1] ) > db ){
+          if ( std::fabs(-bes[m-1]-betan[j-1] ) > db ){
             done = true;
           } else {
-            db = std::abs(-bes[m-1]-betan[j-1]);
+            db = std::fabs(-bes[m-1]-betan[j-1]);
           }
         }
 
