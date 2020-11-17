@@ -11,7 +11,7 @@ auto addDeltaFuncs( const Float twt, const Float& debyeWallerExp, const Range& b
   if ( twt > 0.0  or debyeWallerExp < 1.0e-10 ){ return; }
 
   unsigned int j; 
-  int jj, m = 0;
+  int jj = 0, m = 0;
   bool done = false;
   Float add, db;
 

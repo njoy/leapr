@@ -33,7 +33,7 @@ Float sjbes( int n, const Float& y ){
    * In the case of cold hydrogen and deuterium calculations, y is defined by
    */
   int k, l, nm;
-  Float w, sj, t1, t2, t3;
+  Float w, sj=0.0, t1=0.0, t2, t3;
   // check for large or negative arguments
   if ( n >= 3.0e4 or y > 3.0e4 or y < 0.0 or n < 0.0 ){
     return 0.0;
