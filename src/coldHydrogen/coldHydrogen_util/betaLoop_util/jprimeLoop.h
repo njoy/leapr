@@ -8,7 +8,6 @@ auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst,
   const Float& pj, const Range& bex, const Range& rdbex, const Range& sex, 
   const Range& betan, const Float& alphaWgt, const Float& tbart, const Float& y, 
   int nbx, bool odd, bool free  ){
-
   //--sum over the odd or even values of j-prime
   
   Float add, snl = 0, tmp, bn, ex;
