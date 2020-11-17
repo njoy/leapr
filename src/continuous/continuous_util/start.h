@@ -1,10 +1,5 @@
-//#include "contin/contin_util/start_util/normalize.h"
-//#include "contin/contin_util/start_util/getDebyeWaller.h"
-//#include "contin/contin_util/start_util/getEffectiveTemp.h"
 #include <range/v3/all.hpp>
 #include <iostream>
-
-
 #include "generalTools/tools.h"
 
 template <typename Range_Zip>

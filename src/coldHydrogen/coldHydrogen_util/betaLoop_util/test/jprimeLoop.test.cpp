@@ -4,14 +4,16 @@
 #include "coldHydrogen/coldHydrogen_util/betaLoop_util/jprimeLoop.h"
 
 
+
 TEST_CASE( "jprime loop" ){
   std::vector<double> bex(11), rdbex(11), betan(5), sex(11);
   int j, nbx;
   double wt, be, al, x, swe, pj, y, tbart, total, out, swo;
+  REQUIRE( true );
 
 
   bex   = {-1.2, -0.6, -0.3, -0.15, -0.1, 0.1, 0.15, 0.3, 0.6, 1.2, 0.0};
-  rdbex = {1.666667, 3.3333, 6.6667, 20, 5, 20, 6.6667, 3.33333, 1.66667, 0, 0};
+  rdbex = {1.666667, 3.3333, 6.6667, 20, 5, 20, 6.6667, 3.33333, 1.666667, 0, 0};
   betan = {0.1, 0.15, 0.3, 0.6, 1.2};
 
   GIVEN( "jprime loop is over even values" ){
@@ -90,12 +92,12 @@ TEST_CASE( "jprime loop" ){
 
     WHEN( "molecular translations are assumed to be free (free = true)" ){
       for ( size_t i = 0; i < sex.size(); ++i ){ sex[i] = 2 * (i + 1); }
-      wt = 2.05; y = 0.35; swo = 0.47; pj = 0.48;
+      wt = 2.05; y = 0.35; swo = 0.47; pj = 0.48; x = 0.8;
       out = jPrime( j, be, x, swo, pj, bex, rdbex, sex, betan, al*wt, 
         tbart, y, nbx, true, true );
 
       THEN( "output matches expectation" ){
-        REQUIRE( out == Approx(0.161404).epsilon(1e-6) );
+        REQUIRE( out == Approx(0.1613709705).epsilon(1e-5) );
       } // THEN
     } // WHEN
   } // GIVEN

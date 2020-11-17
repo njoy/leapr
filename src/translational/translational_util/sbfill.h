@@ -16,7 +16,7 @@ void sbfill(Range& sb, int nbt, const double& delta, const double& be,
   bool foundRange = false, indexInRange = false; 
   
   while (bet < bmax){
-    double b = std::abs(bet);
+    double b = std::fabs(bet);
 
     foundRange = false;
     while (not foundRange){

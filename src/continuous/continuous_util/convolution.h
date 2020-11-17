@@ -1,3 +1,4 @@
+#include <cmath>
 
 template <typename Float, typename Range>
 auto getConvolAtPoint( int i, const Float& delta, const Range& t1, 
@@ -11,8 +12,8 @@ auto getConvolAtPoint( int i, const Float& delta, const Range& t1,
     if (i < j){ expVal = exp((i-j)*delta); }
 
     sumVal += ( j == -len_t1+1 or j == len_t1-1 ) ? 
-                0.5*(t1[abs(j)]*t2[abs(i-j)]*expVal)
-              :     (t1[abs(j)]*t2[abs(i-j)]*expVal);
+                0.5*(t1[std::fabs(j)]*t2[std::fabs(i-j)]*expVal)
+              :     (t1[std::fabs(j)]*t2[std::fabs(i-j)]*expVal);
   } 
   return sumVal;
 }

@@ -47,7 +47,7 @@ auto coldHydrogen( Float tev, int ncold, Float transContinWeight,
    * symmetric in beta
    */
 
-  Float de, x, massMolecule, bp, scatLenC, scatLenI, wt;
+  Float de, x, massMolecule, bp, scatLenC, scatLenI;//, wt;
   int nbx, maxbb = 2 * beta.size() + 1;
 
   Range exb(beta.size(), 0.0), bex(maxbb, 0.0), rdbex(maxbb, 0.0);
@@ -74,7 +74,7 @@ auto coldHydrogen( Float tev, int ncold, Float transContinWeight,
 
   x = de / tev;
   //wt = trans_weight + tbeta;  
-  wt = transContinWeight;
+  //wt = transContinWeight;
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
              | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); 

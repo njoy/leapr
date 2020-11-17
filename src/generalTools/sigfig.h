@@ -13,10 +13,9 @@ inline auto sigfig(double x, int ndig, int idig){
    int ipwr,ii;
    double bias=1.0000000000001e0;
    using std::pow;
-   using std::abs;
    xx=0;
    if (x != 0) {
-      aa=log10(abs(x));
+      aa=log10(std::fabs(x));
       ipwr=int(aa);
       if (aa < 0) ipwr=ipwr-1;
       ipwr=ndig-1-ipwr;
@@ -25,7 +24,6 @@ inline auto sigfig(double x, int ndig, int idig){
          ii=ii/10;
          ipwr=ipwr-1;
       }
-      //std::cout << ii  << "   " << ipwr << "   " << idig << std::endl;
       ii=ii+idig;
       xx=ii*pow(10,(-ipwr));
    }

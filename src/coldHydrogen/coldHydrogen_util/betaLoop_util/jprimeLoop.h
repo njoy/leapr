@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
 #include "jprimeLoop_util/sumh.h"
+#include <cmath>
 
 template <typename Float, typename Range>
 auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst, 
   const Float& pj, const Range& bex, const Range& rdbex, const Range& sex, 
   const Range& betan, const Float& alphaWgt, const Float& tbart, const Float& y, 
   int nbx, bool odd, bool free  ){
-
   //--sum over the odd or even values of j-prime
   
   Float add, snl = 0, tmp, bn, ex;
@@ -34,7 +34,7 @@ auto jPrime( int j, const Float& be, const Float& x, const Float& sumConst,
     if ( free ) {
       // If molecular translations are assumed to be free, we calculate the 
       // S_f(a,b) by using Eq. 569-570. This'll be used in Eq. 567-568.
-      ex = -std::pow(alphaWgt-std::abs(bn),2)/(4*alphaWgt);
+      ex = -std::pow(alphaWgt-std::fabs(bn),2)/(4*alphaWgt);
       if ( bn > 0.0 ){ ex -= bn; }
       add = exp(ex)/sqrt(4*M_PI*alphaWgt);
     }

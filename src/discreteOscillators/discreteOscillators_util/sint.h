@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 template <typename Float> 
 auto doSCT( const Float& alpha, const Float& tbart, const Float& x){
   using std::pow;
   if (alpha<= 0.0){ return 0.0; }
-  Float ex = -pow(alpha-abs(x),2)/(4*alpha*tbart);
+  Float ex = -pow(alpha-std::fabs(x),2)/(4*alpha*tbart);
   if ( x > 0.0 ){ ex -= x; }
   return exp(ex)/(4.0*M_PI*alpha*tbart); 
 }  // If x is positive, model it as if it was negative, and then multiply
@@ -26,11 +27,10 @@ auto sint(const Float& x, const Range& bex, const Range& rdbex,
   // function is to help evaluate the S(a,b-b_k) part of Eq. 542. Note that 
   // (b-b_k) is given as input "x". If we can use SCT we will, else we'll have
   // to interpolate on log(S) (Note that tbart is proz \bar{T_s}/T in Eq. 530)
-  using std::abs; 
   using std::log;
   
   // Short Collision Time approximation
-  if (abs(x) > betan[betan.size()-1]){ return doSCT(alpha, tbart, x); }
+  if (std::fabs(x) > betan[betan.size()-1]){ return doSCT(alpha, tbart, x); }
   
   int xLeft = 1, xMid = b+1, xRight = numNonzeroEntries;
 
