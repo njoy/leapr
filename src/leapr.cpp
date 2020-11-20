@@ -11,8 +11,15 @@
 using namespace njoy;
 #include "lipservice.hpp"
 
+namespace njoy {
+namespace LEAPR {
 
-auto finalLEAPR( nlohmann::json jsonInput ){
+class LEAPR{
+
+void operator()( nlohmann::json& jsonInput,
+                 std::ostream& output,
+                 std::ostream& error,
+                 const nlohmann::json& ){
   // Do we have a secondary scatterer?
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -65,24 +72,24 @@ auto finalLEAPR( nlohmann::json jsonInput ){
       double rho_dx           = double(tempInfo["delta"])/tev;
       double continuousWgt    = tempInfo["tbeta"];
       std::vector<double> rho = tempInfo["rho"];
-      auto continOutput  = continuous(int(jsonInput["nphon"]), rho_dx, 
+      auto continOutput  = continuous(int(jsonInput["nphon"]), rho_dx,
                            continuousWgt, rho, scaledAlphas, scaledBetas, sab);
       dwpix[itemp] = std::get<0>(continOutput);
       tempf[itemp] = std::get<1>(continOutput)*temperature;
-    
+
       double transWgt = tempInfo["twt"];
       if (transWgt > 0){
         double diffusion_const = tempInfo["c"];
-        translational( scaledAlphas, scaledBetas, transWgt, rho_dx, 
-                       diffusion_const, dwpix[itemp], continuousWgt, 
+        translational( scaledAlphas, scaledBetas, transWgt, rho_dx,
+                       diffusion_const, dwpix[itemp], continuousWgt,
                        tempf[itemp], temperature, sab );
       }
 
       if (not tempInfo["oscillators"]["energies"].is_null()){
-        std::vector<double> 
+        std::vector<double>
             oscE = tempInfo["oscillators"]["energies"],
             oscW = tempInfo["oscillators"]["weights"];
-        discreteOscillators( dwpix[itemp], transWgt, continuousWgt, scaledAlphas, 
+        discreteOscillators( dwpix[itemp], transWgt, continuousWgt, scaledAlphas,
             scaledBetas, temperature, ranges::view::zip(oscE,oscW),
             tempf[itemp], sab );
       }
@@ -92,7 +99,7 @@ auto finalLEAPR( nlohmann::json jsonInput ){
         auto pairCorrelationInfo = tempInfo["pairCorrelation"];
         std::vector<double> kappa = pairCorrelationInfo["skappa"];
         double                dka = pairCorrelationInfo["dka"];
-        coldHydrogen( tev, ncold, transWgt+continuousWgt, alphas, betas, dka, 
+        coldHydrogen( tev, ncold, transWgt+continuousWgt, alphas, betas, dka,
                       kappa, free, sab, sab2, tempf[itemp]);
       }
 
@@ -108,7 +115,7 @@ auto finalLEAPR( nlohmann::json jsonInput ){
     }
 
   } // Primary and Secondary Scatter Loop
-  
+
 
   //---------------- Coherent (Elastic) ----------------------
   int iel = jsonInput["iel"];
@@ -120,11 +127,11 @@ auto finalLEAPR( nlohmann::json jsonInput ){
     double emax = 5.0;
     auto coherentElasticOut = coherentElastic( iel, npr, bragg, emax );
     nedge = std::get<1>(coherentElasticOut)* 0.5;
-    bragg.resize(std::get<0>(coherentElasticOut)); 
+    bragg.resize(std::get<0>(coherentElasticOut));
     braggOutput = bragg;
   }
-  else { 
-    braggOutput = false; 
+  else {
+    braggOutput = false;
     bragg.resize(0);
   }
 
@@ -147,16 +154,60 @@ auto finalLEAPR( nlohmann::json jsonInput ){
   if (numSecondaryScatterers == 0){ numAtomsVec = {npr}; }
   else { numAtomsVec = {npr,jsonInput["mss"]}; }
 
-  njoy::ENDFtk::file::Type<7> MF7 = endout( sab_AllTemps, za, awrVec, spr, 
+  njoy::ENDFtk::file::Type<7> MF7 = endout( sab_AllTemps, za, awrVec, spr,
           sps, temperatures, numSecondaryScatterers, b7, sab_AllTemps, alphas,
-          betas, dwpix, dwp1, iel, transWgt, bragg, nedge, tempf, tempf1, 
+          betas, dwpix, dwp1, iel, transWgt, bragg, nedge, tempf, tempf1,
           int(jsonInput["ilog"]),
           isym, lat, numAtomsVec);
+
+  std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
+  if ( MF7.hasSection( 2 ) ) {
+
+    index.emplace_back( 7, 2, MF7.section( 2_c ).NC(), 0 );
+  }
+  if ( MF7.hasSection( 4 ) ) {
+
+    index.emplace_back( 7, 4, MF7.section( 4_c ).NC(), 0 );
+  }
+
+  double zaid = jsonInput["za"];
+  double awr = jsonInput["awr"];
+  int lrp = -1
+  int lfi = 0;
+  int nlib = 0;
+  int nmod = 0;
+  double elis = 0;
+  double sta = 0;
+  int lis = 0;
+  int liso = 0;
+  int nfor = 6;
+  double awi = 1.0;
+  double emax = 0;
+  int lrel = 0;
+  int nsub = 0;
+  int nver = 0;
+  double temp = 0;
+  int ldrv = 0;
+
+  std::string comments = "Concat the comments here";
+
+  njoy::ENDFtk::section::Type< 1, 451 > mf1mt451(
+      zaid, awr, lrp, lfi, nlib, nmod,
+      elis, sta, lis, liso, nfor,
+      awi, emax, lrel, nsub, nver,
+      temp, ldrv,
+      comments,
+      std::move( index ) );
+
+  njoy::ENDFtk::Material material( njoy::ENDFtk::file::Type< 1 >( std::move( mf1mt451 ) ),
+                                   std::move( MF7 ) );
+
+  njoy::ENDFtk::Tape tape( "just some silly tape id", { std::move( material ) } );
 
   return MF7;
 
 }
+};
 
-
-
-
+}
+}
