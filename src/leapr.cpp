@@ -171,8 +171,7 @@ void operator()( nlohmann::json& jsonInput,
   }
 
   double zaid = jsonInput["za"];
-  double awr = jsonInput["awr"];
-  int lrp = -1
+  int lrp = -1;
   int lfi = 0;
   int nlib = 0;
   int nmod = 0;
@@ -199,12 +198,15 @@ void operator()( nlohmann::json& jsonInput,
       comments,
       std::move( index ) );
 
-  njoy::ENDFtk::Material material( njoy::ENDFtk::file::Type< 1 >( std::move( mf1mt451 ) ),
-                                   std::move( MF7 ) );
+  output << "this is output";
+  error << "this is error";
 
-  njoy::ENDFtk::Tape tape( "just some silly tape id", { std::move( material ) } );
+  //njoy::ENDFtk::Material material( njoy::ENDFtk::file::Type< 1 >( std::move( mf1mt451 ) ),
+  //                                 std::move( MF7 ) );
 
-  return MF7;
+  //njoy::ENDFtk::Tape tape( "just some silly tape id", { std::move( material ) } );
+
+  //return MF7;
 
 }
 };
