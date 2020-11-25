@@ -14,10 +14,10 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
   int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
 
   using namespace njoy::ENDFtk;
-  using ScatteringFunction   = section::Type<7,4>::Tabulated::ScatteringFunction;
+  using ScatteringFunction   = section::Type<7,4>::TabulatedFunctions::ScatteringFunction;
   using ScatteringLaw        = section::Type<7,4>::ScatteringLaw;
   using EffectiveTemperature = section::Type<7,4>::EffectiveTemperature;
-  using Tabulated            = section::Type<7,4>::Tabulated;
+  using Tabulated            = section::Type<7,4>::TabulatedFunctions;
 
   std::vector<Range> alphaVec (betas.size(),alphas);
   std::vector< long > boundaries   = { int(alphas.size()) },

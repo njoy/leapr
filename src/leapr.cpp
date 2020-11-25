@@ -8,6 +8,7 @@
 #include <range/v3/all.hpp>
 #include <variant>
 #include "endout/endout.h"
+#include <string>
 using namespace njoy;
 #include "lipservice.hpp"
 
@@ -16,10 +17,11 @@ namespace LEAPR {
 
 class LEAPR{
 
-void operator()( nlohmann::json& jsonInput,
-                 std::ostream& output,
-                 std::ostream& error,
-                 const nlohmann::json& ){
+public:
+void operator()( nlohmann::json& jsonInput ){//,
+                 //std::ostream& output,
+                 //std::ostream& error,
+                 //const nlohmann::json& ){
   // Do we have a secondary scatterer?
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -198,8 +200,26 @@ void operator()( nlohmann::json& jsonInput,
       comments,
       std::move( index ) );
 
-  output << "this is output";
-  error << "this is error";
+  //output << "this is output";
+  //error << "this is error";
+
+  int mat = jsonInput["mat"];
+
+  njoy::ENDFtk::file::Type< 1 > mf1( std::move( mf1mt451 ) );
+
+  njoy::ENDFtk::Material material( mat, 
+                          njoy::ENDFtk::file::Type<1>( std::move( mf1mt451 ) ), 
+                          std::move( MF7 ) );
+
+  std::string buffer;
+  auto materialOutput = std::back_inserter( buffer );
+  material.print( materialOutput );
+  int nout = jsonInput["nout"];
+  std::string tapeNumber = std::to_string(nout);
+  std::string name = "tape"+tapeNumber;
+  std::ofstream out(name);
+  out << buffer;
+  out.close();
 
   //njoy::ENDFtk::Material material( njoy::ENDFtk::file::Type< 1 >( std::move( mf1mt451 ) ),
   //                                 std::move( MF7 ) );

@@ -10,7 +10,7 @@
 #include "tsl_ortho_h_tape24.h"
 #include "tsl_liq_ch4_tape24.h"
 
-using Tabulated         = section::Type<7,4>::Tabulated;
+using Tabulated         = section::Type<7,4>::TabulatedFunctions;
 using CoherentElastic   = section::Type<7,2>::CoherentElastic;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 
@@ -119,8 +119,8 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
     checkVec(my_table.interpolants(),good_table.interpolants());
 
     for (int ibeta = 0; ibeta < my_table.numberBetas(); ++ibeta){
-      auto my_value   =   my_table.betas()[ibeta];
-      auto good_value = good_table.betas()[ibeta];
+      auto my_value   =   my_table.scatteringFunctions()[ibeta];
+      auto good_value = good_table.scatteringFunctions()[ibeta];
       REQUIRE( my_value.beta() == Approx(good_value.beta()).epsilon(1e-6) );
       REQUIRE( my_value.LT() == good_value.LT() );
       REQUIRE(   my_value.temperatureDependenceFlag() == 
@@ -156,7 +156,6 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
 
 TEST_CASE( "incorporating lipservice" ){
     REQUIRE ( true );
-    /*
   GIVEN( "H in H2O ENDF-B/VIII.0 input" ) {
     njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
         "20/\n"                             // Card1
@@ -232,17 +231,30 @@ TEST_CASE( "incorporating lipservice" ){
       ) );
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
-    auto my_MF7 = finalLEAPR( jsonLEAPR );
 
-    auto begin = h2o.begin(), end = h2o.end();
-    long lineNumber = 1;
-    StructureDivision division(begin,end,lineNumber);
-    njoy::ENDFtk::file::Type<7> h2o_MF7(division,begin,end,lineNumber);
+    njoy::LEAPR::LEAPR leaprInstance;
+    leaprInstance( jsonLEAPR );//, output, error );
+
+    const static std::string tape =
+    njoy::utility::slurpFileToMemory( "tape20" );
+
+    auto begin = tape.begin(), end = tape.end();
+    long lineNumber = 0;
+    StructureDivision head( begin, end, lineNumber );
+    Material material( head, begin, end, lineNumber );
+
+
+    // Bring in the good (legacy) inputs
+    //auto begin = h2o.begin(), end = h2o.end();
+    //long lineNumber = 1;
+    //StructureDivision division(begin,end,lineNumber);
+    //njoy::ENDFtk::file::Type<7> h2o_MF7(division,begin,end,lineNumber);
   
-    check_MF7(my_MF7,h2o_MF7);
+    //check_MF7(my_MF7,h2o_MF7);
   } // GIVEN
 
 
+    /*
   GIVEN( "Si in SiC ENDF-B/VIII.0 input" ) {
     njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
         "20/\n"                             // Card1

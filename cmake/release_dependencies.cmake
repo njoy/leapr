@@ -27,7 +27,7 @@ FetchContent_Declare( header-utilities
 
 FetchContent_Declare( ENDFtk
     GIT_REPOSITORY  https://github.com/njoy/ENDFtk
-    GIT_TAG         1217062c298560824cb8f239465b3293df178deb
+    GIT_TAG         d72711722a269919321e3f3df8a8b0cfe23ba6c7
     )
 
 FetchContent_Declare( catch-adapter
