@@ -164,13 +164,15 @@ void operator()( nlohmann::json& jsonInput ){//,
 
   std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
   if ( MF7.hasSection( 2 ) ) {
-
     index.emplace_back( 7, 2, MF7.section( 2_c ).NC(), 0 );
   }
   if ( MF7.hasSection( 4 ) ) {
-
     index.emplace_back( 7, 4, MF7.section( 4_c ).NC(), 0 );
   }
+  std::string buffer2;
+  auto output2 = std::back_inserter( buffer2 );
+  auto dir = index[0];
+  dir.print( output2, 1, 1, 451 );
 
   double zaid = jsonInput["za"];
   int lrp = -1;
@@ -190,14 +192,18 @@ void operator()( nlohmann::json& jsonInput ){//,
   double temp = 0;
   int ldrv = 0;
 
-  std::string comments = "Concat the comments here";
+
+  std::string comments;
+  for (std::string comment : jsonInput["comments"]){
+      comments = comments + comment;
+  }//= "Concat the comments here";
 
   njoy::ENDFtk::section::Type< 1, 451 > mf1mt451(
       zaid, awr, lrp, lfi, nlib, nmod,
       elis, sta, lis, liso, nfor,
       awi, emax, lrel, nsub, nver,
       temp, ldrv,
-      comments,
+      std::move(comments),
       std::move( index ) );
 
   //output << "this is output";
@@ -205,28 +211,23 @@ void operator()( nlohmann::json& jsonInput ){//,
 
   int mat = jsonInput["mat"];
 
-  njoy::ENDFtk::file::Type< 1 > mf1( std::move( mf1mt451 ) );
-
   njoy::ENDFtk::Material material( mat, 
                           njoy::ENDFtk::file::Type<1>( std::move( mf1mt451 ) ), 
                           std::move( MF7 ) );
+  std::vector<njoy::ENDFtk::Material> materials {material};
+
+  std::string title = jsonInput["title"];
+  njoy::ENDFtk::Tape tape( TapeIdentification(std::move(title),1), std::move(materials) );
 
   std::string buffer;
   auto materialOutput = std::back_inserter( buffer );
-  material.print( materialOutput );
+  tape.print( materialOutput );
   int nout = jsonInput["nout"];
   std::string tapeNumber = std::to_string(nout);
   std::string name = "tape"+tapeNumber;
   std::ofstream out(name);
   out << buffer;
   out.close();
-
-  //njoy::ENDFtk::Material material( njoy::ENDFtk::file::Type< 1 >( std::move( mf1mt451 ) ),
-  //                                 std::move( MF7 ) );
-
-  //njoy::ENDFtk::Tape tape( "just some silly tape id", { std::move( material ) } );
-
-  //return MF7;
 
 }
 };
