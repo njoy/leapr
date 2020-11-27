@@ -18,7 +18,7 @@ namespace LEAPR {
 class LEAPR{
 
 public:
-void operator()( nlohmann::json& jsonInput ){//,
+void operator()( const nlohmann::json& jsonInput ){//,
                  //std::ostream& output,
                  //std::ostream& error,
                  //const nlohmann::json& ){
@@ -139,65 +139,47 @@ void operator()( nlohmann::json& jsonInput ){//,
 
   //---------------------------- Write Output --------------------------------
 
-  int za = jsonInput["za"];
-  std::vector<double> awrVec {awr,aws};
-  if (numSecondaryScatterers == 0){ awrVec.resize(1); }
+  //int za = jsonInput["za"];
+  //std::vector<double> awrVec {awr,aws};
+  //if (numSecondaryScatterers == 0){ awrVec.resize(1); }
 
-  double spr = jsonInput["spr"],
-         sps = (numSecondaryScatterers == 0) ? 0.0 : double(jsonInput["sps"]);
+  //double spr = jsonInput["spr"],
+  //       sps = (numSecondaryScatterers == 0) ? 0.0 : double(jsonInput["sps"]);
 
-  int isym = 0;
-  if (int(jsonInput["ncold"]) != 0){ isym = 1; }
-  if (int(jsonInput["isabt"]) == 1){ isym += 2; }
 
-  double transWgt = temperatureInfo[temperatures.size()-1]["twt"];
+  //double transWgt = temperatureInfo[temperatures.size()-1]["twt"];
 
-  std::vector<unsigned int> numAtomsVec;
-  if (numSecondaryScatterers == 0){ numAtomsVec = {npr}; }
-  else { numAtomsVec = {npr,jsonInput["mss"]}; }
 
-  njoy::ENDFtk::file::Type<7> MF7 = endout( sab_AllTemps, za, awrVec, spr,
-          sps, temperatures, numSecondaryScatterers, b7, sab_AllTemps, alphas,
-          betas, dwpix, dwp1, iel, transWgt, bragg, nedge, tempf, tempf1,
-          int(jsonInput["ilog"]),
-          isym, lat, numAtomsVec);
+  njoy::ENDFtk::file::Type<7> MF7 = endoutNew( jsonInput, sab_AllTemps, 
+          sab_AllTemps, alphas,
+          betas, dwpix, dwp1, bragg, nedge, tempf, tempf1 );
 
   std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
   if ( MF7.hasSection( 2 ) ) {
     index.emplace_back( 7, 2, MF7.section( 2_c ).NC(), 0 );
   }
-  if ( MF7.hasSection( 4 ) ) {
-    index.emplace_back( 7, 4, MF7.section( 4_c ).NC(), 0 );
-  }
+  index.emplace_back( 7, 4, MF7.section( 4_c ).NC(), 0 );
+
   std::string buffer2;
   auto output2 = std::back_inserter( buffer2 );
   auto dir = index[0];
   dir.print( output2, 1, 1, 451 );
 
-  double zaid = jsonInput["za"];
-  int lrp = -1;
-  int lfi = 0;
-  int nlib = 0;
-  int nmod = 0;
-  double elis = 0;
-  double sta = 0;
-  int lis = 0;
-  int liso = 0;
-  int nfor = 6;
-  double awi = 1.0;
-  double emax = 0;
-  int lrel = 0;
-  int nsub = 0;
-  int nver = 0;
-  double temp = 0;
-  int ldrv = 0;
 
+  int    lrp  = -1, lfi  = 0, nlib = 0, nmod = 0;
+  double elis =  0, sta  = 0;
+  int    lis  =  0, liso = 0, nfor = 6;
+  double awi  =  1, emax = 0;
+  int    lrel =  0, nsub = 0, nver = 0;
+  double temp =  0;
+  int    ldrv =  0;
 
   std::string comments;
   for (std::string comment : jsonInput["comments"]){
       comments = comments + comment;
-  }//= "Concat the comments here";
+  }
 
+  double zaid = jsonInput["za"];
   njoy::ENDFtk::section::Type< 1, 451 > mf1mt451(
       zaid, awr, lrp, lfi, nlib, nmod,
       elis, sta, lis, liso, nfor,
