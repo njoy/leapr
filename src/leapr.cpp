@@ -18,10 +18,14 @@ namespace LEAPR {
 class LEAPR{
 
 public:
-void operator()( nlohmann::json& jsonInput ){//,
-                 //std::ostream& output,
-                 //std::ostream& error,
-                 //const nlohmann::json& ){
+void operator()( const nlohmann::json& jsonInput,
+                 std::ostream& output,
+                 std::ostream& error,
+                 const nlohmann::json& ){
+
+  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
+  output << fmt::format( "Input arguments:\n{}", jsonInput.dump(2) ) << std::endl;
+
   // Do we have a secondary scatterer?
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;

@@ -232,8 +232,9 @@ TEST_CASE( "incorporating lipservice" ){
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
 
+    auto args = nlohamm::json::object();
     njoy::LEAPR::LEAPR leaprInstance;
-    leaprInstance( jsonLEAPR );//, output, error );
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
 
     njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
     long lineNumber = 1;
