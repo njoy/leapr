@@ -18,10 +18,14 @@ namespace LEAPR {
 class LEAPR{
 
 public:
-void operator()( const nlohmann::json& jsonInput ){//,
-                 //std::ostream& output,
-                 //std::ostream& error,
-                 //const nlohmann::json& ){
+void operator()( const nlohmann::json& jsonInput,
+                 std::ostream& output,
+                 std::ostream& error,
+                 const nlohmann::json& ){
+
+  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
+  output << fmt::format( "Input arguments:\n{}", jsonInput.dump(2) ) << std::endl;
+
   // Do we have a secondary scatterer?
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -30,7 +34,6 @@ void operator()( const nlohmann::json& jsonInput ){//,
   if ( numSecondaryScatterers == 0 or b7 > 0 ){ numIter = 1; }
 
 
-  int    lat = jsonInput["lat"];
   double awr = jsonInput["awr"];
   double aws = 0.0;
   if (numSecondaryScatterers > 0){ aws = jsonInput["aws"]; }
@@ -61,6 +64,7 @@ void operator()( const nlohmann::json& jsonInput ){//,
       std::vector<double> sab2(alphas.size()*betas.size(),0.0);
       double tev = kb * temperature;
 
+      int    lat  = jsonInput["lat"];
       double sc   = (lat         == 1) ? 0.0253/tev : 1.0,
              arat = (scatterIter == 0) ?        1.0 : aws/awr;
       double scaling = sc/arat;
@@ -81,16 +85,14 @@ void operator()( const nlohmann::json& jsonInput ){//,
 
       double transWgt = tempInfo["twt"];
       if (transWgt > 0){
-        double diffusion_const = tempInfo["c"];
         translational( scaledAlphas, scaledBetas, transWgt, rho_dx,
-                       diffusion_const, dwpix[itemp], continuousWgt,
+                       static_cast<double>(tempInfo["c"]), dwpix[itemp], continuousWgt,
                        tempf[itemp], temperature, sab );
       }
 
       if (not tempInfo["oscillators"]["energies"].is_null()){
-        std::vector<double>
-            oscE = tempInfo["oscillators"]["energies"],
-            oscW = tempInfo["oscillators"]["weights"];
+        std::vector<double> oscE = tempInfo["oscillators"]["energies"],
+                            oscW = tempInfo["oscillators"]["weights"];
         discreteOscillators( dwpix[itemp], transWgt, continuousWgt, scaledAlphas,
             scaledBetas, temperature, ranges::view::zip(oscE,oscW),
             tempf[itemp], sab );
@@ -139,20 +141,8 @@ void operator()( const nlohmann::json& jsonInput ){//,
 
   //---------------------------- Write Output --------------------------------
 
-  //int za = jsonInput["za"];
-  //std::vector<double> awrVec {awr,aws};
-  //if (numSecondaryScatterers == 0){ awrVec.resize(1); }
-
-  //double spr = jsonInput["spr"],
-  //       sps = (numSecondaryScatterers == 0) ? 0.0 : double(jsonInput["sps"]);
-
-
-  //double transWgt = temperatureInfo[temperatures.size()-1]["twt"];
-
-
-  njoy::ENDFtk::file::Type<7> MF7 = endoutNew( jsonInput, sab_AllTemps, 
-          sab_AllTemps, alphas,
-          betas, dwpix, dwp1, bragg, nedge, tempf, tempf1 );
+  njoy::ENDFtk::file::Type<7> MF7 = endout( jsonInput, sab_AllTemps, 
+    sab_AllTemps, alphas, betas, dwpix, dwp1, bragg, nedge, tempf, tempf1 );
 
   std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
   if ( MF7.hasSection( 2 ) ) {
@@ -176,17 +166,13 @@ void operator()( const nlohmann::json& jsonInput ){//,
 
   std::string comments;
   for (std::string comment : jsonInput["comments"]){
-      comments = comments + comment;
+    comments = comments + comment;
   }
 
   double zaid = jsonInput["za"];
   njoy::ENDFtk::section::Type< 1, 451 > mf1mt451(
-      zaid, awr, lrp, lfi, nlib, nmod,
-      elis, sta, lis, liso, nfor,
-      awi, emax, lrel, nsub, nver,
-      temp, ldrv,
-      std::move(comments),
-      std::move( index ) );
+    zaid, awr, lrp, lfi, nlib, nmod, elis, sta, lis, liso, nfor, awi, emax, 
+    lrel, nsub, nver, temp, ldrv, std::move(comments), std::move( index ) );
 
   //output << "this is output";
   //error << "this is error";

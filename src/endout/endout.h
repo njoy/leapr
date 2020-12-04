@@ -16,12 +16,16 @@ using Inelastic       = section::Type<7,4>;
 using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
 template <typename Range> 
-auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
-  int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
+auto scaleDebyeWallerCoefficients( const nlohmann::json& jsonInput,
+  Range& dwpix, Range& dwp1, const Range& temps, 
   const Range& awrVec ){
-  // display endf t-effective and debye-waller integral
-  auto awr = awrVec[0],
-       aws = awrVec[1];
+
+  int numSecondaryScatterers = jsonInput["nss"];
+  unsigned int secondaryScatterType = 0;
+  if (numSecondaryScatterers > 0){ secondaryScatterType = jsonInput["b7"]; }
+
+  auto awr = awrVec[0], aws = awrVec[1];
+
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
        dwpix[i] /= (awr*temps[i]*kb);
@@ -34,32 +38,20 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers,
 }
 
 
-
 template <typename Range>
-auto endoutNew( const nlohmann::json& jsonInput,
-  std::vector<Range>& sab,
+auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
   const std::vector<Range>& principalScatterSAB, const Range& alphas, 
-  const Range& betas, Range& dwpix, Range& dwp1, 
-  const Range& bragg, int numEdges, 
-  Range primaryTempf, Range secondaryTempf ){ 
+  const Range& betas, Range& dwpix, Range& dwp1, const Range& bragg, 
+  int numEdges, Range primaryTempf, Range secondaryTempf ){ 
+
   using std::pow;
 
-
-  unsigned int npr = jsonInput["npr"];
-
   std::vector<unsigned int> numAtomsVec;
+  unsigned int npr = jsonInput["npr"];
   int numSecondaryScatterers = jsonInput["nss"];
   if (numSecondaryScatterers == 0){ numAtomsVec = {npr}; }
   else { numAtomsVec = {npr,jsonInput["mss"]}; }
 
-  //std::vector<unsigned int> numPrimarySecondaryAtoms {(unsigned int)(jsonInput["nss"]) };
-  //if (numSeconaryScatterers > 0){ numPrimarySecondaryAtoms.push_back(unsigned int jsonInput["mss"])};
-
-  //std::cout << "~~~~~~~  "<<numPrimarySecondaryAtoms[0] << std::endl;
-
-
-  int    lat = jsonInput["lat"];
-  int ilog = jsonInput["ilog"];
   int isym = 0;
   if (int(jsonInput["ncold"]) != 0){ isym = 1; }
   if (int(jsonInput["isabt"]) == 1){ isym += 2; }
@@ -69,7 +61,6 @@ auto endoutNew( const nlohmann::json& jsonInput,
   unsigned int secondaryScatterType = 0;
   if (numSecondaryScatterers > 0){ secondaryScatterType = jsonInput["b7"]; }
 
-  double awr = jsonInput["awr"];
   int za = jsonInput["za"];
   double spr = jsonInput["spr"],
          sps = (numSecondaryScatterers == 0) ? 0.0 : double(jsonInput["sps"]);
@@ -79,21 +70,15 @@ auto endoutNew( const nlohmann::json& jsonInput,
   }
 
   double translationalWeight = jsonInput["temperatures"][temps.size()-1]["twt"];
-
-  double aws = 0.0;
-  if (numSecondaryScatterers > 0){ aws = jsonInput["aws"]; }
+  double awr = jsonInput["awr"];
+  double aws = (numSecondaryScatterers > 0) ? double(jsonInput["aws"]) : 0.0;
   std::vector<double> awrVec {awr,aws};
-  if (numSecondaryScatterers == 0){ awrVec.resize(1); }
 
-
-  //Float awr        = awrVec[0];
-  //unsigned int npr = numAtomsVec[0];
   double sigma_b    = spr*pow(((1.0+awr)/awr),2);
   Range xsVec      = { spr*npr, sps };
   if (numSecondaryScatterers == 0){ xsVec.resize(1); }
 
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
-    //Float aws = awrVec[1];
     double sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
     double srat=sigma_b2/sigma_b;
     for (size_t t = 0; t < temps.size(); ++t){
@@ -106,8 +91,7 @@ auto endoutNew( const nlohmann::json& jsonInput,
     }
   }
 
-  scaleDebyeWallerCoefficients( numSecondaryScatterers, secondaryScatterType, 
-                                dwpix, dwp1, temps, awrVec );
+  scaleDebyeWallerCoefficients( jsonInput, dwpix, dwp1, temps, awrVec );
 
   // write out the inelastic part
   auto epsilon = betas[betas.size()-1];
@@ -115,13 +99,14 @@ auto endoutNew( const nlohmann::json& jsonInput,
   unsigned int lasym = (isym > 1) ? 1 : 0;
   std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
   if (numSecondaryScatterers == 0){ secondaryScattererTypes = {}; }
-
+  if (numSecondaryScatterers == 0){ awrVec.resize(1); }
+  int ilog = jsonInput["ilog"];
   ScatteringLawConstants constants(ilog, numSecondaryScatterers, epsilon, emax, 
     std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
     std::move(secondaryScattererTypes));
 
   Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
-                                 secondaryTempf,lasym,lat,isym,ilog,constants);
+                                 secondaryTempf,lasym,int(jsonInput["lat"]),isym,ilog,constants);
   if (iel == 0 and translationalWeight == 0.0){
     // Write incoherent elastic part
     Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,dwpix)); 
@@ -138,6 +123,26 @@ auto endoutNew( const nlohmann::json& jsonInput,
 
 }
 
+
+
+/*
+template <typename Range> 
+auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
+  int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
+  const Range& awrVec ){
+  // display endf t-effective and debye-waller integral
+  auto awr = awrVec[0],
+       aws = awrVec[1];
+  for (size_t i = 0; i < temps.size(); ++i){
+    if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
+       dwpix[i] /= (awr*temps[i]*kb);
+    }
+    else {
+       dwpix[i] /= (aws*temps[i]*kb);
+       dwp1[i]  /= (awr*temps[i]*kb);
+    }
+  }
+}
 
 
 
@@ -209,3 +214,4 @@ auto endout( std::vector<Range>& sab, int za, Range awrVec,
   return njoy::ENDFtk::file::Type<7>(std::move(mt4));
 
 }
+*/
