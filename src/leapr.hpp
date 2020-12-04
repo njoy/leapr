@@ -23,6 +23,7 @@ void operator()( const nlohmann::json& jsonInput,
                  std::ostream& error,
                  const nlohmann::json& ){
 
+  error << "this is an example of an error" << std::endl;
   output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
   output << fmt::format( "Input arguments:\n{}", jsonInput.dump(2) ) << std::endl;
 

@@ -52,21 +52,13 @@ endif()
 # Project targets
 ########################################################################
 
-add_library( leapr 
-    src/leapr.cpp
-    )
-target_include_directories( leapr PUBLIC src/ )
+add_library( leapr INTERFACE )
+target_include_directories( leapr INTERFACE src/ )
 target_link_libraries( leapr
-    PUBLIC ENDFtk
-    PUBLIC catch-adapter
-    PUBLIC range-v3-adapter
-    PUBLIC lipservice 
-    )
-target_compile_options( leapr PRIVATE
-    ${common_flags}
-    $<$<BOOL:${strict_compile}>:${strict_flags}>
-    $<$<CONFIG:DEBUG>:${debug_flags}>
-    $<$<CONFIG:RELEASE>:${release_flags}>
+    INTERFACE ENDFtk
+    INTERFACE catch-adapter
+    INTERFACE range-v3-adapter
+    INTERFACE lipservice 
     )
 
 

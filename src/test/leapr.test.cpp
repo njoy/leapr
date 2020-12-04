@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "leapr.cpp"
+#include "leapr.hpp"
 #include <range/v3/all.hpp>
 #include "generalTools/testing.h"
 #include <variant>
@@ -232,7 +232,7 @@ TEST_CASE( "incorporating lipservice" ){
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
 
-    auto args = nlohamm::json::object();
+    auto args = nlohmann::json::object();
     njoy::LEAPR::LEAPR leaprInstance;
     leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
 
@@ -297,8 +297,9 @@ TEST_CASE( "incorporating lipservice" ){
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
 
+    auto args = nlohmann::json::object();
     njoy::LEAPR::LEAPR leaprInstance;
-    leaprInstance( jsonLEAPR );//, output, error );
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
 
     njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
     long lineNumber = 1;
@@ -365,8 +366,9 @@ TEST_CASE( "incorporating lipservice" ){
       njoy::njoy21::lipservice::LEAPR leapr(iss);
       nlohmann::json jsonLEAPR(leapr);
   
+      auto args = nlohmann::json::object();
       njoy::LEAPR::LEAPR leaprInstance;
-      leaprInstance( jsonLEAPR );//, output, error );
+      leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
   
       njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
       long lineNumber = 1;
@@ -417,8 +419,10 @@ TEST_CASE( "incorporating lipservice" ){
       njoy::njoy21::lipservice::LEAPR leapr(iss);
       nlohmann::json jsonLEAPR(leapr);
 
+      auto args = nlohmann::json::object();
       njoy::LEAPR::LEAPR leaprInstance;
-      leaprInstance( jsonLEAPR );//, output, error );
+      leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
 
       njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
       long lineNumber = 1;
