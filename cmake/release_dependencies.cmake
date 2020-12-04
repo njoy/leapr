@@ -22,7 +22,7 @@ FetchContent_Declare( hana-adapter
 
 FetchContent_Declare( header-utilities
     GIT_REPOSITORY  https://github.com/njoy/header-utilities
-    GIT_TAG         04f988c2b576630ef10fc0c3838c915f4a6e15d6
+    GIT_TAG         cc2610fee15e255c151e8e22aca1e8b3d1a96b39
     )
 
 FetchContent_Declare( ENDFtk
