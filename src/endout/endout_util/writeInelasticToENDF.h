@@ -1,23 +1,22 @@
 #include <range/v3/all.hpp>
 #include "endout/endout_util/inelasticOutput.h"
 #include "generalTools/constants.h"
-//#include "generalTools/sigfig.h"
 #include "generalTools/tools.h"
 #include "ENDFtk.hpp"
 #include <iostream>
 
-template <typename Float, typename Range, typename RangeOfRange, 
-          typename ScatteringLawConstants >
-auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas, 
-  const Range& betas, const Range& temps, const Float& za, 
-  Range primaryTempf, Range secondaryTempf,
-  int lasym, int lat, int isym, int ilog, ScatteringLawConstants constants ){
+using namespace njoy::ENDFtk;
+using ScatteringFunction   = section::Type<7,4>::TabulatedFunctions::ScatteringFunction;
+using ScatteringLaw        = section::Type<7,4>::ScatteringLaw;
+using EffectiveTemperature = section::Type<7,4>::EffectiveTemperature;
+using Tabulated            = section::Type<7,4>::TabulatedFunctions;
+using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
-  using namespace njoy::ENDFtk;
-  using ScatteringFunction   = section::Type<7,4>::TabulatedFunctions::ScatteringFunction;
-  using ScatteringLaw        = section::Type<7,4>::ScatteringLaw;
-  using EffectiveTemperature = section::Type<7,4>::EffectiveTemperature;
-  using Tabulated            = section::Type<7,4>::TabulatedFunctions;
+template <typename Range, typename RangeOfRange >
+auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas, 
+  const Range& betas, const Range& temps, const double& za, 
+  Range primaryTempf, Range secondaryTempf, int lasym, int lat, int isym, 
+  int ilog, ScatteringLawConstants constants ){
 
   std::vector<Range> alphaVec (betas.size(),alphas);
   std::vector< long > boundaries   = { int(alphas.size()) },
@@ -53,7 +52,6 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
   auto temps_c = temps;
   auto temps_d = temps;
 
-
   EffectiveTemperature principal( { int(temps.size()) }, { 2 }, 
                                   std::move(temps_c),
                                   std::move(primaryTempf)
@@ -77,6 +75,7 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
 
     }
     else {
+
       EffectiveTemperature secondary( { int(temps.size()) }, { 2 }, 
                                       std::move(temps_d),
                                       std::move(secondaryTempf)

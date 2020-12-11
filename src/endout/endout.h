@@ -17,7 +17,7 @@ using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
 template <typename Range> 
 auto scaleDebyeWallerCoefficients( const nlohmann::json& jsonInput,
-  Range& dwpix, Range& dwp1, const Range& temps, 
+  Range& primaryDWF, Range& secondaryDWF, const Range& temps, 
   const Range& awrVec ){
 
   int numSecondaryScatterers = jsonInput["nss"];
@@ -28,11 +28,11 @@ auto scaleDebyeWallerCoefficients( const nlohmann::json& jsonInput,
 
   for (size_t i = 0; i < temps.size(); ++i){
     if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
-       dwpix[i] /= (awr*temps[i]*kb);
+       primaryDWF[i] /= (awr*temps[i]*kb);
     }
     else {
-       dwpix[i] /= (aws*temps[i]*kb);
-       dwp1[i]  /= (awr*temps[i]*kb);
+       primaryDWF[i] /= (aws*temps[i]*kb);
+       secondaryDWF[i]  /= (awr*temps[i]*kb);
     }
   }
 }
@@ -40,9 +40,9 @@ auto scaleDebyeWallerCoefficients( const nlohmann::json& jsonInput,
 
 template <typename Range>
 auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
-  const std::vector<Range>& principalScatterSAB, const Range& alphas, 
-  const Range& betas, Range& dwpix, Range& dwp1, const Range& bragg, 
-  int numEdges, Range primaryTempf, Range secondaryTempf ){ 
+  const std::vector<Range>& secondaryScatterSAB, const Range& alphas, 
+  const Range& betas, Range& primaryDWF, Range& secondaryDWF, const Range& bragg, 
+  int numEdges, Range primaryTempf, Range secondaryTempf, const Range& temps){ 
 
   using std::pow;
 
@@ -64,10 +64,8 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
   int za = jsonInput["za"];
   double spr = jsonInput["spr"],
          sps = (numSecondaryScatterers == 0) ? 0.0 : double(jsonInput["sps"]);
-  std::vector<double> temps;
-  for (const auto& tempChunk : jsonInput["temperatures"]){
-    temps.push_back(tempChunk["temperature"]);
-  }
+
+  int ntempr = jsonInput["ntempr"];
 
   double translationalWeight = jsonInput["temperatures"][temps.size()-1]["twt"];
   double awr = jsonInput["awr"];
@@ -81,17 +79,17 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
   if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
     double sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
     double srat=sigma_b2/sigma_b;
-    for (size_t t = 0; t < temps.size(); ++t){
+
+    for (size_t t = 0; t < ntempr; ++t){
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
-          sab[t][b+a*betas.size()] *= srat;
-          sab[t][b+a*betas.size()] += principalScatterSAB[t][b+a*betas.size()];
+          sab[t][b+a*betas.size()] += srat*secondaryScatterSAB[t][b+a*betas.size()];
         }
       }
     }
   }
 
-  scaleDebyeWallerCoefficients( jsonInput, dwpix, dwp1, temps, awrVec );
+  scaleDebyeWallerCoefficients( jsonInput, primaryDWF, secondaryDWF, temps, awrVec );
 
   // write out the inelastic part
   auto epsilon = betas[betas.size()-1];
@@ -109,12 +107,12 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
                                  secondaryTempf,lasym,int(jsonInput["lat"]),isym,ilog,constants);
   if (iel == 0 and translationalWeight == 0.0){
     // Write incoherent elastic part
-    Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,dwpix)); 
+    Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,primaryDWF)); 
     return njoy::ENDFtk::file::Type<7>( std::move(mt2), std::move(mt4) );
   }
   else if (iel > 0){
     // Write coherent elastic part
-    Elastic mt2(za, awr, writeCohElasticToENDF( bragg, dwpix, dwp1, 
+    Elastic mt2(za, awr, writeCohElasticToENDF( bragg, primaryDWF, secondaryDWF, 
       numSecondaryScatterers, secondaryScatterType, numEdges, temps ));
     return njoy::ENDFtk::file::Type<7>( std::move(mt2), std::move(mt4) );
   }
@@ -125,23 +123,74 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
 
 
 
-/*
-template <typename Range> 
-auto scaleDebyeWallerCoefficients( int numSecondaryScatterers, 
-  int secondaryScatterType, Range& dwpix, Range& dwp1, const Range& temps, 
-  const Range& awrVec ){
-  // display endf t-effective and debye-waller integral
-  auto awr = awrVec[0],
-       aws = awrVec[1];
-  for (size_t i = 0; i < temps.size(); ++i){
-    if (numSecondaryScatterers == 0 or secondaryScatterType > 0){
-       dwpix[i] /= (awr*temps[i]*kb);
-    }
-    else {
-       dwpix[i] /= (aws*temps[i]*kb);
-       dwp1[i]  /= (awr*temps[i]*kb);
-    }
+
+
+
+
+
+void writeOutput( const nlohmann::json jsonInput, 
+  std::vector<std::vector<double>> primarySabAllTemps,
+  std::vector<std::vector<double>> secondarySabAllTemps,
+  std::vector<double> primaryDWF, std::vector<double> secondaryDWF,
+  std::vector<double> bragg, int nedge, std::vector<double> tempf, std::vector<double> tempf1,
+  std::vector<double> temperatures ){
+
+  const std::vector<double> alphas = jsonInput["alpha"],
+                            betas  = jsonInput["beta"];
+
+  njoy::ENDFtk::file::Type<7> MF7 = endout( jsonInput, primarySabAllTemps, 
+    secondarySabAllTemps, alphas, betas, primaryDWF, secondaryDWF, bragg, nedge, tempf, tempf1, temperatures );
+
+  std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
+  if ( MF7.hasSection( 2 ) ) {
+    index.emplace_back( 7, 2, MF7.section( 2_c ).NC(), 0 );
   }
+  index.emplace_back( 7, 4, MF7.section( 4_c ).NC(), 0 );
+
+  std::string buffer2;
+  auto output2 = std::back_inserter( buffer2 );
+  auto dir = index[0];
+  dir.print( output2, 1, 1, 451 );
+
+
+  int    lrp  = -1, lfi  = 0, nlib = 0, nmod = 0;
+  double elis =  0, sta  = 0;
+  int    lis  =  0, liso = 0, nfor = 6;
+  double awi  =  1, emax = 0;
+  int    lrel =  0, nsub = 0, nver = 0;
+  double temp =  0;
+  int    ldrv =  0;
+
+  std::string comments;
+  for (std::string comment : jsonInput["comments"]){
+    comments = comments + comment;
+  }
+  double awr = jsonInput["awr"];
+
+  double zaid = jsonInput["za"];
+  njoy::ENDFtk::section::Type< 1, 451 > mf1mt451(
+    zaid, awr, lrp, lfi, nlib, nmod, elis, sta, lis, liso, nfor, awi, emax, 
+    lrel, nsub, nver, temp, ldrv, std::move(comments), std::move( index ) );
+
+
+  njoy::ENDFtk::Material material( int(jsonInput["mat"]), 
+                          njoy::ENDFtk::file::Type<1>( std::move( mf1mt451 ) ), 
+                          std::move( MF7 ) );
+  std::vector<njoy::ENDFtk::Material> materials {material};
+
+  std::string title = jsonInput["title"];
+  njoy::ENDFtk::Tape tape( TapeIdentification(std::move(title),1), std::move(materials) );
+
+  std::string buffer;
+  auto materialOutput = std::back_inserter( buffer );
+  tape.print( materialOutput );
+  int nout = jsonInput["nout"];
+  std::string tapeNumber = std::to_string(nout);
+  std::string name = "tape"+tapeNumber;
+  std::ofstream out(name);
+  out << buffer;
+  out.close();
+
 }
 
 
@@ -149,69 +198,3 @@ auto scaleDebyeWallerCoefficients( int numSecondaryScatterers,
 
 
 
-
-
-
-
-template <typename Range, typename Float>
-auto endout( std::vector<Range>& sab, int za, Range awrVec, 
-  const Float& spr, const Float& sps, const Range& temps, 
-  int numSecondaryScatterers, unsigned int secondaryScatterType, 
-  const std::vector<Range>& principalScatterSAB, const Range& alphas, 
-  const Range& betas, Range& dwpix, Range& dwp1, int iel,
-  const Float& translationalWeight, const Range& bragg, int numEdges, 
-  Range primaryTempf, Range secondaryTempf, int ilog, int isym, int lat, 
-  std::vector<unsigned int> numAtomsVec ){
-  using std::pow;
-  Float awr        = awrVec[0];
-  unsigned int npr = numAtomsVec[0];
-  Float sigma_b    = spr*pow(((1.0+awr)/awr),2);
-  Range xsVec      = { spr*npr, sps };
-  if (numSecondaryScatterers == 0){ xsVec.resize(1); }
-
-  if (numSecondaryScatterers != 0 and secondaryScatterType <= 0){
-    Float aws = awrVec[1];
-    Float sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
-    Float srat=sigma_b2/sigma_b;
-    for (size_t t = 0; t < temps.size(); ++t){
-      for ( size_t a = 0; a < alphas.size(); ++a ){
-        for ( size_t b = 0; b < betas.size(); ++b ){      
-          sab[t][b+a*betas.size()] *= srat;
-          sab[t][b+a*betas.size()] += principalScatterSAB[t][b+a*betas.size()];
-        }
-      }
-    }
-  }
-
-  scaleDebyeWallerCoefficients( numSecondaryScatterers, secondaryScatterType, 
-                                dwpix, dwp1, temps, awrVec );
-
-  // write out the inelastic part
-  auto epsilon = betas[betas.size()-1];
-  auto emax    = 0.0253 * epsilon;
-  unsigned int lasym = (isym > 1) ? 1 : 0;
-  std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
-  if (numSecondaryScatterers == 0){ secondaryScattererTypes = {}; }
-
-  ScatteringLawConstants constants(ilog, numSecondaryScatterers, epsilon, emax, 
-    std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
-    std::move(secondaryScattererTypes));
-
-  Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
-                                 secondaryTempf,lasym,lat,isym,ilog,constants);
-  if (iel == 0 and translationalWeight == 0.0){
-    // Write incoherent elastic part
-    Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,dwpix)); 
-    return njoy::ENDFtk::file::Type<7>( std::move(mt2), std::move(mt4) );
-  }
-  else if (iel > 0){
-    // Write coherent elastic part
-    Elastic mt2(za, awr, writeCohElasticToENDF( bragg, dwpix, dwp1, 
-      numSecondaryScatterers, secondaryScatterType, numEdges, temps ));
-    return njoy::ENDFtk::file::Type<7>( std::move(mt2), std::move(mt4) );
-  }
-
-  return njoy::ENDFtk::file::Type<7>(std::move(mt4));
-
-}
-*/

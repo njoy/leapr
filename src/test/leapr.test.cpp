@@ -9,6 +9,8 @@
 #include "tsl_be_tape24.h"
 #include "tsl_ortho_h_tape24.h"
 #include "tsl_liq_ch4_tape24.h"
+#include "input-tsl-SiO2-alpha.h"
+#include "tsl-SiO2-alpha.h"
 
 using Tabulated         = section::Type<7,4>::TabulatedFunctions;
 using CoherentElastic   = section::Type<7,2>::CoherentElastic;
@@ -144,6 +146,15 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
                  good_value.thermalScatteringValues()[i]);
       }
     } // beta loop
+
+    auto myTempEff   = my_MT4.principalEffectiveTemperature();
+    auto goodTempEff = good_MT4.principalEffectiveTemperature();
+    checkVec( myTempEff.moderatorTemperatures(), 
+            goodTempEff.moderatorTemperatures() );
+    checkVec( myTempEff.effectiveTemperatures(), 
+            goodTempEff.effectiveTemperatures() );
+
+
   } // if mf7 is present
 }
 
@@ -154,8 +165,37 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
 
 
 
-TEST_CASE( "incorporating lipservice" ){
-    REQUIRE ( true );
+TEST_CASE( "LEAPR" ){
+  GIVEN( "test SiO2-alph ENDF-B/VIII.0 input" ){
+    njoy::njoy21::lipservice::iRecordStream<char> 
+      iss( (std::istringstream(tslSiO2)) );
+
+    njoy::njoy21::lipservice::LEAPR leapr(iss);
+    nlohmann::json jsonLEAPR(leapr);
+
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape24"));
+    long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
+
+    // Bring in the good (legacy) inputs
+    auto begin = sio2_small_alphaBetaGrid.begin(), 
+           end = sio2_small_alphaBetaGrid.end();
+    lineNumber = 1;
+    StructureDivision division(begin,end,lineNumber);
+    file::Type<7>     h2o_MF7(division,begin,end,lineNumber);
+  
+    check_MF7(my_MF7,h2o_MF7);
+
+
+  } // GIVEN
+  
   GIVEN( "H in H2O ENDF-B/VIII.0 input" ) {
     njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
         "20/\n"                             // Card1
