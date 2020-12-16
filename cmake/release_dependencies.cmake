@@ -7,7 +7,7 @@ include( FetchContent )
 
 FetchContent_Declare( lipservice
     GIT_REPOSITORY  https://github.com/njoy/lipservice
-    GIT_TAG          9f84b282718d55324da36b01937e8b9c15ced2a7
+    GIT_TAG         8fdaa44c8ea1d3802dcf4262adaa76dec2f7c80d 
     )
 
 FetchContent_Declare( range-v3-adapter
