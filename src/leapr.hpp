@@ -12,8 +12,6 @@
 using namespace njoy;
 #include "lipservice.hpp"
 
-
-
 namespace njoy {
 namespace LEAPR {
 
@@ -25,7 +23,7 @@ void operator()( const nlohmann::json& jsonInput,
                  std::ostream& error,
                  const nlohmann::json& ){
 
-  //output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
+  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
