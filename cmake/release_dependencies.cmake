@@ -7,7 +7,7 @@ include( FetchContent )
 
 FetchContent_Declare( lipservice
     GIT_REPOSITORY  https://github.com/njoy/lipservice
-    GIT_TAG          9f84b282718d55324da36b01937e8b9c15ced2a7
+    GIT_TAG         8fdaa44c8ea1d3802dcf4262adaa76dec2f7c80d 
     )
 
 FetchContent_Declare( range-v3-adapter
@@ -22,12 +22,12 @@ FetchContent_Declare( hana-adapter
 
 FetchContent_Declare( header-utilities
     GIT_REPOSITORY  https://github.com/njoy/header-utilities
-    GIT_TAG         04f988c2b576630ef10fc0c3838c915f4a6e15d6
+    GIT_TAG         cc2610fee15e255c151e8e22aca1e8b3d1a96b39
     )
 
 FetchContent_Declare( ENDFtk
     GIT_REPOSITORY  https://github.com/njoy/ENDFtk
-    GIT_TAG         1217062c298560824cb8f239465b3293df178deb
+    GIT_TAG         d72711722a269919321e3f3df8a8b0cfe23ba6c7
     )
 
 FetchContent_Declare( catch-adapter

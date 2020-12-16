@@ -8,14 +8,14 @@
 #include "ENDFtk.hpp"
 
 template <typename Range, typename Float> 
-auto processCoherentElastic( const Range& bragg, const Range& dwpix, 
-  const Range& dwp1, int numSecondaryScatterers, int secondaryScatterType,
+auto processCoherentElastic( const Range& bragg, const Range& primaryDWF, 
+  const Range& secondaryDWF, int numSecondaryScatterers, int secondaryScatterType,
   int numEdges, const Float& tol, const Range& temps ){
 
   bool secondScattererWithSCT = ( numSecondaryScatterers > 0 and 
                                   secondaryScatterType  == 0 );
 
-  Float w = secondScattererWithSCT ? (dwpix[0]+dwp1[0])*0.5 : dwpix[0];
+  Float w = secondScattererWithSCT ? (primaryDWF[0]+secondaryDWF[0])*0.5 : primaryDWF[0];
 
   Range scr (2*numEdges+10,0.0);
   std::vector<Range> totalSCR (temps.size());
@@ -38,7 +38,7 @@ auto processCoherentElastic( const Range& bragg, const Range& dwpix,
     sum = 0.0;
     Range scr (numEdges+5,0.0);
 
-    w = secondScattererWithSCT ? (dwpix[i]+dwp1[i])*0.5 : dwpix[i];
+    w = secondScattererWithSCT ? (primaryDWF[i]+secondaryDWF[i])*0.5 : primaryDWF[i];
 
     int jj = 0;
 

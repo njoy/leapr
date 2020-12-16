@@ -12,6 +12,7 @@ using namespace njoy::ENDFtk;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 using MF7 = njoy::ENDFtk::file::Type<7>;
 
+/*
 
 void checkFullMF7( MF7 myMF7, MF7 goodMF7, const std::vector<double>& betas ){
 
@@ -139,6 +140,7 @@ TEST_CASE( "endout" ){
       tempf  = { 1192.460476, 1278.849394, 1301.020228, 1325.615088, 1412.887566 };
       tempf1 = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
+
       double awr = 0.9991673, spr = 20.43608, aws = 15.85751, sps = 3.7939;
       unsigned int numSecondaryScatterers = 1, secondaryScatterType = 0,
                         numPrincipalAtoms = 2,    numSecondaryAtoms = 1;
@@ -149,26 +151,9 @@ TEST_CASE( "endout" ){
       int za = 1001;
       int ilog = 0, isym = 0, lat = 1; 
     
-
-
-
-
-
-
       std::vector<double> awrVec {awr, aws};
       std::vector<unsigned int> numAtomsVec {numPrincipalAtoms,numSecondaryAtoms};
   
-
-      /*
-
-      double epsilon = betas[betas.size()-1];
-      double emax = 0.0253*epsilon;
-      std::vector<double> xsVec {spr, sps};
-      if (numSecondaryScatterers == 0){ xsVec.resize(1); }
-      std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
-
-      ScatteringLawConstants constants(ilog,numSecondaryScatterers, epsilon, emax, std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), std::move(secondaryScattererTypes) );
-      */
 
       njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,
       numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,
@@ -181,8 +166,6 @@ TEST_CASE( "endout" ){
       njoy::ENDFtk::file::Type<7> goodMF7( division, begin, end, lineNumber );
   
       //checkFullMF7( myMF7, goodMF7, betas );
-              /*
-      */
   
     } // WHEN
   } // GIVEN
@@ -228,10 +211,25 @@ TEST_CASE( "endout" ){
       int numEdges = 254;
       int za = 126;
       int ilog = 0, isym = 0, lat = 1; 
+      int ncold = 0;
+      int isabt = 0;
     
       std::vector<double> awrVec {awr};
       std::vector<unsigned int> numAtomsVec {numPrincipalAtoms};
   
+
+
+      nlohmann::json jsonInput = {
+        "npr"   : numPrincipalAtoms,
+        "nss"   : numSecondaryScatterers,
+        "sps"   : numSecondaryAtoms,
+        "ncold" : ncold,
+        "isabt" : isabt,
+        "lat"   : lat,
+        "iel"   : iel, 
+        "b7"    : secondaryScattererType }
+
+
       njoy::ENDFtk::file::Type<7> myMF7 = endout(sab,za,awrVec,spr,sps,temps,
       numSecondaryScatterers,secondaryScatterType,principalScatterSAB,alphas,betas,
       dwpix,dwp1,iel,translationalWeight,bragg,numEdges,tempf,tempf1,ilog,isym,lat,
@@ -289,6 +287,5 @@ TEST_CASE( "endout" ){
 
     } // WHEN
   } // GIVEN
-  /*
-*/
 } // TEST CASE
+*/

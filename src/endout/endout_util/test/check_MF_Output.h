@@ -5,6 +5,7 @@ using CoherentElastic = section::Type<7,2>::CoherentElastic;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 using Elastic = section::Type<7,2>;
 using Inelastic = section::Type<7,4>;
+using Tabulated = section::Type< 7, 4 >::TabulatedFunctions;
 
 
 
@@ -100,7 +101,6 @@ inline void checkFullInelastic(ENDFtk_Inelastic trueChunk, ENDFtk_Inelastic test
     REQUIRE( ranges::equal(constsMine.analyticalFunctionTypes(),
                            constsNjoy.analyticalFunctionTypes(), equal) );
   
-    using Tabulated = section::Type< 7, 4 >::Tabulated;
   
     auto table1 = std::get< Tabulated >( testChunk.scatteringLaw() );
     auto table2 = std::get< Tabulated >( trueChunk.scatteringLaw() );
@@ -110,9 +110,11 @@ inline void checkFullInelastic(ENDFtk_Inelastic trueChunk, ENDFtk_Inelastic test
     REQUIRE( ranges::equal(table1.boundaries(),table2.boundaries(),equal) );
     REQUIRE( ranges::equal(table1.interpolants(),table2.interpolants(),equal) );
   
+    REQUIRE( ranges::equal(table1.betas(), table2.betas(), equal) );
+
     for (size_t b = 0; b < betas.size(); ++b){
-      auto value1 = table1.betas()[b];
-      auto value2 = table2.betas()[b];
+      auto value1 = table1.scatteringFunctions()[b];
+      auto value2 = table2.scatteringFunctions()[b];
       REQUIRE( value1.beta() == Approx( value2.beta() ) );
       REQUIRE( value1.LT() == value2.LT() );
       REQUIRE( value1.temperatureDependenceFlag() == value2.temperatureDependenceFlag() );

@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "leapr.cpp"
+#include "leapr.hpp"
 #include <range/v3/all.hpp>
 #include "generalTools/testing.h"
 #include <variant>
@@ -9,8 +9,10 @@
 #include "tsl_be_tape24.h"
 #include "tsl_ortho_h_tape24.h"
 #include "tsl_liq_ch4_tape24.h"
+#include "input-tsl-SiO2-alpha.h"
+#include "tsl-SiO2-alpha.h"
 
-using Tabulated         = section::Type<7,4>::Tabulated;
+using Tabulated         = section::Type<7,4>::TabulatedFunctions;
 using CoherentElastic   = section::Type<7,2>::CoherentElastic;
 using IncoherentElastic = section::Type<7,2>::IncoherentElastic;
 
@@ -119,8 +121,8 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
     checkVec(my_table.interpolants(),good_table.interpolants());
 
     for (int ibeta = 0; ibeta < my_table.numberBetas(); ++ibeta){
-      auto my_value   =   my_table.betas()[ibeta];
-      auto good_value = good_table.betas()[ibeta];
+      auto my_value   =   my_table.scatteringFunctions()[ibeta];
+      auto good_value = good_table.scatteringFunctions()[ibeta];
       REQUIRE( my_value.beta() == Approx(good_value.beta()).epsilon(1e-6) );
       REQUIRE( my_value.LT() == good_value.LT() );
       REQUIRE(   my_value.temperatureDependenceFlag() == 
@@ -144,6 +146,15 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
                  good_value.thermalScatteringValues()[i]);
       }
     } // beta loop
+
+    auto myTempEff   = my_MT4.principalEffectiveTemperature();
+    auto goodTempEff = good_MT4.principalEffectiveTemperature();
+    checkVec( myTempEff.moderatorTemperatures(), 
+            goodTempEff.moderatorTemperatures() );
+    checkVec( myTempEff.effectiveTemperatures(), 
+            goodTempEff.effectiveTemperatures() );
+
+
   } // if mf7 is present
 }
 
@@ -154,7 +165,37 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
 
 
 
-TEST_CASE( "incorporating lipservice" ){
+TEST_CASE( "LEAPR" ){
+  GIVEN( "test SiO2-alph ENDF-B/VIII.0 input" ){
+    njoy::njoy21::lipservice::iRecordStream<char> 
+      iss( (std::istringstream(tslSiO2)) );
+
+    njoy::njoy21::lipservice::LEAPR leapr(iss);
+    nlohmann::json jsonLEAPR(leapr);
+
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape24"));
+    long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
+
+    // Bring in the good (legacy) inputs
+    auto begin = sio2_small_alphaBetaGrid.begin(), 
+           end = sio2_small_alphaBetaGrid.end();
+    lineNumber = 1;
+    StructureDivision division(begin,end,lineNumber);
+    file::Type<7>     h2o_MF7(division,begin,end,lineNumber);
+  
+    check_MF7(my_MF7,h2o_MF7);
+
+
+  } // GIVEN
+  
   GIVEN( "H in H2O ENDF-B/VIII.0 input" ) {
     njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
         "20/\n"                             // Card1
@@ -230,12 +271,23 @@ TEST_CASE( "incorporating lipservice" ){
       ) );
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
-    auto my_MF7 = finalLEAPR( jsonLEAPR );
 
-    auto begin = h2o.begin(), end = h2o.end();
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
     long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
+
+    // Bring in the good (legacy) inputs
+    auto begin = h2o.begin(), end = h2o.end();
+    lineNumber = 1;
     StructureDivision division(begin,end,lineNumber);
-    njoy::ENDFtk::file::Type<7> h2o_MF7(division,begin,end,lineNumber);
+    file::Type<7>     h2o_MF7(division,begin,end,lineNumber);
   
     check_MF7(my_MF7,h2o_MF7);
   } // GIVEN
@@ -284,22 +336,34 @@ TEST_CASE( "incorporating lipservice" ){
       ) );
     njoy::njoy21::lipservice::LEAPR leapr(iss);
     nlohmann::json jsonLEAPR(leapr);
-    auto my_MF7 = finalLEAPR( jsonLEAPR );
+
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
+    long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
 
     auto begin = sic.begin(), end = sic.end();
-    long lineNumber = 1;
+    lineNumber = 1;
     StructureDivision division(begin,end,lineNumber);
-    njoy::ENDFtk::file::Type<7> h2o_MF7(division,begin,end,lineNumber);
+    njoy::ENDFtk::file::Type<7> sic_MF7(division,begin,end,lineNumber);
   
-    check_MF7(my_MF7,h2o_MF7);
+    check_MF7(my_MF7,sic_MF7);
 
       
   } // GIVEN
 
+    
 
 
   GIVEN( "Be-metal ENDF-B/VIII.0 input" ) {
-    njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
+    WHEN( "Multiple temperatures considered" ){
+      njoy::njoy21::lipservice::iRecordStream<char> iss( std::istringstream(
         "20/\n"                             // Card1
         "title/\n"                          // Card2
         "3 1 100/\n"                        // Card3
@@ -338,19 +402,30 @@ TEST_CASE( "incorporating lipservice" ){
         "-500\n" 
         "/"                                 // Card20
       ) );
-
-     njoy::njoy21::lipservice::LEAPR leapr(iss);
-     nlohmann::json jsonLEAPR(leapr);
-     auto my_MF7 = finalLEAPR( jsonLEAPR );
-
-    
-      auto begin = be.begin(), end = be.end();
+  
+      njoy::njoy21::lipservice::LEAPR leapr(iss);
+      nlohmann::json jsonLEAPR(leapr);
+  
+      auto args = nlohmann::json::object();
+      njoy::LEAPR::LEAPR leaprInstance;
+      leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+  
+      njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
       long lineNumber = 1;
+      int mat = jsonLEAPR["mat"];
+      Tape          tape     = treeTape.parse( lineNumber );
+      Material      material = tape.material(mat).front();
+      file::Type<7> my_MF7   = material.MF(7_c);
+
+      auto begin = be.begin(), end = be.end();
+      lineNumber = 1;
       StructureDivision division(begin,end,lineNumber);
       njoy::ENDFtk::file::Type<7> be_MF7(division,begin,end,lineNumber);
-
+  
       check_MF7(my_MF7,be_MF7);
       
+    } // WHEN
+
   } // GIVEN
 
 
@@ -383,22 +458,31 @@ TEST_CASE( "incorporating lipservice" ){
 
       njoy::njoy21::lipservice::LEAPR leapr(iss);
       nlohmann::json jsonLEAPR(leapr);
-      auto my_MF7 = finalLEAPR( jsonLEAPR );
 
-      auto begin = ch4.begin(), end = ch4.end();
+      auto args = nlohmann::json::object();
+      njoy::LEAPR::LEAPR leaprInstance;
+      leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+
+      njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape20"));
       long lineNumber = 1;
-      StructureDivision division(begin,end,lineNumber);
-      njoy::ENDFtk::file::Type<7> be_MF7(division,begin,end,lineNumber);
+      int mat = jsonLEAPR["mat"];
+      Tape          tape     = treeTape.parse( lineNumber );
+      Material      material = tape.material(mat).front();
+      file::Type<7> my_MF7   = material.MF(7_c);
 
-      check_MF7(my_MF7,be_MF7);
+      // Bring in the good (legacy) inputs
+      auto begin = ch4.begin(), end = ch4.end();
+      lineNumber = 1;
+      StructureDivision division(begin,end,lineNumber);
+      file::Type<7>     h2o_MF7(division,begin,end,lineNumber);
+  
+      check_MF7(my_MF7,h2o_MF7);
+
       
     } // WHEN
+
   } // GIVEN
-
-
-
-
-
 
 } // TEST CASE
 
