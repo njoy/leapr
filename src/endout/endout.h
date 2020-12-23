@@ -173,7 +173,8 @@ void writeOutput( const nlohmann::json jsonInput,
     lrel, nsub, nver, temp, ldrv, std::move(comments), std::move( index ) );
 
 
-  njoy::ENDFtk::Material material( int(jsonInput["mat"]), 
+  unsigned int mat = jsonInput["mat"];
+  njoy::ENDFtk::Material material( mat, 
                           njoy::ENDFtk::file::Type<1>( std::move( mf1mt451 ) ), 
                           std::move( MF7 ) );
   std::vector<njoy::ENDFtk::Material> materials {material};
