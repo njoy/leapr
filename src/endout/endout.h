@@ -80,7 +80,7 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
     double sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
     double srat=sigma_b2/sigma_b;
 
-    for (size_t t = 0; t < ntempr; ++t){
+    for (int t = 0; t < ntempr; ++t){
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
           sab[t][b+a*betas.size()] += srat*secondaryScatterSAB[t][b+a*betas.size()];
@@ -173,7 +173,8 @@ void writeOutput( const nlohmann::json jsonInput,
     lrel, nsub, nver, temp, ldrv, std::move(comments), std::move( index ) );
 
 
-  njoy::ENDFtk::Material material( int(jsonInput["mat"]), 
+  unsigned int mat = jsonInput["mat"];
+  njoy::ENDFtk::Material material( mat, 
                           njoy::ENDFtk::file::Type<1>( std::move( mf1mt451 ) ), 
                           std::move( MF7 ) );
   std::vector<njoy::ENDFtk::Material> materials {material};

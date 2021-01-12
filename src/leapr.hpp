@@ -20,7 +20,7 @@ class LEAPR{
 public:
 void operator()( const nlohmann::json& jsonInput,
                  std::ostream& output,
-                 std::ostream& error,
+                 std::ostream&,
                  const nlohmann::json& ){
 
   output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
@@ -58,7 +58,7 @@ void operator()( const nlohmann::json& jsonInput,
     int secScatterOffset = (scatterIter == 1 and b7 == 0) ?
         int(jsonInput["ntempr"]) : 0;
 
-    for (size_t itemp = 0; itemp < int(jsonInput["ntempr"]); ++itemp){
+    for (int itemp = 0; itemp < int(jsonInput["ntempr"]); ++itemp){
 
       std::vector<double> sab(alphas.size()*betas.size(),0.0);
       std::vector<double> sab2(alphas.size()*betas.size(),0.0);
