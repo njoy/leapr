@@ -55,6 +55,7 @@ endif()
 add_library( leapr INTERFACE )
 target_include_directories( leapr INTERFACE src/ )
 target_link_libraries( leapr
+    INTERFACE Log
     INTERFACE ENDFtk
     INTERFACE catch-adapter
     INTERFACE range-v3-adapter

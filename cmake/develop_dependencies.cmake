@@ -5,9 +5,15 @@ include( FetchContent )
 # Declare project dependencies
 #######################################################################
 
+FetchContent_Declare( Log
+    GIT_REPOSITORY  https://github.com/njoy/Log
+    GIT_TAG         origin/master
+    GIT_SHALLOW     TRUE
+    )
+
 FetchContent_Declare( ENDFtk
     GIT_REPOSITORY  https://github.com/njoy/ENDFtk
-    GIT_TAG         origin/feature/python-v2
+    GIT_TAG         origin/develop
     GIT_SHALLOW     TRUE
     )
 
@@ -36,6 +42,7 @@ FetchContent_Declare( lipservice
 #######################################################################
 
 FetchContent_MakeAvailable(
+    Log
     ENDFtk
     catch-adapter
     range-v3-adapter
