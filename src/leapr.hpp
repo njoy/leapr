@@ -19,11 +19,11 @@ class LEAPR{
 
 public:
 void operator()( const nlohmann::json& jsonInput,
-                 std::ostream& output,
+                 std::ostream& ,
                  std::ostream& error,
                  const nlohmann::json& ){
 
-  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
+  //output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -114,6 +114,14 @@ void operator()( const nlohmann::json& jsonInput,
                       kappa, free, sab, sab2, effectiveTemperature );
       }
 
+      if (int(jsonInput["nsk"]) == 2 and ncold == 0){
+        std::vector<double> skappa = tempInfo["pairCorrelation"]["skappa"];
+        double dka = tempInfo["pairCorrelation"]["dka"];
+        double cfrac = jsonInput["cfrac"];
+        skold( cfrac, tev, scaledAlphas, betas, skappa, awr, dka, sab );
+      } 
+
+
       if (scatterIter == 1 and b7 == 0){
         secondaryEffectiveTemp[itemp] = effectiveTemperature ;
         secondarySabAllTemps[itemp] = sab;
@@ -124,8 +132,6 @@ void operator()( const nlohmann::json& jsonInput,
         primarySabAllTemps[itemp] = sab;
         primaryDWF[itemp] = dwpix[itemp];
       }
-
-
 
     } // temp loop
 

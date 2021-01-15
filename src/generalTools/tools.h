@@ -89,22 +89,11 @@ Float interpolate( const Range& y, const Float& x, const Range& betaGrid, Float 
 }
 
 
-
 template <typename Float, typename Range>
-Float interpolate( const Range& y, const Float& x, const Float& delta, 
+Float interpolate( const Range& y, const Float& x, const Float& delta, int np,
                    Float defaultVal = 0.0 ){
-  if ( x >= (y.size()-1)*delta or x < 0 ){ return defaultVal; }
- 
+  if ( x >= (np-1)*delta or x < 0 ){ return defaultVal; }
   unsigned int i = 0;
-  /*
-  Float x_L = 0.0;
-  for ( size_t j = 0; j < y.size(); ++j ){
-    if ( x < delta*(j+1) ){ 
-      i = j;
-      x_L = delta*j;
-      break;
-    }
-  }*/
   auto xGrid = ranges::view::iota(0,int(y.size())) 
              | ranges::view::transform([delta](int i){return delta*i;});
   i = search(xGrid, x, int(y.size()*0.5), 0, y.size());

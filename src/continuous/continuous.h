@@ -4,6 +4,7 @@
 #include "generalTools/tools.h"
 #include <range/v3/all.hpp>
 
+
 template <typename Range, typename Float>
 auto continuous(int nphon, const Float& delta, const Float& continWgt, 
             const Range& rho, const Range& alpha, const Range& beta, Range& sab ){
@@ -46,7 +47,7 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
       exx    = exp_lambda_alpha[a]*xa[a];
  
       for( size_t b = 0; b < beta.size(); ++b ){
-        add = exx * interpolate(tnow, beta[b], delta);
+        add = exx * interpolate(tnow, beta[b], delta, nNext);
         sab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
         if (n == nphon - 1 and sab[b+a*beta.size()] > 0 and 
              a+1 < maxt[b] and 1000*add > sab[b+a*beta.size()] ){
