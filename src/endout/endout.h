@@ -80,7 +80,7 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
     double sigma_b2 = (aws == 0) ? 0 : sps*pow((1.0+aws)/aws,2);
     double srat=sigma_b2/sigma_b;
 
-    for (size_t t = 0; t < ntempr; ++t){
+    for (int t = 0; t < ntempr; ++t){
       for ( size_t a = 0; a < alphas.size(); ++a ){
         for ( size_t b = 0; b < betas.size(); ++b ){      
           sab[t][b+a*betas.size()] += srat*secondaryScatterSAB[t][b+a*betas.size()];

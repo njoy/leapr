@@ -33,7 +33,7 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
                         | ranges::view::transform([](auto lambda_alpha){
                             return exp(-lambda_alpha); });
 
-  Range maxt(1000,alpha.size()+1);
+  std::vector<int> maxt(beta.size(),alpha.size()+1);
 
   for( int n = 0; n < nphon; ++n ){
     if ( n > 0 ){ 
@@ -48,7 +48,8 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
  
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, beta[b], delta, nNext);
-        sab[b+a*beta.size()] += add < 1e-30 ? 0 : add;
+        if (add < 1e-30){ add = 0; }
+        sab[b+a*beta.size()] += add;
         if (n == nphon - 1 and sab[b+a*beta.size()] > 0 and 
              a+1 < maxt[b] and 1000*add > sab[b+a*beta.size()] ){
           maxt[b] = a+1; 

@@ -39,7 +39,7 @@ void swap( Float& a, Float& b ){
 
 
 template <typename Range, typename Float>
-auto search( Range xRange, Float x, int i, int left, int right ){
+auto search( const Range& xRange, const Float& x, int i, int left, int right ){
   if ( xRange[i] <= x and x <= xRange[i+1] ){ return i; }
   if ( x > xRange[i] ){ left  = i; }
   else                { right = i; }
@@ -109,8 +109,6 @@ auto terp1( const Float& x1, const Float& y1, const Float& x2, const Float& y2,
    * the line,  (x,y) is the interpolated point, i is the interpolation code,
    * thr6 is the kinematic threshold for i = 6 (thr6 > 0)
    */
-
-  Float a, b, t;
 
   // make sure x2 .ne. x1
   if (x2 == x1) {
