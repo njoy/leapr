@@ -12,6 +12,7 @@
 #include "input-tsl-SiO2-alpha.h"
 #include "input-tsl-BeO.h"
 #include "input-tsl-D2O.h"
+#include "input-tsl-QUICKH2O.h"
 #include "tsl-SiO2-alpha.h"
 
 using Tabulated         = section::Type<7,4>::TabulatedFunctions;
