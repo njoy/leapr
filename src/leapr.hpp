@@ -23,7 +23,6 @@ void operator()( const nlohmann::json& jsonInput,
                  std::ostream& ,
                  const nlohmann::json& ){
 
-  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -85,7 +84,8 @@ void operator()( const nlohmann::json& jsonInput,
       std::vector<double> rho = tempInfo["rho"];
 
       auto continOutput  = continuous(int(jsonInput["nphon"]), rho_dx,
-                           continuousWgt, rho, scaledAlphas, scaledBetas, sab);
+                           continuousWgt, rho, scaledAlphas, scaledBetas, sab,
+                           output, int(jsonInput["iprint"]) );
 
       dwpix[itemp] = std::get<0>(continOutput);
       double effectiveTemperature = std::get<1>(continOutput)*temperature;
@@ -117,7 +117,7 @@ void operator()( const nlohmann::json& jsonInput,
       if (int(jsonInput["nsk"]) == 2 and ncold == 0){
         std::vector<double> skappa = tempInfo["pairCorrelation"]["skappa"];
         double dka = tempInfo["pairCorrelation"]["dka"];
-        double cfrac = jsonInput["cfrac"];
+        double cfrac = tempInfo["pairCorrelation"]["cfrac"];
         skold( cfrac, tev, scaledAlphas, betas, skappa, awr, dka, sab );
       } 
 
@@ -159,6 +159,9 @@ void operator()( const nlohmann::json& jsonInput,
    secondaryEffectiveTemp, temperatures );
 
 
+
+  return;
+  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 }
 };
 

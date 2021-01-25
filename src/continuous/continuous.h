@@ -7,7 +7,8 @@
 
 template <typename Range, typename Float>
 auto continuous(int nphon, const Float& delta, const Float& continWgt, 
-            const Range& rho, const Range& alpha, const Range& beta, Range& sab ){
+            const Range& rho, const Range& alpha, const Range& beta, Range& sab,
+            std::ostream& output, int iprint ){
   using std::exp;
 
   Range betaGrid = ranges::view::iota(0,int(rho.size())) 
@@ -48,8 +49,9 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
  
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, beta[b], delta, nNext);
-        if (add < 1e-30){ add = 0; }
+        if (add < 1e-30 or isinf(add) or isnan(add)){ add = 0; }
         sab[b+a*beta.size()] += add;
+
         if (n == nphon - 1 and sab[b+a*beta.size()] > 0 and 
              a+1 < maxt[b] and 1000*add > sab[b+a*beta.size()] ){
           maxt[b] = a+1; 
@@ -62,7 +64,7 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
     nLast = nNext;
   } 
 
-  checkMoments(alpha,beta,maxt,lambda_s,continWgt,t_bar,sab);
+  checkMoments(alpha,beta,maxt,lambda_s,continWgt,t_bar,sab,output,iprint);
 
   return std::make_tuple(lambda_s,t_bar);
 }
