@@ -53,7 +53,7 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
         sab[b+a*beta.size()] += add;
 
         if (n == nphon - 1 and sab[b+a*beta.size()] > 0 and 
-             a+1 < maxt[b] and 1000*add > sab[b+a*beta.size()] ){
+             int(a+1) < maxt[b] and 1000*add > sab[b+a*beta.size()] ){
           maxt[b] = a+1; 
         }
       } 

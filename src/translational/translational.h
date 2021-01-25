@@ -41,14 +41,12 @@ auto translational( Range alpha, Range beta, const Float& transWeight, Float del
              f * sabTrans[i] * sb[nsd-i-1] * exp(-i*delta);
       }
       s = (s < 1e-30) ? 0 : s*delta*0.33333333;
-
-      if (beta[b] > nsd*delta){ 
-        sab[b+a*beta.size()] = s; 
-        continue;
+      if ( int(beta[b]/delta) >= nsd-1 ){ st = 0.0; }
+      else {
+        auto xVals = ranges::view::iota(0,int(sabTrans.size()))
+                   | ranges::view::transform([delta](auto x){return delta*x;});
+        st = interpolateLog(ranges::view::zip(xVals,sabTrans),beta[b]);
       }
-      auto xVals = ranges::view::iota(0,int(sabTrans.size()))
-                 | ranges::view::transform([delta](auto x){return delta*x;});
-      st = interpolateLog(ranges::view::zip(xVals,sabTrans),beta[b]);
 
       if ( st > 0.0 ){ s += exp(-alpha[a]*lambda_s)*st; }
       sab[beta.size()*a + b] = s;
