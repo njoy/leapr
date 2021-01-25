@@ -5,25 +5,26 @@
 #include <range/v3/all.hpp>
 
 
-template <typename Range, typename Float>
-auto continuous(int nphon, const Float& delta, const Float& continWgt, 
-            const Range& rho, const Range& alpha, const Range& beta, Range& sab,
-            std::ostream& output, int iprint ){
+auto continuous(int nphon, const double& delta, const double& continWgt, 
+     const std::vector<double>& rho, const std::vector<double>& alpha, 
+     const std::vector<double>& beta, std::vector<double>& sab,
+     std::ostream& output, int iprint ){
   using std::exp;
 
-  Range betaGrid = ranges::view::iota(0,int(rho.size())) 
+  std::vector<double> betaGrid = ranges::view::iota(0,int(rho.size())) 
                  | ranges::view::transform([delta](auto x){return x*delta;});
     
   auto lambda_s_t_bar = start( rho, continWgt, betaGrid );
-  Float lambda_s = std::get<0>(lambda_s_t_bar),
-        t_bar    = std::get<1>(lambda_s_t_bar);
-  Range t1       = std::get<2>(lambda_s_t_bar);
-  
-  Range xa(alpha.size(),1.0), tnow(nphon*t1.size(),0.0), tlast(nphon*t1.size(),0.0);
+  double lambda_s = std::get<0>(lambda_s_t_bar),
+         t_bar    = std::get<1>(lambda_s_t_bar);
+
+  std::vector<double> t1       = std::get<2>(lambda_s_t_bar);
+  std::vector<double> xa(alpha.size(),1.0),  tnow(nphon*t1.size(),0.0), 
+                                            tlast(nphon*t1.size(),0.0);
   std::copy( t1.begin(), t1.begin() + t1.size(), tlast.begin() );
   std::copy( t1.begin(), t1.begin() + t1.size(), tnow.begin()  );
 
-  Float add, exx, inv_n;
+  double add, exx, inv_n;
   
   size_t nNext = t1.size(), nLast = t1.size();
 
@@ -49,7 +50,7 @@ auto continuous(int nphon, const Float& delta, const Float& continWgt,
  
       for( size_t b = 0; b < beta.size(); ++b ){
         add = exx * interpolate(tnow, beta[b], delta, nNext);
-        if (add < 1e-30 or isinf(add) or isnan(add)){ add = 0; }
+        if (add < 1e-30 or std::isinf(add) or std::isnan(add)){ add = 0; }
         sab[b+a*beta.size()] += add;
 
         if (n == nphon - 1 and sab[b+a*beta.size()] > 0 and 

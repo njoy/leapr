@@ -8,9 +8,9 @@ auto checkMoments( const std::vector<double>& alpha, const std::vector<double>& 
 
   if (iprint == 2){
     output << std::endl << std::endl;
-    output << "Checking S(a,b) with sum rule and normalization rule" << std::endl;
-    output << "----------------------------------------------------" << std::endl;
-    output << std::endl << std::endl;
+    output << "       Checking S(a,b) with sum rule and normalization rule" << std::endl;
+    output << "       ----------------------------------------------------" << std::endl;
+    output << std::endl;
 
     if (iprint != 0){
       for (size_t ibeta = 1; ibeta < beta.size(); ++ibeta){
@@ -28,7 +28,7 @@ auto checkMoments( const std::vector<double>& alpha, const std::vector<double>& 
     double bel = 0, ff1l = 0, ff2l = 0, sum0 = 0, sum1 = 0;
 
     for ( int b = 0; b < int(beta.size()); ++b ){
-      be = beta[b];//*sc;
+      be = beta[b];
 
       ex = -(alw-be)*(alw-be)/(4*alw*tbar);
       ssct = ex > -250.0 ? exp(ex)/sqrt(4*M_PI*alw*tbar) : 0;
@@ -53,10 +53,14 @@ auto checkMoments( const std::vector<double>& alpha, const std::vector<double>& 
     sum1 = sum1/al/tbeta;
 
     if (iprint == 2){
-      output << std::setprecision(8)<< "   alpha    " << alpha[a] << "    (" << 
-                                 a+1 << "/" << alpha.size() << ")" << std::endl;
-      output << "             normalization check = " << sum0 << std::endl;
-      output << "                  sum rule check = " << sum1 << std::endl << std::endl;
+      if (a == 0){ 
+        output << "      alpha                    normalization check   "<<
+                  "sum rule check" << std::endl;
+      }
+      output << std::fixed << std::setprecision(8);
+      output << "    " << std::setw(10) << alpha[a] << 
+               "    (" << a+1 << "/" << alpha.size() << ")"<< 
+               std::setw(20) << sum0 << std::setw(20) << sum1 << std::endl;
     }
   }
 
