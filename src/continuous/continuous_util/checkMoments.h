@@ -13,7 +13,7 @@ auto checkMoments( const std::vector<double>& alpha, const std::vector<double>& 
     output << std::endl << std::endl;
 
     if (iprint != 0){
-      for (int ibeta = 1; ibeta < beta.size(); ++ibeta){
+      for (size_t ibeta = 1; ibeta < beta.size(); ++ibeta){
         if (maxt[ibeta] > maxt[ibeta-1]){
             maxt[ibeta] = maxt[ibeta-1];
         }

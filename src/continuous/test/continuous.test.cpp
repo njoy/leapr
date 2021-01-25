@@ -34,7 +34,7 @@ TEST_CASE( "continuous treatment" ){
       for ( auto& b : beta  ){ b *= sc;      }
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab );
+      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab, std::cout, 0 );
       THEN( "continuous output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
         sabCorrect = {5.6553448E-4, 2.9998239E-4, 3.5728611E-4, 1.3283598E-4, 
@@ -191,7 +191,7 @@ TEST_CASE( "continuous treatment" ){
 
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab );
+      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab, std::cout, 0 );
       THEN( "continuous output matches expected value" ){
         lambda_s =   0.2352041964494244, t_bar = 1.9344942054735312;
         REQUIRE(ranges::equal(sabCorrect, sab, equal));
@@ -312,7 +312,7 @@ std::vector<double>
 
       std::vector<double> sab( alpha.size()*beta.size(), 0.0 );
 
-      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab );
+      output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab, std::cout, 0 );
 
 
     THEN( "continuous output matches expected value" ){
@@ -349,7 +349,7 @@ std::vector<double>
 
 
  
-        output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab );
+        output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab, std::cout, 0 );
         THEN( "continuous output matches expected value" ){
           lambda_s = 7.6444701E-2; t_bar = 6.2888965;
           sabCorrect = {4.1395658E-5, 4.4726194E-5, 3.7025816E-5, 1.5765995E-4, 
@@ -372,7 +372,7 @@ std::vector<double>
         for ( auto& b : beta  ){ b *= sc;      }
 
 
-        output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab );
+        output = continuous( nphon, delta, tbeta, rho, alpha, beta, sab, std::cout, 0 );
         THEN( "continuous output matches expected value" ){
           lambda_s =  1.729454237; t_bar = 1.16861142;
           sabCorrect = {3.3452442E-3, 3.3727931E-3, 1.7063857E-3, 1.7623769E-3, 

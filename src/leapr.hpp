@@ -23,6 +23,7 @@ void operator()( const nlohmann::json& jsonInput,
                  std::ostream& ,
                  const nlohmann::json& ){
 
+  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -160,8 +161,6 @@ void operator()( const nlohmann::json& jsonInput,
 
 
 
-  return;
-  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 }
 };
 

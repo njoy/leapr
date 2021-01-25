@@ -22,7 +22,7 @@ TEST_CASE( "check moments" ){
     for ( auto& a : alpha ){ a *= sc/arat; }
     for ( auto& b : beta  ){ b *= sc; }
 
-    checkMoments( alpha, beta, maxt, f0, tbeta, tbar, ssm );
+    checkMoments( alpha, beta, maxt, f0, tbeta, tbar, ssm, std::cout, 0 );
 
     std::vector<double> correctSab {0.00000000, 3.04230221, 3.03666664, 
       3.00439217, 2.94493755, 2.85993079, 2.73274581, 0.00000000, 2.49419786, 
@@ -49,7 +49,7 @@ TEST_CASE( "check moments" ){
     for ( auto& b : beta  ){ b *= sc; }
 
 
-    checkMoments( alpha, beta, maxt, f0, tbeta, tbar, ssm );
+    checkMoments( alpha, beta, maxt, f0, tbeta, tbar, ssm, std::cout, 0 );
 
     std::vector<double> correctSab { 0.00000000, 3.04230221, 0.00000000, 
       3.00439217, 0.00000000, 2.85993079, 0.00000000, 0.00000000, 2.49419786, 
