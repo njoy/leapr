@@ -23,7 +23,7 @@ void operator()( const nlohmann::json& jsonInput,
                  std::ostream& ,
                  const nlohmann::json& ){
 
-  output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
+  //output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
@@ -65,6 +65,8 @@ void operator()( const nlohmann::json& jsonInput,
 
       auto tempInfo = temperatureInfo[itemp+secScatterOffset];
       double temperature = tempInfo["temperature"];
+      output << std::fixed << std::setprecision(2) << "\n\nBeginning Calculation for " << 
+                temperature << " K " << std::endl << std::endl;
       if (scatterIter == 0){ temperatures[itemp] = temperature; }
 
       double tev = kb * temperature;
@@ -90,9 +92,13 @@ void operator()( const nlohmann::json& jsonInput,
 
       dwpix[itemp] = std::get<0>(continOutput);
       double effectiveTemperature = std::get<1>(continOutput)*temperature;
+      output << "            - Debye-Waller Factor       " << dwpix[itemp]<< std::endl << 
+                "            - Effective Temperature     " << effectiveTemperature<< std::endl;     
+
 
       double transWgt = tempInfo["twt"];
       if (transWgt > 0){
+        output << "\n\n     Beginning translational calculation... " << std::endl;
         translational( scaledAlphas, scaledBetas, transWgt, rho_dx,
                        static_cast<double>(tempInfo["c"]), dwpix[itemp], continuousWgt,
                        effectiveTemperature , temperature, sab );
@@ -101,6 +107,7 @@ void operator()( const nlohmann::json& jsonInput,
       if (not tempInfo["oscillators"]["energies"].is_null()){
         std::vector<double> oscE = tempInfo["oscillators"]["energies"],
                             oscW = tempInfo["oscillators"]["weights"];
+        output << "\n\n     Beginning discrete oscillator calculation... " << std::endl;
         discreteOscillators( dwpix[itemp], transWgt, continuousWgt, scaledAlphas,
             scaledBetas, temperature, ranges::view::zip(oscE,oscW),
             effectiveTemperature, sab );
@@ -111,6 +118,7 @@ void operator()( const nlohmann::json& jsonInput,
         auto pairCorrelationInfo = tempInfo["pairCorrelation"];
         std::vector<double> kappa = pairCorrelationInfo["skappa"];
         double                dka = pairCorrelationInfo["dka"];
+        output << "\n\n     Beginning cold hydrogen calculation... " << std::endl;
         coldHydrogen( tev, ncold, transWgt+continuousWgt, alphas, betas, dka,
                       kappa, free, sab, sab2, effectiveTemperature );
       }

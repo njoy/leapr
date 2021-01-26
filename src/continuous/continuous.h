@@ -11,6 +11,7 @@ auto continuous(int nphon, const double& delta, const double& continWgt,
      std::ostream& output, int iprint ){
   using std::exp;
 
+  output << "\n\n     Beginning continuous, solid-type calculation... " << std::endl;
   std::vector<double> betaGrid = ranges::view::iota(0,int(rho.size())) 
                  | ranges::view::transform([delta](auto x){return x*delta;});
     

@@ -33,5 +33,5 @@ jobs:
       run: make -j2
       working-directory: ./bin
     - name: ctest
-      run: ctest -j2
+      run: ctest -V -j2
       working-directory: ./bin
