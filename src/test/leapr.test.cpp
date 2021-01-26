@@ -179,9 +179,7 @@ TEST_CASE( "LEAPR" ){
     auto args = nlohmann::json::object();
     njoy::LEAPR::LEAPR leaprInstance;
 
-    std::ofstream output; output.open ("output");
-    leaprInstance( jsonLEAPR, output, std::cerr, args );
-    output.close();
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
 
     njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape24"));
     long lineNumber = 1;

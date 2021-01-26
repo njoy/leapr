@@ -77,10 +77,10 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
     // Sort the discrete lines, and throw out the smallest ones
     // Except for the first value, we're sorting wts and bes so that wts values
     // are in decreasing order.
-    unsigned int n = nn; 
+    unsigned int n = nn+1; 
 
     for ( size_t i = 1; i < nn; ++i ){
-      for ( size_t j = i+1; j <= n; ++j ){
+      for ( size_t j = i+1; j <= nn; ++j ){
         if ( wts[j] >= wts[i] ){
           swap( wts[j], wts[i] );
           swap( bes[j], bes[i] );
