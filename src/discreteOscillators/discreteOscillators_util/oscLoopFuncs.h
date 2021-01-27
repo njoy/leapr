@@ -3,10 +3,10 @@
 #include <iostream>
 #include "generalTools/constants.h"
 
-template <typename Float, typename Range>
-void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus, 
-  Range& wts, const Range& wtn, Range& bes, const Range& ben, const int nn, 
-  int pos_or_neg ){
+void posNegTerms( int& n, const double& beta_i, 
+  const std::vector<double>& b_minus_or_plus, std::vector<double>& wts, 
+  const std::vector<double>& wtn, std::vector<double>& bes, 
+  const std::vector<double>& ben, const int nn, int pos_or_neg ){
 
   /* The point of these loops are to prepare wts and bes for the summation in
    * Eq. 542, which involves a sum of sums of sums etc, so we're really 
@@ -42,10 +42,10 @@ void posNegTerms( int& n, const Float& beta_i, const Range& b_minus_or_plus,
 }
 
 
-template <typename Float, typename Range>
-auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar, 
-  Range& wts, Range& bes, Range& betaVals, 
-  Float& tbart, Range& t_eff_consts, const Float& temp ){
+auto oscillatorLoop( const double& alpha, std::vector<double>& debyeWaller, 
+  std::vector<double>& ar, std::vector<double>& wts, std::vector<double>& bes, 
+  std::vector<double>& betaVals, double& tbart, std::vector<double>& 
+  t_eff_consts, const double& temp ){
   /* alpha          --> yup
    * debyeWaller       --> weight / ( tanh( 0.5 * energy / tev ) * energy / tev )
    *                    --defined in Eq. 538, evaluated in prepareParams.h
@@ -64,9 +64,9 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
    *                    --in leapr.f90, this is called dist
    */
 
-  Range ben(wts.size(), 0), wtn(wts.size(), 0); wtn[0] = 1.0;
+  std::vector<double> ben(wts.size(), 0), wtn(wts.size(), 0); wtn[0] = 1.0;
 
-  Float x, bzero;
+  double x, bzero;
   int n = 0, nn = 0;
 
   // Loop over all oscillators
@@ -84,7 +84,7 @@ auto oscillatorLoop( const Float& alpha, Range& debyeWaller, Range& ar,
      *                I0(x)*e^(-alpha*debyeWaller+x)
      * depending on the size of x.
      */
-    Range bminus (50,0), bplus(50,0);
+    std::vector<double> bminus (50,0), bplus(50,0);
     bzero = bfact( x, alpha*debyeWaller[i], betaVals[i], bplus, bminus );
     
     // do convolution for delta function

@@ -31,10 +31,12 @@ auto continuous(int nphon, const double& delta, const double& continWgt,
 
   auto lambda_alpha     = ranges::view::iota(0,int(alpha.size()))
                         | ranges::view::transform([&](auto i){ 
-                            return lambda_s*alpha[i]; });
+                            return lambda_s*alpha[i]; })
+                        | ranges::to_vector;
   auto exp_lambda_alpha = lambda_alpha 
                         | ranges::view::transform([](auto lambda_alpha){
-                            return exp(-lambda_alpha); });
+                            return exp(-lambda_alpha); })
+                        | ranges::to_vector;
 
   std::vector<int> maxt(beta.size(),alpha.size()+1);
 

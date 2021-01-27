@@ -10,16 +10,18 @@
 #include <iostream>
 
 
-template <typename Float, typename Range, typename RangeZipped>
-auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& tbeta, 
-  Range alpha, Range beta, const Float& temp, RangeZipped oscEnergiesWeights, 
-  Float& t_eff, Range& sab ){
+template <typename Zipped>
+auto discreteOscillators( const double& lambda_s, const double& twt, 
+  const double& tbeta, std::vector<double> alpha, std::vector<double> beta, 
+  const double& temp, Zipped oscEnergiesWeights, double& t_eff, 
+  std::vector<double>& sab ){
 
   int maxdd = 500;
 
   // Set up oscillator parameters
-  Range ar(50), t_eff_consts(50), debyeWaller(50), oscBetas(50), exb(beta.size());
-  Float tev = temp*kb;
+  std::vector<double> ar(50), t_eff_consts(50), debyeWaller(50), 
+                                  oscBetas(50), exb(beta.size());
+  double tev = temp*kb;
 
   prepareParams(oscEnergiesWeights, tev, oscBetas, ar, t_eff_consts,
     debyeWaller, exb, beta );
@@ -38,23 +40,23 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
    */
 
 
-  Range rdbex( 2 * beta.size() + 1 );
+  std::vector<double> rdbex(2*beta.size() + 1);
   auto output = bfill(rdbex, beta);
   int nbx   = std::get<0>(output);
-  Range bex = std::get<1>(output);
+  std::vector<double> bex = std::get<1>(output);
 
-  Float tbart = t_eff/temp;
+  double tbart = t_eff/temp;
      
   for ( size_t a = 0; a < alpha.size(); ++a ){
     // Get all sab entries for a given alpha and temperature (vary beta)
-    Range input ( beta.size() );
+    std::vector<double> input ( beta.size() );
     for ( size_t b = 0; b < beta.size(); ++b ){
       input[b] = sab[b+a*beta.size()];
     }
     // input = sab values for constant temp and alpha. 
     // exb   = exp( -beta * sc / 2 ), which (following Eq. 509) we need in 
     //         order to go between S(a,b) and S(a,-b) 
-    Range sex = exts( input, exb, beta );
+    std::vector<double> sex = exts( input, exb, beta );
     // sex is populated with sab entries, such that 
     //        sex = [ s3 s2 s1 s1 s2*exp(-beta) s3*exp(-beta) 0 ]
     //                             or 
@@ -63,7 +65,7 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
     // The exp(-beta) values are explained above, because of Eq. 509
 
     // Initialize delta loop
-    Range bes(maxdd,0.0), wts(maxdd,0.0);
+    std::vector<double> bes(maxdd,0.0), wts(maxdd,0.0);
     
     unsigned int nn = oscillatorLoop( alpha[a], debyeWaller, ar, wts, bes,  
       oscBetas, tbart, t_eff_consts, temp );
@@ -93,7 +95,7 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
     }
 
     // Add the continuous part to the scattering law
-    Range sexpb(beta.size(),0.0);
+    std::vector<double> sexpb(beta.size(),0.0);
 
     for ( size_t m = 0; m < n; ++m ){
       for ( size_t b = 0; b < beta.size(); ++b ){
@@ -108,7 +110,7 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
     }
 
     // Add the delta functions to the scattering law
-    Float debyeWallerExponential = exp( -alpha[a]*lambda_s );
+    double debyeWallerExponential = exp( -alpha[a]*lambda_s );
     addDeltaFuncs( twt, debyeWallerExponential, bes, beta, wts, sexpb, n ); 
 
     // Record the results
@@ -117,7 +119,7 @@ auto discreteOscillators( const Float& lambda_s, const Float& twt, const Float& 
     }
   }
   double tsave = 0.0;
-  for ( Float& t_eff_const : t_eff_consts ){ tsave += t_eff_const; }
+  for ( double& t_eff_const : t_eff_consts ){ tsave += t_eff_const; }
   tsave /= kb;
 
 

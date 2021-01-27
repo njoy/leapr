@@ -1,18 +1,20 @@
 #include <range/v3/all.hpp>
 
-template <typename Float>
-auto cutoff( Float a ){ return a < 1.0e-30 ? 0.0 : a; }
+auto cutoff( double a ){ return a < 1.0e-30 ? 0.0 : a; }
 
-template <typename Float, typename Range>
-auto bfact( const Float& x, const Float& dwc, const Float& beta_i, 
-  Range& bplus, Range& bminus ){
+auto bfact( const double& x, const double& alpha_dbw, const double& beta_i, 
+  std::vector<double>& bplus, std::vector<double>& bminus ){
+  // Compute factors used to weight various discrete-oscillator contributions
+  // to the scattering law. Modified Bessel functions I(x) series must be 
+  // computed. I0(x) and I1(x) are computed using series expansion, and higher
+  // orders are generated using reverse recursion. 
   using std::exp;
    
-  Float I0, I1, expVal = -dwc, y = x / 3.75;
+  double I0, I1, expVal = -alpha_dbw, y = x / 3.75;
 
   if ( y <= 1.0 ){
 
-    Range 
+    std::vector<double> 
       I1Consts = {0.0360768, 0.2659732, 1.2067492, 3.0899424, 3.5156229, 1.0},
       I2Consts = {0.0030153, 0.02658733,0.15084934,0.51498869,0.87890594,0.5};
     I0 = 0.0045813;
@@ -42,24 +44,24 @@ auto bfact( const Float& x, const Float& dwc, const Float& beta_i,
     expVal += x;
   }
 
-  Range In ( 50, 0.0 );
+  std::vector<double> In ( 50, 0.0 );
   
   int nmax=50, i = 49;
   In[nmax-1] = 0; In[nmax-2] = 1;
   while (i > 1){
     In[i-2] = In[i] + 2 * i * In[i-1] / x;
-    i = i - 1;
+    i -= 1;
     if (In[i-1] >= 1.0e10){ 
       for (auto j = i-1; j < nmax-1; ++j){ In[j] *= 1e-10; } 
     }  
   } 
 
-  Float fraction = I1/In[0];
+  double fraction = I1/In[0];
   for ( auto i = 0; i < nmax; ++i ){ 
     In[i] = cutoff( In[i] * fraction ); 
   }
 
-  for ( auto n = 0; n < nmax; ++n ){
+  for ( double n = 0; n < nmax; ++n ){
     bplus[n]  = cutoff( exp(expVal - (n+1) * beta_i * 0.5) * In[n] );
     bminus[n] = cutoff( exp(expVal + (n+1) * beta_i * 0.5) * In[n] );
   }
