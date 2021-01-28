@@ -7,8 +7,7 @@
 #include <tuple>
 
 
-template <typename Float>
-auto getSumConstants( int ncold, Float& scatLenI, Float& scatLenC, Float& sk ){
+auto getSumConstants( int ncold, double& scatLenI, double& scatLenC, double& sk ){
   using std::make_tuple; using std::pow;
   // Ortho Hydrogen
   if (ncold == 1){ 
@@ -34,10 +33,10 @@ auto getSumConstants( int ncold, Float& scatLenI, Float& scatLenC, Float& sk ){
 
 
 
-template <typename Float, typename Range>
-auto coldHydrogen( Float tev, int ncold, Float transContinWeight, 
-  const Range& alpha, const Range& beta, Float& dka, Range& ska, 
-  bool free, Range& sab_1, Range& sab_2, const Float& tbart ){
+template <typename Range>
+auto coldHydrogen( double tev, int ncold, double transContinWeight, 
+  const Range& alpha, const Range& beta, double& dka, Range& ska, 
+  bool free, Range& sab_1, Range& sab_2, const double& tbart ){
   /* Convolve current scattering law with discrete rotational modes for ortho
    * or para hydrogen / deuterium. The discrete modes are calculated using 
    * formulas of Young and Koppel for vibrational ground state with coding 
@@ -47,7 +46,7 @@ auto coldHydrogen( Float tev, int ncold, Float transContinWeight,
    * symmetric in beta
    */
 
-  Float de, x, massMolecule, bp, scatLenC, scatLenI;//, wt;
+  double de, x, massMolecule, bp, scatLenC, scatLenI;//, wt;
   int nbx, maxbb = 2 * beta.size() + 1;
 
   Range exb(beta.size(), 0.0), bex(maxbb, 0.0), rdbex(maxbb, 0.0);
@@ -77,7 +76,7 @@ auto coldHydrogen( Float tev, int ncold, Float transContinWeight,
   //wt = transContinWeight;
 
   auto xVals = ranges::view::iota(0,int(ska.size()))
-             | ranges::view::transform([delta=dka](auto x){return Float(delta*x);}); 
+             | ranges::view::transform([delta=dka](auto x){return double(delta*x);}); 
   auto xyZipped = ranges::view::zip(xVals,ska);
 
   for ( int b = 0; b < int(beta.size()); ++b ){
@@ -92,17 +91,18 @@ auto coldHydrogen( Float tev, int ncold, Float transContinWeight,
 
 
   for ( size_t a = 0; a < alpha.size(); ++a ){
-    Float waven = 1e-10 * sqrt( massMolecule * tev * ev * alpha[a] ) / hbar;
-    Float y = bp * waven;
+    double waven = 1e-10 * sqrt( massMolecule * tev * ev * alpha[a] ) / hbar;
+    double y = bp * waven;
+    if (a == 26){ std::cout << y<< std::endl; }
 
     // We interpolate S(kappa) to get the corresponding value that we will use
     // for the Vineyard approximation. 
     // We will replace a_c^2 with S(kappa)*a_c^2, as is stated on pg. 663.
-    Float sk = interpolate( xyZipped, waven, 1.0 );
+    double sk = interpolate( xyZipped, waven, 1.0 );
 
     // spin-correlation factors
     auto output = getSumConstants( ncold, scatLenI, scatLenC, sk );
-    Float evenSumConst = std::get<0>(output), 
+    double evenSumConst = std::get<0>(output), 
           oddSumConst  = std::get<1>(output);
     // -----------------------------------------------------------------------
     // This is meant to recreate the table on pg. 662 of the manual, where we

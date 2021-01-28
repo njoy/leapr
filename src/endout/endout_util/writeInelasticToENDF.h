@@ -13,28 +13,38 @@ using Tabulated            = section::Type<7,4>::TabulatedFunctions;
 using ScatteringLawConstants = section::Type<7,4>::ScatteringLawConstants;
 
 template <typename Range, typename RangeOfRange >
-auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas, 
-  const Range& betas, const Range& temps, const double& za, 
+auto writeInelasticToENDF( const RangeOfRange& fullSAB, const RangeOfRange& fullSAB2,
+  const Range alphas, const Range& betas, const Range& temps, const double& za, 
   Range primaryTempf, Range secondaryTempf, int lasym, int lat, int isym, 
-  int ilog, ScatteringLawConstants constants ){
+  int ilog, ScatteringLawConstants constants, const double& smin ){
 
-  std::vector<Range> alphaVec (betas.size(),alphas);
+  int nbt = (isym == 1 or isym == 3) ? 2*betas.size()-1 : betas.size();
+  std::vector<Range> alphaVec (nbt,alphas);
   std::vector< long > boundaries   = { int(alphas.size()) },
                       interpolants = { 4 },  // // ENDF interpolation type 
                       li (temps.size()-1,4);
 
   std::vector<ScatteringFunction> chunkVectors;
-  for (size_t b = 0; b < betas.size(); ++b){
+  for (int b = 0; b < nbt; ++b){
     auto boundaries_b   = boundaries;
     auto interpolants_b = interpolants;
     auto li_b           = li;
     auto temps_b        = temps;
     auto alphas_b       = alphas;
     auto out_b          = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,
-                                             ilog,lat,b);
+                                             ilog,lat,b,smin,fullSAB2);
     auto toWrite_b      = std::get<1>(out_b);
+    double betaVal = betas[b];
+
+    if ((isym == 1 or isym ==3) and b < betas.size()-1){
+        betaVal = -betas[betas.size()-b-1];
+    }
+    else if ((isym == 1 or isym ==3) and b >= betas.size()-1){
+        betaVal = betas[b-betas.size()+1];
+    }
+
     ScatteringFunction chunk_b ( 
-                                betas[b], 
+                                std::move(betaVal), 
                                 std::move(boundaries_b  ),
                                 std::move(interpolants_b),
                                 std::move(temps_b       ),
@@ -47,7 +57,7 @@ auto writeInelasticToENDF( const RangeOfRange& fullSAB, const Range alphas,
   auto awr = constants.atomicWeightRatios()[0];
 
   ScatteringLaw scatter_law =
-    Tabulated( { int(betas.size()) }, { 4 }, std::move(chunkVectors) );
+    Tabulated( { nbt }, { 4 }, std::move(chunkVectors) );
 
   auto temps_c = temps;
   auto temps_d = temps;

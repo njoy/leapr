@@ -25,7 +25,7 @@ auto getSAB( const Range& sab, const Float& be, int a, int b, int nbeta,
 template <typename Range, typename RangeOfRange >
 auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps, 
   const Range& alphas, const Range& betas, int isym, int ilog, int lat, size_t b, 
-  const RangeOfRange& fullSAB_2 = {std::vector<double> (0)} ){
+  const double& smin, const RangeOfRange& fullSAB_2 = {std::vector<double> (0)} ){
     std::vector<Range> toWrite (temps.size()); 
     // This is a vector of vectors where the ith entry of this is a vector of 
     // SAB (in order of increasing temperature) for the ith temperature
@@ -57,7 +57,7 @@ auto getSABreadyToWrite( const RangeOfRange& fullSAB, const Range& temps,
           else          { scr[a] = getlog10SAB(SAB,be,a,bIndex,nbeta,expBetaSign);}
         }
 
-        if (ilog == 0 and scr[a] < -999.0){ scr[a] = 0.0; }
+        if (ilog == 0 and scr[a] < smin){ scr[a] = 0.0; }
 
       } // alpha loop
       toWrite[t] = scr;

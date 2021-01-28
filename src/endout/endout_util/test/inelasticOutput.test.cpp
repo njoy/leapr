@@ -6,6 +6,7 @@
 
 TEST_CASE( "processing inelastic scattering data" ){
   GIVEN( "" ){  
+    double smin = 1e-75;
     std::cout.precision(15);
     int lat = 1;
 
@@ -31,8 +32,8 @@ TEST_CASE( "processing inelastic scattering data" ){
       AND_WHEN( "No log option is used" ){
         int ilog = 0;
 
-        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
-        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1);
+        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0,smin);
+        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1,smin);
 
         correctOut_beta0 = { {0.03803357, 0.07283326, 0.1046095}, 
                              {0.06888776, 0.1308459,  0.1864122}, 
@@ -53,8 +54,8 @@ TEST_CASE( "processing inelastic scattering data" ){
       } // AND WHEN
       AND_WHEN( "Log option is used - log10(S(a,b)) returned" ){
         int ilog = 1;
-        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
-        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1);
+        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0,smin);
+        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1,smin);
         auto toWrite0 = std::get<1>(out0);
         auto toWrite1 = std::get<1>(out1);
     
@@ -119,7 +120,7 @@ TEST_CASE( "processing inelastic scattering data" ){
 
 
         for ( int b = 0; b < 7; ++b ){
-          auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,lat,b,fullSAB_2);
+          auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,lat,b,smin,fullSAB_2);
           auto toWrite0 = std::get<1>(out0);
           REQUIRE( betaVals[b] == Approx(std::get<0>(out0)).epsilon(1e-6) );
           for ( size_t a = 0; a < alphas.size(); ++a ){
@@ -153,7 +154,7 @@ TEST_CASE( "processing inelastic scattering data" ){
 
         for ( int b = 0; b < 7; ++b ){
           auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,
-                                         lat,b,fullSAB_2);
+                                         lat,b,smin,fullSAB_2);
           auto toWrite0 = std::get<1>(out0);
           REQUIRE( betaVals[b] == Approx(std::get<0>(out0)).epsilon(1e-6) );
           for ( size_t a = 0; a < alphas.size(); ++a ){
@@ -175,8 +176,8 @@ TEST_CASE( "processing inelastic scattering data" ){
 
       AND_WHEN( "No log option is used" ){
         int ilog = 0;
-        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
-        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1);
+        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0,smin);
+        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1,smin);
         auto toWrite0 = std::get<1>(out0),
              toWrite1 = std::get<1>(out1);
   
@@ -199,8 +200,8 @@ TEST_CASE( "processing inelastic scattering data" ){
 
       AND_WHEN( "Log option is used - log10(S(a,b)) returned" ){
         int ilog = 1;
-        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0);
-        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1);
+        auto out0 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,0,smin);
+        auto out1 = getSABreadyToWrite(fullSAB,temps,alphas,betas,isym,ilog,lat,1,smin);
         auto toWrite0 = std::get<1>(out0);
         auto toWrite1 = std::get<1>(out1);
     
@@ -275,7 +276,7 @@ TEST_CASE( "processing inelastic scattering data" ){
 
 
         for ( int b = 0; b < 7; ++b ){
-          auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,lat,b,fullSAB_2);
+          auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,lat,b,smin,fullSAB_2);
           auto toWrite0 = std::get<1>(out0);
           REQUIRE( betaVals[b] == Approx(std::get<0>(out0)).epsilon(1e-6) );
           for ( size_t a = 0; a < alphas.size(); ++a ){
@@ -317,7 +318,7 @@ TEST_CASE( "processing inelastic scattering data" ){
 
         for ( int b = 0; b < 7; ++b ){
           auto out0 = getSABreadyToWrite(fullSAB_1,temps,alphas,betas,isym,ilog,
-                                         lat,b,fullSAB_2);
+                                         lat,b,smin,fullSAB_2);
           auto toWrite0 = std::get<1>(out0);
           REQUIRE( betaVals[b] == Approx(std::get<0>(out0)).epsilon(1e-6) );
           for ( size_t a = 0; a < alphas.size(); ++a ){

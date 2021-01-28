@@ -41,7 +41,8 @@ auto scaleDebyeWallerCoefficients( const nlohmann::json& jsonInput,
 template <typename Range>
 auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
   const std::vector<Range>& secondaryScatterSAB, const Range& alphas, 
-  const Range& betas, Range& primaryDWF, Range& secondaryDWF, const Range& bragg, 
+  const Range& betas, Range& primaryDWF, Range& secondaryDWF, 
+  std::vector<Range>& sab2, const Range& bragg, 
   int numEdges, Range primaryTempf, Range secondaryTempf, const Range& temps){ 
 
   using std::pow;
@@ -94,7 +95,7 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
   // write out the inelastic part
   auto epsilon = betas[betas.size()-1];
   auto emax    = 0.0253 * epsilon;
-  unsigned int lasym = (isym > 1) ? 1 : 0;
+  unsigned int lasym = (isym > 0) ? 1 : 0;
   std::vector<unsigned int> secondaryScattererTypes {secondaryScatterType};
   if (numSecondaryScatterers == 0){ secondaryScattererTypes = {}; }
   if (numSecondaryScatterers == 0){ awrVec.resize(1); }
@@ -103,8 +104,9 @@ auto endout( const nlohmann::json& jsonInput, std::vector<Range>& sab,
     std::move(xsVec), std::move(awrVec), std::move(numAtomsVec), 
     std::move(secondaryScattererTypes));
 
-  Inelastic mt4 = writeInelasticToENDF(sab,alphas,betas,temps,za,primaryTempf,
-                                 secondaryTempf,lasym,int(jsonInput["lat"]),isym,ilog,constants);
+  Inelastic mt4 = writeInelasticToENDF(sab,sab2,alphas,betas,temps,za,primaryTempf,
+            secondaryTempf,lasym,int(jsonInput["lat"]),isym,ilog,constants,
+            double(jsonInput["smin"]));
   if (iel == 0 and translationalWeight == 0.0){
     // Write incoherent elastic part
     Elastic mt2(za,awr, writeIncElasticToENDF(sigma_b,temps,primaryDWF)); 
@@ -132,14 +134,15 @@ void writeOutput( const nlohmann::json jsonInput,
   std::vector<std::vector<double>> primarySabAllTemps,
   std::vector<std::vector<double>> secondarySabAllTemps,
   std::vector<double> primaryDWF, std::vector<double> secondaryDWF,
-  std::vector<double> bragg, int nedge, std::vector<double> tempf, std::vector<double> tempf1,
+  std::vector<double> bragg, int nedge, std::vector<double> tempf, 
+  std::vector<double> tempf1, std::vector<std::vector<double>> primarySabAllTempsPosBeta,
   std::vector<double> temperatures ){
 
   const std::vector<double> alphas = jsonInput["alpha"],
                             betas  = jsonInput["beta"];
 
   njoy::ENDFtk::file::Type<7> MF7 = endout( jsonInput, primarySabAllTemps, 
-    secondarySabAllTemps, alphas, betas, primaryDWF, secondaryDWF, bragg, nedge, tempf, tempf1, temperatures );
+    secondarySabAllTemps, alphas, betas, primaryDWF, secondaryDWF, primarySabAllTempsPosBeta, bragg, nedge, tempf, tempf1, temperatures );
 
   std::vector< njoy::ENDFtk::DirectoryRecord > index = {};
   if ( MF7.hasSection( 2 ) ) {

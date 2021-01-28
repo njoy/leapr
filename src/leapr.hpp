@@ -25,6 +25,7 @@ void operator()( const nlohmann::json& jsonInput,
 
   //output << "Input arguments:\n" << jsonInput.dump(2) << std::endl;
 
+  std::setprecision(15);
   int numSecondaryScatterers = jsonInput["nss"];
   int b7 = 0;
   if (numSecondaryScatterers > 0){ b7 = jsonInput["b7"]; }
@@ -52,7 +53,11 @@ void operator()( const nlohmann::json& jsonInput,
 
   std::vector<std::vector<double>> primarySabAllTemps(ntempr);
   std::vector<std::vector<double>> secondarySabAllTemps(ntempr);
+  std::vector<std::vector<double>> primarySabAllTempsPosBeta;
+  if (ncold > 0){ primarySabAllTempsPosBeta.resize(ntempr); }
+
   std::vector<double> temperatures(ntempr);
+
   for (int scatterIter = 0; scatterIter < numIter; ++scatterIter){
 
     int secScatterOffset = (scatterIter == 1 and b7 == 0) ?
@@ -118,9 +123,11 @@ void operator()( const nlohmann::json& jsonInput,
         auto pairCorrelationInfo = tempInfo["pairCorrelation"];
         std::vector<double> kappa = pairCorrelationInfo["skappa"];
         double                dka = pairCorrelationInfo["dka"];
+        double tbart = effectiveTemperature/temperature;
         output << "\n\n     Beginning cold hydrogen calculation... " << std::endl;
         coldHydrogen( tev, ncold, transWgt+continuousWgt, alphas, betas, dka,
-                      kappa, free, sab, sab2, effectiveTemperature );
+                      kappa, free, sab, sab2, tbart );
+        primarySabAllTempsPosBeta[itemp] = sab2;
       }
 
       if (int(jsonInput["nsk"]) == 2 and ncold == 0){
@@ -153,6 +160,7 @@ void operator()( const nlohmann::json& jsonInput,
   int nedge = 0;
   if (iel > 0){
     double emax = 5.0;
+    output << "\n\n     Beginning coherent elastic calculation... " << std::endl;
     auto coherentElasticOut = coherentElastic( iel, npr, bragg, emax );
     nedge = std::get<1>(coherentElasticOut)* 0.5;
     bragg.resize(std::get<0>(coherentElasticOut));
@@ -163,9 +171,10 @@ void operator()( const nlohmann::json& jsonInput,
 
 
   //---------------------------- Write Output --------------------------------
+  output << "\n\n     Writing thermal scattering information to tape" << std::endl;
   writeOutput( jsonInput, primarySabAllTemps, secondarySabAllTemps, 
    primaryDWF, secondaryDWF, bragg, nedge,  primaryEffectiveTemp,  
-   secondaryEffectiveTemp, temperatures );
+   secondaryEffectiveTemp, primarySabAllTempsPosBeta, temperatures );
 
 
 

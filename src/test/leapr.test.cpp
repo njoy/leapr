@@ -13,6 +13,8 @@
 #include "input-tsl-BeO.h"
 #include "input-tsl-D2O.h"
 #include "tsl-SiO2-alpha.h"
+#include "input-tsl-orthoH.h"
+#include "input-tsl-paraD.h"
 
 using Tabulated         = section::Type<7,4>::TabulatedFunctions;
 using CoherentElastic   = section::Type<7,2>::CoherentElastic;
@@ -144,6 +146,11 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
       REQUIRE(   my_value.thermalScatteringValues().size() == 
                good_value.thermalScatteringValues().size());
       for ( size_t i = 0; i < my_value.thermalScatteringValues().size(); ++i){
+          for (size_t a = 0; a < my_value.thermalScatteringValues()[i].size(); ++a){
+
+            std::cout << a << "   " << ibeta << "   " << my_value.thermalScatteringValues()[i][a] << std::endl;
+            REQUIRE( my_value.thermalScatteringValues()[i][a] == Approx(good_value.thermalScatteringValues()[i][a]).epsilon(1e-6));
+        }
         checkVec(  my_value.thermalScatteringValues()[i],
                  good_value.thermalScatteringValues()[i]);
       }
@@ -168,6 +175,69 @@ void check_MF7(MF7 my_MF7, MF7 good_MF7){
 
 
 TEST_CASE( "LEAPR" ){
+
+  GIVEN( "ENDF/B-VIII.0 para D" ){
+    njoy::njoy21::lipservice::iRecordStream<char> 
+      iss( (std::istringstream(input_paraD)) );
+
+    njoy::njoy21::lipservice::LEAPR leapr(iss);
+    nlohmann::json jsonLEAPR(leapr);
+
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape24"));
+    long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape2(njoy::utility::slurpFileToMemory("tsl_paraD_tape24"));
+    lineNumber = 1;
+    Tape          tape2     = treeTape2.parse( lineNumber );
+    Material      material2 = tape2.material(mat).front();
+    file::Type<7> good_MF7  = material2.MF(7_c);
+
+    check_MF7(my_MF7,good_MF7);
+
+  } // GIVEN
+
+
+
+
+  GIVEN( "ENDF/B-VIII.0 ortho H" ){
+    njoy::njoy21::lipservice::iRecordStream<char> 
+      iss( (std::istringstream(input_orthoH)) );
+
+    njoy::njoy21::lipservice::LEAPR leapr(iss);
+    nlohmann::json jsonLEAPR(leapr);
+
+    auto args = nlohmann::json::object();
+    njoy::LEAPR::LEAPR leaprInstance;
+
+    leaprInstance( jsonLEAPR, std::cout, std::cerr, args );
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape(njoy::utility::slurpFileToMemory("tape24"));
+    long lineNumber = 1;
+    int mat = jsonLEAPR["mat"];
+    Tape          tape     = treeTape.parse( lineNumber );
+    Material      material = tape.material(mat).front();
+    file::Type<7> my_MF7   = material.MF(7_c);
+
+    njoy::ENDFtk::tree::Tape<std::string> treeTape2(njoy::utility::slurpFileToMemory("tsl_orthoH_tape24"));
+    lineNumber = 1;
+    Tape          tape2     = treeTape2.parse( lineNumber );
+    Material      material2 = tape2.material(mat).front();
+    file::Type<7> good_MF7  = material2.MF(7_c);
+
+
+    check_MF7(my_MF7,good_MF7);
+
+  } // GIVEN
+
 
   GIVEN( "ENDF-B/VIII Be in BeO input" ){
     njoy::njoy21::lipservice::iRecordStream<char> 

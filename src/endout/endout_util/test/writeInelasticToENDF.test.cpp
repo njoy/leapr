@@ -12,6 +12,7 @@ using Inelastic = section::Type<7,4>;
 TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
   GIVEN( "Secondary scatterer example (Be in BeO)" ){
 
+    double smin = 1e-75;
     int isym = 0, ilog = 0; // also known as lln
 
     unsigned int nAtomsPrincipal = 1;
@@ -51,10 +52,11 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
                    0.4863204544, 0.1641521631, 0.0883833504, 0.0850936470, 
                    0.6682223599, 0.2310164432, 0.1267533036, 0.1218130094 };
       std::vector<std::vector<double>> fullSAB {sab_temp_1};
-
-      auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+      std::vector<std::vector<double>> fullSAB2 {sab_temp_1};
+      
+      auto myChunk = writeInelasticToENDF(fullSAB, fullSAB2, alphas, betas, temps, za, 
                      effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
-                     lat, isym, ilog, constants);
+                     lat, isym, ilog, constants, smin);
 
       auto begin = ENDF_BeO_correct_1temp.begin();
       auto end   = ENDF_BeO_correct_1temp.end();
@@ -82,13 +84,14 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
                    1.0115272080, 0.3459026996, 0.1876553149, 0.1781711799, 
                    1.3373756330, 0.4741303254, 0.2644242176, 0.2504673594 };
 
-      std::vector<std::vector<double>> fullSAB {sab_temp_1, sab_temp_2, sab_temp_3};
+      std::vector<std::vector<double>> fullSAB  {sab_temp_1, sab_temp_2, sab_temp_3};
+      std::vector<std::vector<double>> fullSAB2 (3);
 
       AND_WHEN( "No log option chosen (return S(a,b))" ){
         ilog = 0;
-        auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+        auto myChunk = writeInelasticToENDF(fullSAB, fullSAB2, alphas, betas, temps, za, 
                        effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
-                       lat, isym, ilog, constants);
+                       lat, isym, ilog, constants, smin);
         auto begin = ENDF_BeO_correct_3temps.begin();
         auto end   = ENDF_BeO_correct_3temps.end();
         long lineNumber = 1;
@@ -106,9 +109,9 @@ TEST_CASE( "Preparing full ENDF output for S(a,b) --> [7,4]" ){
         ScatteringLawConstants constants( ilog, numSecondaryScatterers, epsilon, 
           emax, std::move(xsVec), std::move(awrVec), std::move(natomsVec), 
           std::move(secondaryScattererTypes) );
-        auto myChunk = writeInelasticToENDF(fullSAB, alphas, betas, temps, za, 
+        auto myChunk = writeInelasticToENDF(fullSAB, fullSAB2, alphas, betas, temps, za, 
                        effectiveTempsPrincipal, effectiveTempsSecondary, lasym, 
-                       lat, isym, ilog, constants);
+                       lat, isym, ilog, constants, smin);
         auto begin = ENDF_BeO_correct_3temps_log.begin();
         auto end   = ENDF_BeO_correct_3temps_log.end();
         long lineNumber = 1;
